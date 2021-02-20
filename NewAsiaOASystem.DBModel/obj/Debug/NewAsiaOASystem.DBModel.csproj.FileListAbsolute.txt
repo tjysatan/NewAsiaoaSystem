@@ -40,3 +40,12 @@ C:\Users\96297\source\repos\NewRepo\NewAsiaOASystem\NewAsiaOASystem.DBModel\obj\
 C:\Users\96297\source\repos\NewRepo\NewAsiaOASystem\NewAsiaOASystem.DBModel\obj\Debug\NewAsiaOASystem.DBModel.csproj.CopyComplete
 C:\Users\96297\source\repos\NewRepo\NewAsiaOASystem\NewAsiaOASystem.DBModel\obj\Debug\NewAsiaOASystem.DBModel.dll
 C:\Users\96297\source\repos\NewRepo\NewAsiaOASystem\NewAsiaOASystem.DBModel\obj\Debug\NewAsiaOASystem.DBModel.pdb
+D:\object\NewAsiaOASystem.DBModel\bin\Debug\NewAsiaOASystem.DBModel.dll
+D:\object\NewAsiaOASystem.DBModel\bin\Debug\NewAsiaOASystem.DBModel.pdb
+D:\object\NewAsiaOASystem.DBModel\bin\Debug\Spring.Core.dll
+D:\object\NewAsiaOASystem.DBModel\bin\Debug\Common.Logging.dll
+D:\object\NewAsiaOASystem.DBModel\obj\Debug\NewAsiaOASystem.DBModel.csprojAssemblyReference.cache
+D:\object\NewAsiaOASystem.DBModel\obj\Debug\NewAsiaOASystem.DBModel.csproj.CoreCompileInputs.cache
+D:\object\NewAsiaOASystem.DBModel\obj\Debug\NewAsiaOASystem.DBModel.csproj.CopyComplete
+D:\object\NewAsiaOASystem.DBModel\obj\Debug\NewAsiaOASystem.DBModel.dll
+D:\object\NewAsiaOASystem.DBModel\obj\Debug\NewAsiaOASystem.DBModel.pdb
