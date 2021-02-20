@@ -1,0 +1,175 @@
+﻿@model NewAsiaOASystem.ViewModel.PagerInfo<NewAsiaOASystem.ViewModel.WL_XFOrderinfoView>
+@{
+    ViewBag.Title = "续费订单";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@section HeadContent{
+    <script type="text/javascript">
+        $(function () {
+            BindGrid();
+        })
+
+        function BindGrid() {
+            @{
+                if (null != Model && null != Model.GetPagingDataJson)
+                {
+                    string json = Model.GetPagingDataJson;//获取json数据
+                    @: var jsonStr = @Html.Raw(json);
+                }
+             }
+            dataGrid(jsonStr);
+        }
+
+        function dataGrid(jsonStr)
+        {
+            if (typeof (jsonStr) != "undefined") {
+                var html = "";
+                html = '<table class="layui-table">';
+                html += '<thead>';
+                html+='<tr>';
+                html+='<td width="5%"><input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" /></td>';
+                html+='<td width="15%">SID</td>';
+                html+='<td width="10%">续费金额</td>';
+                html+='<td width="10%">下单时间</td>';
+                html+='<td width="10%">续费时间</td>';
+                html+='<td width="10%">监控点</td>';
+                html+='<td width="15%">操作</td>';
+                html+='</tr>';
+                html+='</thead>';
+                for (var i = 0, j = jsonStr.length; i < j; i++) {
+                    html+='<tr>';
+                    html += '<td width="5%"><input type="checkbox" name="ContentChecked" value="' + jsonStr[i].Id + '"/></td>';
+                    html += '<td width="15%">'+ jsonStr[i].Sid + '</td>';
+                    html += '<td width="10%">'+ jsonStr[i].price + '</td>';
+                    html +='<td width="10%">'+showDate(jsonStr[i].xddatetime) + '</td>';
+                    html +='<td width="10%">'+showDate(jsonStr[i].Xcxfdatetime) + '</td>';
+                    html +='<td width="10%">'+jsonStr[i].monitor_name + '</td>';
+                    html+='<td width="15%">-</td>';
+                    html+='</tr>';
+                }
+                html += '</table>';
+                $("#content").html(html);
+            }
+        }
+        //pageIndex当前页
+        function SerchList(pageIndex)
+        {
+            $("input[name='pageIndex']").val(pageIndex);
+            var options = {
+                beforeSubmit: function () {
+                    return true;
+                },
+                dataType: "json",
+                success: function (context) {
+                    var data=eval(context.result);
+                    dataGrid(data);
+                    $(".pagin").html(context.PageN);//输出分页按钮
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $.messager.alert("操作提示", '查询失败请重试！', 'error');
+                }
+            }
+            $('#form1').ajaxSubmit(options);
+            return false;
+        }
+
+        //续费订单同步
+        function AjaxTBxfddjson()
+        {
+            $.ajax({
+                url: "../WL_XFOrderinfo/TBXForderdata",
+                type: "POST",
+                dataType: "html",
+                async: true,
+                beforeSend: function () {
+                    ddchen();
+                },
+                success: function (response) {
+                    if (response == "0") {
+                        disLoading();
+                        layer.alert("当前数据已是最新！", { icon: 1 });
+                    }
+                    else {
+                        disLoading();
+                        layer.alert("本次更新"+response+"条记录", { icon: 1 });
+                    }
+                },
+                error: function (e) {
+                    layer.alert("操作失败！", { icon: 2 });
+                }
+            })
+        }
+        var loadi;
+        function ddchen() {
+            loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+        }
+        //关闭等待效果
+        function disLoading() {
+            layer.close(loadi);
+        }
+    </script>
+}
+
+<!--==================================数据列表=============================-->
+<div class="h-right">
+    <div class="h-right-c">
+        <!--查询条件-->
+        <div class="inquiry1">
+            <fieldset>
+                <legend>查询条件：</legend>
+                <ul>
+                    @using (Html.BeginForm("SearchList", "WL_XForderinfo", FormMethod.Post, new { id = "form1" }))
+                    {
+                        @Html.Hidden("pageIndex");
+                        <li><span>SID：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txt_sid" />
+                            </span>
+                        </li>
+ 
+                        <li>
+                            <span>下单时间：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txt_startdatetime" onclick="WdatePicker()" />
+                            </span>
+                            到    <span class="inquiry-input">
+                                <input type="text" name="txt_enddatetime" onclick="WdatePicker()" /></span>
+                        </li>
+                        
+                        <li style="*width: 100%; *margin: -10px 0 5px 90px;"><span class="inquiry-input">
+                            <button class="layui-btn" onclick="return SerchList(1)"><i class="layui-icon">&#xe615;</i> 查询</button>
+                        </span>
+                        </li>
+                    }
+                    <li>
+                        <span class="inquiry-input">
+                            <button class="layui-btn" onclick="return AjaxTBxfddjson()"><i class="layui-icon">&#xe63d;</i>续费单</button>
+                        </span>
+                        <span class="inquiry-input">
+                            <button class="layui-btn" onclick="return addClick('/WL_XForderinfo/List')"><i class="layui-icon">&#x1002;</i> 刷新</button>
+                        </span>
+
+                    </li>
+                </ul>
+            </fieldset>
+        </div>
+
+        <div class="h-table">
+            <div class="h-table-content">
+
+
+                <div id="content"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--==========================输出分页按钮=========================-->
+<div class="pagin">
+    @if (ViewBag.PageNavigate == null)
+    {
+        @Html.ShowPageNavigate(Model.CurrentPageIndex, Model.PageSize, Model.RecordCount);
+    }
+</div>
+<div id="windowDia" class="easyui-window" closed="true" style="width: 600px; height: 400px; padding: 10px;"></div>

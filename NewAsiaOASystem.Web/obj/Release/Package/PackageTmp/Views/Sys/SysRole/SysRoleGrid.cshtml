@@ -1,0 +1,133 @@
+﻿@model NewAsiaOASystem.ViewModel.PagerInfo<NewAsiaOASystem.ViewModel.SysRoleView>
+
+@{
+    ViewBag.Title = "角色管理";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+
+@section HeadContent{
+    <script src="~/Scripts/Sys/SysRole.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            BindGrid();
+        })
+        function BindGrid() {
+            @{
+                if (null != Model && null != Model.GetPagingDataJson)
+                {
+                    string json = Model.GetPagingDataJson;//获取json数据
+                    @: var jsonStr = @Html.Raw(json);
+                                          
+                }
+             }
+            dataGrid(jsonStr);
+        }
+
+        function dataGrid(jsonStr)
+        {
+            if (typeof (jsonStr) != "undefined") {
+                var html = "";
+                html = '<table cellpadding="0" cellspacing="0">';
+                for (var i = 0, j = jsonStr.length; i < j; i++) {
+                    if (i % 2 == 0)
+                        html += '<tr class="h-table-content-r1">';
+                    else
+                        html += '<tr class="h-table-content-r">';
+                    html += '<td width="30"><input type="checkbox" name="ContentChecked" value="' + jsonStr[i].Id + '"/></td>';
+                    html += '<td width="150">' + jsonStr[i].Name + '</td>';
+                    if (jsonStr[i].Status == 1)
+                        html += '<td width="100">启用</td>';
+                    else
+                        html += '<td width="100">禁用</td>';
+                    html += '<td width="100">' + showDate(jsonStr[i].CreateTime) + '</td>';
+                    html+='<td width="100">'+ formatOper('\''+jsonStr[i].Id+'\'')+'</td>';
+                    html+='</tr>';
+                }
+                html += '</table>';
+                $("#content").html(html);
+            }
+        }
+
+        //pageIndex当前页
+        function SerchList(pageIndex)
+        {
+            $("input[name='pageIndex']").val(pageIndex);
+            var options = {
+                beforeSubmit: function () {
+                    return true;
+                },
+                dataType: "json",
+                success: function (context) {
+                    var data=eval(context.result);
+                    dataGrid(data);
+                    $(".pagin").html(context.PageN);//输出分页按钮
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $.messager.alert("操作提示", '查询失败请重试！', 'error');
+                }
+            }
+            $('#form1').ajaxSubmit(options);
+            return false;
+        }
+    </script>
+
+}
+
+
+
+<!--==================================数据列表=============================-->
+<div class="h-right">
+  <div class="h-right-c">
+ 
+        @using (Html.BeginForm("SearchRoleList", "SysRole", FormMethod.Post, new { id = "form1" }))
+        {
+            @Html.Hidden("pageIndex");
+            <div class="inquiry1">
+                <fieldset>
+                    <legend>查询条件：</legend>
+                    <ul>
+                        <li><span>角色名称：</span>
+                            
+                            <span class="inquiry-input"><input type="text" name="txtSearch_RoleName" />
+                            </span></li>
+                           <li style="*width: 100%; *margin: -10px 0 5px 90px;"><span class="inquiry-input">
+                            <button name="btnSerch" onclick="return SerchList(1)">查询</button> </span>
+                            <span class="inquiry-input">
+                                <button onclick="return addClick('/SysRole/addPage')">添加</button></span>
+                            <span class="inquiry-input">
+                                <button onclick="return del('/SysRole/Delete')">删除</button></span>
+                            <span class="inquiry-input">
+                                <button onclick="return update('/SysRole/EditPage')">编辑</button></span>
+                            <span class="inquiry-input">
+                                <button onclick="return addClick('/SysRole/Index')">刷新</button></span></li>
+                    </ul>
+                </fieldset>
+            </div>
+        }
+        <div class="h-table">
+            <div class="h-table-content">
+                <table cellpadding="0" cellspacing="0" class="h-right-table-title1" style="border: none;">
+                    <tr>
+                        <td width="30">
+                            <input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" /></td>
+                        <td width="150">功能名称</td>
+                        <td width="100">状态</td>
+                        <td width="100">创建时间</td>
+                        <td width="100">操作</td>
+                    </tr>
+                </table>
+                <div id="content"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--==========================输出分页按钮=========================-->
+<div class="pagin">
+        @if (ViewBag.PageNavigate == null)
+        {
+            @Html.ShowPageNavigate(Model.CurrentPageIndex, Model.PageSize, Model.RecordCount);
+        }
+</div>
+
+<div id="windowDia" class="easyui-window" closed="true" style="width: 800px; height: 600px; padding: 10px;"></div>

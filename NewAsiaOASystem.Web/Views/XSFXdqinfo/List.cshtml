@@ -1,0 +1,168 @@
+﻿@model NewAsiaOASystem.ViewModel.PagerInfo<NewAsiaOASystem.ViewModel.XSFXdqinfoView>
+@{
+    ViewBag.Title = "区域销售目标分析管理";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@section HeadContent{
+    <script type="text/javascript"> 
+        $(function () {
+            BindGrid();
+        })
+        function BindGrid() {
+            @{
+                if (null != Model && null != Model.GetPagingDataJson)
+                {
+                    string json = Model.GetPagingDataJson;//获取json数据
+                    @: var jsonStr = @Html.Raw(json);
+                }
+             }
+            dataGrid(jsonStr);
+        }
+
+        function dataGrid(jsonStr)
+        {
+            if (typeof (jsonStr) != "undefined") {
+                var html = "";
+                html = '<table cellpadding="0" cellspacing="0" style="width:100%;">';
+                for (var i = 0, j = jsonStr.length; i < j; i++) {
+                    if (i % 2 == 0)
+                        html += '<tr class="h-table-content-r1">';
+                    else
+                        html += '<tr class="h-table-content-r">';
+                    html += '<td width="5%"><input type="checkbox" name="ContentChecked" value="' + jsonStr[i].Id + '"/></td>';
+                    
+                    html += '<td width="20%">' + jsonStr[i].dqname + '</td>';
+                    html += '<td width="15%">' + jsonStr[i].XSL + '</td>';
+                    html+='<td width="15%">'+jsonStr[i].WCSL+'</td>';
+                    html += '<td width="10%">' + jsonStr[i].XSYear + '</td>';
+                    html+='<td width="10%">'+jsonStr[i].zrr+'</td>';
+                   
+                    html+='<td width="20%">'+ SZshow(jsonStr[i].Id)+'&nbsp;&nbsp;'+ckshow(jsonStr[i].Id)+'</td>';
+                    html+='</tr>';
+                }
+                html += '</table>';
+                $("#content").html(html);
+            }
+        }
+        //pageIndex当前页
+        function SerchList(pageIndex)
+        {
+            $("input[name='pageIndex']").val(pageIndex);
+            var options = {
+                beforeSubmit: function () {
+                    return true;
+                },
+                dataType: "json",
+                success: function (context) {
+                    var data=eval(context.result);
+                    dataGrid(data);
+                    $(".pagin").html(context.PageN);//输出分页按钮
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $.messager.alert("操作提示", '查询失败请重试！', 'error');
+                }
+            }
+            $('#form1').ajaxSubmit(options);
+            return false;
+        }
+
+
+        //操作
+        function SZshow(val) {
+            var Id = "'" + val + "'";
+            var s = '<a href="#" onclick="editsz(' + Id + ')">完成量</a>&nbsp;&nbsp;';
+            return s;
+        }
+
+        function ckshow(val){
+            var Id="'"+val+"'";
+            var s='<a href="#" onclick="ckDZ(' + Id + ')">编辑</a>&nbsp;&nbsp;';
+            return s;
+        }
+
+
+        
+        function ckDZ(Id) {
+            location.href = "../XSFXdqinfo/ckview" + "?Id=" + Id;
+        }
+
+        //设置完成量
+        function editsz(id) {
+            if (id != "") {
+                $('#windowDia').html("<iframe src=../XSFXdqinfo/EditPage?id=" + id + "&&   style='border:0px;' width='300px' height='100px'></iframe>");
+                $("#windowDia").window({
+                    title: '已完成数量设置',
+                    modal: true,
+                    closed: false,
+                    width:400,
+                    height:200,
+                });
+            }
+        }
+    </script>
+    }
+
+<!--==================================数据列表=============================-->
+<div class="h-right">
+    <div class="h-right-c">
+     @*   <div class="h-right-title">您当前的位置：免疫点管理</div>*@
+        <!--查询条件-->
+        @using (Html.BeginForm("SearchList", "XSFXdqinfo", FormMethod.Post, new { id = "form1" }))
+        {
+            @Html.Hidden("pageIndex");
+            <div class="inquiry1">
+                <fieldset>
+                    <legend>查询条件：</legend>
+                    <ul>
+                        <li><span>区域名称：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txtSearch_Name" /></span></li>
+                        
+                        <li style="*width: 100%; *margin: -10px 0 5px 90px;"><span class="inquiry-input">
+                            <button name="btnSerch" onclick="return SerchList(1)">查询</button>
+                        </span>
+                        </li>
+                        <li>
+                            <span class="inquiry-input">
+                            <button onclick="return addClick('/XSFXdqinfo/addPage')">添加</button></span>
+                           @* <span class="inquiry-input">
+                                <button onclick="return del('/XSFXdqinfo/Delete')">删除</button></span>
+                            <span class="inquiry-input">
+                                <button onclick="return update('/XSFXdqinfo/EditPage')">编辑</button></span>*@
+                            <span class="inquiry-input">
+                                <button onclick="return addClick('/XSFXdqinfo/List')">刷新</button></span></li>
+                    </ul>
+                </fieldset>
+            </div>
+        }
+        <div class="h-table">
+            <div class="h-table-content">
+                <table cellpadding="0" cellspacing="0" class="h-right-table-title1" style="border: none;width:100%;">
+                    <tr>
+                        <td width="5%">
+                            <input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" /></td>
+                        <td width="20%">区域名称</td>
+                        <td width="15%">销售目标</td>
+                        <td width="15%">完成进度</td>
+                        <td width="10%">销售年份</td>
+                        <td width="10%">负责人</td>
+                        <td width="20%">操作</td>
+                    </tr>
+                </table>
+                <div id="content"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!--==========================输出分页按钮=========================-->
+<div class="pagin">
+    @if (ViewBag.PageNavigate == null)
+    {
+        @Html.ShowPageNavigate(Model.CurrentPageIndex, Model.PageSize, Model.RecordCount);
+    }
+</div>
+<div id="windowDia" class="easyui-window" closed="true" style="width:400px; height:200px; padding:10px;"></div>

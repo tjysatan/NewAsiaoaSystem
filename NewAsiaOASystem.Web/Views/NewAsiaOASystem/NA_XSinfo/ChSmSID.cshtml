@@ -1,0 +1,127 @@
+﻿
+@{
+    ViewBag.Title = "ChSmSID";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@section HeadContent{
+     <script type="text/javascript">
+         $(function () {
+             $(SID).focus();
+             var XSmxinfomodel = GetmxxqbyId('@ViewData["mxId"]');//订单明细 详情
+           var fhsl= GetsmcountbyordermxId();
+           $("#fhsl").html(XSmxinfomodel.SL);//发货数量赋值
+           $("#smsl").html(fhsl);
+        
+         })
+
+   
+         /*根据明细ID 查找明细Id*/
+         function GetmxxqbyId(Id) {
+             var json;
+             $.ajax({
+                 type: "POST",
+                 url: "../NA_XSinfo/GetXsdetailbyIdjson",
+                 data: { Id: Id },
+                 dataType: "json",
+                 async: false,
+                 success: function (reslut) {
+                     json = reslut;
+                 },
+                 error: function (e) {
+                     alert("请求失败！");
+                 }
+             })
+             return json;
+         }
+
+         function GetsmcountbyordermxId() {
+             var json;
+             $.ajax({
+                 type: "POST",
+                 url: "../NA_XSinfo/GetsmCount",
+                 data: { ordermxId: '@ViewData["mxId"]' },
+                 dataType: "json",
+                 async: false,
+                 success: function (reslut) {
+                     json = reslut.status;
+                 },
+                 error: function (e) {
+                     alert("请求失败！");
+                 }
+             })
+             return json;
+         }
+
+         function gbym() {
+              var ParentObj = window.parent;//获取父窗口
+              window.parent.$('#windowDia').window('close');
+              window.parent.location = "/NA_XSinfo/OrdermxView?Id=" + '@ViewData["OrderId"]';
+         }
+     </script>
+    }
+
+<div style="width:200px; height:300px; margin:auto">
+    <div style="font-size:14px;">
+        此单需要发货<label id="fhsl"></label> 台,已经发货<label id="smsl"></label>台
+    </div>
+    @using (Html.BeginForm("Editch", "WL_DkxInfo", FormMethod.Post, new { id = "form1" }))
+    {
+        <input type="hidden" id="khId" name="khId" value="@ViewData["khId"]" />
+        <input type="hidden" id="mxId" name="mxId" value="@ViewData["mxId"]" />
+    <input type="text" name="SID" id="SID" style="width:200px; height:120px; border:1px solid #000000" />
+  
+
+         <div class="inquiry-input infor-b">
+            <span>
+                <button onclick="return smfhSavaForm()">保存</button></span><span>
+                <button onclick="return gbym()">返回</button></span>
+         </div> 
+    }
+</div>
+
+<script type="text/javascript">
+    function smfhSavaForm() {
+        var sid = $("#SID").val();
+        if (sid == "") {
+            alert("SID码不为空！");
+            $(SID).focus();
+            return false;
+        }
+        if (sid == "GUANBI") {
+            gbym();
+            return false;
+        }
+        if (sid == "WANCHENG") {
+            gbym();
+            return false;
+        }
+        //表单验证
+        var options = {
+            beforeSubmit: function () {
+                return true;
+            },
+            dataType: "json",//这里是指控制器处理后返回的类型，这里返回json格式。 
+            success: function (context) {
+                if ("success" == context.result) {
+                    location.href = "../NA_XSinfo/ChSmSID?Id=" + $("#R_Id").val() + "&&khid=" + '@ViewData["khId"]' + "&&mxId=" + '@ViewData["mxId"]';
+                }
+                if ("error2" == context.result) {
+                    $.messager.alert("操作提示", '此电控箱已经销售！', 'error', function () {
+                        location.href = "../NA_XSinfo/ChSmSID?Id=" + $("#R_Id").val() + "&&khid=" + '@ViewData["khId"]' + "&&mxId=" + '@ViewData["mxId"]';
+                    });
+                }
+                if ("error3" == context.reslut) {
+                    $.messager.alert("操作提示", '不存在此电控箱！', 'error');
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $.messager.alert("操作提示", '操作失败！', 'error');
+            }
+        }
+        $('#form1').ajaxSubmit(options);
+        return false; //为了不刷新页面,返回false 
+    }
+</script>
+
+

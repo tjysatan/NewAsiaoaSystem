@@ -1,0 +1,109 @@
+﻿@model NewAsiaOASystem.ViewModel.WX_MessageView
+@{
+    ViewBag.Title = "Edit_new";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@section HeadContent{
+    <script type="text/javascript">
+        $(function () {
+            if ("" == $("#Id").val())
+                $("#Ptitle").text("关键词添加");
+            else
+                $("#Ptitle").text("关键词编辑");
+        })
+    </script>
+       <link href="~/Scripts/zTree_v3/css/demo.css" rel="stylesheet" />
+ 
+       <link href="~/Scripts/zTree_v3/css/zTreeStyle/zTreeStyle.css" rel="stylesheet" />
+    <script src="~/Scripts/zTree_v3/js/jquery.ztree.core-3.5.min.js"></script>
+    <script src="~/Scripts/zTree_v3/js/jquery.ztree.excheck-3.5.min.js"></script>
+}
+ 
+ 
+ 
+ 
+@using (Html.BeginForm("Edit_new", "FirstBack", FormMethod.Post, new { id = "form1" }))
+{         
+    @Html.HiddenFor(m => m.A_CreateTime);
+    @Html.HiddenFor(m => m.A_CreateUser)
+    @Html.HiddenFor(m => m.A_id)
+    @Html.HiddenFor(m => m.MsgType)
+     @Html.Hidden("SelectComm");//用于保存选中的图文Id
+    <div class="infor">
+       @* <div class="h-right-title">您当前的位置：图文信息编辑</div>*@
+        <p id="Ptitle"></p>
+        <div class="system-menu-set">
+            <ul class="infor-c">
+                <li><span class="infor-c-width">关键词：</span><span class="infor-c-input">
+                    @Html.TextBoxFor(m => m.A_KeyWord)</span>
+                     <span style="color:red;font-size:24px;vertical-align: middle;margin-left: 8px;">*</span><span class="desc w-register">关键字不为空！</span>
+                </li>
+            </ul>
+
+            <ul class="infor-c " style="display: none">
+                <li><span class="infor-c-width">消息类型：</span></li>
+                <li><span>
+
+
+                    <select class="add-function" name="MsgType">
+                        @{
+                                        if ("text".Equals(Convert.ToString(@Model.MsgType)) && null != @Model.A_id)
+                                        {
+                            @:<option value="news">文本消息</option>
+@*                                @:<option value="news" selected="selected">图文消息</option>*@
+                                        }
+                                        else
+                                        {
+                            @:<option value="news"  selected="selected">文本消息</option>
+@*                                @:<option value="news">图文消息</option>*@
+                                        }
+                                                
+                        }
+
+                    </select>
+                </span>
+
+                </li>
+            </ul>
+
+            <ul class="infor-c">
+                <li><span class="infor-c-width">是否默认：</span>
+                    <span>
+                        <select class="add-function" name="IsDefaultMessage">
+                            @{
+    if ("False".Equals(Convert.ToString(@Model.IsDefaultMessage)) && null != @Model.A_id)
+                                        {
+                                @:<option value="True">是</option>
+                                @:<option value="False" selected="selected">否</option>
+                                                }
+                                        else
+                                        {
+                                @:<option value="True"  selected="selected">是</option>
+                                @:<option value="False">否</option>
+                                      }
+                                                
+                            }
+
+                        </select></span></li>
+            </ul>
+
+          <ul class="infor-c ">
+                <li><span class="infor-c-width">图文消息选择：</span>
+                    <span>
+                         <input id="sel_Comm" name="sel_Comm"  class="add-function"  style="width:192px;" type="text" readonly="readonly"  onclick="showMenu();" />
+                    </span><span style="color:red;font-size:24px;vertical-align: middle;margin-left: 8px;">*</span><span class="desc w-register">请选择图文消息</span></li>
+ 
+            </ul>
+        </div>
+        <div class="inquiry-input infor-b">
+            <span>
+                <button onclick="return SavaForm('/FirstBack/Index')">保存</button></span><span>
+                    <button onclick="return RedirectUrl('/FirstBack/Index')">返回</button></span>
+        </div>
+    </div>
+}
+<div id="menuContent" class="menuContent" style="display:none; position: absolute;">
+	<ul id="CommList" class="ztree" style="margin-top:0; width:180px; height: 300px;"></ul>
+</div>
+ <script src="~/Scripts/WX/WX_Message.js"></script>

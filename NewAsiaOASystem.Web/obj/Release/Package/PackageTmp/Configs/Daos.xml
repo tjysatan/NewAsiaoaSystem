@@ -1,0 +1,510 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<objects xmlns="http://www.springframework.net" xmlns:db="http://www.springframework.net/database">
+  <object id="SysButtonDao" type="NewAsiaOASystem.Dao.SysButtonDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="SysPersonDao" type="NewAsiaOASystem.Dao.SysPersonDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="SysLog_historyDao" type="NewAsiaOASystem.Dao.SysLog_historyDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="SysDepartmentDao" type="NewAsiaOASystem.Dao.SysDepartmentDao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="SysMenuDao" type="NewAsiaOASystem.Dao.SysMenuDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="SysAuthorizeDao" type="NewAsiaOASystem.Dao.SysAuthorizeDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="SysRoleDao" type="NewAsiaOASystem.Dao.SysRoleDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="SysFunctionDao" type="NewAsiaOASystem.Dao.SysFunctionDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="AppPersonDao" type="NewAsiaOASystem.Dao.AppPersonDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="Point_infoDao" type="NewAsiaOASystem.Dao.Point_infoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="Bb_UpdateDao" type="NewAsiaOASystem.Dao.Bb_UpdateDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="AppUpdateDao" type="NewAsiaOASystem.Dao.AppUpdateDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="AppPoint_infoDao" type="NewAsiaOASystem.Dao.AppPoint_infoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+ 
+
+  <object id="WX_MessageDao" type="NewAsiaOASystem.Dao.WX_MessageDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="WX_Message_NewsDao" type="NewAsiaOASystem.Dao.WX_Message_NewsDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+  
+  <object id="WX_ReceiveMessageDao" type="NewAsiaOASystem.Dao.WX_ReceiveMessageDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="WX_SendMessageDao" type="NewAsiaOASystem.Dao.WX_SendMessageDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="WX_MenusDao" type="NewAsiaOASystem.Dao.WX_MenusDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="WX_OpenIDDao" type="NewAsiaOASystem.Dao.WX_OpenIDDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="WX_SendCDao" type="NewAsiaOASystem.Dao.WX_SendCDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="Wx_configinfoDao" type="NewAsiaOASystem.Dao.Wx_configinfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+ 
+  <object id="Vote_SubjectDao" type="NewAsiaOASystem.Dao.Vote_SubjectDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+  <object id="Vote_ConfigDao" type="NewAsiaOASystem.Dao.Vote_ConfigDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="Vote_TitleDao" type="NewAsiaOASystem.Dao.Vote_TitleDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+
+  <object id="Vote_QuestionDao" type="NewAsiaOASystem.Dao.Vote_QuestionDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+
+  <object id="Vote_ipDao" type="NewAsiaOASystem.Dao.Vote_ipDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+
+  <object id="DisImmuneCenterDao" type="NewAsiaOASystem.Dao.DisImmuneCenterDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="NACustomerinfoDao" type="NewAsiaOASystem.Dao.NACustomerinfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+
+  <object id="NQR_ProductDao" type="NewAsiaOASystem.Dao.NQR_ProductDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="NQR_ReasonDao" type="NewAsiaOASystem.Dao.NQR_ReasonDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="NAReturnListDao" type="NewAsiaOASystem.Dao.NAReturnListDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="NQ_productinfoDao" type="NewAsiaOASystem.Dao.NQ_productinfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="NQ_chuhuoinfonDao" type="NewAsiaOASystem.Dao.NQ_chuhuoinfonDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="NQ_CHdetailinfoDao" type="NewAsiaOASystem.Dao.NQ_CHdetailinfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="NQ_ThdetailinfoDao" type="NewAsiaOASystem.Dao.NQ_ThdetailinfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="NQ_THinfoFXDao" type="NewAsiaOASystem.Dao.NQ_THinfoFXDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="NQ_BlinfoDao" type="NewAsiaOASystem.Dao.NQ_BlinfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+  
+
+  <object id="NQ_GysInfoDao" type="NewAsiaOASystem.Dao.NQ_GysInfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="NQ_OASupplierDao" type="NewAsiaOASystem.Dao.NQ_OASupplierDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="NQ_SupplierAndBaseitemDao" type="NewAsiaOASystem.Dao.NQ_SupplierAndBaseitemDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="NQ_SupplierDao" type="NewAsiaOASystem.Dao.NQ_SupplierDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="NQ_SupplierAttachmentDao" type="NewAsiaOASystem.Dao.NQ_SupplierAttachmentDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="NQ_BaseitemAttachmentDao" type="NewAsiaOASystem.Dao.NQ_BaseitemAttachmentDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="NQ_YJinfoDao" type="NewAsiaOASystem.Dao.NQ_YJinfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="NQ_BlxxinfoDao" type="NewAsiaOASystem.Dao.NQ_BlxxinfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="EP_jlinfoDao" type="NewAsiaOASystem.Dao.EP_jlinfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="CG_infoDao" type="NewAsiaOASystem.Dao.CG_infoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+
+  <object id="CG_DetailinfoDao" type="NewAsiaOASystem.Dao.CG_DetailinfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="NA_QyinfoDao" type="NewAsiaOASystem.Dao.NA_QyinfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="WL_CPInfoDao" type="NewAsiaOASystem.Dao.WL_CPInfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <!--物联网电控箱-->
+  <object id="WL_GcsinfoDao" type="NewAsiaOASystem.Dao.WL_GcsinfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="WL_DkxInfoDao" type="NewAsiaOASystem.Dao.WL_DkxInfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="WL_JxqnumberDao" type="NewAsiaOASystem.Dao.WL_JxqnumberDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="WL_ReturnVisitDao" type="NewAsiaOASystem.Dao.WL_ReturnVisitDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+  
+  <object id="WL_XForderinfoDao" type="NewAsiaOASystem.Dao.WL_XForderinfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="WL_NewgscinfoDao" type="NewAsiaOASystem.Dao.WL_NewgscinfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="WL_dkxthjlinfoDao" type="NewAsiaOASystem.Dao.WL_dkxthjlinfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+  
+  
+
+  <object id="NA_XSinfoDao" type="NewAsiaOASystem.Dao.NA_XSinfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="NA_XSdetailsinfoDao" type="NewAsiaOASystem.Dao.NA_XSdetailsinfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="XSFXdqinfoDao" type="NewAsiaOASystem.Dao.XSFXdqinfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="XSFXqxinfoDao" type="NewAsiaOASystem.Dao.XSFXqxinfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="XSFXkhinfoDao" type="NewAsiaOASystem.Dao.XSFXkhinfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+
+  <object id="NA_AddresseeInfoDao" type="NewAsiaOASystem.Dao.NA_AddresseeInfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="Flow_ProductionNoticeinfoDao" type="NewAsiaOASystem.Dao.Flow_ProductionNoticeinfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="Flow_RoutineStockinfoDao" type="NewAsiaOASystem.Dao.Flow_RoutineStockinfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+
+  <object id="Flow_PlanProductioninfoDao" type="NewAsiaOASystem.Dao.Flow_PlanProductioninfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="Flow_PleasepurchaseinfoDao" type="NewAsiaOASystem.Dao.Flow_PleasepurchaseinfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="WeChat_forwardInfoDao" type="NewAsiaOASystem.Dao.WeChat_forwardInfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="WeChat_OrderInfoDao" type="NewAsiaOASystem.Dao.WeChat_OrderInfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="Wechat_TXinfoDao" type="NewAsiaOASystem.Dao.Wechat_TXinfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="Flow_PlanPPrintinfoDao" type="NewAsiaOASystem.Dao.Flow_PlanPPrintinfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="Flow_NonSProductinfoDao" type="NewAsiaOASystem.Dao.Flow_NonSProductinfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="Flow_AjaxtxdateDao" type="NewAsiaOASystem.Dao.Flow_AjaxtxdateDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="Flow_DKXPlanPPrintinfoDao" type="NewAsiaOASystem.Dao.Flow_DKXPlanPPrintinfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="WeChat_signuppersonInfoDao" type="NewAsiaOASystem.Dao.WeChat_signuppersonInfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="WeChat_SlyderpersonInfoDao" type="NewAsiaOASystem.Dao.WeChat_SlyderpersonInfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <!--年会活动-->
+  <object id="WeChat_AnnualmeetingSignDao" type="NewAsiaOASystem.Dao.WeChat_AnnualmeetingSignDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="WeChat_AnnualmeetingBarrageDao" type="NewAsiaOASystem.Dao.WeChat_AnnualmeetingBarrageDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <!--返退货维修分析-->
+  <object id="NQ_TjFtwxCPTypeSuminfoDao" type="NewAsiaOASystem.Dao.NQ_TjFtwxCPTypeSuminfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="Wx_FTUserbdopenIdinfoDao" type="NewAsiaOASystem.Dao.Wx_FTUserbdopenIdinfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <!--会议签到-->
+  <object id="Act_SignNamelistinfoDao" type="NewAsiaOASystem.Dao.Act_SignNamelistinfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+  
+  
+  <!--个人利润-->
+  <object id="PP_TeaminfoDao" type="NewAsiaOASystem.Dao.PP_TeaminfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="PP_StaffinfoDao" type="NewAsiaOASystem.Dao.PP_StaffinfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="PP_ProfitpointinfoDao" type="NewAsiaOASystem.Dao.PP_ProfitpointinfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="PP_ProfuttoStaffInfoDao" type="NewAsiaOASystem.Dao.PP_ProfuttoStaffInfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="PP_ShouruandzhichuDetailsinfoDao" type="NewAsiaOASystem.Dao.PP_ShouruandzhichuDetailsinfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="PP_ProfitSummaryinfoDao" type="NewAsiaOASystem.Dao.PP_ProfitSummaryinfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="PP_ProfuttoStaffTDInfoDao" type="NewAsiaOASystem.Dao.PP_ProfuttoStaffTDInfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="PP_TTShouruandzhichuDetailsinfoDao" type="NewAsiaOASystem.Dao.PP_TTShouruandzhichuDetailsinfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+  
+  <!--来料检-->
+  <object id="IQC_SopInfoDao" type="NewAsiaOASystem.Dao.IQC_SopInfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="IQC_JyffinfoDao" type="NewAsiaOASystem.Dao.IQC_JyffinfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+  
+  <object id="IQC_JyconstrinfoDao" type="NewAsiaOASystem.Dao.IQC_JyconstrinfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="IQC_llNoticeordinfoDao" type="NewAsiaOASystem.Dao.IQC_llNoticeordinfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="IQC_llNoticeMXordinfoDao" type="NewAsiaOASystem.Dao.IQC_llNoticeMXordinfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="IQC_JYDDinfoDao" type="NewAsiaOASystem.Dao.IQC_JYDDinfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="IQC_JYDjyconinfoDao" type="NewAsiaOASystem.Dao.IQC_JYDjyconinfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+  
+  <!--k3基础数据-->
+  <object id="K3_wuliaoinfoDao" type="NewAsiaOASystem.Dao.K3_wuliaoinfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+  
+  
+  <!--电控箱生产-->
+  
+  <object id="DKX_DDtypeinfoDao" type="NewAsiaOASystem.Dao.DKX_DDtypeinfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="DKX_GCSinfoDao" type="NewAsiaOASystem.Dao.DKX_GCSinfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="DKX_DKXtypeandgcsDao" type="NewAsiaOASystem.Dao.DKX_DKXtypeandgcsDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="DKX_DDinfoDao" type="NewAsiaOASystem.Dao.DKX_DDinfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="DKX_PAY_CONTROL_INFODao" type="NewAsiaOASystem.Dao.DKX_PAY_CONTROL_INFODao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="DKX_CONTROL_LISTDao" type="NewAsiaOASystem.Dao.DKX_CONTROL_LISTDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="DKX_CONTROL_LIST_DETAILDao" type="NewAsiaOASystem.Dao.DKX_CONTROL_LIST_DETAILDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="DKX_ZLDataInfoDao" type="NewAsiaOASystem.Dao.DKX_ZLDataInfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+  
+  <object id="DKX_LCCZJLinfoDao" type="NewAsiaOASystem.Dao.DKX_LCCZJLinfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="DKX_CPInfoDao" type="NewAsiaOASystem.Dao.DKX_CPInfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="DKX_RKZLDataInfoDao" type="NewAsiaOASystem.Dao.DKX_RKZLDataInfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="DKX_k3BominfoDao" type="NewAsiaOASystem.Dao.DKX_k3BominfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="DKX_PleasepurchaseinfoDao" type="NewAsiaOASystem.Dao.DKX_PleasepurchaseinfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="DKX_DDCLyqNoteInfoDao" type="NewAsiaOASystem.Dao.DKX_DDCLyqNoteInfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="DKX_pjgdbinfoDao" type="NewAsiaOASystem.Dao.DKX_pjgdbinfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+  
+  
+  <!--客诉跟踪模块-->
+  <object id="KS_CLPersonnelInfoDao" type="NewAsiaOASystem.Dao.KS_CLPersonnelInfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+  <object id="KS_ProblemTyleDao" type="NewAsiaOASystem.Dao.KS_ProblemTyleDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+  
+  <!--设备远程监控微信公众-->
+  <object id="Wx_openIdinfoDao" type="NewAsiaOASystem.Dao.Wx_openIdinfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="YCACCandSIDInfoDao" type="NewAsiaOASystem.Dao.YCACCandSIDInfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="YCAccountbindingInfoDao" type="NewAsiaOASystem.Dao.YCAccountbindingInfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
+  <object id="YCnoticeinfoDao" type="NewAsiaOASystem.Dao.YCnoticeinfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+  <!--退单原因管理-->
+  <object id="NewChargebackReasonDao" type="NewAsiaOASystem.Dao.NewChargebackReasonDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+  <!--返退货售后费用责任部门均摊-->
+  <object id="NA_SharealikeDao" type="NewAsiaOASystem.Dao.NA_SharealikeDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+  <!--新客户备案-->
+  <object id="NA_CustomerRecordDao" type="NewAsiaOASystem.Dao.NA_CustomerRecordDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" /> 
+  </object>
+</objects>

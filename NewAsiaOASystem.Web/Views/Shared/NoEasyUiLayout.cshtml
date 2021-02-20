@@ -1,0 +1,27 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>@ViewBag.Title</title>
+    <link href="~/Content/css/SysStyle.css" rel="stylesheet" />
+
+    <script src="~/Scripts/jquery-1.11.2.min.js"></script>
+    <script src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
+    <script src="~/Scripts/jquery.form.js"></script>
+    <script src="~/Scripts/layer/layer.js"></script>
+    <script src="~/Scripts/Date.js"></script>
+    <script src="~/Scripts/public.js"></script>
+    <link href="/Content/layer/css/layui.css" rel="stylesheet" />
+
+    @RenderSection("HeadContent", false)
+</head>
+<body  style="background-color:#fff;">
+   @RenderBody()
+</body>
+</html>

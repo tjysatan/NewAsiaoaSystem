@@ -1,0 +1,56 @@
+﻿@model NewAsiaOASystem.ViewModel.XSFXdqinfoView
+@{
+    ViewBag.Title = "销售目标编辑页面";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+ 
+@using (Html.BeginForm("Edit", "XSFXdqinfo", FormMethod.Post, new { id = "form1" }))
+{
+    @Html.HiddenFor(m => m.C_datetime);
+    @Html.HiddenFor(m => m.WCSL)
+  
+    @Html.HiddenFor(m => m.Id)
+     <div class="infor">
+          <div class="system-menu-set">
+               <ul class="infor-c">
+                <li>
+                    <span class="infor-c-width">区域名称：</span>
+                    <span class="infor-c-input">@Html.TextBoxFor(m => m.dqname)</span>
+                    <span style="color:red;font-size:24px;vertical-align: middle;margin-left: 8px;">*</span>
+                    <span class="desc w-register"></span>
+                </li>
+                   </ul>
+               <ul class="infor-c">
+                   <li>
+                    <span class="infor-c-width">销售年份：</span>
+                    <span class="infor-c-input">@Html.TextBoxFor(m => m.XSYear)</span>
+                    <span style="color:red;font-size:24px;vertical-align: middle;margin-left: 8px;">*</span>
+                    <span class="desc w-register">如：2016</span>
+                </li>
+                   </ul>
+               <ul class="infor-c">
+                 <li>
+                    <span class="infor-c-width">年销售目标：</span>
+                    <span class="infor-c-input">@Html.TextBoxFor(m => m.XSL)</span>
+                    <span style="color:red;font-size:24px;vertical-align: middle;margin-left: 8px;">*</span>
+                    <span class="desc w-register">套</span>
+                </li>
+                    </ul>
+                <ul class="infor-c">
+                 <li>
+                    <span class="infor-c-width">责任人：</span>
+                    <span class="infor-c-input">@Html.TextBoxFor(m => m.zrr)</span>
+                    <span style="color:red;font-size:24px;vertical-align: middle;margin-left: 8px;">*</span>
+                    <span class="desc w-register"></span>
+                </li>
+            </ul>
+           </div>
+         <div class="inquiry-input infor-b">
+            <span>
+                <button onclick="return SavaForm()">保存</button></span><span>
+                <button onclick="return RedirectUrl('/XSFXdqinfo/List')">返回</button>
+            </span>
+        </div>
+     </div> 
+}
+ <script src="~/Scripts/NAjs/XSFXDQ.js"></script>

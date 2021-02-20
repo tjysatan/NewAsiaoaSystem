@@ -1,0 +1,184 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>订单页面</title>
+    <link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+    <script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+</head>
+<script type="text/javascript">
+
+    function test() {
+        alert($('#color input:radio:checked').val());
+    }
+
+    //改变价格和通讯费
+    function Jgonchange() {
+        var sl = $("#sl").val();
+        var cpjg = $('#cpxh').val();
+        var jg;
+        var txf;
+        if ($('#color input:radio:checked').val() == "1") {
+            jg = parseFloat(sl) * parseFloat(cpjg);
+            txf = 365 * parseFloat(sl);
+            $('#Jg').val(jg);
+            $('#txf').val(txf);
+        } else if ($('#color input:radio:checked').val() == "2"){
+            jg = parseFloat(sl) * parseFloat(cpjg);
+            $('#Jg').val(jg);
+            $('#txf').val("0");
+        }else
+        {
+            alert("选择购买方案！");
+        }
+    }
+
+    //增加数量
+    function ADDandsub(val) {
+        if (val == "0") {//减肥
+            var sl = $("#sl").val();
+            if (sl == "0") {
+                alert("数量不小于0！");
+            } else {
+                sl = parseFloat(sl) - 1;
+            }
+            $("#sl").val(sl);
+        } else {
+            var sl = $("#sl").val();
+                sl = parseFloat(sl)+1;
+            $("#sl").val(sl);
+        }
+        Jgonchange();
+    }
+
+    //复位数量和费用
+    function fwslandfy() {
+        var sl = $("#sl").val("0");
+        $('#Jg').val("0");
+        $('#txf').val("0");
+    }
+</script>
+
+<body>
+    <div class="container">
+
+        <div class="form-group">
+            <label for="firstname" class="col-sm-2 control-label">购买方案：</label>
+            <div class="col-sm-10">
+                <div class="btn-group" id="color" data-toggle="buttons">
+                    <label class="btn btn-default">
+                        <input type="radio" class="toggle" value="1">包含三年管理费
+                    </label>
+                    <label class="btn btn-default">
+                        <input type="radio" class="toggle" value="2">
+                        包含一年管理费
+                    </label>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label for="firstname" class="col-sm-2 control-label">选择型号：</label>
+            <div class="col-sm-10">
+                <div class="form-group">
+                    <select class="form-control" onchange="fwslandfy()"  id="cpxh">
+                        <option value="1">NAW111排管&nbsp; &nbsp;8P(5.5KW)</option>
+                        <option value="1580">NAW111排管&nbsp; &nbsp;15P（10KW）&nbsp;适用150-250 m³的冷库</option>
+                        <option value="1650">NAW111排管&nbsp; &nbsp;20P（15KW）&nbsp;适用200-350 m³的冷库</option>
+                        <option value="1800">NAW111排管&nbsp; &nbsp;30P（20KW）&nbsp;适用300-400 m³的冷库</option>
+                        <option value="1954">NAW131风机&nbsp; &nbsp;8P(5.5KW)  &nbsp;适用80-150 m³的冷库 </option>
+                        <option value="2072">NAW131风机&nbsp; &nbsp;15P（10KW）&nbsp;适用150-250 m³的冷库</option>
+                        <option value="2290">NAW131风机&nbsp; &nbsp;20P（15KW）&nbsp;适用200-350 m³的冷库</option>
+                        <option value="2550">NAW131风机&nbsp; &nbsp;30P（20KW）&nbsp;适用300-400 m³的冷库</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label for="firstname" class="col-sm-2 control-label">订购数量：</label>
+            <div class="col-sm-10">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="input-group">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button" onclick="ADDandsub(0)">-</button>
+                            </span>
+                            <input type="text" class="form-control" placeholder="0" value="0" id="sl">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button" onclick="ADDandsub(1)">+</button>
+                            </span>
+                        </div>
+                        <!-- /input-group -->
+                    </div>
+                    <!-- /.col-lg-6 -->
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="form-group">
+            <label for="firstname" class="col-sm-2 control-label">价格：</label>
+            <div class="col-sm-10">
+                <input type="text" readonly="readonly" id="Jg" value="" class="form-control">￥
+            </div>
+
+        </div>
+
+        <div class="form-group">
+            <label for="firstname" class="col-sm-2 control-label">通信费：</label>
+            <div class="col-sm-10">
+                <input type="text" readonly="readonly" id="txf" value="" class="form-control">￥
+            </div>
+
+        </div>
+
+        <button type="button" class="btn btn-success" onclick="ajaxSubmitOeder()">确认订单</button>
+    </div>
+</body>
+</html>
+<script type="text/javascript">
+    function ajaxSubmitOeder() {
+        var fangan = $('#color input:radio:checked').val();
+        var sl = $("#sl").val();
+        var cpname = $("#cpxh").find("option:selected").text();
+       
+        var CPJG = $('#Jg').val();
+        var TXJG= $('#txf').val();
+        if (fangan == "undefined") {
+            alert("请选择购买方式！");
+            return;
+        }
+        if (sl == "0") {
+            alert("请选择购的数量！");
+            return;
+        }
+        $.ajax({
+            type: "POST",
+            url: "../activity/SubmitWxOrder",
+            data: { Openid: '@ViewData["openid"]', cpname: cpname, sl: sl, fangan: fangan, CPJG: CPJG, TXJG: TXJG },
+                dataType: "html",
+                async: false,
+                success: function (reslut) {
+                    json = reslut;
+                    if (json != "1") {
+                        window.location = "../example/OrderInfoPay.aspx";
+                    } else {
+                        alert("提交失败！");
+                    }
+                },
+                error: function (e) {
+                    alert("请求失败");
+                }
+          })
+    }
+ </script>

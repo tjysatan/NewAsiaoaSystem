@@ -1,0 +1,116 @@
+﻿@model NewAsiaOASystem.ViewModel.SysDepartmentView
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+ 
+<script type="text/javascript">
+    $(function () {
+        AjaxCombotree("PValue", "ParentId", "/Api/SysWebApi/GetSysDepartment");
+        SelectedParentTree();
+    });
+
+    function SelectedParentTree() {
+        $("#PValue").combotree({
+            onLoadSuccess: function () {
+                var ParentId = $("#ParentId").val();
+                var node = $('#PValue').combotree('tree').tree('find', ParentId);
+                if (node != null) {
+                    $('#PValue').combotree('tree').tree('check', node.target);
+                }
+                $('#PValue').combotree('setValue', ParentId);
+
+
+            }
+        });
+    }
+</script>
+
+   <div style="width:400px;">
+      @using (Html.BeginForm("Edit", "SysDepartment", FormMethod.Post, new { id = "form1" }))
+      { 
+                    @Html.HiddenFor(m => m.CreateTime);
+                    @Html.HiddenFor(m => m.CreatePerson);
+	    <table cellpadding="5"> 
+             <tr style="display:none;">
+	    			                <td>Id:</td>
+	    			                <td>
+                                        @{
+                                           if (ViewBag.action == "EditPage")
+                                           {
+                                                 <input class="easyui-textbox" type="text" name="ID" id="ID" value="@ViewBag.result.Id"/>
+                                           }
+                                           else
+                                           {
+                                                <input class="easyui-textbox" type="text" name="ID" id="ID" value=""/>
+                                           }
+                                         }
+                                       
+
+	    			                </td>
+	    		                </tr>
+	    		<tr>
+	    			<td>部门名称:</td>
+	    			<td>
+                     @Html.TextBoxFor(m => m.Name, new { @class = "easyui-textbox",@data_options="required:true,missingMessage:'部门名称不为空！'", @name = "name" })
+	    			</td>
+	    		</tr>
+
+                <tr>
+                    <td>
+                        上级部门：
+                    </td>
+                    <td>  
+                        <select id="PValue"  class="easyui-combotree" style=" width:160px;"></select>
+                        @Html.HiddenFor(m => m.ParentId)
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        排序：
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(m => m.Sort, new { @class = "easyui-textbox", @name = "sort" })
+                    </td>
+                </tr>
+                <tr>
+                    <td>描述：</td>
+                    <td>
+                       @Html.TextAreaFor(m => m.Description, new { @class = "easyui-textbox", @height = "60px",@data_options="multiline:true",@style="height:60px" })
+                    </td>
+
+                </tr>
+
+                <tr>
+                    <td>状态：</td>
+                    <td> 
+                       
+                      <select class="easyui-combobox" name="State">
+                                          @{
+                             if ("0".Equals(Convert.ToString(Model.State)) && null != Model.Id)
+                                 {
+                                                    @:<option value="1">启用</option>
+                                                    @:<option value="0" selected="selected">禁用</option>
+                                  }
+                                else
+                                 {
+                                                    @:<option value="1"  selected="selected">启用</option>
+                                                    @:<option value="0">禁用</option>
+                                   }
+                                                
+                                           } 
+                                          
+                                       </select>
+                    </td>
+                </tr>
+            </table> 
+      }
+       <div style="text-align:center;padding:5px">
+	     
+             <div style="text-align:center;padding:5px;width:300px;">
+	    	                <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm('/SysDepartment/List')">保存</a>
+	    	                <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">清除</a>
+                </div>
+	    </div> 
+
+   </div>

@@ -1,0 +1,25 @@
+E:\公司项目\NetSystem\NetSystem.IDao\bin\Debug\NetSystem.IDao.dll
+E:\公司项目\NetSystem\NetSystem.IDao\bin\Debug\NetSystem.IDao.pdb
+E:\公司项目\NetSystem\NetSystem.IDao\bin\Debug\NetSystem.DBModel.dll
+E:\公司项目\NetSystem\NetSystem.IDao\bin\Debug\NetSystem.DBModel.pdb
+E:\公司项目\NetSystem\NetSystem.IDao\obj\Debug\NetSystem.IDao.csprojResolveAssemblyReference.cache
+E:\公司项目\NetSystem\NetSystem.IDao\obj\Debug\NetSystem.IDao.dll
+E:\公司项目\NetSystem\NetSystem.IDao\obj\Debug\NetSystem.IDao.pdb
+F:\新疆侨瑞欣源电子 工作\NET框架 开发\Code2\trunk\NetSystem.IDao\bin\Debug\NetSystem.IDao.dll
+F:\新疆侨瑞欣源电子 工作\NET框架 开发\Code2\trunk\NetSystem.IDao\bin\Debug\NetSystem.IDao.pdb
+F:\新疆侨瑞欣源电子 工作\NET框架 开发\Code2\trunk\NetSystem.IDao\bin\Debug\NetSystem.DBModel.dll
+F:\新疆侨瑞欣源电子 工作\NET框架 开发\Code2\trunk\NetSystem.IDao\bin\Debug\NetSystem.ViewModel.dll
+F:\新疆侨瑞欣源电子 工作\NET框架 开发\Code2\trunk\NetSystem.IDao\bin\Debug\NetSystem.DBModel.pdb
+F:\新疆侨瑞欣源电子 工作\NET框架 开发\Code2\trunk\NetSystem.IDao\bin\Debug\NetSystem.ViewModel.pdb
+F:\新疆侨瑞欣源电子 工作\NET框架 开发\Code2\trunk\NetSystem.IDao\obj\Debug\NetSystem.IDao.csprojResolveAssemblyReference.cache
+F:\新疆侨瑞欣源电子 工作\NET框架 开发\Code2\trunk\NetSystem.IDao\obj\Debug\NetSystem.IDao.dll
+F:\新疆侨瑞欣源电子 工作\NET框架 开发\Code2\trunk\NetSystem.IDao\obj\Debug\NetSystem.IDao.pdb
+F:\新疆侨瑞欣源电子 工作\维稳信息化平台_政府通令\Code\NetSystem.IDao\bin\Debug\NetSystem.IDao.dll
+F:\新疆侨瑞欣源电子 工作\维稳信息化平台_政府通令\Code\NetSystem.IDao\bin\Debug\NetSystem.IDao.pdb
+F:\新疆侨瑞欣源电子 工作\维稳信息化平台_政府通令\Code\NetSystem.IDao\bin\Debug\NetSystem.DBModel.dll
+F:\新疆侨瑞欣源电子 工作\维稳信息化平台_政府通令\Code\NetSystem.IDao\bin\Debug\NetSystem.ViewModel.dll
+F:\新疆侨瑞欣源电子 工作\维稳信息化平台_政府通令\Code\NetSystem.IDao\bin\Debug\NetSystem.DBModel.pdb
+F:\新疆侨瑞欣源电子 工作\维稳信息化平台_政府通令\Code\NetSystem.IDao\bin\Debug\NetSystem.ViewModel.pdb
+F:\新疆侨瑞欣源电子 工作\维稳信息化平台_政府通令\Code\NetSystem.IDao\obj\Debug\NetSystem.IDao.csprojResolveAssemblyReference.cache
+F:\新疆侨瑞欣源电子 工作\维稳信息化平台_政府通令\Code\NetSystem.IDao\obj\Debug\NetSystem.IDao.dll
+F:\新疆侨瑞欣源电子 工作\维稳信息化平台_政府通令\Code\NetSystem.IDao\obj\Debug\NetSystem.IDao.pdb

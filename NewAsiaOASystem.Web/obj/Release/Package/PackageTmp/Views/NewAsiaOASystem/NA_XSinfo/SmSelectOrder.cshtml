@@ -1,0 +1,39 @@
+﻿@{
+    ViewBag.Title = "扫描查找订单";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@section HeadContent{
+     <script type="text/javascript">
+         $(function () {
+             $(orderID).focus();
+         })
+         function smfhSavaForm() {
+             var orderID = $("#orderID").val();
+             if (orderID == "") {
+                 alert("请输入订单号！"); 
+                 return false;
+             } else {
+                 window.location = "/NA_XSinfo/SmOrderinfoView?Id=" + orderID;
+                 return false;
+
+             }
+         }
+     </script>
+    }
+
+<div style="width:200px; height:300px; margin:auto; margin-top:30px;">
+   
+   <form id="form1" name="form1">
+    <input type="text" name="orderID" id="orderID" style="width:200px; height:120px; border:1px solid #000000" />
+         <div class="inquiry-input infor-b">
+            <span>
+                <button onclick="return smfhSavaForm()">保存</button></span>
+         </div>
+   </form>
+   
+</div>
+
+<div id="windowDia" class="easyui-window" closed="true" style="width:855px; height:250px; padding:10px;"></div>
+
+ 

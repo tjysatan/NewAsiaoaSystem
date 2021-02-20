@@ -1,0 +1,80 @@
+﻿@model NewAsiaOASystem.DBModel.Vote_Subject
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+@section HeadContent{
+    <script type="text/javascript">
+        $(function () {
+            if ("" == $("#Id").val())
+                $("#Ptitle").text("主题添加");
+            else
+                $("#Ptitle").text("主题编辑"); 
+        })
+    </script>
+  }
+
+ @using (Html.BeginForm("Edit", "Vote_Subject", FormMethod.Post, new { id = "form1" }))
+  {         
+    @Html.HiddenFor(m => m.S_time);
+    @Html.HiddenFor(m => m.S_person)
+    @Html.HiddenFor(m => m.S_Id)
+     
+    <div class="infor">
+        <p id="Ptitle"></p>
+        <div class="system-menu-set">
+            <ul class="infor-c">
+                <li><span class="infor-c-width">主题名称：</span><span class="infor-c-input">
+                    @Html.TextBoxFor(m => m.S_title)</span>
+                      <span style="color:red;font-size:24px;vertical-align: middle;margin-left: 8px;">*</span><span class="desc w-register">主题名称不为空！</span>
+
+                </li>
+            </ul>
+            <ul class="infor-c ">
+                <li><span class="infor-c-width">主题描述：</span>
+                    <span class="infor-c-input">
+                       @Html.TextAreaFor(m => m.S_conten, new { })
+                    </span>
+                     @* <span style="color:red;font-size:24px;vertical-align: middle;margin-left: 8px;">*</span><span class="desc w-register">主题描述不为空！</span>*@
+                </li>
+            </ul>
+
+                        <ul class="infor-c">
+                <li><span class="infor-c-width">问卷对象：</span>
+                    <span class="infor-c-input">
+                            <select class="add-function" name="S_Type">
+                            @{
+                        if ("1".Equals(Convert.ToString(@Model.S_Type)) && null != @Model.S_Id)
+                          {
+                                @:<option value="0">全部微信用户</option>
+                                @:<option value="1" selected="selected">绑定帐号用户</option>
+                              }
+    else
+    {
+                                @:<option value="0"  selected="selected">全部微信用户</option>
+                                @:<option value="1">绑定帐号用户</option>
+                                      }
+                                                
+                            }
+                      
+
+                        </select>  
+                    </span>
+
+                </li>
+            </ul>
+            <ul class="infor-c">
+                <li><span class="infor-c-width">到期时间：</span>
+                    <span class="infor-c-input">
+                           @Html.TextBoxFor(m => m.S_QX, new {  onclick="WdatePicker()" })
+                    </span>
+
+                </li>
+            </ul>
+                       
+        </div>
+        <div class="inquiry-input infor-b"><span><button onclick="return SavaForm('/Vote_Subject/Index')">保存</button></span><span><button onclick="return RedirectUrl('/Vote_Subject/Index')">返回</button></span></div>
+    </div>
+}
+
+ <script src="~/Scripts/Vote/Vote_Subject.js"></script>

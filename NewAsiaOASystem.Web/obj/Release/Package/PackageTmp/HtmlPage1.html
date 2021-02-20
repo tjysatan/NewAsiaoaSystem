@@ -1,0 +1,96 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <script src="Scripts/jquery-1.9.1.min.js"></script>
+    <script src="Scripts/jquery.form.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $("#btn").bind("click", function () {
+                var postData =
+                    {
+                        DisChildID: "22346482", //儿童编号
+                        DisName: "张三", //儿童姓名
+                        DisSex: "男", //儿童性别
+                        DisCardId: "652328201302011589",//身份证号
+                        DisBirth: "2013-02-01",//出生日期
+                        DisPhone: "18501718952",//联系方式
+                        DisNational: "哈萨克族",//民族
+                        DisRegistration: "新疆木垒哈萨克自治县新疆木垒县",//户籍
+                        DisAddress: "红光山路南五巷一百五十一号202",//住址
+                        DisChildAddTime: "2014-05-28",//流入时间
+                        DisCommunityName: "文汇社区",//社区名称
+                        DisLevelEducation: "学龄前儿童",//文化程度
+                        DisSomatotype: "较瘦",//体型
+                        DisPersonType: "特殊人员",//人员类型
+                        DisFaceShape: "椭圆脸",//脸型
+                        DisLandlordRelation: "非亲属关系",//与房东关系
+                        DisStartRentDate: "2015-03-29",//起租日期
+                        DisRentUse: "居住",//承租用途
+                        DisliveStatus: "居住",//居住状态
+                        DisToAddressCause: "子女投靠父母",//来本地事由
+                        DisAssPerson: "陈东霞",//协管人员
+                        DisProfession: "其他劳动者",//现从事职业
+                        DisCancelDate: "2015-05-12",//儿童注销日期
+                        DisCancelDire: "不详",//注销去向
+                        DisResidencePer: "不详",//居住证
+                        DisResiAcceptDate: "2015-03-30",//办证日期
+                        DisEndorseDate: "2015-03-31",//改签日期
+                        DisRemark:""//备注
+                    };
+
+                $.ajax({
+                    type: 'POST',
+                    url: 'api/DisWebApi/InsertFloatingChildService',
+                    data: postData,
+                    dataType: 'json',
+                    success: function (data, textStatus) {
+                        alert(data);
+                    },
+                    error: function (xmlHttpRequest, textStatus, errorThrown) {
+                        alert("错误");
+                    }
+                });
+            })
+        })
+
+        /*
+ajax表单提交
+RetUrl 返回路径
+*/
+        function submitForm() {
+            //表单验证
+            var options = {
+                beforeSubmit: function () {
+                    return true;
+                },
+                //  url: 'api/AppWebApi/UploadHeadPortrait', //提交给哪个执行   
+                //   url: 'api/AppWebApi/UploadHeadPortraitOne', //提交给哪个执行   
+                //type: 'POST',
+                dataType: "json",//这里是指控制器处理后返回的类型，这里返回json格式。  
+                success: function (context) {
+                    alert(context);
+                },
+                error: function (data) {
+                    console.log(data)
+                    alert("错误");
+                }
+
+            }
+            $('#form1').ajaxSubmit(options);
+            return false; //为了不刷新页面,返回false 
+        }
+
+    </script>
+</head>
+<body>
+    <form action="api/AppWebApi/UploadHeadPortraitOne" method="post" enctype="multipart/form-data" id="form1">
+        <input type="file" id="Name" name="aa" />
+        <input type="text" id="File1" name="LoginId" />
+        <input type="button" id="btn" value="提交" />
+        <input type="submit" id="Button1" onclick="submitForm()" value="文件上传" />
+    </form>
+
+</body>
+</html>

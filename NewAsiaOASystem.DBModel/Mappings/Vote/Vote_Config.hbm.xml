@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="NewAsiaOASystem.DBModel" assembly="NewAsiaOASystem.DBModel">
+  <class name="Vote_Config" table="Vote_Config">
+    <id name="C_Id" column="C_Id" type="string" unsaved-value="0">
+      <generator class="uuid.hex"/>
+    </id>
+
+    <property name="RestrictIP">
+      <column name="RestrictIP"/>
+    </property>
+
+    <property name="AllowView">
+      <column name="AllowView"/>
+    </property>
+
+    <property name="refuseTime">
+      <column name="refuseTime"/>
+    </property>
+
+  </class>
+</hibernate-mapping>

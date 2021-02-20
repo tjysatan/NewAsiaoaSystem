@@ -1,0 +1,80 @@
+﻿@{
+    ViewBag.Title = "AwardView";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+ <style>
+    .table_con
+    {
+        border-collapse: collapse;
+        border: none;
+    }
+
+        .table_con td
+        {
+            border: solid #eae5e5 1px;
+            height: 35px;
+            padding: 0 0 0 5px;
+        }
+
+     .textcss
+     {
+         border:#eae5e5 solid 1px; height:35px; width:200px;
+     }
+     .textbtn
+     {
+          border:#eae5e5 solid 1px; height:35px; width:100px;
+     }
+</style>
+
+  <script type="text/javascript">
+      //领奖
+      function award()
+      {
+          var zjstr = $("#zjstr").val();
+          if (zjstr == "") {
+              alert("领券号码不为空！");
+              return false;
+          }
+          $.ajax({
+              type: "POST",
+              url: "/activity/AwardEdit",
+              dataType: "json",
+              data:{zjstr:zjstr},
+              async: false,
+              success: function (reslut) {
+                  json = eval(reslut);
+                  if (json != null) {
+                      if (json.Id == "0") {
+                          layer.alert(json.Winname + " ~ 领奖成功！", { icon: 1 });
+                      }
+                      if (json.Id == "1") {
+                          layer.alert(" ~ 未中奖！", { icon: 1 });
+                      }
+                      if (json.Id == "2") {
+                          layer.alert(json.Winname + " ~ 已经领奖！", { icon: 1 });
+                      }
+                  } else {
+                      layer.alert("领券号不存在！", { icon: 1 });
+                  }
+              },
+              error: function (e) {
+                  alert("");
+              }
+          })
+
+      }
+  </script>
+
+
+<div style="width:100%; line-height:180px; text-align:center;font-size:30px">
+     微信大转盘领奖页面
+</div>
+
+<div style="width:100%; margin:auto">
+      <table style="width:100%;" class="table_con">
+          <tr>
+              <td align="center" style="height:50px">领奖号码：<input type="text" id="zjstr" name="zjstr" class="textcss" /> <input type="button" value="领奖" class="textbtn" onclick="return award()"  /></td>
+          </tr>
+      </table>
+</div>

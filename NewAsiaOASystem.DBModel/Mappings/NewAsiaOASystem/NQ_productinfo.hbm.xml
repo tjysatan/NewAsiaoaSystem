@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="NewAsiaOASystem.DBModel" assembly="NewAsiaOASystem.DBModel">
+  <class name="NQ_productinfo" table="NQ_productinfo">
+    <id name="Id" column="Id" type="string" unsaved-value="0">
+      <generator class="uuid.hex"/>
+    </id>
+    <property name="p_type" column="p_type" />
+    <property name="Pname" column="Pname" />
+    <property name="P_bianhao" column="P_bianhao" />
+    <property name="dw" column="dw" />
+    <property name="P_xh" column="P_xh"/>
+    <property name="P_aqkc" column="P_aqkc"/>
+    <property name="P_dqkc" column="P_dqkc" />
+    <property name="CreatePerson" column="CreatePerson"/>
+    <property name="CreateTime" column="CreateTime"/>
+    <property name="UpdatePerson" column="UpdatePerson"/>  
+    <property name="UpdateTime" column="UpdateTime" />
+    <property name="SMFH" column="SMFH" />
+    <property name="stait" column="stait" />
+    <property name="Nptype" column="Nptype" />
+  </class>
+</hibernate-mapping>

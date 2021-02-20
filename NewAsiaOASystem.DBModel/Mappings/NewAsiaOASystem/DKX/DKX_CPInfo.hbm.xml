@@ -1,0 +1,25 @@
+﻿<?xml version="1.0"  encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="NewAsiaOASystem.DBModel" assembly="NewAsiaOASystem.DBModel">
+  <class name="DKX_CPInfo" table="DKX_CPInfo">
+    <id name="Id" column="Id" type="string" unsaved-value="0">
+      <generator class="uuid.hex"/>
+    </id>
+    <property name="Cpname" column="Cpname"  />
+    <property name="Xinghao" column="Xinghao"  />
+    <property name="Power" column="Power"  />
+    <property name="DW" column="DW"  />
+    <property name="Type" column="Type"  />
+    <property name="Isft" column="Lytype"  />
+    <property name="Gcs_name" column="Gcs_name"  />
+    <property name="C_time" column="C_time"  />
+    <property name="RK_time" column="RK_time"  />
+    <property name="Dd_Id" column="Dd_Id"  />
+    <property name="IsDis" column="IsDis"  />
+    <property name="zgyy" column="zgyy"  />
+    <property name="zgtime" column="zgtime"  />
+    <property name="zgname" column="zgname"  />
+    <property name="cpgnjs" column="cpgnjs"  />
+    <property name="cplytype" column="cplytype"  />
+    <property name="DXTDJ" column="DXTDJ"  />
+  </class>
+</hibernate-mapping>

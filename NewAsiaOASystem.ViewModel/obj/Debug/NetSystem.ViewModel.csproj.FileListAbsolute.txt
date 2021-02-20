@@ -1,0 +1,13 @@
+E:\公司项目\NetSystem\ViewModel\bin\Debug\NetSystem.ViewModel.dll
+E:\公司项目\NetSystem\ViewModel\bin\Debug\NetSystem.ViewModel.pdb
+E:\公司项目\NetSystem\ViewModel\obj\Debug\NetSystem.ViewModel.dll
+E:\公司项目\NetSystem\ViewModel\obj\Debug\NetSystem.ViewModel.pdb
+E:\公司项目\NetSystem\ViewModel\obj\Debug\NetSystem.ViewModel.csprojResolveAssemblyReference.cache
+F:\新疆侨瑞欣源电子 工作\NET框架 开发\Code2\trunk\ViewModel\bin\Debug\NetSystem.ViewModel.dll
+F:\新疆侨瑞欣源电子 工作\NET框架 开发\Code2\trunk\ViewModel\bin\Debug\NetSystem.ViewModel.pdb
+F:\新疆侨瑞欣源电子 工作\NET框架 开发\Code2\trunk\ViewModel\obj\Debug\NetSystem.ViewModel.dll
+F:\新疆侨瑞欣源电子 工作\NET框架 开发\Code2\trunk\ViewModel\obj\Debug\NetSystem.ViewModel.pdb
+F:\新疆侨瑞欣源电子 工作\维稳信息化平台_政府通令\Code\ViewModel\bin\Debug\NetSystem.ViewModel.dll
+F:\新疆侨瑞欣源电子 工作\维稳信息化平台_政府通令\Code\ViewModel\bin\Debug\NetSystem.ViewModel.pdb
+F:\新疆侨瑞欣源电子 工作\维稳信息化平台_政府通令\Code\ViewModel\obj\Debug\NetSystem.ViewModel.dll
+F:\新疆侨瑞欣源电子 工作\维稳信息化平台_政府通令\Code\ViewModel\obj\Debug\NetSystem.ViewModel.pdb

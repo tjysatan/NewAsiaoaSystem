@@ -1,0 +1,103 @@
+﻿@{
+    ViewBag.Title = "DRkcview";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@using (Html.BeginForm("DRKCExcel", "NQ_YJinfo", FormMethod.Post, new { id = "form1", enctype = "multipart/form-data" }))
+{
+ <table width="100%" style="height: 200px">
+     <tr>
+        <td colspan="2" nowrap="nowrap" align="center">
+           库存数据：<input id="fileImport" name="fileImport" runat="server" type="file" />
+        </td>
+        <td style="width: 20px">
+        </td>
+     </tr>
+     <tr>
+        <td colspan="2" align="center">
+            <div class="inquiry-input infor-b">
+            <span>
+               <button onclick="return SavaFrom('/NQ_YJinfo/List')">确认</button>
+            </span>
+            </div>
+         </td>
+      </tr>
+ </table>
+}
+
+@using (Html.BeginForm("DRDQylExcel", "NQ_YJinfo", FormMethod.Post, new { id = "form2", enctype = "multipart/form-data" }))
+{
+    <table width="100%" style="height: 200px">
+     <tr>
+        <td colspan="2" nowrap="nowrap" align="center">
+           当月用量：<input id="filImg" name="filImg" runat="server" type="file" />
+        </td>
+        <td style="width: 20px">
+        </td>
+     </tr>
+      <tr>
+        <td colspan="2" align="center">
+            <div class="inquiry-input infor-b">
+            <span>
+               <button onclick="return DQYLSavaFrom('/NQ_YJinfo/List')">确认</button>
+            </span>
+            </div>
+         </td>
+      </tr>
+ </table> 
+}
+
+
+
+<script type="text/javascript">
+    function kcSavaFrom(RetUrl) {
+alert('111');
+        //表单验证
+        var options = {
+            beforeSubmit: function () {
+                return true;
+            },
+            dataType: "json",//这里是指控制器处理后返回的类型，这里返回json格式。  
+            success: function (context) {
+                if ("success" == context.result) {
+                    $.messager.alert("操作提示", '库存导入成功！', 'info', function () {
+                        location.href = RetUrl;
+                    });
+                }
+                if ("error" == context.result) {
+                    $.messager.alert("操作提示", '操作失败！', 'error');
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $.messager.alert("操作提示", '操作失败！', 'error');   
+            }
+        }
+        $('#form1').ajaxSubmit(options);
+        return false; //为了不刷新页面,返回false 
+    }
+
+
+    function DQYLSavaFrom(RetUrl) {
+        var options = {
+            beforeSubmit: function () {
+                return true;
+            },
+            dataType:"json",//这个指控制器处理后返回的类型，这里返回的json格式。
+            success: function (context) {
+                if ("success" == context.result) {
+                    $.messager.alert("操作提示", '当前用量导入成功！', 'info', function () {
+                        location.href = RetUrl;
+                    });
+                }
+                if ("error" == context.result) {
+                    $.messager.alert("操作提示", '操作失败！', 'error');
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $.messager.alert("操作提示", '操作失败！', 'error');
+            }
+        }
+        $('#form2').ajaxSubmit(options);
+        return false; //为了不刷新页面,返回false 
+    }
+</script>

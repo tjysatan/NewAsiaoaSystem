@@ -1,0 +1,43 @@
+﻿@model NewAsiaOASystem.ViewModel.NAReturnListView
+@{
+    ViewBag.Title = "ckEdit";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@using (Html.BeginForm("Edit", "NAReturnList", FormMethod.Post, new { id = "form1" }))
+{
+    @Html.HiddenFor(m => m.CreateTime);
+    @Html.HiddenFor(m => m.CreatePerson)
+    @Html.HiddenFor(m => m.UpdateTime)
+    @Html.HiddenFor(m => m.UpdatePerson)
+    @Html.HiddenFor(m => m.Id)
+
+      <div class="infor">
+        <p id="Ptitle"></p>
+        <div class="system-menu-set">
+            <ul class="infor-c">
+                <li><span class="infor-c-width">型号/规格：</span><span class="infor-c-input">@Html.TextBoxFor(m => m.Name)</span><span style="color:red;font-size:24px;vertical-align: middle;margin-left: 8px;">*</span><span class="desc w-register"></span></li>
+            </ul>
+            
+             <ul class="infor-c">
+              <li><span class="infor-c-width">客户：</span>
+                    <span>
+                        @Html.DropDownList("CustListData", ViewData["CustList"] as SelectList, new { @class="add-function"})
+                    </span><span style="color:red;font-size:24px;vertical-align: middle;margin-left: 8px;">*</span></li>
+            </ul>
+
+             <ul class="infor-c">
+                <li><span class="infor-c-width">数量：</span><span class="infor-c-input">@Html.TextBoxFor(m => m.R_Number)</span><span class="desc w-register">套/件</span></li>
+            </ul>
+
+          
+        </div>
+        <div class="inquiry-input infor-b">
+            <span>
+                <button onclick="return SavaForm()">保存</button></span><span>
+                <button onclick="return RedirectUrl('/NAReturnList/List')">返回</button></span>
+        </div>
+    </div>     
+  }
+ <script src="~/Scripts/NAjs/NAReturnList.js"></script>
+

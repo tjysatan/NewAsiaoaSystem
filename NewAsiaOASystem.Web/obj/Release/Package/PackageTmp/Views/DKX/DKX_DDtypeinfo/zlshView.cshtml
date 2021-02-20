@@ -1,0 +1,325 @@
+﻿@{
+    ViewBag.Title = "图纸资料审核页面";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<script src="~/Scripts/NAjs/layui.js"></script>
+<script type="text/javascript">
+    $(function () {
+        var ddstr = AjaxGetddinfoyId();
+        var xqzlstr = AJaxziliaojson(ddstr.Id, "0");//需求
+        var htmlxq;
+        htmlxq = "";
+        htmlxq = "";
+        if (xqzlstr != "" && xqzlstr != null) {
+            for (var i = 0, j = xqzlstr.length; i < j; i++) {
+                if (xqzlstr[i].Isgl == "0") {//附件资料
+                    var id = "'" + xqzlstr[i].Id + "'";
+                    htmlxq += '<a  target="_blank" href="' + xqzlstr[i].url + '">' + xqzlstr[i].wjName + '</a>&nbsp;&nbsp;';
+                } else {//关联的资料
+                    var xuqiustr = AJaxxuqiujson(xqzlstr[i].Bjno);
+                    if (xuqiustr.COMPRESSOR_TYPE == '0') {
+                        htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/BLDetail.aspx?CONTROL_NO=' + xuqiustr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                    }
+                    else if (xuqiustr.COMPRESSOR_TYPE == '1') {
+                        htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/LGDetail.aspx?CONTROL_NO=' + xuqiustr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                    }
+                    else if (xuqiustr.COMPRESSOR_TYPE == '2') {
+                        htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/LSDetail.aspx?CONTROL_NO=' + xuqiustr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                    }
+                    else if (xuqiustr.COMPRESSOR_TYPE == '3') {
+                        htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/MDDetail2.aspx?CONTROL_NO=' + xuqiustr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                    }
+                    else if (xuqiustr.COMPRESSOR_TYPE == '12') {
+                        htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/PTLDetail.aspx?CONTROL_NO=' + xuqiustr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                    } else {
+                        htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/XXTDetail.aspx?CONTROL_NO=' + xuqiustr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                    }
+                }
+            }
+        }
+        else {
+            htmlxq += '<span style="color:red">暂无需求</span>';
+        }
+        $("#xuqiucon").html(htmlxq);
+
+        var liaodanstr = AJaxziliaojson(ddstr.Id, "1");//料单
+        var htmlliaodan = "";
+        if (liaodanstr != "" && liaodanstr != null) {
+            for (var z = 0, s = liaodanstr.length; z < s; z++) {
+                if (liaodanstr[z].Isgl == "0") {//附件资料
+                    var id = "'" + liaodanstr[z].Id + "'";
+                    htmlliaodan += '<a  target="_blank" href="' + liaodanstr[z].url + '">' + liaodanstr[z].wjName + '</a>&nbsp;&nbsp;';
+                }
+                if (liaodanstr[z].Isgl == "1") {
+                    var xuqiustr = AJaxxuqiujson(liaodanstr[z].Bjno);
+                    htmlliaodan += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/ToExcel2.aspx?NO=' + xuqiustr.CONTROL_INFO_NO + '&TYPE=' + xuqiustr.CONTROL_TYPE + '">料单</a>';
+                }
+                if (liaodanstr[z].Isgl == "2") {//k3数据
+                    htmlliaodan += '<a  target="_blank" href="../DKX_DDtypeinfo/NewliaodanView?oId=' + ddstr.Id + '">K料单</a>';
+                }
+            }
+        }
+        else {
+            htmlliaodan += '<span style="color:red">暂无料单</span>';
+        }
+        $("#liaodancon").html(htmlliaodan);
+
+        //电器排布图
+        var dqpbtuzhistr = AJaxziliaojson(ddstr.Id, "6");//图纸（电器排布图）
+        var htmldqpbtuzhi = "";
+        if (dqpbtuzhistr != "" && dqpbtuzhistr != null) {
+            for (var i = 0, j = dqpbtuzhistr.length; i < j; i++) {
+                var id = "'" + dqpbtuzhistr[i].Id + "'";
+                htmldqpbtuzhi += '<a  target="_blank" href="' + dqpbtuzhistr[i].url + '">' + dqpbtuzhistr[i].wjName + '</a>&nbsp;&nbsp; ';
+            }
+        }
+        else {
+            htmldqpbtuzhi += '<span style="color:red">暂无图纸(电器排布图)</span>';
+        }
+        $("#dqpbtuzhi").html(htmldqpbtuzhi);
+        if (ddstr.Bnote2 == "0")//电器排版图纸状态
+        {
+            $("#dqpbshztcon").html("未上传");
+        }
+        if (ddstr.Bnote2 == "1")//电器排版图纸状态
+        {
+            $("#dqpbshztcon").html("通过审核");
+        }
+        if (ddstr.Bnote2 == "2")//电器排版图纸状态
+        {
+            $("#dqpbshztcon").html("待审核");
+        }
+        if (ddstr.Bnote2 == "3")//电器排版图纸状态
+        {
+            $("#dqpbshztcon").html("不通过");
+        }
+
+        var QTtuzhistr = AJaxziliaojson(ddstr.Id, "5");//图纸(其他图)
+        var htmlqttuzhi = "";
+        if (QTtuzhistr != "" && QTtuzhistr != null) {
+            for (var i = 0, j = QTtuzhistr.length; i < j; i++) {
+                htmlqttuzhi += '<a  target="_blank" href="' + QTtuzhistr[i].url + '">' + QTtuzhistr[i].wjName + '</a>&nbsp;&nbsp;';
+            }
+        }
+        else {
+            htmlqttuzhi += '<span style="color:red">暂无图纸(电器原理图)</span>';
+        }
+        $("#QTtuzhicon").html(htmlqttuzhi);
+        if (ddstr.Bnote1 == "0")//电器排版图纸状态
+        {
+            $("#qttuzhiztcon").html("未上传");
+        }
+        if (ddstr.Bnote1 == "1")//电器排版图纸状态
+        {
+            $("#qttuzhiztcon").html("通过审核");
+        }
+        if (ddstr.Bnote1 == "2")//电器排版图纸状态
+        {
+            $("#qttuzhiztcon").html("待审核");
+        }
+        if (ddstr.Bnote1 == "3")//电器排版图纸状态
+        {
+            $("#qttuzhiztcon").html("不通过");
+        }
+    })
+
+    //获取订单信息
+    function AjaxGetddinfoyId() {
+        var json;
+        $.ajax({
+            url: "../DKX_DDtypeinfo/AjaxorderbyId",
+            type: "POST",
+            data: { Id: '@ViewData["Id"]' },
+            dataType: "JSON",
+            async: false,
+            success: function (response) {
+                json = eval(response);
+            },
+            error: function (e) {
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+        return json;
+    }
+
+    //获取需求数据
+    function AJaxxuqiujson(val) {
+        var json;
+        $.ajax({
+            url: "../DKX_DDtypeinfo/AjaxxuqiubyorderNo",
+            type: "POST",
+            data: { Bjno: val },
+            dataType: "JSON",
+            async: false,
+            success: function (response) {
+                json = eval(response);
+            },
+            error: function (e) {
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+        return json;
+    }
+
+    //获取资料数据
+    function AJaxziliaojson(Id, type) {
+        var json;
+        $.ajax({
+            url: "../DKX_DDtypeinfo/GetziliaojsonbyddIdandtype",
+            type: "POST",
+            data: { ddId: Id, type: type },
+            dataType: "JSON",
+            async: false,
+            success: function (response) {
+                json = eval(response);
+            },
+            error: function (e) {
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+        return json;
+    }
+
+
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+    //电器排布图审核
+    function dqpbtuzhishAJAX(type)
+    {
+        var Id = '@ViewData["Id"]';
+        $.ajax({
+            url: "../DKX_DDtypeinfo/dqpbtuzhishEide",
+            type: "POST",
+            data: { Id: Id ,type:type},
+            dataType: "html",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response == "0") {
+                    layer.alert("操作异常！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "1") {
+                    layer.alert("订单不存在！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "1") {
+                    layer.alert("订单当前状态,不支持资料审核！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "2") {
+                    layer.alert("订单当前状态,不支持资料审核！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "3") {
+                    layer.alert("图纸尚未上传！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "4") {
+                    layer.alert("操作成功！", { icon: 1 }, function () { location.reload(); });
+                }
+                if (response == "5") {
+                    layer.alert("操作失败！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "6") {
+                    layer.alert("操作成功！", { icon: 1 }, function () { location.reload(); });
+                }
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+    }
+
+    //其他图纸审核
+    function qttzhishAJAX(type)
+    {
+        var Id = '@ViewData["Id"]';
+        $.ajax({
+            url: "../DKX_DDtypeinfo/qttuzhishEide",
+            type: "POST",
+            data: { Id: Id, type: type },
+            dataType: "html",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response == "0") {
+                    layer.alert("操作异常！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "1") {
+                    layer.alert("订单不存在！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "1") {
+                    layer.alert("订单当前状态,不支持资料审核！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "3") {
+                    layer.alert("图纸尚未上传！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "4") {
+                    layer.alert("操作成功！", { icon: 1 }, function () { location.reload(); });
+                }
+                if (response == "5") {
+                    layer.alert("操作失败！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "6") {
+                    layer.alert("操作成功！", { icon: 1 }, function () { location.reload(); });
+                }
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+    }
+</script>
+
+<div style="width: 90%; padding: 20px 20px 0 20px">
+    <table style="width: 100%">
+        <tr>
+            <td width="100px">需求：</td>
+            <td id="xuqiucon"></td>
+        </tr>
+    </table>
+    <hr class="layui-bg-blue">
+    <table style="width: 100%">
+        <tr>
+            <td width="100px">料单：</td>
+            <td id="liaodancon"></td>
+        </tr>
+    </table>
+    <hr class="layui-bg-blue">
+    <table style="width: 100%">
+        <tr>
+            <td width="100px">电器排布图：</td>
+            <td id="dqpbtuzhi" width="200px"></td>
+            <td width="60px">状态：</td>
+            <td id="dqpbshztcon" width="60px"></td>
+            <td>
+                <button class="layui-btn layui-btn-xs layui-btn-normal" onclick="dqpbtuzhishAJAX('0')">通过</button>
+                <button class="layui-btn layui-btn-primary layui-btn-xs" onclick="dqpbtuzhishAJAX('1')">不通过</button>
+            </td>
+        </tr>
+    </table>
+    <hr class="layui-bg-blue">
+    <table style="width: 100%">
+        <tr>
+            <td width="100px">电器原理图：</td>
+            <td id="QTtuzhicon" width="200px"></td>
+            <td width="60px">状态：</td>
+            <td id="qttuzhiztcon" width="60px"></td>
+            <td>
+                <button class="layui-btn layui-btn-xs layui-btn-normal" onclick="qttzhishAJAX('0')">通过</button>
+                <button class="layui-btn layui-btn-primary layui-btn-xs" onclick="qttzhishAJAX('1')">不通过</button>
+            </td>
+        </tr>
+    </table>
+</div>

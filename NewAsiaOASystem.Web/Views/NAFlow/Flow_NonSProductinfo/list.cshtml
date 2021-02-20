@@ -1,0 +1,252 @@
+﻿@{
+    ViewBag.Title = "非标产品列表";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<style>
+    .titletjbg2
+    {
+        height: 40px;
+        line-height: 40px;
+        background: #fff;
+        float: left;
+        width: 100%;
+        border-radius: 4%;
+    }
+
+    .add-infor-title-bg_tj ul
+    {
+        padding: 10px;
+    }
+
+        .add-infor-title-bg_tj ul li
+        {
+            width: 20%;
+            float: left;
+            font-size: 15px;
+        }
+
+    .titletjbg2 ul
+    {
+        padding: 10px;
+    }
+
+        .titletjbg2 ul li
+        {
+            width: 20%;
+            float: left;
+            font-size: 15px;
+        }
+
+    .add-infor-title-bg_header
+    {
+        height: 46px;
+        line-height: 46px;
+        background: #e8e5e5;
+        float: left;
+        width: 100%;
+    }
+
+        .add-infor-title-bg_header ul
+        {
+            /*padding: 10px;*/
+        }
+
+            .add-infor-title-bg_header ul li
+            {
+                width: 20%;
+                float: left;
+                font-size: 18px;
+            }
+
+    #content table
+    {
+        border-collapse: collapse;
+        border: none;
+    }
+
+        #content table td
+        {
+            border: solid #e8e5e5 1px;
+        }
+
+    .a
+    {
+        position: relative;
+        top: expression(this.offsetParent.scrollTop);
+        text-align: center;
+        z-index: 10;
+    }
+
+    .mainDIV
+    {
+        overflow: scroll;
+        height: 380px;
+    }
+</style>
+
+<script src="~/Scripts/Flow/Flow_NonSProductinfo.js"></script>
+
+<script type="text/javascript">
+
+    $(function () {
+        dataGrid("null", "0,1", "", "");
+    })
+
+    //
+    function dataGrid(Sort, Category, wldm, Pname) {
+        var jsonStr;
+        jsonStr = AjxaNosPind(Sort, Category, wldm, Pname);
+        $("#content").html("");
+        if (jsonStr != null) {
+            var html = "";
+            html += '<table style="width:100%; color:#000; font-size:13px; text-align:center;">';
+            for (var i = 0, j = jsonStr.length; i < j; i++) {
+                html += '<tr>';
+                html += '<td width="25%"  height="30px">' + jsonStr[i].Pbianma + '</td>';
+                html += '<td width="20%" height="30px">' + jsonStr[i].Pname + '</td>';
+                html += '<td width="15%" height="30px">' + jsonStr[i].Pmodel + '</td>';
+                if (jsonStr[i].Category == "0")
+                    html += '<td width="10%" height="30px">销售</td>';
+                else if (jsonStr[i].Category == "1")
+                    html += '<td width="10%" height="30px">工程</td>';
+             
+                html += '<td width="20%" height="30px">' + czshow(jsonStr[i].Pbianma,jsonStr[i].Id) + '</td>';
+                html += '</tr>';
+            }
+            html += '</table>';
+            $("#content").html(html);
+        }
+    }
+
+    //查询
+    function Selectdate() {
+        var wlsort = $("#wlsort").val();//排序
+        var cptype = $("#cptype").val();
+        var text_wldm = $("#text_wldm").val();//物料代码
+        var text_cpname = $("#text_cpname").val();
+        dataGrid(wlsort, cptype, text_wldm, text_cpname);
+    }
+
+
+
+    //操作
+    function czshow(val,val2) {
+        var Id = "'" + val + "'";
+        var cpid = "'" + val2 + "'";
+        var s = '<a href="#" onclick="Selectkc(' + Id + ')">库存</a>&nbsp;&nbsp;';
+        var t = '<a href="#" onclick="InsertSctzd(' + cpid + ')">生产通知</a>&nbsp;&nbsp;';
+        return s+t;
+    }
+
+    //查看库存
+    function Selectkc(val) {
+        var id = val;
+        if (id != "" && id != "null") {
+            $('#windowDia').html("<iframe src=../Flow_NonSProductinfo/KcckView?wldm=" + id + " style='border:0px;' width='450px' height='220px'></iframe>");
+            $("#windowDia").window({
+                title: '实时库存',
+                modal: true,
+                closed: false,
+                width: 500,
+                height: 320,
+            });
+        }
+    }
+
+    //生产计划通知
+    function InsertSctzd(val) {
+        var id = val;
+        if (id != "" && id != "null") {
+            $('#windowDia').html("<iframe src=../Flow_NonSProductinfo/InsertSCPlan?Id=" + id + " style='border:0px;' width='650px' height='400px'></iframe>");
+            $("#windowDia").window({
+                title: '生产通知',
+                modal: true,
+                closed: false,
+                width: 710,
+                height: 500,
+            });
+        }
+    }
+
+</script>
+
+<div class="infor">
+    <div class="inquiry1">
+        <fieldset>
+            <ul>
+                <li>
+                    <span>物料代码排序：</span>
+                    <span class="inquiry-input">
+                        <select id="wlsort" name="wlsort">
+                            <option value="null">请选择</option>
+                            <option value="0">倒序</option>
+                            <option value="1">正序</option>
+                        </select>
+                    </span>
+                </li>
+                <li>
+                    <span>产品类型：</span>
+                    <span class="inquiry-input">
+                        <select id="cptype" name="cptype">
+                            <option value="">请选择</option>
+                            <option value="0">销售</option>
+                            <option value="1">工程</option>
+                        </select>
+                    </span>
+                </li>
+                <li>
+                    <span>物料代码：</span>
+                    <span class="inquiry-input">
+                        <input type="text" id="text_wldm" name="text_wldm" />
+                    </span>
+                </li>
+                <li>
+                    <span>产品名称：</span>
+                    <span class="inquiry-input">
+                        <input type="text" id="text_cpname" name="text_cpname" />
+                    </span>
+                </li>
+                <li>
+                    <span class="inquiry-input">
+                        <button type="button" onclick="Selectdate()">查询</button>
+                    </span>
+                    <span class="inquiry-input">
+                        <button type="button" onclick="return addClick('/Flow_NonSProductinfo/addPage')">新增</button>
+                    </span>
+
+                    <span class="inquiry-input">
+                        <button type="button" onclick="return addClick('/Flow_NonSProductinfo/list')">刷新</button>
+                    </span>
+
+                </li>
+            </ul>
+        </fieldset>
+    </div>
+</div>
+
+<div style="width: 95%; margin: auto; margin-top: 10px; border: 1px solid #e8e5e5;">
+    <div class="add-infor-title-bg_header">
+        <table style="width: 100%; color: #000; font-size: 13px; text-align: center;">
+            <thead>
+                <tr class="a">
+                    <td width="25%">物料代码
+                    </td>
+                    <td width="20%">名称
+                    </td>
+                    <td width="15%">型号
+                    </td>
+                    <td width="10%">产品类别
+                    </td>
+                
+                    <td width="20%">操作
+                    </td>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <div id="content" style="width: 100%;" class="mainDIV">
+    </div>
+</div>
+
+<div id="windowDia" class="easyui-window" closed="true" style="width: 600px; height: 500px; padding: 10px;"></div>

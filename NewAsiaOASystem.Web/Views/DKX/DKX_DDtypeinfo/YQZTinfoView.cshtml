@@ -1,0 +1,133 @@
+﻿@{
+    ViewBag.Title = "逾期通知记录";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+
+
+<script type="text/javascript">
+
+    $(function () {
+        var str = AJAXliaodanfkzdata();
+        htmljl(str);
+    })
+
+    //拼接html
+    function htmljl(str) {
+        var constr = str;
+       
+        if (constr != "" && constr != null) {
+            var html = "";
+            html = '<table class="layui-table">';
+            html += '<thead>';
+            html += '<tr style="font-weight:bold;color:#000000">';
+            html += '<td width="20%">逾期类型</td>';
+            html += '<td width="10%">接收人</td>';
+            html += '<td width="10%">推送时间</td>';
+            html += '<td width="10%">时段</td>';
+            html += '</tr>';
+            html += '</thead>';
+            for (var i = 0, j = constr.length; i < j; i++) {
+                //提交人的信息
+                var TJnamestr = AjaxPerson_Name(constr[i].Jsname);
+                var Tjnameuser = "";
+                if (TJnamestr != null && TJnamestr != "") {
+                    Tjnameuser = TJnamestr.UserName;
+                }
+                html += '<tr style="color:#000000">';
+                html += '<td width="20%">' + YQtypeshow(constr[i].Type) + '</td>';
+                html += '<td width="10%">' + Tjnameuser + '</td>';
+                html += '<td width="10%">' + constr[i].C_time + '</td>';
+                html += '<td width="10%">' + SDshow(constr[i].fstype) + '</td>';
+                html += '</tr>';
+            }
+            html += '</table>';
+            $("#content").html(html);
+        }
+        else {
+            $("#content").html("没有数据");
+        }
+
+    }
+
+    //记录
+    function AJAXliaodanfkzdata() {
+        var json;
+        $.ajax({
+            url: "../DKX_DDtypeinfo/GetyqtzinfobyId",
+            type: "POST",
+            data: { Id: '@ViewData["Id"]' },
+            dataType: "JSON",
+            async: false,
+            success: function (response) {
+                json = eval(response);
+            },
+            error: function (e) {
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+        return json;
+    }
+
+
+
+    /*当前登录用户的信息*/
+    function AjaxPerson_Name(Id) {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "/Api/SysWebApi/GetPersonjson_Id",
+            data: { "": Id },
+            dataType: "json",
+            async: false,
+            success: function (reslut) {
+                json = eval('(' + reslut + ')');
+            },
+            error: function (e) {
+                alert("请求失败");
+            }
+        })
+        return json;
+    }
+
+    //时段显示
+    function SDshow(val) {
+        var str = "";
+        if (val == "0") {
+            str = "上午段";
+        }
+        if (val == "1") {
+            str = "下午段"
+        }
+        return str;
+    }
+    //逾期类型显示
+    function YQtypeshow(val) {
+        var str = "";
+        if (val == "0") {
+            str = "制图接单逾期";
+        }
+        if (val == "1")
+            str = "制图逾期";
+        if (val == "2")
+            str = "箱体库存确认逾期";
+        if (val == "3")
+            str = "其他物料库存确认逾期";
+        if (val == "4")
+            str = "生产接单逾期";
+        if (val == "5")
+            str = "生产逾期";
+        if (val == "6")
+            str = "发货逾期";
+        if (val == "7")
+            str = "资料审核逾期";
+        return str;
+    }
+
+
+</script>
+
+
+<div style="width:95%; margin:auto">
+    <div id="content"></div>
+</div>

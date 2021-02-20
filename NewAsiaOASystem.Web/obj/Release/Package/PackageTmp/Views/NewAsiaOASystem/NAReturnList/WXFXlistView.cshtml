@@ -1,0 +1,661 @@
+﻿@model NewAsiaOASystem.ViewModel.PagerInfo<NewAsiaOASystem.ViewModel.NQ_THinfoFXView>
+
+@{
+    ViewBag.Title = "维修分析列表";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+<link href="~/Scripts/zTree_v3/css/demo.css" rel="stylesheet" />
+<link href="~/Scripts/zTree_v3/css/zTreeStyle/zTreeStyle.css" rel="stylesheet" />
+<script src="~/Scripts/zTree_v3/js/jquery.ztree.core-3.5.min.js"></script>
+<script src="~/Scripts/zTree_v3/js/jquery.ztree.excheck-3.5.min.js"></script>
+
+@section HeadContent{
+    <script type="text/javascript">
+        $(function () {
+            YQJXZ();//元器件选择
+            BindGrid();
+        })
+        function BindGrid() {
+            @{
+                if (null != Model && null != Model.GetPagingDataJson)
+                {
+                    string json = Model.GetPagingDataJson;//获取json数据
+                    @: var jsonStr = @Html.Raw(json);
+                }
+             }
+            dataGrid(jsonStr);
+        }
+        function dataGrid(jsonStr){
+        
+            if (typeof (jsonStr) != "undefined") {
+                var html = "";
+                html = '<table class="table_listNew">';
+                html+='<tr>';
+                html+='<td width="4%"><input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" /></td>';
+                html+='<td width="8%">客户名称</td>';
+                html+='<td width="8%">产品型号</td>';
+                html+='<td width="8%">生产批号</td>';
+                html+='<td width="8%">不良现象</td>';
+                html+='<td width="8%">不良原因</td>';
+                html+='<td width="8%"></td>';
+                html+='<td width="8%">元器件</td>';
+                html+='<td width="8%">元件品牌</td>';
+                html+='<td width="6%">性质</td>';
+                html+='<td width="8%">备注</td>';
+                html+='<td width="4%">包材</td>';
+                html+='<td width="4%">人工</td>';
+                html+='<td width="4%">合计</td>';
+                html+='<td width="7%">维修时间</td>';
+                html+='';
+                html+='</tr>';
+                for (var i = 0, j = jsonStr.length; i < j; i++) {
+                    //var Perinfo = GetPerinfobyId(jsonStr[i].P_Id);
+                    var cusname=ajaxgetCusbyR_Id(jsonStr[i].R_Id);
+                    if (i % 2 == 0)
+                        html += '<tr class="h-table-content-r">';
+                    else
+                        html += '<tr class="h-table-content-r1">';
+                    html += '<td width="4%"><input type="checkbox" name="ContentChecked" value="' + jsonStr[i].Id + '"/></td>';
+                    html += '<td width="8%">' +cusname.substr(0, 6) + '</td>';
+                    html += '<td width="8%" title="' + jsonStr[i].Cpname+'">' + jsonStr[i].Cpname.substr(0, 6) +'</td>';
+                    if(jsonStr[i].TH_Ph!=null&&jsonStr[i].TH_Ph!="")
+                        html+='<td width="8%">'+jsonStr[i].TH_Ph+'</td>';
+                    else
+                        html+='<td width="8%">-</td>';
+                    if (jsonStr[i].TH_BLXXX != null && jsonStr[i].TH_BLXXX != "")  
+                        html+='<td width="8%">'+ajaxblxxmodeljson(jsonStr[i].TH_BLXXX).Name+'</td>';
+                    else
+                        html+='<td width="8%">-</td>';
+                    if (jsonStr[i].TH_BLXX != null && jsonStr[i].TH_BLXX!="")
+                        html+='<td width="8%">'+ajaxblyymodelbyidjson(jsonStr[i].TH_BLXX).Name+'</td>';
+                    else
+                        html+='<td width="8%">-</td>';
+                    if (jsonStr[i].TH_BLYY != null && jsonStr[i].TH_BLYY!="")
+                        html+='<td width="8%">'+ajaxblyymodelbyidjson(jsonStr[i].TH_BLYY).Name+'</td>';
+                    else
+                        html+='<td width="8%">-</td>';
+                    if (jsonStr[i].TH_YQJname != null && jsonStr[i].TH_YQJname != "") {
+                        var yjmodel = ajaxyjmodelbyidjson(jsonStr[i].TH_YQJname);//元器件
+                        var gysinfo = ajaxgysinfobydm(yjmodel.G_Dm);
+                    }
+                    if (jsonStr[i].TH_YQJname != null && jsonStr[i].TH_YQJname != "")
+                        html+='<td width="8%">'+yjmodel.Y_Name+'</td>';
+                    else
+                        html+='<td width="8%">-</td>';
+                    if (jsonStr[i].TH_YQJname != null && jsonStr[i].TH_YQJname != "") 
+                        html+='<td width="8%">'+gysinfo.G_Name.substr(0, 6)+'</td>';
+                    else
+                        html+='<td width="8%">-</td>';
+                    if (jsonStr[i].TH_zbshj != null) 
+                        html+='<td width="6%">'+showISZB(jsonStr[i].TH_zbshj)+'</td>';
+                    else
+                        html+='<td width="6%">-</td>';
+                    if(jsonStr[i].TH_bz2!=null)
+                        html+='<td width="8%">'+jsonStr[i].TH_bz2+'</td>';
+                    else
+                        html+='<td width="8%">-</td>';
+                    if(jsonStr[i].TH_yqjjg!=null)
+                        html+='<td width="4%">'+jsonStr[i].TH_BCF+'元</td>';
+                    else
+                        html+='<td width="4%">-</td>';
+                    if(jsonStr[i].TH_RGF!=null)
+                        html+='<td width="4%">'+jsonStr[i].TH_RGF+'元</td>';
+                    else
+                        html+='<td width="4%">-</td>';
+
+                    html+='<td width="4%">-</td>';
+                    if(jsonStr[i].wx_time!=null&&jsonStr[i].wx_time!="")
+                        html+='<td width="7%">'+showDate(jsonStr[i].wx_time) +'</td>';
+                    else
+                        html+='<td width="7%">-</td>';
+                    html+='</tr>';
+                }
+                html += '</table>';
+                $("#content").html(html);
+            }
+        }
+
+        //ajax根据返退货Id查找客户名称
+        function ajaxgetCusbyR_Id(val)
+        {
+            var json;
+            $.ajax({
+                type: "POST",
+                url: "/NAReturnList/Getkfnamebyr_Id",
+                data: { Id: val },
+                dataType: "html",
+                async: false,
+                success: function (reslut) {
+                    json = reslut;
+                },
+                error: function (e) {
+                    alert("请求失败");
+                }
+            })
+            return json;
+        }
+
+        //根据不良现象ID 查找不良现象信息
+        function ajaxblxxmodeljson(Id) {
+            var json;
+            $.ajax({
+                type: "POST",
+                url: "/NQ_Blxxinfo/GetblXXmodelbyId",
+                data: { Id: Id },
+                async: false,
+                success: function (reslut) {
+                    json = eval('(' + reslut + ')');
+                },
+                error: function (e) {
+                    alert("请求失败！");
+                }
+            })
+            return json;
+        }
+
+        //根据不良原因ID 查找不良原因信息
+        function ajaxblyymodelbyidjson(Id) {
+            var json;
+            $.ajax({
+                type: "POST",
+                url: "/NQ_Blinfo/GetblyymodelbyId",
+                data: { Id: Id },
+                async: false,
+                success: function (reslut) {
+                    json =eval('('+reslut+')');
+                },
+                error: function (e) {
+                    alert("请求失败！");
+                }
+            })
+            return json;
+        }
+
+        //根据元器件ID 查找元器件信息
+        function ajaxyjmodelbyidjson(Id) {
+            var json;
+            $.ajax({
+                type: "POST",
+                url: "/NQ_YJinfo/Getyjinfomodelbyid",
+                data: { Id: Id },
+                async: false,
+                success: function (reslut) {
+                    json =eval('('+ reslut+')');
+                },
+                error: function (e) {
+                    alert("请求失败！");
+                }
+            })
+            return json;
+        }
+
+
+        //根据供应商代码查找供应商信息
+        function ajaxgysinfobydm(dm) {
+            var json;
+            $.ajax({
+                type: "POST",
+                url: "/NQ_GysInfo/Getgysinfobydm",
+                data: { dm: dm },
+                async: false,
+                success: function (reslut) {
+                    json = eval('(' + reslut + ')');
+                },
+                error: function (e) {
+                    alert("请求失败！");
+                }
+            })
+            return json;
+        }
+
+        function showISZB(val) {
+            var str="-";
+            if (Number(val) <= 18) {
+                str = "18个月内";
+                return str;
+            }
+            if (18 < Number(val) && Number(val) <= 36) {
+                str = "18月至3年";
+                return str;
+            }
+            if (Number(val) > 36) {
+                str = "3年外";
+                return str;
+            }
+            return str;
+
+
+        }
+
+        //客户资料（下拉搜索）
+        function YQJXZ() {
+            var jsondate = ajaxCusjson($("#tt").val());
+            var datajson = "";
+            if (jsondate != null) {
+                var j = 110;
+                if (jsondate.length < 110) {
+                    j = jsondate.length
+                }
+                for (var i = 0; i < j; i++) {
+                    datajson += '{title:"' + jsondate[i].Name + '" ,Id:"' + jsondate[i].Id + '"},';
+                }
+
+            } else {
+                datajson += '{title:"没有记录"}';
+            }
+            datajson = eval('[' + datajson + ']');
+            $("#tt").bigAutocomplete({
+                width: 116,
+                scrollHeight:50,
+                scroll: true,
+                data: datajson,
+                callback: function (data) {
+                    $("#txtSearch_khname").val(data.Id);
+                }
+            });
+        }
+
+        //元器件数据（下拉搜索）
+        function YQJXLSS()
+        {
+            var jsondate = ajaxYQJjson($("#txtSearch_yqjId").val());
+            var datajson = "";
+            if (jsondate != null) {
+                var j = 110;
+                if (jsondate.length < 110) {
+                    j = jsondate.length
+                }
+                for (var i = 0; i < j; i++) {
+                    datajson += '{title:"' + jsondate[i].Y_Name + ',' + jsondate[i].Y_Ggxh + '" ,Id:"' + jsondate[i].Id + '"},';
+                }
+
+            } else {
+                datajson += '{title:"没有记录"}';
+            }
+            datajson = eval('[' + datajson + ']');
+            $("#cc").bigAutocomplete({
+                width: 116,
+                scrollHeight:50,
+                scroll: true,
+                data: datajson,
+                callback: function (data) {
+                    $("#txtSearch_yqjId").val(data.Id);
+                }
+            });
+        }
+
+        //查询元器件信息根据名称
+        function ajaxCusjson(r_id) {
+            var json;
+            $.ajax({
+                type: "POST",
+                url: "/NAReturnList/cusInfolikename",
+                data: { name: r_id },
+                dataType: "json",
+                async: false,
+                success: function (reslut) {
+                    json = reslut;
+                },
+                error: function (e) {
+                    alert("请求失败!");
+                }
+            })
+            return json;
+        }
+
+        //
+        function ajaxYQJjson(val)
+        {
+            var json;
+            $.ajax({
+                type: "POST",
+                url: "/NQ_YJinfo/Getyjinfobyname",
+                data: { name: val },
+                dataType: "json",
+                async: false,
+                success: function (reslut) {
+                    json = reslut;
+                },
+                error: function (e) {
+                    alert("请求失败!");
+                }
+            })
+            return json;
+        }
+        //赋值元器件文本框
+        @*  function Fzyqjtext() {
+          
+            var yjmodel = ajaxyjmodelbyidjson('@Model.TH_YQJname');//元器件
+            var yqjxh = yjmodel.Y_Name + "," + yjmodel.Y_Ggxh;
+            $("#tt").val(yqjxh);
+            $("#txtSearch_khname").val(yjmodel.Id);
+        
+    }*@
+
+        //不良现象多选
+
+        var blxxsetting = {
+            check: {
+                enable: true,
+                chkboxType: { "Y": "", "N": "" }
+            },
+            view: {
+                dblClickExpand: false
+            },
+            data: {
+                simpleData: {
+                    enable: true
+                }
+            },
+            callback: {
+                beforeClick: blxxbeforeClick,
+                onCheck: blxxonCheck
+            }
+        };
+
+
+        function blxxbeforeClick(treeId, treeNode) {
+            var zTree = $.fn.zTree.getZTreeObj("blxxCommList");
+            zTree.checkNode(treeNode, !treeNode.checked, null, true);
+            return false;
+        }
+
+        function blxxonCheck(e, treeId, treeNode) {
+            blxxBindNode();
+        }
+
+        function blxxshowMenu(id) {
+            var cityObj = $("#blxxsel_Comm");
+            var cityOffset = $("#blxxsel_Comm").offset();
+            $("#blxxmenuContent").css({ left: cityOffset.left + "px", top: cityOffset.top + cityObj.outerHeight() + "px" }).slideDown("fast");
+
+            $("body").bind("mousedown", onBodyDown);
+        }
+        function onBodyDown(event) {
+            if (!(event.target.id == "menuBtn" || event.target.id == "blxxsel_Comm" || event.target.id == "blxxmenuContent" || $(event.target).parents("#blxxmenuContent").length > 0)) {
+                blxxhideMenu();
+            }
+        }
+
+        function blxxhideMenu() {
+            $("#blxxmenuContent").fadeOut("fast");
+            $("body").unbind("mousedown", onBodyDown);
+        }
+        //首次赋值
+        var zblxxNodes = [];
+        $(document).ready(function () {
+            AjaxBlxxCombo("/NAReturnList/BlxxAlbumDropdown");
+            $.fn.zTree.init($("#blxxCommList"), blxxsetting, zblxxNodes);
+            blxxBindNode();
+        });
+
+        //ajax获取下拉框值
+        function AjaxBlxxCombo(url) {
+            $.ajax({
+                type: "POST",
+                url: url,
+                // data: { personId: $("#Id").val() },
+                dataType: "json",
+                async: false,
+                success: function (context) {
+                    zblxxNodes = eval(context.result);
+                },
+                error: function (e) {
+                    alert("请求失败");
+                }
+            })
+        }
+
+        //绑定选中的值
+        function blxxBindNode()
+        {
+            var zTree = $.fn.zTree.getZTreeObj("blxxCommList"),
+            nodes = zTree.getCheckedNodes(true),
+            text = "",id="";
+            for (var i = 0, l = nodes.length; i < l; i++) {
+                id = id + "'" + nodes[i].id + "',";
+                text += nodes[i].name + ",";
+            }
+            if (id.length > 0) {
+                id = id.substring(0, id.length - 1);
+                text = text.substring(0, text.length - 1);
+            }
+            var textObj = $("#blxxsel_Comm");
+            var SelectComm = $("#blxxSelectComm");
+            SelectComm.attr("value", id);
+            textObj.attr("value", text);
+        }
+
+        //pageIndex当前页
+        function SerchList(pageIndex)
+        {
+            $("input[name='pageIndex']").val(pageIndex);
+            var options = {
+                beforeSubmit: function () {
+                    return true;
+                },
+                dataType: "json",
+                success: function (context) {
+                    var data=eval(context.result);
+                    dataGrid(data);
+                    $(".pagin").html(context.PageN);//输出分页按钮
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $.messager.alert("操作提示", '查询失败请重试！', 'error');
+                }
+            }
+            $('#form1').ajaxSubmit(options);
+            return false;
+        }
+
+        //导出excl 数据
+        function ExporttxJSON()
+        {
+            var txtSearch_khname =$("#txtSearch_khname").val();
+            var cpname=$("#txtSearch_cpname").val();
+            var scph=$("#txtSearch_scph").val();
+            var blxx=$("#blxxSelectComm").val();
+            var blyy=$("#txtSearch_blYy").val();//不良原因
+            var yqjname=$("#txtSearch_yqjname").val();//元器件
+            var yqjxh=$("#txtSearch_yqjxh").val();//元器件型号
+            var zbxz=$("#txtSearch_zx").val();//性质
+            var starttime=$("#txtSearch_starttime").val();//维修时间
+            var endtime=$("#txtSearch_enedtime").val();//维修时间
+            var r_pid=$("#txtSearch_rpid").val();//产品类型
+            var wxstarttime=$("#txtwxstarttime").val();//维修时间
+            var wxendtime=$("#wxendtime").val();
+            if(typeof(starttime)=="undefined"||typeof(endtime)=="undefined")
+            {
+                starttime="";
+                endtime="";
+            }
+            if(typeof(wxstarttime)=="undefined"||typeof(wxendtime)=="undefined")
+            {
+                wxstarttime="";
+                wxendtime="";
+            }
+            if(typeof(cpname)=="undefined")
+            {
+                cpname="";
+            }
+            if(typeof(scph)=="undefined")
+            {
+                scph="";
+            }
+            if(typeof(yqjname)=="undefined")
+            {
+                yqjname="";
+            }
+            if(typeof(yqjxh)=="undefined")
+            {
+                yqjxh="";
+            }
+            window.location.href="/NAReturnList/ERWEIDATA?khname="+txtSearch_khname+"&&CPName="+cpname+"&&SC_PH="+scph+"&&BL_XX="+blxx+"&&BL_Yy="+blyy+"&&yqj_name="+yqjname+"&&yqj_xh="+yqjxh+"&&xzstr="+zbxz+"&&starttime="+starttime+"&&enedtime="+endtime+"&&wxstarttime="+wxstarttime+"&&wxendtime="+wxendtime+ "&&r_pId="+r_pid;
+        }
+    </script>
+}
+
+<style>
+    .bigautocomplete-layout {
+        position: absolute;
+        left: 100px;
+        top: 150px;
+        width: 116px;
+        border: 1px solid #808080;
+        background: #ffffff;
+        z-index: 999;
+        font-size: 12px;
+    }
+</style>
+
+<!--==================================数据列表=============================-->
+<div class="h-right">
+    <div class="h-right-c">
+
+        <!--查询条件-->
+        @using (Html.BeginForm("FXSearchList", "NAReturnList", FormMethod.Post, new { id = "form1" }))
+        {
+            @Html.Hidden("pageIndex");
+            @Html.Hidden("blxxSelectComm");//用于保存选中的角色id
+            <input type="hidden" id="txtSearch_khname" name="txtSearch_khname" />
+            <input type="hidden" id="txtSearch_yqjId" name="txtSearch_yqjId" />
+            <div class="inquiry1">
+                <fieldset>
+                    <legend>查询条件：</legend>
+                    <ul>
+                        <li><span>退货客户：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="tt" id="tt" onkeyup="YQJXZ()" /></span>
+
+                        </li>
+                        <li>
+                            <span>产品型号：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txtSearch_cpname" id="txtSearch_cpname" />
+                            </span>
+                        </li>
+                        <li>
+                            <span>生产批号：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txtSearch_scph" id="txtSearch_scph" />
+                            </span>
+                        </li>
+                        <li>
+                            <span>不良现象：</span>
+                            @* @Html.DropDownList("txtSearch_bl_xx", ViewData["CustList"] as SelectList, new { @class = "add-function" })*@
+                            <input id="blxxsel_Comm" class="add-function" type="text" readonly="readonly" onclick="blxxshowMenu();" />
+                        </li>
+                        <li>
+                            <span>不良原因：</span>
+                            @Html.DropDownList("txtSearch_blYy", ViewData["BLyyList"] as SelectList, new { @class = "add-function" })
+                        </li>
+                        <li>
+                            <span>元器件：</span>
+                            <span class="inquiry-input">
+                                @* <input type="text" name="cc" id="cc" onkeyup="YQJXLSS()" />*@
+                                <input type="text" name="txtSearch_yqjname" id="txtSearch_yqjname" />
+                            </span>
+                        </li>
+                        <li>
+                            <span>元器件型号：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txtSearch_yqjxh" id="txtSearch_yqjxh" />
+                            </span>
+                        </li>
+                        <li>
+                            <span>性质：</span>
+                            <span class="inquiry-input">
+                                <select id="txtSearch_zx" name="txtSearch_zx">
+                                    <option value="">全部</option>
+                                    <option value="0">18月内</option>
+                                    <option value="1">3年内</option>
+                                    <option value="2">3年外</option>
+                                </select>
+                            </span>
+                        </li>
+                        <li>
+                            <span>退货时间：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txtSearch_starttime" id="txtSearch_starttime" onclick="WdatePicker()" />
+                            </span>
+                            -
+                             <span class="inquiry-input">
+                                 <input type="text" name="txtSearch_enedtime" id="txtSearch_enedtime" onclick="WdatePicker()" />
+                             </span>
+                        </li>
+                        <li>
+                            <span>维修时间：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txtwxstarttime" id="txtwxstarttime" onclick="WdatePicker()" />
+                            </span>
+                            -
+                             <span class="inquiry-input">
+                                 <input type="text" name="wxendtime" id="wxendtime" onclick="WdatePicker()" />
+                             </span>
+                        </li>
+                        <li>
+                            <span>产品类型：</span>
+                            @*@Html.DropDownList("txtSearch_rpid", ViewData["perList"] as SelectList, new { @class = "add-function" })*@
+                            <span class="inquiry-input">
+                                <select id="txtSearch_rpid" name="txtSearch_rpid">
+                                    <option value="">全部</option>
+                                    <option value="3,5">温控器（04/06）</option>
+                                    <option value="4">电控箱(05)</option>
+                                    <option value="0,1,2,6,7">其他(01/02/03/07/08)</option>
+                                </select>
+                            </span>
+                        </li>
+                        <li style="*width: 100%; *margin: -10px 0 5px 90px;"><span class="inquiry-input">
+                            <button name="btnSerch" onclick="return SerchList(1)">查询</button>
+                        </span>
+                            <span class="inquiry-input">
+                                <button type="button" onclick="ExporttxJSON()">导出数据</button>
+                            </span>
+                        </li>
+                    </ul>
+                </fieldset>
+            </div>
+            <div id="blxxmenuContent" class="menuContent" style="display: none; position: absolute;">
+                <ul id="blxxCommList" class="ztree" style="margin-top: 0; width: 180px; height: 300px;"></ul>
+            </div>
+        }
+        <div class="h-table">
+            <div class="h-table-content">
+                @* <table cellpadding="0" cellspacing="0" class="h-right-table-title1" style="border: none; width: 100%;">
+                    <tr>
+                        <td width="4%">
+                            <input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" /></td>
+                        <td width="8%">客户名称</td>
+                        <td width="8%">产品型号</td>
+                        <td width="8%">生产批号</td>
+                        <td width="8%">不良现象</td>
+                        <td width="8%">不良原因</td>
+                        <td width="8%"></td>
+                        <td width="8%">元器件</td>
+                        <td width="8%">元件品牌</td>
+                        <td width="6%">性质</td>
+                        <td width="8%">备注</td>
+                        <td width="4%">包材</td>
+                        <td width="4%">人工</td>
+                        <td width="4%">合计</td>
+                        <td width="7%">维修时间</td>
+                    </tr>
+                </table>*@
+                <div id="content"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!--==========================输出分页按钮=========================-->
+<div class="pagin">
+    @if (ViewBag.PageNavigate == null)
+    {
+        @Html.ShowPageNavigate(Model.CurrentPageIndex, Model.PageSize, Model.RecordCount);
+    }
+</div>
+<script src="~/Scripts/NAjs/NAReturnList.js"></script>
+<script src="~/Scripts/NAjs/bigAutocomplete.js"></script>
+

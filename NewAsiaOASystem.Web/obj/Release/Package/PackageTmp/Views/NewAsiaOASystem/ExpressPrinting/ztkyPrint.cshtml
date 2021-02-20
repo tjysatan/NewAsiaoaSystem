@@ -1,0 +1,73 @@
+﻿@{
+    ViewBag.Title = "中通快运快递单打印";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<script src="~/Scripts/Printjs/LodopFuncs.js" type="text/javascript"></script>
+<script src="~/Scripts/NAjs/Printjs.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        getLodop();
+    })
+
+    var LODOP; //声明为全局变量 
+    function myPreview() {
+        CreateFullBill();
+        LODOP.ADD_PRINT_SETUP_BKIMG("<img border='0' width='819px' src='http://wx.chinanewasia.com/Content/kdimg/L_ztky.jpg'>");
+        LODOP.SET_SHOW_MODE("BKIMG_IN_PREVIEW", 1); //注："BKIMG_IN_PREVIEW"-预览包含背景图 "BKIMG_IN_FIRSTPAGE"- 仅首页包含背景图
+        LODOP.PREVIEW(); //打印预览
+        Closetk();
+    };
+    function Design1() {
+        CreateFullBill();
+        LODOP.ADD_PRINT_SETUP_BKIMG("<img border='0' width='819px' src='http://wx.chinanewasia.com/Content/kdimg/L_ztky.jpg'>");
+        LODOP.PRINT_DESIGN();
+    };
+
+    function CreateFullBill() {
+        LODOP = getLodop();
+        LODOP.PRINT_INIT("套打中通快运的模板");
+        LODOP.PRINT_INITA(-10, -20, 750, 500, "套打中通快运的模板");
+        LODOP.SET_PRINT_STYLE("FontSize", 16);
+        var userinfo = AjaxPerson_Name('@ViewData["UID"]');//当前登录的用户信息
+
+        var fname = userinfo.UserName;//发货人
+        var ftel = userinfo.Tel;//发货人电话
+        LODOP.ADD_PRINT_TEXT(90, 80, 139, 25, "苏州新亚科技有限公司");
+        LODOP.ADD_PRINT_TEXT(120, 80, 75, 25, fname);
+        LODOP.ADD_PRINT_TEXT(120, 160, 154, 25, ftel);
+        LODOP.ADD_PRINT_TEXT(140, 80, 253, 45, "太仓市花墙工业区新亚路二号");
+
+        var Cus_info = AjaxCust_Name('@ViewData["Id"]');//客户信息
+               var sname = Cus_info.LxrName;//收货人
+               var sAdress = Cus_info.Adress;//收货地址
+               var sdw = Cus_info.Name;//收货单位
+               var stel = Cus_info.Tel;//收货电话
+               LODOP.ADD_PRINT_TEXT(190, 80, 137, 25, sdw);
+               LODOP.ADD_PRINT_TEXT(215, 80, 75, 25, sname);
+               LODOP.ADD_PRINT_TEXT(215, 180, 243, 25, stel);
+               LODOP.ADD_PRINT_TEXT(235, 80, 249, 65, sAdress);
+               var jdata = GetNewdatetimejson();//寄件日期
+               LODOP.ADD_PRINT_TEXT(293, 641, 100, 25, fname);
+               LODOP.ADD_PRINT_TEXT(318, 595, 155, 25, jdata);
+
+           };
+
+           function Closetk() {
+               var ParentObj = window.parent;//获取父窗口
+               window.parent.$('#windowDia').window('close');
+               window.parent.location = "/ExpressPrinting/printlist";
+           };
+
+</script>
+
+<div style="width: 200px; height:80px; overflow: hidden">
+    <div class="inquiry-input infor-b">
+        <span>
+            <button onclick="return myPreview()">打印</button>
+        </span>
+        <span>
+            <button onclick="return Closetk()">关闭</button></span>
+    </div>
+</div>

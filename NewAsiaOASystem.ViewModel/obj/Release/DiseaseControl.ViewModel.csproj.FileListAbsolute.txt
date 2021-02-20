@@ -1,0 +1,7 @@
+F:\新疆侨瑞欣源电子 工作\流动儿童计划免疫平台\NewCode\trunk\DiseaseControl.ViewModel\bin\Release\DiseaseControl.ViewModel.dll
+F:\新疆侨瑞欣源电子 工作\流动儿童计划免疫平台\NewCode\trunk\DiseaseControl.ViewModel\bin\Release\DiseaseControl.ViewModel.pdb
+F:\新疆侨瑞欣源电子 工作\流动儿童计划免疫平台\NewCode\trunk\DiseaseControl.ViewModel\obj\Release\DiseaseControl.ViewModel.dll
+F:\新疆侨瑞欣源电子 工作\流动儿童计划免疫平台\NewCode\trunk\DiseaseControl.ViewModel\obj\Release\DiseaseControl.ViewModel.pdb
+F:\新疆侨瑞欣源电子 工作\流动儿童计划免疫平台\NewCode\trunk\DiseaseControl.ViewModel\bin\Release\DiseaseControl.DBModel.dll
+F:\新疆侨瑞欣源电子 工作\流动儿童计划免疫平台\NewCode\trunk\DiseaseControl.ViewModel\bin\Release\DiseaseControl.DBModel.pdb
+F:\新疆侨瑞欣源电子 工作\流动儿童计划免疫平台\NewCode\trunk\DiseaseControl.ViewModel\obj\Release\DiseaseControl.ViewModel.csprojResolveAssemblyReference.cache

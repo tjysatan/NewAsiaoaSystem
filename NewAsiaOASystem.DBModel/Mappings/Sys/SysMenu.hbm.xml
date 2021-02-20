@@ -1,0 +1,24 @@
+﻿<?xml version="1.0"  encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="NewAsiaOASystem.DBModel" assembly="NewAsiaOASystem.DBModel">
+	<class name="SysMenu" table="SysMenu">
+		<id name="Id" column="Id" type="string" unsaved-value="0">
+      <generator class="uuid.hex"/>    			
+    </id>      		
+		<property name="Name" column="Name" type="string"  />
+		<property name="PId" column="ParentId" type="string"  />
+		<property name="Sort" column="Sort" type="int"  />
+		<property name="Description" column="Description" type="string"  />
+		<property name="Url" column="Url" type="string"  />
+		<property name="CreatePerson" column="CreatePerson" type="string"  />
+		<property name="CreateTime" column="CreateTime" type="DateTime"  />
+		<property name="UpdatePerson" column="UpdatePerson" type="string"  />
+		<property name="UpdateTime" column="UpdateTime" type="DateTime"  />
+    <property name="Ico" column="Ico" type="string"  />
+    <property name="Status" column="Status" type="int"  />
+   <!--菜单按钮多对多-->
+    <!--<bag name="Sysbutton" table="SysMenuButton"  inverse="false" lazy="false" cascade="none" >
+      <key column="MenuId"></key>
+      <many-to-many class="SysButton" column="ButtonId"  not-found="ignore" order-by="Sort asc"></many-to-many>
+    </bag>-->
+	</class>
+</hibernate-mapping>

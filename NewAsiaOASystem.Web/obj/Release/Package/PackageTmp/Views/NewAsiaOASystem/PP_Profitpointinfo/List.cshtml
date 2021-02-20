@@ -1,0 +1,142 @@
+﻿@model NewAsiaOASystem.ViewModel.PagerInfo<NewAsiaOASystem.ViewModel.PP_ProfitpointinfoView>
+@{
+    ViewBag.Title = "收入项管理";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@section HeadContent{
+    <script type="text/javascript">
+        $(function () {
+            BindGrid();
+        })
+        function BindGrid() {
+            @{
+                if (null != Model && null != Model.GetPagingDataJson)
+                {
+                    string json = Model.GetPagingDataJson;//获取json数据
+                    @: var jsonStr = @Html.Raw(json);
+                }
+             }
+            dataGrid(jsonStr);
+        }
+
+        function dataGrid(jsonStr){
+            if (typeof (jsonStr) != "undefined") {
+                var html = "";
+                html = '<table class="layui-table">';
+                html += '<thead>';
+                html+='<tr>';
+                html+='<td width="5%"><input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" /></td>';
+                html+='<td width="15%">收入业务</td>';
+                html+='<td width="15%">所属团队</td>';
+                html+='<td width="15%">单位盈利值</td>';
+                html+='<td width="15%">类别</td>';
+                html+='<td width="15%">创建时间</td>';
+                html+='</tr>';
+                html+='</thead>';
+                for (var i = 0, j = jsonStr.length; i < j; i++) {
+                    html+='<tr>';
+                    html += '<td width="5%"><input type="checkbox" name="ContentChecked" value="' + jsonStr[i].Id + '"/></td>';
+                    html += '<td width="15%">' + jsonStr[i].Rwname + '</td>';
+                    html += '<td width="15%">' +ajaxgetteamdata(jsonStr[i].Rw_teamId).Team_Name + '</td>';
+                    html+='<td width="15%">'+jsonStr[i].Rwfz+' /￥</td>';
+                    html +='<td width="15%">'+Showsrtype(jsonStr[i].ProType)+'</td>';
+                    html+='<td width="15%">'+showDate(jsonStr[i].C_time)+'</td>';
+                    html+='</tr>';
+                }
+                html += '</table>';
+                $("#content").html(html);
+            }
+        }
+
+        function SerchList(pageIndex)
+        {
+            $("input[name='pageIndex']").val(pageIndex);
+            var options = {
+                beforeSubmit: function () {
+                    return true;
+                },
+                dataType: "json",
+                success: function (context) {
+                    var data=eval(context.result);
+                    dataGrid(data);
+                    $(".pagin").html(context.PageN);//输出分页按钮
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $.messager.alert("操作提示", '查询失败请重试！', 'error');
+                }
+            }
+            $('#form1').ajaxSubmit(options);
+            return false;
+        }
+    </script>
+}
+
+
+<div class="h-right">
+    <div class="h-right-c">
+        <!--查询条件-->
+        @using (Html.BeginForm("SearchList", "PP_Profitpointinfo", FormMethod.Post, new { id = "form1" }))
+        {
+            @Html.Hidden("pageIndex");
+            <div class="inquiry1">
+                <fieldset>
+                    <legend>查询条件：</legend>
+                    <ul>
+                        <li><span>业务名称：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="rwName" /></span></li>
+                        <li><span>团队名称：</span>
+                            <span class="inquiry-input">
+                                @Html.DropDownList("tdname", ViewData["teamname"] as SelectList, new { @class = "add-function" })
+                            </span>
+                        </li>
+                        <li>
+                            <span>收入项类型：</span>
+                            <span class="inquiry-input">
+                                <select id="protype" name="protype">
+                                    <option value="">全部</option>
+                                    <option value="0">个人收入</option>
+                                    <option value="1">团队收入一</option>
+                                    <option value="2">团队收入二</option>
+                                </select>
+                            </span>
+                        </li>
+                        <li style="*width: 100%; *margin: -10px 0 5px 90px;"><span class="inquiry-input">
+                            <button name="btnSerch" onclick="return SerchList(1)">查询</button>
+                        </span>
+                        </li>
+                        <li>
+                            <span class="inquiry-input">
+                                <button onclick="return addClick('/PP_Profitpointinfo/addPage')">添加</button></span>
+                            <span class="inquiry-input">
+                                <button onclick="return update('/PP_Profitpointinfo/EditPage')">编辑</button></span>
+                            <span class="inquiry-input">
+                                <button onclick="return addClick('/PP_Teaminfo/ImportProfitinfoView')">批量导入</button>
+                            </span>
+                            <span class="inquiry-input">
+                                <button onclick="return addClick('/PP_Profitpointinfo/List')">刷新</button></span></li>
+                    </ul>
+                </fieldset>
+            </div>
+        }
+
+        <div class="h-table">
+            <div class="h-table-content">
+
+                <div id="content"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--==========================输出分页按钮=========================-->
+<div class="pagin">
+    @if (ViewBag.PageNavigate == null)
+    {
+        @Html.ShowPageNavigate(Model.CurrentPageIndex, Model.PageSize, Model.RecordCount);
+    }
+</div>
+
+<script src="~/Scripts/NAjs/PP_pulice.js"></script>
+

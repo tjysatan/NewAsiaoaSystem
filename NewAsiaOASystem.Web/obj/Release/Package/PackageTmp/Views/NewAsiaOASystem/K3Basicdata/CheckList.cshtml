@@ -1,0 +1,224 @@
+﻿@model NewAsiaOASystem.ViewModel.PagerInfo<NewAsiaOASystem.ViewModel.K3_wuliaoinfoView>
+@{
+    ViewBag.Title = "元器件列表";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+
+
+@section HeadContent{
+    <script type="text/javascript">
+        $(function () {
+            BindGrid();
+        })
+        function BindGrid() {
+            @{
+                if (null != Model && null != Model.GetPagingDataJson)
+                {
+                    string json = Model.GetPagingDataJson;//获取json数据
+                    @: var jsonStr = @Html.Raw(json);
+                   
+                }
+             }
+            dataGrid(jsonStr);
+        }
+        function dataGrid(jsonStr)
+        {
+            if (typeof (jsonStr) != "undefined") {
+                var html = "";
+                html = '<table class="layui-table">';
+                html += '<thead>';
+                html+='<tr>';
+                html+='<td width="5%"><input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" /></td>';
+                //html+='<td width="10%">序号</td>';
+                html+='<td width="20%">物料代码</td>';
+                html+='<td width="20%">名称</td>';
+                html+='<td width="20%">型号</td>';
+                html+='<td width="10%">类型</td>';
+                html+='<td width="10%">单价</td>';
+                html+='<td width="10%">单位</td>';
+                html+='</tr>';
+                html+='</thead>';
+                for (var i = 0, j = jsonStr.length; i < j; i++) {
+                    html+='<tr>';
+                    html += '<td width="5%"><input type="checkbox" name="ContentChecked" value="' + jsonStr[i].fitem + '"/></td>';
+                    //html += '<td width="10%">' + jsonStr[i].fitem + '</td>';
+                    html+='<td width="20%">'+jsonStr[i].fnumber+'</td>';
+                    html+='<td width="20%">'+jsonStr[i].fname+'</td>';
+                    html+='<td width="20%">'+jsonStr[i].fmodel+'</td>';
+                    html+='<td width="10%">'+ztshow(jsonStr[i].Type)+'</td>';
+                    html+='<td width="10%">'+jsonStr[i].forderprice+'</td>';
+                    html+='<td width="10%">'+jsonStr[i].unitname+'</td>';
+                    html+='</tr>';
+                }
+                html += '</table>';
+                $("#content").html(html);
+            }
+        }
+
+        //pageIndex当前页
+        function SerchList(pageIndex)
+        {
+            $("input[name='pageIndex']").val(pageIndex);
+            var options = {
+                beforeSubmit: function () {
+                    return true;
+                },
+                dataType: "json",
+                success: function (context) {
+                    var data=eval(context.result);
+                    dataGrid(data);
+                    $(".pagin").html(context.PageN);//输出分页按钮
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $.messager.alert("操作提示", '查询失败请重试！', 'error');
+                }
+            }
+            $('#form1').ajaxSubmit(options);
+            return false;
+        }
+
+        //状态显示
+        function ztshow(val)
+        {
+            if(val=="0")
+            {
+                return "电器原料";
+            }
+            if(val=="1")
+            {
+                return "电子原料";
+            }
+            if(val=="2")
+            {
+                return "辅料";
+            }
+            if(val=="3")
+            {
+                return "温控器";
+            }
+            if(val=="4")
+            {
+                return "电控箱";
+            }
+            if(val=="5")
+            {
+                return "温控半成品";
+            }
+            if(val=="6")
+            {
+                return "软件";
+            }
+            else
+            {
+                return "其他项目";
+            }
+        }
+
+    </script>
+}
+
+<!--==================================数据列表=============================-->
+<div class="h-right">
+    <div class="h-right-c">
+        @*   <div class="h-right-title">您当前的位置：免疫点管理</div>*@
+        <!--查询条件-->
+        @using (Html.BeginForm("SearchList", "K3Basicdata", FormMethod.Post, new { id = "form1" }))
+        {
+            @Html.Hidden("pageIndex");
+            <div class="inquiry1">
+                <fieldset>
+                    <legend>查询条件：</legend>
+                    <ul>
+                        <li><span>物料代码：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="fnumber" /></span></li>
+                        <li><span>名称：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="fname" /></span></li>
+                        <li>
+                            <span>型号：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="fmodel" /></span>
+                        </li>
+                        
+                        <li style="*width: 100%; *margin: -10px 0 5px 90px;">
+                            <span class="inquiry-input">
+                                <button class="layui-btn" onclick="return SerchList(1)"><i class="layui-icon">&#xe615;</i> 查询</button>
+                            </span>
+                        </li>
+                        <li>
+                            <span class="inquiry-input">
+                                <button class="layui-btn" onclick="return addClick('/K3Basicdata/CheckList')"><i class="layui-icon">&#x1002;</i> 刷新</button>
+                            </span>
+                        </li>
+                        <li>
+                            <span class="inquiry-input">
+                                <button class="layui-btn" onclick="return checkPage('/K3Basicdata/CheckPage')"><i class="layui-icon">&#x1005;</i>审核</button>
+                            </span>
+                        </li>
+                    </ul>
+                </fieldset>
+            </div>
+        }
+        <div class="h-table">
+            <div class="h-table-content">
+                <div id="content"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!--==========================输出分页按钮=========================-->
+<div class="pagin">
+    @if (ViewBag.PageNavigate == null)
+    {
+        @Html.ShowPageNavigate(Model.CurrentPageIndex, Model.PageSize, Model.RecordCount);
+    }
+</div>
+
+
+<script type="text/javascript">
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+
+    function editPage(OpenUrl) {
+        //获取到选中值
+        var arr = GetGridSelete();
+        if (arr.length > 1) {
+            $.messager.alert("操作提示", "只能选择一个！", "warning");
+        }
+        else if (arr.length <= 0) {
+            $.messager.alert("操作提示", "请先选择一条记录后再编辑！", "warning");
+        }
+        else {
+            location.href = OpenUrl + "?id=" + arr[0];
+        }
+
+        return false;
+    }
+
+    function checkPage(OpenUrl) {
+        //获取到选中值
+        var arr = GetGridSelete();
+        if (arr.length > 1) {
+            $.messager.alert("操作提示", "只能选择一个！", "warning");
+        }
+        else if (arr.length <= 0) {
+            $.messager.alert("操作提示", "请先选择一条记录后再查看审核！", "warning");
+        }
+        else {
+            location.href = OpenUrl + "?id=" + arr[0];
+        }
+        return false;
+    }
+
+</script>

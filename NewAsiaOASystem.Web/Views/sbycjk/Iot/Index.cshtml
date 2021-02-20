@@ -1,0 +1,100 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>设备远程监控帐号绑定</title>
+    <link rel="stylesheet" type="text/css" href="http://at.alicdn.com/t/font_1459473269_4751618.css">
+    <link href="~/Content/NewM2M/Index/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/Content/NewM2M/Index/css/style.css" rel="stylesheet">
+    <script src="~/Content/NewM2M/Index/js/jquery.min.js"></script>
+    <script src="~/Content/NewM2M/Index/js/bootstrap.min.js"></script>
+    <!--必要样式-->
+    <link rel="stylesheet" type="text/css" href="~/Content/NewM2M/Index/css/menu_elastic.css" />
+    <script src="~/Content/NewM2M/Index/js/snap.svg-min.js"></script>
+    <script type="text/javascript" src="../Content/M2Mv2/js/jquery.min.js"></script>
+    <script type="text/javascript" src="../Content/M2Mv2/js/jquery.leanModal.min.js"></script>
+    <link href="../Content/M2Mv2/css/jquery.uls.css" rel="stylesheet" />
+    <link href="../Content/M2Mv2/css/jquery.uls.grid.css" rel="stylesheet" />
+    <link href="../Content/M2Mv2/css/jquery.uls.lcd.css" rel="stylesheet" />
+
+
+    <script src="../Content/M2Mv2/js/jquery.uls.data.js"></script>
+    <script src="../Content/M2Mv2/js/jquery.uls.data.utils.js"></script>
+    <script src="../Content/M2Mv2/js/jquery.uls.lcd.js"></script>
+    <script src="../Content/M2Mv2/js/jquery.uls.languagefilter.js"></script>
+    <script src="../Content/M2Mv2/js/jquery.uls.regionfilter.js"></script>
+    <script src="../Content/M2Mv2/js/jquery.uls.core.js"></script>
+    <script src="../Scripts/layer/layer.js"></script>
+    <script src="../Scripts/jquery-1.9.1.min.js"></script>
+    <script src="../Scripts/jquery-easyui-1.4.1/jquery.easyui.min.js"></script>
+    <link href="../Scripts/jquery-easyui-1.4.1/themes/default/easyui.css" rel="stylesheet" />
+
+    <script src="../Scripts/jquery.form.js"></script>
+
+     
+    <!--[if IE]>
+<script src="js/html5.js"></script>
+<![endif]-->
+</head>
+<body class="huibg">
+    <div class="vipcenter">
+        <div class="vipheader">
+            <a href="#">
+                <div class="touxiang">
+                    <img src='@ViewData["TXURL"]' alt="">
+                </div>
+                <div class="name">@ViewData["nickname"]</div>
+            </a>
+        </div>
+        <div class="vipsan">
+            <div class="col-xs-6 text-center">
+                <a>
+                    <h4>绑定数量：@ViewData["bdsum"]个</h4>
+                    <p></p>
+                </a>
+            </div>
+            <div class="col-xs-6 text-center">
+                <a>
+                    <h4>今日消息:@ViewData["fssum"]条</h4>
+                    <p></p>
+                </a>
+            </div>
+        </div>
+
+        <ul class="vipul">
+            <li>
+                <a href="../Iot/bindingView" >
+                    <div class="icc"><i class="iconfont icon-huodongfj"></i></div>
+                    <div class="lzz">我要绑定</div>
+                    <div class="rizi"><i class="iconfont icon-jiantouri"></i></div>
+                </a>
+            </li>
+
+            <li>
+                <a href="../Iot/ACClistView">
+                    <div class="icc"><i class="iconfont icon-xitongmingpian"></i></div>
+                    <div class="lzz">我的帐号</div>
+                    <div class="rizi"><i class="iconfont icon-jiantouri"></i></div>
+                </a>
+            </li>
+            <li>
+                <a href="#" href="../Iot/NoticelistView">
+                    <div class="icc"><i class="iconfont icon-liebiao"></i></div>
+                    <div class="lzz">最新消息</div>
+                    <div class="rizi"><i class="iconfont icon-jiantouri"></i></div>
+                </a>
+            </li>
+
+        </ul>
+    </div>
+</body>
+</html>

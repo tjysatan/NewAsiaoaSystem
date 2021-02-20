@@ -1,0 +1,164 @@
+﻿@{
+    ViewBag.Title = "销售目标分析查看页面";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+ @section HeadContent{
+    <script type="text/javascript">
+        $(function () {
+            var xsfxdq = Ajaxxsfxdq_Id('@ViewData["xsfxId"]');
+            $("#XSyear").html(xsfxdq.XSYear);
+            $("#Cname").html(xsfxdq.dqname);
+            $("#Ctel").html(xsfxdq.WCSL);
+            $("#Clxr").html(xsfxdq.XSL);
+            $("#zrr").html(xsfxdq.zrr);
+            dataGrid()
+        })
+
+        function dataGrid() {
+            var jsonStr;
+            jsonStr = eval(Ajaxxsfxqxbysqid('@ViewData["xsfxId"]'));
+            $("#content").html("");
+            if (jsonStr != null) {
+                if (typeof (jsonStr) != "undefined") {
+                    var html = "";
+                    for (var i = 0,j=jsonStr.length; i < j; i++) {
+                        html += '<div class="add-infor-title-bg"><div style="width: 400px; height: 35px; margin-left:10px; font-size: 16px;">';
+                        html += jsonStr[i].Dqname + '&nbsp;&nbsp;&nbsp;&nbsp;销售目标：' + jsonStr[i].XSL+'/套';
+                        html += czshow(jsonStr[i].Id);
+                        html += ' </div></div>';
+                        var jsonstrkh;
+                        jsonstrkh = eval(Ajaxxsfxkhbysqid(jsonStr[i].Id))
+                        if (jsonstrkh != null) {
+                            for (var a = 0,b=jsonstrkh.length; a < b; a++) {
+                                html += ' <ul class="infor-c">';
+                                html += '<li class="infor-c-in"><span class="infor-c-width">' + jsonstrkh[a].KHName + '</span> </li>';
+                                html += '<li class="infor-c-in"><span class="infor-c-width">销售目标：' + jsonstrkh[a].XSL + '/套</span> </li>';
+                                html += '<li class="infor-c-in"><span class="infor-c-width">主要产品：' + jsonstrkh[a].beizhu + '</span> </li>';
+                                html += ' </ul>';
+                            }
+                         
+                        }
+                    }
+                    $("#content").html(html);
+                }
+            }
+        }
+
+        function Ajaxxsfxdq_Id(Id) {
+            var json;
+            $.ajax({
+                type: "POST",
+                url: "../XSFXdqinfo/GetxsfxdqinfobyIdjson",
+                data: { Id: Id },
+                dataType: "json",
+                async: false,
+                success: function (reslut) {
+                    json =reslut;
+                },
+                error: function (e) {
+                    alert("请求失败");
+                }
+            })
+            return json;
+        }
+
+        function Ajaxxsfxqxbysqid(Id) {
+            var json;
+            $.ajax({
+                type: "POST",
+                url: "../XSFXdqinfo/Getxsfxqxinfobydqidjson",
+                data: { Id: Id },
+                dataType: "json",
+                async: false,
+                success: function (reslut) {
+                    json = reslut;
+                },
+                error: function (e) {
+                    alert("请求失败");
+                }
+            })
+            return json;
+        }
+
+        function Ajaxxsfxkhbysqid(Id) {
+            var json;
+            $.ajax({
+                type: "POST",
+                url: "../XSFXdqinfo/Getxsfxkhinfobydxidjson",
+                data: { Id: Id },
+                dataType: "json",
+                async: false,
+                success: function (reslut) {
+                    json = reslut;
+                },
+                error: function (e) {
+                    alert("请求失败");
+                }
+            })
+            return json;
+        }
+
+        function czshow(val) {
+            var Id = "'" + val + "'";
+            var s = '<a href="#" style="  float:right; margin-right:10px; font-size:14px;" onclick="khzj(' + Id + ')">增加客户</a>&nbsp;&nbsp;';
+            return s;
+        }
+
+
+        //增加区县
+        function fkdz() {
+            var id = '@ViewData["xsfxId"]';
+            if (id != "") {
+                $('#windowDia').html("<iframe src=../XSFXdqinfo/QXADD?Id=" + id + "&&type=0 style='border:0px;' width='600px' height='500px'></iframe>");
+                $("#windowDia").window({
+                    title: '区（县）销售目标',
+                    modal: true,
+                    closed: false,
+                    width: 680,
+                    height: 500,
+                });
+            }
+        }
+        function khzj(val) {
+           
+            var id = '@ViewData["xsfxId"]';
+            if (id != "") {
+                $('#windowDia').html("<iframe src=../XSFXdqinfo/KHADD?Id=" + id + "&&qxId=" + val + "&&  style='border:0px;' width='600px' height='500px'></iframe>");
+                $("#windowDia").window({
+                    title: '主要客户销售目标',
+                    modal: true,
+                    closed: false,
+                    width: 680,
+                    height: 500,
+                });
+            }
+        }
+
+    </script>
+}
+
+<div class="infor">
+     <div class="infor-content" style="width: 100%; ">
+         <div class="add-infor-title-bg">
+            <div style="width: 100px; height: 35px; margin: auto; font-size: 16px;">
+                <label id="XSyear"></label>销售目标 
+                 
+            </div>
+             <a  onclick="fkdz()" style="cursor:pointer; text-align:center; float:right">
+                            <img src="~/Content/images/add.gif" /></a>
+        </div>
+          <ul class="infor-c">
+            <li class="infor-c-in"><span class="infor-c-width">总区域：</span><span class="infor-c-q"><label id="Cname"></label></span></li>
+            <li class="infor-c-in"><span class="infor-c-width">销售量：</span><span class="infor-c-q"><label id="Clxr"></label>/套</span></li>
+            <li class="infor-c-in"><span class="infor-c-width">已完成：</span><span class="infor-c-q"><label id="Ctel"></label>/套</span></li>
+              <li class="infor-c-in"><span class="infor-c-width">责任人：</span><span class="infor-c-q"><label id="zrr"></label></span></li>
+        </ul>
+
+     </div>
+
+     <div class="infor-content" id="content" style="width: 100%;">
+
+     </div>
+      
+</div>
+<div id="windowDia" class="easyui-window" closed="true" style="width:680px; height: 600px; padding:10px;"></div>

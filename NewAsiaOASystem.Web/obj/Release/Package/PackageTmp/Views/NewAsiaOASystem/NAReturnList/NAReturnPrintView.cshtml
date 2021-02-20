@@ -1,0 +1,811 @@
+﻿@model NewAsiaOASystem.ViewModel.NAReturnListView
+@{
+    ViewBag.Title = "返退货流程打印";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<script src="~/Scripts/Printjs/LodopFuncs.js" type="text/javascript"></script>
+
+<script language="javascript" type="text/javascript">
+
+
+    var LODOP; //声明为全局变量
+    function myPreview1() {
+        LODOP = getLodop();
+        var strBodyStyle = "<style>" + document.getElementById("style1").innerHTML + "</style>";
+        var strFormHtml = strBodyStyle + "<body>" + document.getElementById("form1").innerHTML + "</body>";
+        //LODOP.PRINT_INIT("打印控件功能演示_Lodop功能_样式风格");	
+        //LODOP.ADD_PRINT_TEXT(50,50,260,39,"打印与显示样式一致：");
+        LODOP.ADD_PRINT_HTM(20, 30, 680, 990, strFormHtml);
+        LODOP.PREVIEW();
+    };
+
+    function Closetk() {
+        var ParentObj = window.parent;//获取父窗口
+        window.parent.$('#windowDia').window('close');
+        window.parent.location = "/ExpressPrinting/printlist";
+    };
+
+    function AjaxPrintJson() {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "/Flow_PlanProductioninfo/PlandateJson",
+            data: { plan_Id: '@ViewData["P_Id"]' },
+            dataType: "json",
+            async: false,
+            success: function (reslut) {
+                json = eval(reslut);
+            },
+            error: function (e) {
+                alert("请求失败");
+            }
+        })
+        return json;
+    }
+
+    $(function () {
+        var Cust = AjaxCust_Name('@Model.C_Id');//客户信息
+        $("#Cname").html(Cust.Name);//客户名称
+        var Per = AjaxR_Product('@Model.R_pId');//返退产品信息
+        $("#R_Per").html(FtPhtml(Per.Name))//产品名称
+        $("#Clxr").html(Cust.LxrName);
+        $("#Ctel").html(Cust.Tel);
+
+        //返退原因记录
+        FTyyhtml();
+        // var Resason = AjaxResasonjson('@Model.R_FTyyp');//父级返退货原因
+        // $("#R_ResasonP").html(Resason.Name);
+        @* if ('@Model.R_FTyy' != "") {
+            var ResasonS = AjaxResasonjson('@Model.R_FTyy');//
+            $("#R_Resason").html(ResasonS.Name);
+        }
+        if ('@Model.R_FTyysm' != null) {
+            $("#R_Rqtyy").html('@Model.R_FTyysm');
+        }*@
+        @*        if ('@Model.R_CLjg' == "0") {
+            $("#r_cljg").html(Showcljg('@Model.R_CLjg'))
+        } else if ('@Model.R_CLjg' == "1") {
+            $("#r_cljg").html(Showcljg('@Model.R_CLjg') + '@Model.R_CLFY' + "元")
+        } else if ('@Model.R_CLjg' == "2") {
+            $("#r_cljg").html(Showcljg('@Model.R_CLjg') + '@Model.R_CLQTSM')
+        }*@
+        //要求处理的结果
+        YqcljgHtml();
+        //涉及费用
+        Sjfyhtml();
+        var kfzyname = AjaxPerson_Name('@Model.Kfzy');//客服专员
+        $("#kfzyname").html(kfzyname.UserName);
+        var kfzgname = AjaxPerson_Name('@Model.Kfzg');//客服主管
+        $("#kfzgname").html(kfzgname.UserName);
+
+        //电器车间
+        @* if ('@Model.FTtype' == '0') {
+            $("#ftlx").html("维修");
+            $("#sfzb").css('display', 'block');
+            if ('@Model.R_isbxqn' == '0') {
+                $("#sfzbn").html("是")
+            } else if ('@Model.R_isbxqn' == '1') {
+                $("#sfzbn").html("否")
+            }
+            $("#bzpd").css('display', 'none');
+            $("#qtqk").css('display', 'none');
+        } else if ('@Model.FTtype' == '1') {
+            $("#ftlx").html("翻新");
+            $("#bzpd").css('display', 'block');
+            $("#qtqk").css('display', 'block');
+            $("#pzpd").html(pzpd('@Model.R_Pzpd'))
+            if ('@Model.R_Pzpd' == '3') {
+                $("#qtqksm").html('@Model.R_qtqksm')
+            }
+            $("#fxjljs").css('display', 'block');
+            $("#fxjljsc").html('@Model.R_Fxjlcon');
+        }*@
+        //维修返退记录
+        Wxfxjlhtml();
+        //责任部门
+        zrbmhtml();
+        if ('@Model.R_bbzrbm' != "") {
+            $("#zrbm").html(showzrbm('@Model.R_bbzrbm'));
+        }
+        var dqcjname = AjaxPerson_Name('@Model.R_CJFZR');//电气车间主管
+        $("#CQEname").html(dqcjname.UserName);
+        var pbbname = AjaxPerson_Name('@Model.R_bbgly');//品质经理
+        $("#pzjlname").html(pbbname.UserName);
+        //   var yxjlname = AjaxPerson_Name('@Model.R_yxzj');//营销主管
+        //    $("#yxjl").html(yxjlname.UserName);
+        if ('@Model.R_ZJL' != "") {
+            var ZJLNAME = AjaxPerson_Name('@Model.R_ZJL');//总经理或代表
+            $("#ZJLNAME").html(ZJLNAME.UserName);
+        }
+    })
+
+    //返退产显示
+    function FtPhtml(val) {
+        var html;
+        if (val == "温控器") {
+            html = '<div style="width: 100%">&radic;温控器</div>';
+            html += '<div style="width: 100%;"><i></i>电控箱</div>';
+            html += '<div style="width: 100%"><i></i> 其他</div>';
+        }
+        if (val == "电控箱") {
+            html = '<div style="width:100%"><i></i> 温控器</div>';
+            html += '<div style="width:100%">&radic; 电控箱</div>';
+            html += '<div style="width:100%"><i></i> 其他</div>';
+        }
+        if (val == "其他") {
+            html = '<div style="width: 100%"><i></i> 温控器</div>';
+            html += '<div style="width: 100%"><i></i> 电控箱</div>';
+            html += '<div style="width: 100%">&radic; 其他</div>';
+        }
+        return html;
+    }
+
+    //返退货原因记录
+    function FTyyhtml() {
+        var html;
+        var Resason = AjaxResasonjson('@Model.R_FTyyp');//父级返退货原因
+        html = '<table>'
+        if (Resason.Name == "故障品返退") {
+            html += '<tr><td style="width:120px;border: none;">(1)故障品返退</td><td style="width:120px;border: none;" colspan="3">&radic;</td></tr>';
+            html += '<tr><td style="width:120px;border: none;">(2)样品返退翻新</td><td style="width:200px;border: none;" colspan="2"><i></i>业务出差带样返退</td>';
+            html += '<td style="width:120px;border: none;"><i></i>客户样品返退</td></tr>';
+            html += '<tr><td style="width:130px;border: none;">(3)发错货产品退回</td><td style="width:100px;border: none;"><i></i>客户订错货</td>';
+            html += '<td style="width:100px;border: none;"><i></i>仓库发错货</td><td style="width:100px;border: none;"> <i></i>客服下错单</td></tr>';
+            html += '<tr><td style="width:120px;border: none;">(4)其他原因：</td><td style="width:200px;border: none;"colspan="3">@Model.R_FTyysm</td></tr>';
+
+        }
+        if (Resason.Name == "样品返退翻新") {
+            var ResasonS;
+            if ('@Model.R_FTyy' != "") {
+                ResasonS = AjaxResasonjson('@Model.R_FTyy');
+            }
+            html += '<tr><td style="width:120px;border: none;">(1)故障品返退</td><td style="width:120px;border: none;" colspan="3"><i></i></td></tr>';
+            html += '<tr><td style="width:120px;border: none;">(2)样品返退翻新</td>';
+            if (ResasonS.Name == "业务出差带样返退") {
+                html += '<td style="width:200px;border: none;" colspan="2">&radic;业务出差带样返退</td>';
+                html += '<td style="width:120px;border: none;"><i></i>客户样品返退</td></tr>';
+            }
+            if (ResasonS.Name == "客户样品返退") {
+                html += '<td style="width:200px;border: none;" colspan="2"><i></i>业务出差带样返退</td>';
+                html += '<td style="width:120px;border: none;">&radic;客户样品返退</td></tr>';
+            }
+            html += '<tr><td style="width:130px;border: none;">(3)发错货产品退回</td><td style="width:100px;border: none;"><i></i>客户订错货</td>';
+            html += '<td style="width:100px;border: none;"><i></i>仓库发错货</td><td style="width:100px;border: none;"> <i></i>客服下错单</td></tr>';
+            html += '<tr><td style="width:120px;border: none;">(4)其他原因：</td><td style="width:200px;border: none;"colspan="3">@Model.R_FTyysm</td></tr>';
+        }
+        if (Resason.Name == "发错货产品退回") {
+            var ResasonS;
+            if ('@Model.R_FTyy' != "") {
+                ResasonS = AjaxResasonjson('@Model.R_FTyy');
+            }
+            html += '<tr><td style="width:120px;border: none;">(1)故障品返退</td><td style="width:120px;border: none;" colspan="3"><i></i></td></tr>';
+            html += '<tr><td style="width:120px;border: none;">(2)样品返退翻新</td><td style="width:200px;border: none;" colspan="2"><i></i>业务出差带样返退</td>';
+            html += '<td style="width:120px;border: none;"><i></i>客户样品返退</td></tr>';
+            html += '<tr><td style="width:120px;border: none;">(3)发错货产品退回</td>';
+            if (ResasonS.Name == "客户订错货") {
+                html += '<td style="width:100px;border: none;">&radic;客户订错货</td>';
+                html += '<td style="width:100px;border: none;"><i></i>仓库发错货</td>';
+                html += '<td style="width:100px;border: none;"> <i></i>客服下错单</td></tr>';
+            }
+            if (ResasonS.Name == "仓库发错货") {
+                html += '<td style="width:100px;border: none;"><i></i>客户订错货</td>';
+                html += '<td style="width:100px;border: none;">&radic;仓库发错货</td>';
+                html += '<td style="width:100px;border: none;"> <i></i>客服下错单</td></tr>';
+            }
+            if (ResasonS.Name == "客服下错单") {
+                html += '<td style="width:100px;border: none;"><i></i>客户订错货</td>';
+                html += '<td style="width:100px;border: none;"><i></i>仓库发错货</td>';
+                html += '<td style="width:100px;border: none;">&radic;客服下错单</td></tr>';
+            }
+            html += '<tr><td style="width:120px;border: none;">(4)其他原因：</td><td style="width:200px;border: none;"colspan="3">@Model.R_FTyysm</td></tr>';
+        }
+        if (Resason.Name == "其他原因") {
+
+            html += '<tr><td style="width:120px;border: none;">(1)故障品返退</td><td style="width:120px;border: none;" colspan="3"><i></i></td></tr>';
+            html += '<tr><td style="width:120px;border: none;">(2)样品返退翻新</td><td style="width:200px;border: none;" colspan="2"><i></i>业务出差带样返退</td>';
+            html += '<td style="width:120px;border: none;"><i></i>客户样品返退</td></tr>';
+            html += '<tr><td style="width:130px;border: none;">(3)发错货产品退回</td><td style="width:100px;border: none;"><i></i>客户订错货</td>';
+            html += '<td style="width:100px;border: none;"><i></i>仓库发错货</td><td style="width:100px;border: none;"> <i></i>客服下错单</td></tr>';
+            html += '<tr><td style="width:120px;border: none;">(4)其他原因：</td><td style="width:200px;border: none;"colspan="3">@Model.R_FTyysm</td></tr>';
+        }
+        html += '</table>';
+        $("#ftyy").html(html);
+    }
+
+    //要求处理结果html
+    function YqcljgHtml() {
+        var html;
+        @* @Model.R_CLjg*@
+
+        html = '<table><tr>';
+        if ('@Model.R_CLjg' == "0") {
+            html += ' <td style="width:90px;border: none;"> &radic;修复寄回</td> <td  style="width:190px;border: none;"><i></i>翻新入库后减帐  元</td><td style="width:120px; border:none"><i></i>正常处理流程</td><td style="width:200px;border: none;"> <i></i>其他：</td>';
+        }
+        if ('@Model.R_CLjg' == "1") {
+            html += ' <td style="width:90px;border: none;"><i></i>修复寄回</td> <td  style="width:190px;border: none;"> &radic;翻新入库后减帐 @Model.R_CLFY 元</td><td style="width:120px; border:none"><i></i>正常处理流程</td><td style="width:200px;border: none;"> <i></i>其他：</td>';
+
+        }
+        if ('@Model.R_CLjg' == "2") {
+            html += ' <td style="width:90px;border: none;"><i></i>修复寄回</td> <td  style="width:180px;border: none;"> <i></i>翻新入库后减帐   元</td><td style="width:120px; border:none"><i></i>正常处理流程</td><td style="width:180px;border: none;"> &radic;其他：@Model.R_CLQTSM</td>';
+        }
+        if ('@Model.R_CLjg' == "3") {
+            html += ' <td style="width:90px;border: none;"><i></i>修复寄回</td> <td  style="width:180px;border: none;"> <i></i>翻新入库后减帐   元</td><td style="width:120px; border:none">&radic;正常处理流程</td><td style="width:180px;border: none;"><i></i> 其他：@Model.R_CLQTSM</td>';
+        }
+
+        html += '</tr></table>';
+        $("#cljghtml").html(html);
+    }
+
+    //涉及费用html
+    function Sjfyhtml() {
+        var html;
+        html = '<table><tr>';
+        if ('@Model.R_Yf' != "") {
+            html += '<td style="width:130px;border: none;"> &radic;运费（@Model.R_Yf）元</td>';
+        }
+        else {
+            html += '<td style="width:130px;border: none;"> <i></i>运费（@Model.R_Yf）元</td>';
+        }
+        if ('@Model.R_sp' != "") {
+            html += '<td style="width:130px;border: none;"> &radic;客户索赔（@Model.R_sp）元</td>';
+        }
+        else {
+            html += '<td style="width:130px;border: none;"> <i></i>客户索赔（@Model.R_sp）元</td>';
+        }
+        html += '</tr></table>';
+        $("#sjfyhtml").html(html);
+    }
+    //维修/翻新记录html
+    function Wxfxjlhtml() {
+        var html;
+        html = '<table style="border: none;"> <tr>';
+        if ('@Model.FTtype' == '0') {
+            html += '<td style="width: 500px; border-bottom: none; border-left: none; border-top: none">';
+            html += '<div style="width: 100%">';
+            html += '<table style="width: 100%">';
+            html += '<tr>';
+            html += '<td colspan="2" style="border: none;">维修记录（详见返退维修维修处理意见）</td>';
+            html += '</tr>';
+            html += '<tr><td style="border: none;">';
+            html += '<table style="width: 100%">';
+            html += '<tr><td style="width: 50%; border: none;">维修费用（保内）</td><td style="width: 50%; border: none;">维修费用（保外）</td></tr>';
+            if ('@Model.R_isbxqn' == '0') {
+                html += '<tr><td style="width: 50%; border: none; font-size: 12px">元器件（@Model.R_YQJ）元</td>';
+                html += '<td style="width: 50%; border: none; font-size: 12px">元器件（）元</td></tr>';
+                html += '<tr><td style="width: 50%; border: none; font-size: 12px">人工费（@Model.R_RGF）元</td>';
+                html += '<td style="width: 50%; border: none; font-size: 12px">人工费（）元</td></tr>';
+                html += '<tr><td style="width: 50%; border: none; font-size: 12px">包材费（@Model.R_BCF）元</td>';
+                html += '<td style="width: 50%; border: none; font-size: 12px">包材费（）元</td></tr>';
+                html += '<tr><td style="width: 50%; border: none; font-size: 12px">小&nbsp;&nbsp;计（@Model.R_XJ）元</td>';
+                html += '<td style="width: 50%; border: none; font-size: 12px">小&nbsp;&nbsp;计（）元</td></tr>';
+            }
+            else if ('@Model.R_isbxqn' == '1') {
+                html += '<tr><td style="width: 50%; border: none; font-size: 12px">元器件（）元</td>';
+                html += '<td style="width: 50%; border: none; font-size: 12px">元器件（@Model.R_YQJ）元</td></tr>';
+                html += '<tr><td style="width: 50%; border: none; font-size: 12px">人工费（）元</td>';
+                html += '<td style="width: 50%; border: none; font-size: 12px">人工费（@Model.R_RGF）元</td></tr>';
+                html += '<tr><td style="width: 50%; border: none; font-size: 12px">包材费（@Model.R_BCF）元</td>';
+                html += '<td style="width: 50%; border: none; font-size: 12px">包材费（@Model.R_BCF）元</td></tr>';
+                html += '<tr><td style="width: 50%; border: none; font-size: 12px">小&nbsp;&nbsp;计（）元</td>';
+                html += '<td style="width: 50%; border: none; font-size: 12px">小&nbsp;&nbsp;计（@Model.R_XJ）元</td></tr>';
+            }
+        html += '</table>';
+        html += '</td></tr>';
+        html += '</table>';
+        html += '</div>';
+        html += '</td>';
+
+        html += '<td style="width: 500px; border: none;">';
+        html += '<div style="width: 100%">';
+        html += '<table style="width: 100%;border: none;">';
+        html += '<tr><td colspan="2" style="border: none;">翻新记录简述：</td></tr>';
+        html += '<tr><td style="border: none;">';
+        html += '<table style="width: 100%;border: none;">';
+        html += '<tr><td style="width: 50%; border: none;">品质判定：</td><td style="width: 50%; border: none;">翻新费用</td></tr>';
+        html += '<tr><td style="width: 50%; border: none; font-size: 12px"><i></i>保修期限外,不予入库</td>';
+        html += '<td style="width: 50%; border: none; font-size: 12px">元器件（）元</td></tr>';
+        html += '<tr><td style="width: 50%; border: none; font-size: 12px"><i></i>客户使用不当,不予入库</td>';
+        html += '<td style="width: 50%; border: none; font-size: 12px">人工费（）元</td></tr>';
+        html += '<tr><td style="width: 50%; border: none; font-size: 12px"><i></i>翻新入库,可减帐</td>';
+        html += '<td style="width: 50%; border: none; font-size: 12px">包材费（）元</td></tr>';
+        html += '<tr><td style="width: 50%; border: none; font-size: 12px"><i></i>其他情况说明：</td>';
+        html += '<td style="width: 50%; border: none; font-size: 12px">小&nbsp;&nbsp;计（）元</td></tr>';
+        html += '</table>';
+        html += '</td></tr>';
+        html += '</table>';
+        html += '</div>';
+        html += '</td>';
+    }
+    else if ('@Model.FTtype' == '1') {
+            html += '<td style="width: 500px; border-bottom: none; border-left: none; border-top: none">';
+            html += '<div style="width: 100%">';
+            html += '<table style="width: 100%">';
+            html += '<tr>';
+            html += '<td colspan="2" style="border: none;">维修记录（详见返退维修维修处理意见）</td>';
+            html += '</tr>';
+            html += '<tr><td style="border: none;">';
+            html += '<table style="width: 100%">';
+            html += '<tr><td style="width: 50%; border: none;">维修费用（保内）</td><td style="width: 50%; border: none;">维修费用（保外）</td></tr>';
+            html += '<tr><td style="width: 50%; border: none; font-size: 12px">元器件（）元</td>';
+            html += '<td style="width: 50%; border: none; font-size: 12px">元器件（）元</td></tr>';
+            html += '<tr><td style="width: 50%; border: none; font-size: 12px">人工费（）元</td>';
+            html += '<td style="width: 50%; border: none; font-size: 12px">人工费（）元</td></tr>';
+            html += '<tr><td style="width: 50%; border: none; font-size: 12px">包材费（）元</td>';
+            html += '<td style="width: 50%; border: none; font-size: 12px">包材费（）元</td></tr>';
+            html += '<tr><td style="width: 50%; border: none; font-size: 12px">小&nbsp;&nbsp;计（）元</td>';
+            html += '<td style="width: 50%; border: none; font-size: 12px">小&nbsp;&nbsp;计（）元</td></tr>';
+            html += '</table>';
+            html += '</td></tr>';
+            html += '</table>';
+            html += '</div>';
+            html += '</td>';
+
+            html += '<td style="width: 500px;border: none;">';
+            html += '<div style="width: 100%">';
+            html += '<table style="width: 100%">';
+            html += '<tr><td colspan="2" style="border: none;">翻新记录简述：@Model.R_Fxjlcon</td></tr>';
+            html += '<tr><td style="border: none;">';
+            html += '<table style="width: 100%">';
+            html += '<tr><td style="width: 50%; border: none;">品质判定：</td><td style="width: 50%; border: none;">翻新费用</td></tr>';
+            if ('@Model.R_Pzpd' == '0') {
+                html += '<tr><td style="width: 50%; border: none; font-size: 12px">&radic;保修期限外,不予入库</td>';
+                html += '<td style="width: 50%; border: none; font-size: 12px">元器件（@Model.R_YQJ）元</td></tr>';
+                html += '<tr><td style="width: 50%; border: none; font-size: 12px"><i></i>客户使用不当,不予入库</td>';
+                html += '<td style="width: 50%; border: none; font-size: 12px">人工费（@Model.R_RGF）元</td></tr>';
+                html += '<tr><td style="width: 50%; border: none; font-size: 12px"><i></i>翻新入库,可减帐</td>';
+                html += '<td style="width: 50%; border: none; font-size: 12px">包材费（@Model.R_BCF）元</td></tr>';
+                html += '<tr><td style="width: 50%; border: none; font-size: 12px"><i></i>其他情况说明：</td>';
+                html += '<td style="width: 50%; border: none; font-size: 12px">小&nbsp;&nbsp;计（@Model.R_XJ）元</td></tr>';
+            }
+            if ('@Model.R_Pzpd' == '1') {
+            html += '<tr><td style="width: 50%; border: none; font-size: 12px"><i></i>保修期限外,不予入库</td>';
+            html += '<td style="width: 50%; border: none; font-size: 12px">元器件（@Model.R_YQJ）元</td></tr>';
+            html += '<tr><td style="width: 50%; border: none; font-size: 12px">&radic;客户使用不当,不予入库</td>';
+            html += '<td style="width: 50%; border: none; font-size: 12px">人工费（@Model.R_RGF）元</td></tr>';
+            html += '<tr><td style="width: 50%; border: none; font-size: 12px"><i></i>翻新入库,可减帐</td>';
+            html += '<td style="width: 50%; border: none; font-size: 12px">包材费（@Model.R_BCF）元</td></tr>';
+            html += '<tr><td style="width: 50%; border: none; font-size: 12px"><i></i>其他情况说明：</td>';
+            html += '<td style="width: 50%; border: none; font-size: 12px">小&nbsp;&nbsp;计（@Model.R_XJ）元</td></tr>';
+            }
+            if ('@Model.R_Pzpd' == '2') {
+            html += '<tr><td style="width: 50%; border: none; font-size: 12px"><i></i>保修期限外,不予入库</td>';
+            html += '<td style="width: 50%; border: none; font-size: 12px">元器件（@Model.R_YQJ）元</td></tr>';
+            html += '<tr><td style="width: 50%; border: none; font-size: 12px"><i></i>客户使用不当,不予入库</td>';
+            html += '<td style="width: 50%; border: none; font-size: 12px">人工费（@Model.R_RGF）元</td></tr>';
+            html += '<tr><td style="width: 50%; border: none; font-size: 12px">&radic;翻新入库,可减帐</td>';
+            html += '<td style="width: 50%; border: none; font-size: 12px">包材费（@Model.R_BCF）元</td></tr>';
+            html += '<tr><td style="width: 50%; border: none; font-size: 12px"><i></i>其他情况说明：</td>';
+            html += '<td style="width: 50%; border: none; font-size: 12px">小&nbsp;&nbsp;计（@Model.R_XJ）元</td></tr>';
+            }
+            if ('@Model.R_Pzpd' == '3') {
+            html += '<tr><td style="width: 50%; border: none; font-size: 12px"><i></i>保修期限外,不予入库</td>';
+            html += '<td style="width: 50%; border: none; font-size: 12px">元器件（@Model.R_YQJ）元</td></tr>';
+            html += '<tr><td style="width: 50%; border: none; font-size: 12px"><i></i>客户使用不当,不予入库</td>';
+            html += '<td style="width: 50%; border: none; font-size: 12px">人工费（@Model.R_RGF）元</td></tr>';
+            html += '<tr><td style="width: 50%; border: none; font-size: 12px"><i></i>翻新入库,可减帐</td>';
+            html += '<td style="width: 50%; border: none; font-size: 12px">包材费（@Model.R_BCF）元</td></tr>';
+            html += '<tr><td style="width: 50%; border: none; font-size: 12px">&radic;其他情况说明：</td>';
+            html += '<td style="width: 50%; border: none; font-size: 12px">小&nbsp;&nbsp;计（@Model.R_XJ）元</td></tr>';
+        }
+        html += '</table>';
+        html += '</td></tr>';
+        html += '</table>';
+        html += '</div>';
+        html += '</td>';
+    }
+
+    html += '</tr></table>'
+    $("#wxfthtml").html(html);
+}
+
+//责任部门html
+function zrbmhtml() {
+    var zrbm = '@Model.R_bbzrbm';
+        zrbm = zrbm.split(","); //字符分割 
+        var html;
+        var BBB = "<i></i>品保部";
+        var jsb = "<i></i>技术部";//停用
+        var dqjs = "<i></i>电气技术";//新增
+        var dzjs = "<i></i>电子技术";//新增
+        var wljs = "<i></i>网络技术";//新增
+        var dqcj = "<i></i>电气车间";//新增
+        var dzcj = "<i></i>电子车间";//新增
+        var wlgs = "<i></i>物流公司";//新增
+        var gys = "<i></i>供应商";//新增
+        var zcb = "<i></i>制造部";//停用
+        var yxb = "<i></i>营销部";
+        var qtbm = "<i></i>其他部门";//停用
+        var khdw = "<i></i>客户单位";
+        var ckdw = "<i></i>仓库";
+    var zcwz = "<i></i>正常无责";
+    console.log('zrbm', zrbm)
+        for (var i = 0, j = zrbm.length; i < j; i++) {
+            if (zrbm[i] == "品保部") {
+                BBB = "&radic;品保部";
+            }
+            //if (zrbm[i] == "技术部") {
+            //    jsb = "&radic;技术部";
+            //}
+            if (zrbm[i] == "电气技术") {
+                dqjs = "&radic;电气技术";
+            }
+            if (zrbm[i] == "电子技术") {
+                dzjs = "&radic;电子技术";
+            }
+            if (zrbm[i] == "网络技术")
+            {
+                wljs = "&radic;网络技术";
+            }
+            if (zrbm[i] == "电气车间") {
+                dqcj = "&radic;电气车间";
+            }
+            if (zrbm[i] == "电子车间") {
+                dzcj = "&radic;电子车间";
+            }
+            if (zrbm[i] == "物流公司") {
+                wlgs = "&radic;物流公司";
+            }
+            if (zrbm[i] == "供应商") {
+                gys = "&radic;供应商";
+            }
+            //if (zrbm[i] == "制造部") {
+            //    zcb = "&radic;制造部";
+            //}
+            if (zrbm[i] == "营销部") {
+                yxb = "&radic;营销部";
+            }
+            //if (zrbm[i] == "其他部门") {
+            //    qtbm = "&radic;其他部门";
+            //}
+            if (zrbm[i] == "客户单位") {
+                khdw = "&radic;客户单位";
+            }
+            if (zrbm[i] == "仓库") {
+                ckdw = "&radic;仓库";
+            }
+            if (zrbm[i] == "正常无责") {
+                zcwz = "&radic;正常无责";
+            }
+        }
+    // html = BBB + jsb + zcb + yxb + qtbm + khdw;
+        html = BBB + dqjs + dzjs + wljs + dqcj + dzcj + wlgs + gys + yxb + khdw +ckdw+ zcwz;
+        $("#zrbmhtml").html(html);
+    }
+
+</script>
+
+<style id="style1">
+    .table_con
+    {
+        border-collapse: collapse;
+        border: none;
+    }
+
+        .table_con td
+        {
+            border: solid #000 1px;
+            height: 25px;
+            padding: 0 0 0 5px;
+        }
+
+    .Miantitle
+    {
+        width: 100%;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .hedertitle
+    {
+        width: 100%;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .fontsizetd
+    {
+        font-size: 14px;
+    }
+
+    .bhcss
+    {
+        width: 100%;
+        height: 50px;
+    }
+
+    .xkk
+    {
+        width: 5px;
+        height: 5px;
+        border: 1px solid #000;
+    }
+
+    i
+    {
+        width: 10px;
+        height: 10px;
+        line-height: 24px;
+        vertical-align: top;
+        margin: 4px 2px 0 0;
+        overflow: hidden;
+        border: 1px solid #000;
+        display: inline-block;
+    }
+</style>
+
+
+
+<div id="form1">
+    <div class="Miantitle">
+        新亚洲科技有限公司
+    </div>
+    <div class="hedertitle">
+        返退货流程跟踪单
+    </div>
+    <div class="bhcss">
+        <table style="width: 100%;">
+            <tr>
+                @*<td style="width: 400px">编号：NA/R-8  5-06</td>*@
+                <td style="width:400px">编号：NA/QR-8.2-25</td>
+                <td>NO:A/1</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>返退货编号：@Model.fthbianhao</td>
+            </tr>
+        </table>
+    </div>
+    <table class="table_con" style="width: 100%; color: #000; font-size: 13px; margin: auto;">
+        <tr>
+            <td style="width: 20%">客户名称</td>
+            <td style="width: 20%" id="Cname"></td>
+            <td style="width: 15%">返退产品</td>
+            <td style="width: 15%" id="R_Per"></td>
+            <td style="width: 15%">返退数量</td>
+            <td style="width: 15%">@Model.R_Number   套/件</td>
+        </tr>
+        <tr>
+            <td style="width: 20%">客户联系人</td>
+            <td style="width: 20%" id="Clxr"></td>
+            <td style="width: 15%">联系电话</td>
+            <td style="width: 15%" id="Ctel"></td>
+            <td style="width: 15%">返退日期</td>
+            <td style="width: 15%">@Model.R_FTdate</td>
+        </tr>
+        <tr>
+            <td colspan="6">
+
+                <!---返退原因记录--->
+                <div style="width: 100%; height: 120px;">
+                    <table style="width: 100%; border: none">
+                        <tr>
+                            <td style="width: 130px; border: none;" valign="top">
+                                <div style="width: 100%; height: 40px; line-height: 30px;">
+                                    返退货原因记录
+                                </div>
+                            </td>
+
+                            <td style="border: none;">
+                                <div style="width: 100%; height: 120px;" id="ftyy">
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <!---要求处理结果--->
+                <div style="line-height: 30px;">
+
+                    <table style="width: 100%; border: none">
+                        <tr>
+                            <td style="width: 120px; border: none;">
+                                <div style="width: 100%; height: 30px; line-height: 30px;">
+                                    要求处理结果:
+                                </div>
+                            </td>
+
+                            <td style="border: none;">
+                                <div style="width: 100%; height: 30px;" id="cljghtml">
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <!---设计费用--->
+                <div style="line-height: 30px;">
+
+                    <table style="width: 100%; border: none">
+                        <tr>
+                            <td style="width: 120px; border: none;">
+                                <div style="width: 100%; height: 30px; line-height: 30px;">
+                                    涉及费用：
+                                </div>
+                            </td>
+
+                            <td style="border: none;">
+                                <div style="width: 100%; height: 30px;" id="sjfyhtml">
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
+                </div>
+                <!----补充要求--->
+                <div style="line-height: 30px;">
+                    <table style="width: 100%; border: none">
+                        <tr>
+                            <td style="width: 120px; border: none;">
+                                <div style="width: 100%; height: 30px; line-height: 30px;">
+                                    补充要求：
+                                </div>
+                            </td>
+
+                            <td style="border: none;">
+                                <div style="width: 100%; height: 30px;">
+                                    @Model.Remark1
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <!---客服签字--->
+                <div style="line-height: 40px; width: 100%;">
+                    <table style="width: 100%; border: none">
+                        <tr>
+                            <td style="width: 25%; border: none;" class="fontsizetd"></td>
+                            <td style="width: 25%; border: none;" class="fontsizetd">客服专员：
+                                <label id="kfzyname"></label>
+                            </td>
+                            <td style="width: 25%; border: none;" class="fontsizetd">客服主管：
+                                <label id="kfzgname"></label>
+                            </td>
+                            <td style="width: 25%; border: none;" class="fontsizetd">日期：@Model.ClDate</td>
+                        </tr>
+                    </table>
+                </div>
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan="6">
+                <!--电气--->
+                <div style="width: 100%;" id="wxfthtml">
+                </div>
+
+                <div style="line-height: 40px; width: 100%;">
+                    <table style="width: 100%; border: none">
+                        <tr>
+                            <td style="width: 30%; border: none;" class="fontsizetd"></td>
+                            <td style="width: 40%; border: none;" class="fontsizetd">电气车间负责人：
+                               <label id="CQEname"></label>
+                            </td>
+                            <td style="width: 30%; border: none;" class="fontsizetd">日期：
+                              @Model.R_cjcldate
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan="6">
+                <div style="line-height: 40px; width: 100%;">
+                    @* 责任判定:  @Model.R_bbzrpd*@
+                    <table style="width: 100%; border: none">
+                        <tr>
+                            <td style="border: none;" valign="top">
+                                <div style="width: 100%; height: 40px; line-height: 30px;">
+                                    责任判定:@Model.R_bbzrpd
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div style="line-height: 40px; width: 100%;">
+                    <table style="width: 100%; border: none">
+                        <tr>
+                            <td style="width: 80px; border: none;" valign="top">
+                                <div style="width: 100%; height: 40px; line-height: 30px;">
+                                    责任部门:
+                                </div>
+                            </td>
+                            <td style="border: none;"></td>
+                        </tr>
+                        <tr>
+                            <td id="zrbmhtml" colspan="2" style="border: none;"></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div style="line-height: 40px; width: 100%;">
+                    <table style="width: 100%; border: none">
+                        <tr>
+                            <td style="width: 30%; border: none;" class="fontsizetd"></td>
+                            <td style="width: 40%; border: none;" class="fontsizetd">品质经理：
+                                 <label id="pzjlname"></label>
+                            </td>
+                            <td style="width: 30%; border: none;" class="fontsizetd">日期：
+                               @Model.R_bbcldate
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan="6">
+                <div style="line-height: 40px; width: 100%;">
+                    营销处理意见:
+                    @Model.R_xybclyj
+                </div>
+
+
+                <div style="line-height: 40px; width: 100%">
+                    <table style="width: 100%; border: none">
+                        <tr>
+                            <td style="width: 30%; border: none;" class="fontsizetd">区域经理:
+                                 @Model.R_qyjl
+                            </td>
+                            <td style="width: 40%; border: none;" class="fontsizetd">营销经理：
+                                  <label id="yxjl"></label>
+                            </td>
+                            <td style="width: 30%; border: none;" class="fontsizetd">日期：
+                               @Model.R_yxcldate
+                            </td>
+                        </tr>
+                    </table>
+
+                </div>
+
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan="6">
+                <div style="line-height: 40px; width: 100%;">
+                    审核意见:
+                    @Model.R_JLSHYJ
+                </div>
+
+                <div style="line-height: 40px; width: 100%">
+                    <table style="width: 100%; border: none">
+                        <tr>
+                            <td style="width: 30%; border: none;" class="fontsizetd"></td>
+                            <td style="width: 40%; border: none;" class="fontsizetd">总经理/代表：
+                                  <label id="ZJLNAME"></label>
+                            </td>
+                            <td style="width: 30%; border: none;" class="fontsizetd">日期：
+                               @Model.R_SHDATE
+                            </td>
+                        </tr>
+                    </table>
+
+                </div>
+            </td>
+        </tr>
+    </table>
+
+</div>
+
+<div style="width: 200px; height: 80px; overflow: hidden">
+    <div class="inquiry-input infor-b">
+        <span>
+            <button onclick="return myPreview1()">打印</button>
+        </span>
+        <span>
+            <button onclick="window.history.go(-1)">返回</button></span>
+    </div>
+</div>
+
+<script src="~/Scripts/NAjs/NAReturnList.js"></script>
+
+

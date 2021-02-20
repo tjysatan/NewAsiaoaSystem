@@ -1,0 +1,276 @@
+﻿@model NewAsiaOASystem.ViewModel.PagerInfo<NewAsiaOASystem.ViewModel.CG_infoView>
+@{
+    ViewBag.Title = "采购单列表";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@section HeadContent{
+    <script type="text/javascript">
+        $(function () {
+            BindGrid();
+        })
+        function BindGrid() {
+            @{
+                if (null != Model && null != Model.GetPagingDataJson)
+                {
+                    string json = Model.GetPagingDataJson;//获取json数据
+                    @: var jsonStr = @Html.Raw(json);
+                }
+             }
+            dataGrid(jsonStr);
+        }
+
+        function dataGrid(jsonStr)
+        {
+            if (typeof (jsonStr) != "undefined") {
+                var html = "";
+                html = '<table cellpadding="0" cellspacing="0" style="width:100%;">';
+                for (var i = 0, j = jsonStr.length; i < j; i++) {
+                    if (i % 2 == 0)
+                        html += '<tr class="h-table-content-r1">';
+                    else
+                        html += '<tr class="h-table-content-r">';
+                    html += '<td width="5%"><input type="checkbox" name="ContentChecked" value="' + jsonStr[i].Id + '"/></td>';
+                    html += '<td width="15%">' + GetGysinfojson(jsonStr[i].GysId).G_Name + '</td>';
+                    html += '<td width="10%">' + showDate(jsonStr[i].Cg_xdtime) + '</td>';
+
+                    if(jsonStr[i].Cg_sgjqtime!=null)
+                        html+='<td width="10%">'+showDate(jsonStr[i].Cg_sgjqtime)+'</td>';
+                    else
+                        html += '<td width="10%"></td>';
+
+                    if(jsonStr[i].Cg_Isdh!=null){
+                        if(jsonStr[i].Cg_Isdh=="0"){
+                            html+='<td width="10%">未到货</td>';
+                        }
+                        else if(jsonStr[i].Cg_Isdh==1){
+                            html+='<td width="10%">已到货</td>';
+                        }
+                    }else{
+                        html += '<td width="10%"></td>';
+                   }
+                    if(jsonStr[i].Cg_jqqrtime!=null)
+                        html+='<td width="10%">'+showDate(jsonStr[i].Cg_jqqrtime)+'</td>';
+                    else
+                        html += '<td width="10%"></td>';
+                    if(jsonStr[i].Cg_dhtime!=null)
+                        html+='<td width="10%">'+showDate(jsonStr[i].Cg_dhtime)+'</td>';
+                    else
+                        html += '<td width="10%"></td>';
+ 
+                    html+='<td width="25%">'+ Sgjqshow(jsonStr[i].Id)+dhshow(jsonStr[i].Id)+ Cgdck(jsonStr[i].Id)+'</td>';
+                    html+='</tr>';
+                }
+                html += '</table>';
+                $("#content").html(html);
+            }
+        }
+
+        //pageIndex当前页
+        function SerchList(pageIndex)
+        {
+            $("input[name='pageIndex']").val(pageIndex);
+            var options = {
+                beforeSubmit: function () {
+                    return true;
+                },
+                dataType: "json",
+                success: function (context) {
+                    var data=eval(context.result);
+                    dataGrid(data);
+                    $(".pagin").html(context.PageN);//输出分页按钮
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $.messager.alert("操作提示", '查询失败请重试！', 'error');
+                }
+            }
+            $('#form1').ajaxSubmit(options);
+            return false;
+        }
+
+        //交期设置
+        function Sgjqshow(val) {
+            var Id = "'" + val + "'";
+            var s = '<a href="#" onclick="editssgtime(' + Id + ')">交期设定</a>&nbsp;&nbsp;';
+            return s;
+        }
+
+        //到货编辑
+        function dhshow(val){
+            var Id = "'" + val + "'";
+            var s = '<a href="#" onclick="editdhtime(' + Id + ')">到货确认</a>&nbsp;&nbsp;';
+            return s;
+        }
+
+
+        //设置到货时间
+        function editdhtime(id) {
+            if (id != "") {
+                $('#windowDia').html("<iframe src=../CG_info/dhtimeview?Id=" + id + "&&   style='border:0px;' width='300px' height='150px'></iframe>");
+                $("#windowDia").window({
+                    title: '到货时间确认',
+                    modal: true,
+                    closed: false,
+                    width:400,
+                    height:200,
+                });
+            }
+        }
+ 
+
+        //生管需求时间设定
+        function editssgtime(id){
+            $('#windowDia').html("<iframe src=../CG_info/SGtimeview?Id=" + id + "&&   style='border:0px;' width='300px' height='170px'></iframe>");
+            $("#windowDia").window({
+                title: '生管需求时间设定',
+                modal: true,
+                closed: false,
+                width:400,
+                height:200,
+            });
+        }
+
+        //采购单查看
+        function Cgdck(val1)
+        {
+             val1 = "'" + val1 + "'";
+            var s = '<a href="#" onclick="editxd('+ val1 + ')">编辑</a>&nbsp;&nbsp;';
+            return s;
+        }
+
+        //采购下单
+        function editxd(val){
+            location.href = "../CG_info/CkcgdView?Id="+val;
+        }
+
+        //根据供应商ID 查找供应商信息
+        function GetGysinfojson(val){
+            var json;
+            $.ajax({
+                type: "POST",
+                url:"/CG_info/GetgysinfoJson",
+                data: { Id: val },
+                dataType: "json",
+                async: false,
+                success: function (result) {
+                    json=result;
+                },
+                error: function (e) {
+                    alert("数据连接超时!");
+                }
+            })
+            return json;
+        }
+
+        //根据供应商名称查找供应商信息
+        function GetGysinfomodelbynamejson(val){
+            var json;
+            $.ajax({
+                type:"POST",
+                url:"/NQ_YJinfo/Getgysmodeljson",
+                data:{Name:val},
+                dataType:"json",
+                async:false, 
+                success:function (result){
+                    json=result;
+                },
+                error: function (e) {
+                    alert("数据连接超时!");
+                }
+            })
+            return json;
+        }
+
+        //双击查询供应商信息
+        function sjcxgys(){
+            var gysname=$("#txtSearch_Name").val();//供应商名称
+            var gysmodel=GetGysinfomodelbynamejson(gysname);
+            $("#txtSearch_Name").val(gysmodel.G_Name);//供应商名称
+            $("#gysId").val(gysmodel.Id);//供应商Id
+        }
+
+    </script>
+}
+
+<!--==================================数据列表=============================-->
+<div class="h-right">
+    <div class="h-right-c">
+     @*   <div class="h-right-title">您当前的位置：免疫点管理</div>*@
+        <!--查询条件-->
+        @using (Html.BeginForm("SearchList", "CG_info", FormMethod.Post, new { id = "form1" }))
+        {
+            @Html.Hidden("pageIndex");
+            <input type="hidden" id="gysId" name="gysId" />
+            <div class="inquiry1">
+                <fieldset>
+                    <legend>查询条件：</legend>
+                    <ul>
+                        <li><span>供应商：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txtSearch_Name" id="txtSearch_Name" ondblclick="sjcxgys()" />
+                            </span>
+                        </li>
+                        <li>
+                            <span>是否到货：</span>
+                            <span class="inquiry-input">
+                                <select id="Isdh" name="Isdh">
+                                    <option value="">全部</option>
+                                    <option value="1">已到</option>
+                                    <option value="0">未到</option>
+                                </select>
+                            </span>
+                        </li>
+                        <li>
+                            <span>采购时间：</span>
+                            <span class="inquiry-input">
+                                 <input type="text" name="Stratrldate" onclick="WdatePicker()" />
+                                 - <input type="text" name="Endrldate" onclick="WdatePicker()" />
+                            </span>
+                        </li>
+                        <li style="*width: 100%; *margin: -10px 0 5px 90px;"><span class="inquiry-input">
+                            <button name="btnSerch" onclick="return SerchList(1)">查询</button>
+                        </span>
+                        </li>
+                        <li>
+                            <span class="inquiry-input">
+                            <button onclick="return addClick('/NQ_YJinfo/addPage')">添加</button></span>
+                            <span class="inquiry-input">
+                            <button onclick="return del('/NQ_YJinfo/Delete')">删除</button></span>
+                            <span class="inquiry-input">
+                            <button onclick="return update('/NQ_YJinfo/EditPage')">编辑</button></span>
+                            <span class="inquiry-input">
+                            <button onclick="return addClick('/NQ_YJinfo/List')">刷新</button></span></li>
+                    </ul>
+                </fieldset>
+            </div>
+        }
+        <div class="h-table">
+            <div class="h-table-content">
+                <table cellpadding="0" cellspacing="0" class="h-right-table-title1" style="border: none;width:100%;">
+                    <tr>
+                        <td width="5%">
+                            <input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" /></td>
+                        <td width="15%">供应商</td>
+                        <td width="10%">下单时间</td>
+                        <td width="10%">生管时间</td>
+                        <td width="10%">到货状态</td>
+                        <td width="10%">预计交期</td>
+                        <td width="10%">时间到货</td>
+                        <td width="25%">操作</td>
+                    </tr>
+                </table>
+                <div id="content"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--==========================输出分页按钮=========================-->
+<div class="pagin">
+    @if (ViewBag.PageNavigate == null)
+    {
+        @Html.ShowPageNavigate(Model.CurrentPageIndex, Model.PageSize, Model.RecordCount);
+    }
+</div>
+<div id="windowDia" class="easyui-window" closed="true" style="width:400px; height:250px; padding:10px;"></div>

@@ -1,0 +1,63 @@
+﻿@model NewAsiaOASystem.ViewModel.CG_DetailinfoView
+@{
+    ViewBag.Title = "实际采购数量编写";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@using (Html.BeginForm("Editcgsl", "CG_info", FormMethod.Post, new { id = "form1" }))
+{
+    @Html.HiddenFor(m => m.Id);
+    @Html.HiddenFor(m => m.GysId);
+    @Html.HiddenFor(m=>m.cgId);
+    @Html.HiddenFor(m=>m.Cgsl);
+    @Html.HiddenFor(m=>m.Dhsl);
+    @Html.HiddenFor(m => m.sypjsl);
+    @Html.HiddenFor(m=>m.YqjId);
+    <table style="width:300px;">
+        <tr>
+            <td><span class="infor-c-width">采购数量:</span></td>
+            <td><span class="infor-c-input">@Html.TextBoxFor(m => m.sjcgsl)</span></td>
+        </tr>
+        <tr>
+            <td style=" height:30px;" colspan="2"></td>
+        </tr>
+        <tr>
+            <td colspan="2" algin="center">
+                   <div class="inquiry-input" >
+             <span style="margin-left:100px;">
+                <button onclick="return  sjcgslSavaForm()">保存</button>
+            </span>
+               </div>
+            </td>
+        </tr>
+    </table>
+}
+
+<script type="text/javascript">
+    //采购数量设置
+    function sjcgslSavaForm() {
+        //表单验证
+        var options = {
+            beforeSubmit: function () {
+                return true;
+            },
+            dataType: "json",//这里是指控制器处理后返回的类型，这里返回json格式。
+            success: function (context) {
+                if ("success" == context.result) {
+                    var ParentObj = window.parent;//获取父窗口
+                    window.parent.$('#windowDia').window('close');
+                    var Id = $("#cgId").val();//供应商Id
+                    window.parent.location = '/CG_info/CkcgdView?Id=' + Id;
+                }
+                if ("error" == context.result) {
+                    $.messager.alert("操作提示", '设置失败！', 'error');
+                }
+                if ("error1" == context.result) {
+                    $.messager.alert("操作提示", '采购数量设置失败！', 'error');
+                }
+            }
+        }
+        $('#form1').ajaxSubmit(options);
+        return false; //为了不刷新页面,返回false 
+    }
+</script>

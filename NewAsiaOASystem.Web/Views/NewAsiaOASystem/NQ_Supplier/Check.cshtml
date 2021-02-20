@@ -1,0 +1,346 @@
+﻿@model NewAsiaOASystem.ViewModel.NQ_SupplierView
+@{
+    ViewBag.Title = "Check";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+<style>
+    .commonStatus {
+        color: green;
+    }
+
+    .imOutDate {
+        color: red;
+    }
+
+    .hadOutDate {
+        color: red;
+    }
+</style>
+
+
+
+@using (Html.BeginForm("updateSupplierAndAttachment", "NQ_Supplier", FormMethod.Post, new { id = "form1" }))
+{
+
+    @Html.HiddenFor(m => m.FItemID)
+    <div class="infor">
+        <p id="Ptitle"></p>
+        <div class="system-menu-set">
+            <ul class="infor-c">
+                <li>
+                    <span class="infor-c-width">供应商代码：</span>
+                    @*<span class="infor-c-input">@Html.TextBoxFor(m => m.FNumber, new { disabled = "disabled" })</span>*@
+                    <span class="infor-c-input">@Html.TextBox("FNumber", Model.FNumber, new { disabled = "disabled" })</span>
+                </li>
+                <li>
+                    <span class="infor-c-width">供应商名称：</span>
+                    <span class="infor-c-input">
+                        @Html.TextBoxFor(m => m.FName, new { disabled = "disabled" })
+                    </span>
+                </li>
+                <li>
+                    <span class="infor-c-width">地址：</span>
+                    <span class="infor-c-input">@Html.TextBoxFor(m => m.FAddress, new { disabled = "disabled" })</span>
+                </li>
+            </ul>
+            <ul class="infor-c">
+                <li>
+                    <span class="infor-c-width">联系人：</span>
+                    <span class="infor-c-input">@Html.TextBoxFor(m => m.FContact, new { disabled = "disabled" })</span>
+                </li>
+                <li>
+                    <span class="infor-c-width">电话：</span>
+                    <span class="infor-c-input">
+                        @Html.TextBoxFor(m => m.FPhone, new { disabled = "disabled" })
+                    </span>
+                </li>
+                <li>
+                    <span class="infor-c-width">手机号：</span>
+                    <span class="infor-c-input">
+                        @Html.TextBoxFor(m => m.FMobilePhone, new { disabled = "disabled" })
+                    </span>
+                </li>
+            </ul>
+            <ul class="infor-c ">
+                <li>
+                    <span class="infor-c-width">供应商类型：</span>
+                    <span class="infor-c-input">
+                        @if (Model.FSupplierType == 0)
+                        {
+                            @Html.TextBox("FSupplierType", "厂家", new { disabled = "disabled" })
+                        }
+                        else
+                        {
+                            @Html.TextBox("FSupplierType", "供应商", new { disabled = "disabled" })
+                        }
+
+
+                    </span>
+                </li>
+            </ul>
+            <ul class="infor-c ">
+                <li>
+                    <span class="infor-c-width">营业执照：<span style="color: red; font-size: 24px;vertical-align: middle; margin-left: 8px;width: 4px;">*</span></span>
+                    <span class="infor-c-input">
+                        @Html.TextBoxFor(m => m.FLicence, new { disabled = "disabled" })
+                    </span>
+                </li>
+                <li>
+                    <span class="infor-c-width">有效期至：</span>
+                    <span class="infor-c-input">
+                        <input type="text" name="FLicenceDeadline" value="@(ViewBag.FLicenceDeadline == null ? "":ViewBag.FLicenceDeadline.ToString("D") )" disabled="disabled" />
+                    </span>
+                </li>
+                <li>
+                    <span class="infor-c-width">状态：</span>
+                    <span class="infor-c-input">
+                        <input type="text" id="FLicenceStatus" name="FLicenceStatus" value="@ViewBag.FLicenceStatusName" readonly="readonly" />
+                    </span>
+                </li>
+            </ul>
+
+            <ul class="infor-c ">
+                <li>
+                    <span class="infor-c-width">税务登记证：<span style="color: red; font-size: 24px;vertical-align: middle; margin-left: 8px;width: 4px;">*</span></span>
+                    <span class="infor-c-input">
+                        @Html.TextBoxFor(m => m.FTaxNum, new { disabled = "disabled" })
+                    </span>
+                </li>
+                <li>
+                    <span class="infor-c-width">有效期至：</span>
+                    <span class="infor-c-input">
+                        <input type="text" name="FTaxDeadLine" value="@(ViewBag.FTaxDeadLine == null ? "":ViewBag.FTaxDeadLine.ToString("D") )" disabled="disabled" />
+                    </span>
+                </li>
+                <li>
+                    <span class="infor-c-width">状态：</span>
+                    <span class="infor-c-input">
+                        <input type="text" id="FTaxNumStatus" name="FTaxNumStatus" value="@ViewBag.FTaxNumStatusName" disabled="disabled" />
+                    </span>
+                </li>
+            </ul>
+
+            <ul class="infor-c ">
+                <li>
+                    <span class="infor-c-width">ISO9001：<span style="color: red; font-size: 24px;vertical-align: middle; margin-left: 8px;width: 4px;">*</span></span>
+                    <span class="infor-c-input">
+                        @Html.TextBoxFor(m => m.FISO9001)
+                    </span>
+                </li>
+                <li>
+                    <span class="infor-c-width">有效期至：</span>
+                    <span class="infor-c-input">
+                        <input type="text" name="FISO9001DeadLine" value="@(ViewBag.FISO9001DeadLine == null ? "":ViewBag.FISO9001DeadLine.ToString("D") )" disabled="disabled" />
+                    </span>
+                </li>
+                <li>
+                    <span class="infor-c-width">状态：</span>
+                    <span class="infor-c-input">
+                        <input type="text" id="FISO9001Status" name="FISO9001Status" value="@ViewBag.FISO9001StatusName" disabled="disabled" />
+                    </span>
+                </li>
+            </ul>
+
+            <ul class="infor-c ">
+                <li>
+                    <span class="infor-c-width">ISO14000：</span>
+                    <span class="infor-c-input">
+                        @Html.TextBoxFor(m => m.FISO14000)
+                    </span>
+                </li>
+                <li>
+                    <span class="infor-c-width">有效期至：</span>
+                    <span class="infor-c-input">
+                        <input type="text" name="FISO14000DeadLine" value="@(ViewBag.FISO14000DeadLine == null ? "":ViewBag.FISO14000DeadLine.ToString("D") )" disabled="disabled" />
+                    </span>
+                </li>
+                <li>
+                    <span class="infor-c-width">状态：</span>
+                    <span class="infor-c-input">
+                        <input type="text" id="FISO14000Status" name="FISO14000Status" value="@ViewBag.FISO14000StatusName" disabled="disabled" />
+                    </span>
+                </li>
+            </ul>
+            <ul class="infor-c ">
+                <li>
+                    <span class="infor-c-width">专利证书：</span>
+                    <span class="infor-c-input">
+                        @Html.TextBoxFor(m => m.FPatent)
+                    </span>
+                </li>
+                <li>
+                    <span class="infor-c-width">有效期至：</span>
+                    <span class="infor-c-input">
+                        <input type="text" name="FPatentDeadLine" value="@(ViewBag.FPatentDeadLine == null ? "":ViewBag.FPatentDeadLine.ToString("D") )" disabled="disabled" />
+                    </span>
+                </li>
+                <li>
+                    <span class="infor-c-width">状态：</span>
+                    <span class="infor-c-input">
+                        <input type="text" id="FPatentStatus" name="FPatentStatus" value="@ViewBag.FPatentStatusName" disabled="disabled" />
+                    </span>
+                </li>
+            </ul>
+            <ul class="infor-c ">
+                <li>
+                    <span class="infor-c-width">其他认证：</span>
+                    <span class="infor-c-input">
+                        @Html.TextBoxFor(m => m.FOther)
+                    </span>
+                </li>
+
+                <li>
+                    <span class="infor-c-width">有效期至：</span>
+                    <span class="infor-c-input">
+                        <input type="text" name="FOtherDeadLine" value="@(ViewBag.FOtherDeadLine == null ? "":ViewBag.FOtherDeadLine.ToString("D") )" disabled="disabled" />
+                    </span>
+                </li>
+                <li>
+                <li>
+                    <span class="infor-c-width">状态：</span>
+                    <span class="infor-c-input">
+                        <input type="text" id="FOtherStatus" name="FOtherStatus" value="@ViewBag.FOtherStatusName" disabled="disabled" />
+                    </span>
+                </li>
+            </ul>
+            <ul class="infor-c ">
+                <li>
+                    <span class="infor-c-width">供应商调查表：</span>
+                    <span class="infor-c-input">
+                        @Html.TextBoxFor(m => m.FQuestionnaire)
+                    </span>
+                </li>
+
+                <li>
+                    <span class="infor-c-width">有效期至：</span>
+                    <span class="infor-c-input">
+                        <input type="text" name="FQuestionnaireDeadLine" value="@(ViewBag.FQuestionnaireDeadLine == null ? "":ViewBag.FQuestionnaireDeadLine.ToString("D") )" disabled="disabled" />
+                    </span>
+                </li>
+                <li>
+                    <span class="infor-c-width">状态：</span>
+                    <span class="infor-c-input">
+                        <input type="text" id="FQuestionnaireStatus" name="FQuestionnaireStatus" value="@ViewBag.FQuestionnaireStatusName" />
+                    </span>
+                </li>
+            </ul>
+            <ul class="infor-c" id="agentul">
+                <li>
+                    <span class="infor-c-width">代理证：<span style="color: red; font-size: 24px;vertical-align: middle; margin-left: 8px;width: 4px;">*</span></span>
+                    <span class="infor-c-input">
+                        @Html.TextBoxFor(m => m.FAgent)
+                    </span>
+                </li>
+
+                <li>
+                    <span class="infor-c-width">有效期至：</span>
+                    <span class="infor-c-input">
+                        <input type="text" name="FAgentDeadLine" value="@(ViewBag.FAgentDeadLine == null ? "":ViewBag.FAgentDeadLine.ToString("D") )" disabled="disabled" />
+                    </span>
+                </li>
+                <li>
+                    <span class="infor-c-width">状态：</span>
+                    <span class="infor-c-input">
+                        <input type="text" id="FAgentStatus" name="FAgentStatus" value="@ViewBag.FAgentStatusName" disabled="disabled" class="statusInput" />
+                    </span>
+                </li>
+            </ul>
+        </div>
+        <div class="inquiry-input infor-b">
+            <span>
+                <button onclick="return SaveForm()">保存</button>
+            </span><span>
+                <button onclick="return RedirectUrl('/NQ_Supplier/List')">返回</button>
+            </span>
+        </div>
+    </div>
+}
+<script src="~/Scripts/NAjs/NQ_Supplier.js"></script>
+<style>
+    .btn_att {
+        margin-left: 30px;
+    }
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        var FLicenceStatus = @ViewBag.FLicenceStatus;
+        var FTaxNumStatus = @ViewBag.FTaxNumStatus;
+        var FISO9001Status = @ViewBag.FISO9001Status;
+        var FISO14000Status = @ViewBag.FISO14000Status;
+        var FPatentStatus = @ViewBag.FPatentStatus;
+        var FOtherStatus = @ViewBag.FOtherStatus;
+        var FQuestionnaireStatus = @ViewBag.FQuestionnaireStatus;
+        var FAgentStatus = @ViewBag.FAgentStatus;
+
+        inputClassSet($("#FLicenceStatus"),FLicenceStatus)
+        inputClassSet($("#FTaxNumStatus"),FTaxNumStatus)
+        inputClassSet($("#FISO9001Status"),FISO9001Status)
+        inputClassSet($("#FISO14000Status"),FISO14000Status)
+        inputClassSet($("#FPatentStatus"),FPatentStatus)
+        inputClassSet($("#FOtherStatus"),FOtherStatus)
+        inputClassSet($("#FQuestionnaireStatus"),FQuestionnaireStatus)
+        inputClassSet($("#FAgentStatus"),FAgentStatus)
+
+    });
+
+    function inputClassSet(obj,status)
+    {
+        if (status == 3)
+        {
+            obj.addClass("commonStatus");
+        }else if (status == "4")
+        {
+            obj.addClass("imOutDate");
+        }else if (status == "5")
+        {
+            obj.addClass("hadOutDate");
+        }
+    }
+
+
+    //保存表单
+    function SaveForm() {
+        var FLicenceExist = @ViewBag.FLicenceExist;
+        var FTaxNumExist = @ViewBag.FTaxNumExist;
+        var FISO9001Exist = @ViewBag.FISO9001Exist;
+        var FISO14000Exist = @ViewBag.FISO14000Exist;
+        var FPatentExist = @ViewBag.FPatentExist;
+        var FOtherExist = @ViewBag.FOtherExist;
+        var FQuestionnaireExist = @ViewBag.FQuestionnaireExist;
+        var FAgentExist = @ViewBag.FAgentExist;
+
+        if (FLicenceExist==0)
+        {
+            $.messager.alert("操作提示", "营业执照必须上传", "warning");
+            return false;
+        }
+        if (FTaxNumExist==0)
+        {
+            $.messager.alert("操作提示", "税务登记号必须上传", "warning");
+            return false;
+        }
+        //20180326
+        //if (FISO9001Exist==0)
+        //{
+        //    $.messager.alert("操作提示", "ISO9001必须上传", "warning");
+        //    return false;
+        //}
+
+        var val = $('input:radio[name="FSupplierType"]:checked').val();
+
+        if (val == 1)
+        {
+            if (FAgentExist==0)
+            {
+                $.messager.alert("操作提示", "代理证必须上传", "warning");
+                return false;
+            }
+        }
+
+        var fitemid = $("#FItemID").val();
+
+        return submitSupplierForm('/NQ_Supplier/EditPage?id=' + fitemid);
+    }
+
+</script>

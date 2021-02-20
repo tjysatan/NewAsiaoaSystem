@@ -1,0 +1,49 @@
+﻿
+@{
+    ViewBag.Title = "授权代码";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+
+@section HeadContent{
+    <script type="text/ecmascript">
+        $(function () {
+            BindGrid();
+        })
+       function BindGrid() {
+            @{
+                if (null != ViewBag.result)
+                 {
+                    @: var jsonStr =@Html.Raw(ViewBag.result)
+                    @: $("#dg").treegrid('loadData', jsonStr);
+                 }
+                 
+              }
+       }
+	 </script>
+    
+   }
+
+   <!--控制列表的显示与隐藏(进入编辑时隐藏列表)-->
+<div style="width:100%;">
+        <!--==================================编辑按钮=============================-->
+        <div class="z-toolbar">
+                <a href="#" plain="true" class="easyui-linkbutton" icon="icon-reload" title="刷新" onclick="location.href='/SysAuthorize/Index'">刷新</a>
+                <a href="#" plain="true" class="easyui-linkbutton" icon="icon-add"    title="新增" onclick="addClick('/SysAuthorize/addPage','添加','/SysAuthorize/Index')">新增</a>
+                <a href="#" plain="true" class="easyui-linkbutton" icon="icon-edit"   title="编辑" onclick="update('/SysAuthorize/EditPage','/SysAuthorize/Index','500px','')">编辑</a>
+                <a href="#" plain="true" class="easyui-linkbutton" icon="icon-no"     title="删除" onclick="del('/SysAuthorize/Delete')" >删除</a>
+          </div>
+        <!--==================================数据列表=============================-->
+        <table id="dg" class="easyui-treegrid"  style="width:100%;height:auto" data-options="idField:'Id',treeField:'Name',singleSelect:false">
+		       <thead>
+			        <tr>
+				        <th data-options="field:'Id',checkbox:true,align:'center'"></th>
+				        <th data-options="field:'Name',width:'20%',align:'center'">名称</th>
+                        <th data-options="field:'Status',width:'20%',align:'center',formatter:showVal">状态</th>
+				        <th data-options="field:'CreateTime',width:'59%',align:'center',formatter:showDate">创建时间</th>
+			        </tr>
+		        </thead>
+        </table>
+    <div id="windowDia" class="easyui-window"  data-options="modal:true,closed:true,iconCls:'icon-save'" style="width:500px;height:400px;padding:10px;">
+	</div>
+    </div>

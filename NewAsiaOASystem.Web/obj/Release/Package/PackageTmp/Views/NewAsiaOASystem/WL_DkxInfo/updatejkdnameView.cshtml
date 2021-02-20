@@ -1,0 +1,99 @@
+﻿@{
+    ViewBag.Title = "更新上线没有监控点的sid";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<style>
+    .table_con
+    {
+        border-collapse: collapse;
+        border: none;
+    }
+
+    .table_con td
+        {
+            border: solid #eae5e5 1px;
+            height: 35px;
+            padding: 0 0 0 5px;
+        }
+
+    .concss
+    {
+        width: 450px;
+        height: 250px;
+        margin: auto;
+        margin-top: 100px;
+        border: solid #eae5e5 1px;
+        background: #fff;
+        -moz-border-radius: 15px;
+        -webkit-border-radius: 15px;
+        border-radius: 15px;
+    }
+
+    .btncss
+    {
+        width: 100px;
+        height: 30px;
+        -moz-border-radius: 15px;
+        -webkit-border-radius: 15px;
+        border-radius: 15px;
+    }
+</style>
+
+<div id="Con" style="" class="concss">
+    <table class="table_con" style="width: 100%; color: #000; margin-top: 20px; font-size: 13px;">
+  
+        <tr>
+            <td style="height: 30px; border: none;"></td>
+        </tr>
+        <tr>
+            <td align="center" style="border: none;">
+                <input type="button" class="btncss" value="更新监控点" onclick="return AjaxTBjson()" />
+            </td>
+        </tr>
+    </table>
+    <div style="font-size: 14px; color: #f00;">
+        &nbsp; &nbsp;操作说明:<br />
+        <p style="text-indent: 2em">
+          更新已经上线没有监控点名称的sid <br />
+        </p>
+        <p style="text-indent: 2em"> </p>
+        <p style="text-indent: 2em"> </p>
+    </div>
+</div>
+<script type="text/javascript">
+    //同步
+    function AjaxTBjson()
+    {
+        $.ajax({
+            url: "../WL_DkxInfo/Updatejkdname",
+            type: "POST",
+            dataType: "html",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                if (response == "0") {
+                    disLoading();
+                    layer.alert("当前没有存在缺少监控点名称的！", { icon: 1 });
+                }
+                else {
+                    disLoading();
+                    layer.alert("本次更新"+response+"条记录", { icon: 1 });
+                }
+            },
+            error: function (e) {
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+    }
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+</script>

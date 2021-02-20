@@ -1,0 +1,78 @@
+﻿@model NewAsiaOASystem.ViewModel.NQ_YJinfoView
+@{
+    ViewBag.Title = "安全库存设置页面";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@using (Html.BeginForm("AqkcEidt", "NQ_YJinfo", FormMethod.Post, new { id = "form1" }))
+{
+    @Html.HiddenFor(m => m.CreateTime);
+    @Html.HiddenFor(m => m.CreatePerson)
+    @Html.HiddenFor(m => m.UpdateTime)
+    @Html.HiddenFor(m => m.UpdatePerson)
+    @Html.HiddenFor(m => m.Id)
+    @Html.HiddenFor(m => m.Y_Name)
+    @Html.HiddenFor(m => m.Y_Ggxh)
+    @Html.HiddenFor(m => m.Y_Dm)
+    @Html.HiddenFor(m => m.Y_DJ)
+    @Html.HiddenFor(m => m.Status)
+    @Html.HiddenFor(m => m.Sort)
+    @Html.HiddenFor(m => m.G_Dm)
+    @Html.HiddenFor(m => m.Y_DQYL)
+    @Html.HiddenFor(m => m.Y_DQDJZ)
+    @Html.HiddenFor(m => m.Y_iscg)
+    @Html.HiddenFor(m => m.Y_cgSL)
+    @Html.HiddenFor(m => m.Y_CYZ)
+    @Html.HiddenFor(m => m.Y_Syzyl)
+    <table style="width:300px;">
+        <tr>
+            <td><span class="infor-c-width">安全库存数量:</span></td>
+            <td> <span class="infor-c-input">@Html.TextBoxFor(m => m.Y_aqkc)</span></td>
+        </tr>
+        <tr>
+            <td style=" height:30px;" colspan="2"></td>
+        </tr>
+        <tr>
+            <td colspan="2" algin="center">
+                   <div class="inquiry-input" >
+             <span style="margin-left:100px;">
+                <button onclick="return  AqkcSavaForm()">保存</button>
+            </span>
+                   </div>
+            </td>
+        </tr>
+    </table>
+}
+
+<script type="text/javascript">
+    //设置安全库存
+    function AqkcSavaForm() {
+        //表单验证
+        var options = {
+            beforeSubmit: function () {
+                return true;
+            },
+            dataType: "json",//这里是指控制器处理后返回的类型，这里返回json格式。
+            success: function (context) {
+                if ("success" == context.result) {
+                    //$.messager.alert("操作提示", '设置成功！', 'info', function () {
+                        var ParentObj = window.parent;//获取父窗口
+                        window.parent.$('#windowDia').window('close');
+                        window.parent.location = '/NQ_YJinfo/List';
+                    //});
+                }
+                if ("error" == context.result) {
+                    $.messager.alert("操作提示", '设置失败！', 'error');
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $.messager.alert("操作提示", '设置失败！', 'error');
+            }
+        }
+        $('#form1').ajaxSubmit(options);
+        return false; //为了不刷新页面,返回false 
+    }
+</script>
+
+<script src="~/Scripts/NAjs/NQ_YJinfo.js"></script>
+

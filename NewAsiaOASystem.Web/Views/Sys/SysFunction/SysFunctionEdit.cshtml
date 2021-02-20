@@ -1,0 +1,65 @@
+﻿@model NewAsiaOASystem.ViewModel.SysFunctionView
+
+@{
+    ViewBag.Title = "功能权限";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@section HeadContent{
+    <script type="text/javascript">
+        $(function () {
+            if ("" == $("#Id").val())
+                $("#Ptitle").text("添加功能权限");
+            else
+                $("#Ptitle").text("修改功能权限");
+            
+        })
+    </script>
+    
+    }
+
+@using (Html.BeginForm("Edit", "SysFunction", FormMethod.Post, new { id = "form1" }))
+{         
+    @Html.HiddenFor(m => m.CreateTime);
+    @Html.HiddenFor(m => m.CreatePerson)
+    @Html.HiddenFor(m => m.UpdateTime)
+    @Html.HiddenFor(m => m.UpdatePerson)
+    @Html.HiddenFor(m => m.Id)
+    <div class="infor">
+        <div class="h-right-title">您当前的位置：功能管理</div>
+        <p id="Ptitle"></p>
+        <div class="system-menu-set">
+            <ul class="infor-c">
+                <li><span class="infor-c-width">功能名称：</span><span class="infor-c-input">
+                    @Html.TextBoxFor(m => m.Name)</span><span style="color:red;font-size:24px;vertical-align: middle;margin-left: 8px;">*</span><span class="desc w-register">填写所需功能名称，如绩效考核管理</span></li>
+            </ul>
+            <ul class="infor-c ">
+                <li><span class="infor-c-width">功能路径：</span>
+                    <span>
+                        @Html.DropDownList("ActionData", ViewData["ActionUrl"] as SelectList, new { @class="add-function"})
+                    </span><span class="desc w-register">请选择所此菜单路径</span></li>
+            </ul>
+            <ul class="infor-c">
+                <li><span class="infor-c-width">状态：</span>
+                    <span>
+                        <select class="add-function" name="Status">
+                            @{
+                                      if ("0".Equals(Convert.ToString(@Model.Status)) && null != @Model.Id)
+                                      {
+                                @:<option value="1">启用</option>
+                                @:<option value="0" selected="selected">禁用</option>
+                                                }
+                                      else
+                                      {
+                                @:<option value="1"  selected="selected">启用</option>
+                                @:<option value="0">禁用</option>
+                                      }
+                                                
+                            }
+
+                        </select></span><span class="desc w-register">是否显示此功能</span></li>
+            </ul>
+        </div>
+        <div class="inquiry-input infor-b"><span><button onclick="return submitForm('/SysFunction/Index')">保存</button></span><span><button onclick="return RedirectUrl('/SysFunction/Index')">返回</button></span></div>
+    </div>
+}

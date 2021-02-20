@@ -1,0 +1,62 @@
+﻿@{
+    ViewBag.Title = "检验内容添加";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<style>
+    .sopbtnsave
+    {
+        position: absolute;
+        width: 90%;
+        bottom: 5px;
+        text-align: center;
+    }
+
+    .soptopbtn
+    {
+        position: absolute;
+        width: 90%;
+        top: 1px;
+        text-align: center;
+    }
+</style>
+
+<fieldset class="layui-elem-field layui-field-title">
+    <legend>检验内容添加</legend>
+</fieldset>
+<input type="hidden" id="sopId" name="sopId" value='@ViewData["sopId"]' />
+<input type="hidden" id="type" name="type" value='@ViewData["type"]' />
+<div class="layui-form-item">
+    <div class="layui-form-item">
+        <label class="layui-form-label">检验内容：</label>
+        <div class="layui-input-block" style="width: 70%">
+            <input type="text" name="jycon" id="jycon" placeholder="例：负载" lay-verify="title" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">检验设备：</label>
+        <div class="layui-input-block" style="width: 70%">
+            <input type="text" name="jysb" id="jysb" placeholder="例：电源" lay-verify="title" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">缺点等级：</label>
+        <div class="layui-input-inline">
+            <select id="qddj" name="qddj" style="border: 1px solid #e5e5e5; width: 190px; height: 38px;">
+                <option value="">请选择</option>
+                <option value="0">CR(0)</option>
+                <option value="0.65">MA(0.65)</option>
+                <option value="1.5">MI(1.5)</option>
+            </select>
+        </div>
+    </div>
+
+    <!--按钮-->
+    <div class="sopbtnsave">
+        <button class="layui-btn layui-btn-primary" onclick='return AjaxjyconEide("0")'>保存,并继续</button>
+        <button class="layui-btn layui-btn-primary" onclick='return AjaxjyconEide("1")'>保存,并关闭</button>
+        <button class="layui-btn layui-btn-primary" onclick="return guanbi()">关闭</button>
+    </div>
+</div>
+
+<script src="~/Scripts/NAjs/IQCpulice.js"></script>

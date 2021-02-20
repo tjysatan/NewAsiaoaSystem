@@ -1,0 +1,86 @@
+﻿@model NewAsiaOASystem.ViewModel.NewChargebackReasonView
+@{
+    ViewBag.Title = "退单原因编辑";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+<style>
+    .inputwidth {
+        width: 200px;
+    }
+</style>
+
+<div style="width: 80%; padding: 20px 20px 0 20px">
+    @using (Html.BeginForm("CBREdit", "DkxBasicsManagement", FormMethod.Post, new { id = "form1" }))
+    {
+        <input type="hidden" id="Id" name="Id" value='@Model.Id' />
+        <input type="hidden" id="C_userId" name="C_userId" value='@Model.C_userId' />
+        <input type="hidden" id="C_time" name="C_time" value='@Model.C_time' />
+        <input type="hidden" id="Up_userId" name="Up_userId" value='@Model.Up_userId' />
+        <input type="hidden" id="Up_time" name="Up_time" value='@Model.Up_time' />
+        <div class="layui-form-item">
+            <label class="layui-form-label">退单原因：</label>
+            <div class="layui-input-block">
+                @Html.TextBoxFor(m => m.Reason_name, new { @class = "layui-input inputwidth", @placeholder = "请填写退单原因" })
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">是否备注：</label>
+            <div class="layui-input-block">
+                @Html.DropDownList("IsRemarks", ViewData["IsRemarks"] as SelectList, new { @class = "layui-input inputwidth" })
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">退单环节：</label>
+            <div class="layui-input-block">
+                @Html.DropDownList("txttype", ViewData["CBTYPE"] as SelectList, new { @class = "layui-input inputwidth" })
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">是否禁用：</label>
+            <div class="layui-input-block">
+                @Html.DropDownList("txtIsDis", ViewData["IsDis"] as SelectList, new { @class = "layui-input inputwidth" })
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="formDemo" onclick="return Ajaxform()">确定提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary" onclick="guanbi()">取消</button>
+            </div>
+        </div>
+    }
+</div>
+<script>
+    function guanbi() {
+        var index = parent.layer.getFrameIndex(window.name);
+        //关闭弹出层
+        parent.layer.close(index);
+    }
+    function Ajaxform() {
+        var Reason_name = $("#Reason_name").val();//退单原因
+        if (Reason_name == "") {
+            layer.alert("退单原因不为空！", { icon: 2 });
+            return false;
+        }
+         //表单验证
+        var options = {
+            beforeSubmit: function () {
+                return true;
+            },
+            dataType: "json",//这里是指控制器处理后返回的类型，这里返回json格式。  
+            success: function (context) {
+                if (context.result == "success") {
+                    layer.alert("提交成功！", { icon: 1 }, function () { guanbi(); });
+                }
+                if (context.result == "error") {
+                    layer.alert("提交失败！", { icon: 2 }, function () { location.reload(); });
+                }
+                
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $.messager.alert("操作提示", '操作失败！', 'error');
+            }
+        }
+        $('#form1').ajaxSubmit(options);
+        return false; //为了不刷新页面,返回false 
+    }
+</script>

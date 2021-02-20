@@ -1,0 +1,47 @@
+﻿@model NewAsiaOASystem.ViewModel.PP_TeaminfoView
+@{
+    ViewBag.Title = "团队编辑页面";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@using (Html.BeginForm("Edit", "PP_Teaminfo", FormMethod.Post, new { id = "form1" }))
+{
+ 
+    @Html.HiddenFor(m => m.C_time);
+    @Html.HiddenFor(m => m.Id);
+    @Html.HiddenFor(m => m.Team_No);
+    @Html.HiddenFor(m => m.Team_Beizhu);
+    <div class="infor">
+        <p id="Ptitle"></p>
+        <div class="system-menu-set">
+            <ul class="infor-c">
+                <li><span class="infor-c-width">团队名称：</span><span class="infor-c-input">@Html.TextBoxFor(m => m.Team_Name)</span><span style="color: red; font-size: 24px; vertical-align: middle; margin-left: 8px;">*</span><span class="desc w-register"></span></li>
+            </ul>
+            <ul class="infor-c">
+                <li><span class="infor-c-width">责任人：</span><span class="infor-c-input">@Html.TextBoxFor(m => m.Team_zrname)</span><span style="color: red; font-size: 24px; vertical-align: middle; margin-left: 8px;">*</span><span class="desc w-register"></span></li>
+            </ul>
+            <ul class="infor-c">
+                <li><span class="infor-c-width">电话：</span><span class="infor-c-input">@Html.TextBoxFor(m => m.Team_zrTel)</span><span style="color: red; font-size: 24px; vertical-align: middle; margin-left: 8px;">*</span><span class="desc w-register"></span></li>
+            </ul>
+            <ul class="infor-c">
+                <li>
+                    <span class="infor-c-width">
+                        团队管理员：
+                    </span>
+                    <span>
+                         @Html.DropDownList("ADListData", ViewData["sysperonlist"] as SelectList, new { @class = "add-function" });
+                    </span>
+                </li>
+            </ul>
+
+        </div>
+        <div class="inquiry-input infor-b">
+            <span>
+                <button onclick="return SavaForm()">保存</button></span><span>
+                    <button onclick="return RedirectUrl('/PP_Teaminfo/List')">返回</button>
+                </span>
+        </div>
+    </div>  
+}
+
+<script src="~/Scripts/NAjs/PP_pulice.js"></script>

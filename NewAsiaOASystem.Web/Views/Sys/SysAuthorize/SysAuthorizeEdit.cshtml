@@ -1,0 +1,114 @@
+﻿@model NewAsiaOASystem.ViewModel.SysAuthorizeView
+
+@{
+    ViewBag.Title = "授权代码";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<script type="text/javascript">
+    $(function () {
+        AjaxCombotree("PValue", "ParentId", "/Api/SysWebApi/GetSysAuthorize");
+        AjaxCombotree("AuthorizeVal", "AuthorizeId", "/Api/SysWebApi/GetSysDepartment");
+        SelectedParentTree();
+    });
+
+    function SelectedParentTree() {
+        $("#PValue").combotree({
+            onLoadSuccess: function () {
+                var ParentId = $("#ParentId").val();
+                var node = $('#PValue').combotree('tree').tree('find', ParentId);
+                if (node != null) {
+                    $('#PValue').combotree('tree').tree('check', node.target);
+                }
+                $('#PValue').combotree('setValue', ParentId);
+
+
+            }
+        });
+
+        $("#AuthorizeVal").combotree({
+            onLoadSuccess: function () {
+                var ParentId = $("#AuthorizeId").val(); 
+                var node = $('#AuthorizeVal').combotree('tree').tree('find', ParentId);
+                if (node != null) {
+                    $('#AuthorizeVal').combotree('tree').tree('check', node.target);
+                }
+                $('#AuthorizeVal').combotree('setValue', ParentId);
+
+
+            }
+        });
+    }
+</script>
+<div style="width: 400px;">
+    @using (Html.BeginForm("Edit", "SysAuthorize", FormMethod.Post, new { id = "form1" }))
+    {         
+        @Html.HiddenFor(m => m.CreateTime);
+        @Html.HiddenFor(m => m.CreatePerson)
+        @Html.HiddenFor(m => m.UpdateTime)
+        @Html.HiddenFor(m => m.UpdatePerson)
+        <table cellpadding="5" id="TableForm">
+            <tr style="display: none;">
+                <td>Id:</td>
+                <td>
+                    @Html.TextBoxFor(m => m.Id, new { @class = "easyui-textbox" })
+                </td>
+            </tr>
+            <tr>
+                <td>名称:</td>
+                <td>@Html.TextBoxFor(m => m.Name, new { @class = "easyui-textbox" })</td>
+            </tr>
+            <tr>
+                <td>上级名称:</td>
+                <td>
+                    <div class="zTreeDemoBackground left">
+                        <ul class="list">
+                            <li class="title">
+                                <select id="PValue" class="easyui-combotree" style="width: 200px;"></select>
+                            </li>
+                            @Html.HiddenFor(m => m.ParentId)
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+              <tr>
+                <td>授权代码:</td>
+                <td>
+                    <div class="zTreeDemoBackground left">
+                        <ul class="list">
+                            <li class="title">
+                                <select id="AuthorizeVal" class="easyui-combotree" style="width: 200px;"></select>
+                            </li>
+                            @Html.HiddenFor(m => m.AuthorizeId)
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>状态:</td>
+                <td>
+                    <select class="easyui-combobox" name="Status">
+                        @{
+                                          if ("0".Equals(Convert.ToString(@Model.Status)) && null != @Model.Id)
+                                          {
+                            @:<option value="1">启用</option>
+                            @:<option value="0" selected="selected">禁用</option>
+                                  }
+                                          else
+                                          {
+                            @:<option value="1"  selected="selected">启用</option>
+                            @:<option value="0">禁用</option>
+                                                }
+                                                
+                        }
+
+                    </select></td>
+            </tr>
+        </table>
+    }
+
+    <div style="text-align: center; padding: 5px; width: 300px;">
+        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm('/SysAuthorize/Index')">保存</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">清除</a>
+    </div>
+</div>

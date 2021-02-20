@@ -1,0 +1,92 @@
+﻿@model NewAsiaOASystem.ViewModel._20150510WL_ReturnVisitView
+@{
+    ViewBag.Title = "工程商回访记录";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        $("#RVDateTime").val("2015-06-11");
+        $("#RVtype").val('@ViewBag.Rvtype');
+        $("#DKXId").val('@ViewBag.Sid');
+    })
+</script>
+@using (Html.BeginForm("RvEdit", "WL_DkxInfo", FormMethod.Post, new { id = "form1" }))
+{
+    @Html.HiddenFor(m=>m.Id);
+    @Html.HiddenFor(m=>m.RV_Usid);
+    @Html.HiddenFor(m=>m.DKXId);
+    @Html.HiddenFor(m=>m.RVtype);
+   <div class="infor">
+        <p id="Ptitle"></p>
+       <div class="system-menu-set">
+             <ul class="infor-c">
+                <li>
+                    <span class="infor-c-width">回访时间：</span>
+                    <span class="infor-c-input">@Html.TextBoxFor(m=>m.RVDateTime, new {@onclick = "WdatePicker()"})</span>
+                    <span style="color: red; font-size: 24px; vertical-align: middle; margin-left: 8px;  ">*</span>
+                    <span class="desc w-register"></span>
+                </li>
+             </ul>
+             <ul>
+                 <li>
+                     <span class="infor-c-width">回访记录：</span>
+                     <span class="infor-c-input">@Html.TextAreaFor(m=>m.RVContent, new { @class = "easyui-textbox",@data_options="multiline:true",@style="width:300px; height:120px" })</span>
+                 </li>
+             </ul>
+       </div>
+       <div class="inquiry-input infor-b" style=" line-height:30px;  text-indent:120px;">
+            <span>
+              <button onclick="return RvsubmitForm()">保存</button></span>
+           <span>
+             <button onclick="return gbym()">返回</button>
+           </span>
+        </div>
+   </div>
+}
+
+<script type="text/javascript">
+    function RvsubmitForm() {
+        var RetUrl;
+        if ('@ViewBag.Rvtype' == "0") {
+            RetUrl = '/WL_DkxInfo/RVgcsList';
+        } else {
+            RetUrl = '/WL_DkxInfo/RVyhList';
+        }
+        //表单验证
+        var options = {
+            beforeSubmit: function () {
+                return true;
+            },
+            dataType: "json",//这里是指控制器处理后返回的类型，这里返回json格式。  
+            success: function (context) {
+                if ("success" == context.result) {
+                    $.messager.alert("操作提示", '操作成功！', 'info', function () {
+                        var ParentObj = window.parent;//获取父窗口
+                        window.parent.$('#windowDia').window('close');
+                        window.parent.location = RetUrl;
+                    });
+                }
+                if ("error" == context.result) {
+                    $.messager.alert("操作提示", '操作失败！', 'error');
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $.messager.alert("操作提示", '操作失败！', 'error');
+            }
+        }
+        $('#form1').ajaxSubmit(options);
+        return false; //为了不刷新页面,返回false 
+    }
+
+    function gbym() {
+        var RetUrl;
+        if ('@ViewBag.Rvtype' == "0") {
+             RetUrl = '/WL_DkxInfo/RVgcsList';
+         } else {
+             RetUrl = '/WL_DkxInfo/RVyhList';
+         }
+        var ParentObj = window.parent;//获取父窗口
+        window.parent.$('#windowDia').window('close');
+        window.parent.location = RetUrl;
+          }
+</script>

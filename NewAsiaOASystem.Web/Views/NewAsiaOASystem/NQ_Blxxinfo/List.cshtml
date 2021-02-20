@@ -1,0 +1,134 @@
+﻿@model NewAsiaOASystem.ViewModel.PagerInfo<NewAsiaOASystem.ViewModel.NQ_BlxxinfoView>
+@{
+    ViewBag.Title = "不良现象";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@section HeadContent{
+    <script type="text/javascript">
+        $(function () {
+            BindGrid();
+        })
+        function BindGrid() {
+            @{
+                if (null != Model && null != Model.GetPagingDataJson)
+                {
+                    string json = Model.GetPagingDataJson;//获取json数据
+                    @: var jsonStr = @Html.Raw(json);
+                   
+                }
+             }
+            dataGrid(jsonStr);
+        }
+
+        function dataGrid(jsonStr)
+        {
+            if (typeof (jsonStr) != "undefined") {
+                var html = "";
+                html = '<table cellpadding="0" cellspacing="0" style="width:100%;">';
+                for (var i = 0, j = jsonStr.length; i < j; i++) {
+                    if (i % 2 == 0)
+                        html += '<tr class="h-table-content-r1">';
+                    else
+                        html += '<tr class="h-table-content-r">';
+                    html += '<td width="5%"><input type="checkbox" name="ContentChecked" value="' + jsonStr[i].Id + '"/></td>';
+                    html += '<td width="35%">' + jsonStr[i].Name + '</td>';
+                    if(jsonStr[i].Status!=null)
+                        html += '<td width="10%">' + showVal(jsonStr[i].Status) + '</td>';
+                    else
+                        html += '<td width="10%"></td>';
+                    if(jsonStr[i].C_Data!=null)
+                        html += '<td width="15%">' + showDate(jsonStr[i].C_Data) + '</td>';
+                    else
+                        html += '<td width="15%"></td>';
+
+                    html+='</tr>';
+                }
+                html += '</table>';
+                $("#content").html(html);
+            }
+        }
+
+        //pageIndex当前页
+        function SerchList(pageIndex)
+        {
+            $("input[name='pageIndex']").val(pageIndex);
+            var options = {
+                beforeSubmit: function () {
+                    return true;
+                },
+                dataType: "json",
+                success: function (context) {
+                    var data=eval(context.result);
+                    dataGrid(data);
+                    $(".pagin").html(context.PageN);//输出分页按钮
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $.messager.alert("操作提示", '查询失败请重试！', 'error');
+                }
+            }
+            $('#form1').ajaxSubmit(options);
+            return false;
+        }
+
+    </script>
+}
+
+<!--==================================数据列表=============================-->
+<div class="h-right">
+    <div class="h-right-c">
+     @*   <div class="h-right-title">您当前的位置：免疫点管理</div>*@
+        <!--查询条件-->
+        @using (Html.BeginForm("SearchList", "NQ_Blxxinfo", FormMethod.Post, new { id = "form1" }))
+        {
+            @Html.Hidden("pageIndex");
+            <div class="inquiry1">
+                <fieldset>
+                    <legend>查询条件：</legend>
+                    <ul>
+                        <li><span>现象名称：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txtSearch_Name" /></span></li>
+                        <li style="*width: 100%; *margin: -10px 0 5px 90px;"><span class="inquiry-input">
+                            <button name="btnSerch" onclick="return SerchList(1)">查询</button>
+                        </span></li>
+                        <li><span class="inquiry-input">
+                            <button onclick="return addClick('/NQ_Blxxinfo/addPage')">添加</button></span>
+                            <span class="inquiry-input">
+                                <button onclick="return del('/NQ_Blxxinfo/Delete')">删除</button></span>
+                            <span class="inquiry-input">
+                                <button onclick="return update('/NQ_Blxxinfo/EditPage')">编辑</button></span>
+                            <span class="inquiry-input">
+                                <button onclick="return addClick('/NQ_Blxxinfo/List')">刷新</button></span></li>
+                    </ul>
+                </fieldset>
+            </div>
+        }
+        <div class="h-table">
+            <div class="h-table-content">
+                <table cellpadding="0" cellspacing="0" class="h-right-table-title1" style="border: none;width:100%;">
+                    <tr>
+                        <td width="5%">
+                            <input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" /></td>
+                        <td width="35%">不良现象</td>
+                      <td width="10%">状态</td>
+                        <td width="15%">创建时间</td>
+                    </tr>
+                </table>
+                <div id="content"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!--==========================输出分页按钮=========================-->
+<div class="pagin">
+    @if (ViewBag.PageNavigate == null)
+    {
+        @Html.ShowPageNavigate(Model.CurrentPageIndex, Model.PageSize, Model.RecordCount);
+    }
+</div>
+ 
+ <script src="~/Scripts/NAjs/NQ_Blinfo.js"></script>

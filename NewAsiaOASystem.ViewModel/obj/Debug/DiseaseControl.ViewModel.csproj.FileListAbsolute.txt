@@ -1,0 +1,21 @@
+F:\新疆侨瑞欣源电子 工作\流动儿童计划免疫平台\NewCode\trunk\DiseaseControl.ViewModel\bin\Debug\DiseaseControl.ViewModel.dll
+F:\新疆侨瑞欣源电子 工作\流动儿童计划免疫平台\NewCode\trunk\DiseaseControl.ViewModel\bin\Debug\DiseaseControl.ViewModel.pdb
+F:\新疆侨瑞欣源电子 工作\流动儿童计划免疫平台\NewCode\trunk\DiseaseControl.ViewModel\bin\Debug\DiseaseControl.DBModel.dll
+F:\新疆侨瑞欣源电子 工作\流动儿童计划免疫平台\NewCode\trunk\DiseaseControl.ViewModel\bin\Debug\DiseaseControl.DBModel.pdb
+F:\新疆侨瑞欣源电子 工作\流动儿童计划免疫平台\NewCode\trunk\DiseaseControl.ViewModel\obj\Debug\DiseaseControl.ViewModel.csprojResolveAssemblyReference.cache
+F:\新疆侨瑞欣源电子 工作\流动儿童计划免疫平台\NewCode\trunk\DiseaseControl.ViewModel\obj\Debug\DiseaseControl.ViewModel.dll
+F:\新疆侨瑞欣源电子 工作\流动儿童计划免疫平台\NewCode\trunk\DiseaseControl.ViewModel\obj\Debug\DiseaseControl.ViewModel.pdb
+E:\trunk\DiseaseControl.ViewModel\bin\Debug\DiseaseControl.ViewModel.dll
+E:\trunk\DiseaseControl.ViewModel\bin\Debug\DiseaseControl.ViewModel.pdb
+E:\trunk\DiseaseControl.ViewModel\bin\Debug\DiseaseControl.DBModel.dll
+E:\trunk\DiseaseControl.ViewModel\bin\Debug\DiseaseControl.DBModel.pdb
+E:\trunk\DiseaseControl.ViewModel\obj\Debug\DiseaseControl.ViewModel.csprojResolveAssemblyReference.cache
+E:\trunk\DiseaseControl.ViewModel\obj\Debug\DiseaseControl.ViewModel.dll
+E:\trunk\DiseaseControl.ViewModel\obj\Debug\DiseaseControl.ViewModel.pdb
+E:\新亚工作\新亚科技办公OA系统——返退货流程跟踪系统\CodeNEW\NewAsiaOASystem\NewAsiaOASystem.ViewModel\bin\Debug\NewAsiaOASystem.ViewModel.dll
+E:\新亚工作\新亚科技办公OA系统——返退货流程跟踪系统\CodeNEW\NewAsiaOASystem\NewAsiaOASystem.ViewModel\bin\Debug\NewAsiaOASystem.ViewModel.pdb
+E:\新亚工作\新亚科技办公OA系统——返退货流程跟踪系统\CodeNEW\NewAsiaOASystem\NewAsiaOASystem.ViewModel\bin\Debug\NewAsiaOASystem.DBModel.dll
+E:\新亚工作\新亚科技办公OA系统——返退货流程跟踪系统\CodeNEW\NewAsiaOASystem\NewAsiaOASystem.ViewModel\bin\Debug\NewAsiaOASystem.DBModel.pdb
+E:\新亚工作\新亚科技办公OA系统——返退货流程跟踪系统\CodeNEW\NewAsiaOASystem\NewAsiaOASystem.ViewModel\obj\Debug\DiseaseControl.ViewModel.csprojResolveAssemblyReference.cache
+E:\新亚工作\新亚科技办公OA系统——返退货流程跟踪系统\CodeNEW\NewAsiaOASystem\NewAsiaOASystem.ViewModel\obj\Debug\NewAsiaOASystem.ViewModel.dll
+E:\新亚工作\新亚科技办公OA系统——返退货流程跟踪系统\CodeNEW\NewAsiaOASystem\NewAsiaOASystem.ViewModel\obj\Debug\NewAsiaOASystem.ViewModel.pdb

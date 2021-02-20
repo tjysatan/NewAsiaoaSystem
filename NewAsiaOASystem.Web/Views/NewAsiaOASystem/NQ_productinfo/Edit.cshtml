@@ -1,0 +1,98 @@
+﻿@model NewAsiaOASystem.ViewModel.NQ_productinfoView
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<script type="text/javascript">
+    $(function () {
+        if ('@Model.p_type' != "") {
+
+            $("#p_type").find("option[value='@Model.p_type']").attr("selected", true);
+        }
+    })
+</script>
+
+@using (Html.BeginForm("Edit", "NQ_productinfo", FormMethod.Post, new { id = "form1" }))
+{
+    @Html.HiddenFor(m => m.CreateTime);
+    @Html.HiddenFor(m => m.CreatePerson)
+    @Html.HiddenFor(m => m.UpdateTime)
+    @Html.HiddenFor(m => m.UpdatePerson)
+    @Html.HiddenFor(m => m.Id) 
+    <div class="infor">
+        <p id="Ptitle"></p>
+        <div class="system-menu-set">
+            <ul class="infor-c">
+                <li>
+                    <span class="infor-c-width">产品名称：</span>
+                    <span class="infor-c-input">@Html.TextBoxFor(m => m.Pname)</span>
+                    <span style="color: red; font-size: 24px; vertical-align: middle; margin-left: 8px;">*</span>
+                    <span class="desc w-register">填写产品名称</span>
+                </li>
+            </ul>
+            <ul>
+                <li>
+                <span class="infor-c-width">产品型号：</span>
+                <span class="infor-c-input">@Html.TextBoxFor(m => m.P_xh)</span>
+                <span style="color: red; font-size: 24px; vertical-align: middle; margin-left: 8px;">*</span>
+                <span class="desc w-register">填写产品型号</span>
+                </li>
+            </ul>
+            <ul class="infor-c">
+                <li>
+                    <span class="infor-c-width">代码：</span>
+                    <span class="infor-c-input">@Html.TextBoxFor(m => m.P_bianhao)</span>
+                    <span style="color: red; font-size: 24px; vertical-align: middle; margin-left: 8px;">*</span>
+                    <span class="desc w-register">填写K3代码</span>
+                </li>
+            </ul>
+
+
+            <ul class="infor-c ">
+                <li><span class="infor-c-width">状态：</span>
+                    <span>
+                        <select class="add-function" name="SMFH">
+                            @{
+                                      if ("1".Equals(Convert.ToString(@Model.SMFH)) && null != @Model.Id)
+                                      {
+                                @:<option value="0">无需扫描</option>
+                                @:<option value="1" selected="selected">需扫码</option>
+                              }
+                                      else
+                                      {
+                                @:<option value="0"  selected="selected">无需扫描</option>
+                                @:<option value="1">需扫码</option>
+                                                }
+                                                
+                            }
+                        </select></span><span class="desc w-register"> 是否需要扫描发货</span></li>
+            </ul>
+
+            <ul class="infor-c ">
+                <li><span class="infor-c-width">所属类别：</span>
+                    <span>
+                        <select class="add-function" name="p_type" id="p_type">
+                            <option value="qxz">请选择</option>
+                            <option value="0">电控箱</option>
+                            <option value="1">温控器</option>
+                            <option value="2">其他</option>
+                        </select></span> </li>
+            </ul>
+            <ul>
+                <li>
+                    <span class="infor-c-width">单位：</span>
+                    <span class="infor-c-input">
+                        @Html.TextBoxFor(m => m.dw)
+                    </span>
+                </li>
+            </ul>
+        </div>
+        <div class="inquiry-input infor-b">
+            <span>
+                <button onclick="return SavaFormP()">保存</button></span><span>
+                    <button onclick="return RedirectUrl('/NQ_productinfo/List')">返回</button></span>
+        </div>
+    </div> 
+}
+<script src="~/Scripts/NAjs/NQR_Product.js"></script>

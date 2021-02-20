@@ -1,0 +1,79 @@
+﻿@model NewAsiaOASystem.ViewModel.WL_DkxInfoView
+@{
+    ViewBag.Title = "SID（电控箱）手动上线";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+
+@using (Html.BeginForm("sdsxEdit", "WL_DkxInfo", FormMethod.Post, new { id = "form1" }))
+{
+      @Html.HiddenFor(m => m.Id)
+<div style="width:400px; margin: auto;">
+     <div style="width:100%; height:50px; background:#CEE3F2;">
+         <span style="line-height:50px; padding-left:10px;">电控箱手动上线设置</span>
+     </div>
+     <div style="width:99%; height:180px; margin-top:10px; border:1px solid #808080; padding-left:5px;">
+          <div class="system-menu-set">
+            <ul class="infor-c">
+                <li>
+                  <span class="infor-c-width">工程商：</span>
+                  <span class="infor-c-input">
+                     @Html.DropDownList("txtGcs", ViewData["GcsList"] as SelectList, new { @class="add-function"})
+                  </span>
+               </li>
+                <li>
+                    <span class="infor-c-width">上线时间：</span>
+                     <span class="infor-c-input">
+                     @Html.TextBoxFor(m => m.Sx_time, new {@onclick="WdatePicker()" })
+                     </span>
+                </li>
+         </ul>
+          </div>
+            <div class="inquiry-input" style=" margin-left:80px; margin-top:50px;">
+            <span>
+               <button onclick="return DksdbdSavaForm('/WL_DkxInfo/list')">保存</button></span><span>
+               <button onclick="return Ganbi()">返回</button></span>
+           </div>
+     </div>
+    
+</div>
+}
+<script type="text/javascript">
+    function DksdbdSavaForm(RetUrl) {
+        //表单验证
+        var options = {
+            beforeSubmit: function () {
+                return true;
+            },
+            dataType: "json",//这里是指控制器处理后返回的类型，这里返回json格式。 
+            success: function (context) {
+                if ("success" == context.result) {
+                    $.messager.alert("操作提示", '操作成功！', 'info', function () {
+                        var ParentObj = window.parent;//获取父窗口
+                        window.parent.$('#windowDia').window('close');
+                        window.parent.location = RetUrl;
+                    });
+                }
+                if ("error" == context.result) {
+                    $.messager.alert("操作提示", '操作失败！', 'error', function () {
+                        var ParentObj = window.parent;//获取父窗口
+                        window.parent.$('#windowDia').window('close');
+                        window.parent.location = RetUrl;
+                    });
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $.messager.alert("操作提示", '操作失败！', 'error');
+            }
+        }
+        $('#form1').ajaxSubmit(options);
+        return false; //为了不刷新页面,返回false 
+
+    }
+
+    function Ganbi() {
+        var ParentObj = window.parent;//获取父窗口
+        window.parent.$('#windowDia').window('close');
+    }
+</script>
+

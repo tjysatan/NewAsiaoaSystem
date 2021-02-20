@@ -1,0 +1,110 @@
+﻿@{
+    ViewBag.Title = "个人盈利的汇总数据更新页面";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<style>
+    .PS_main
+    {
+        padding: 10px 10px 10px 10px;
+        width: 900px;
+        margin: auto;
+    }
+
+        .PS_main ul
+        {
+            width: 100%;
+        }
+
+            .PS_main ul li
+            {
+                float: left;
+            }
+</style>
+@*<form name="reg_testdate">
+    <span class="inquiry-input">
+        <select name="YYYY" id="YYYY" onchange="YYYYDD(this.value)">
+            <option value="">请选择 年</option>
+        </select>
+    </span>
+
+    <span class="inquiry-input">
+        <select name="MM" id="MM" onchange="MMDD(this.value)">
+            <option value="">选择 月</option>
+        </select>
+    </span>
+</form>*@
+
+<div class="PS_main">
+    @* <ul>
+        <li>
+            <span>选择时间：</span>
+
+            <form name="reg_testdate">
+                <span class="inquiry-input">
+                    <select name="YYYY" id="YYYY" onchange="YYYYDD(this.value)">
+                        <option value="">请选择 年</option>
+                    </select>
+                </span>
+                <span class="inquiry-input">
+                    <select name="MM" id="MM" onchange="MMDD(this.value)">
+                        <option value="">选择 月</option>
+                    </select>
+                </span>
+            </form>
+
+        </li>
+    </ul>*@
+    <table style="width: 100%">
+        <tr>
+            <td style="width: 15%; line-height: 70px">
+                <span>选择时间：
+                </span>
+            </td>
+            <td>
+                <span>
+                    <form name="reg_testdate">
+                        <span class="inquiry-input">
+                            <select name="YYYY" id="YYYY" onchange="YYYYDD(this.value)" style="width: 250px;">
+                                <option value="">请选择 年</option>
+                            </select>
+                        </span>
+                        <span class="inquiry-input">
+                            <select name="MM" id="MM" onchange="MMDD(this.value)" style="width: 200px;">
+                                <option value="">选择 月</option>
+                            </select>
+                        </span>
+                    </form>
+                </span>
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 15%; line-height: 70px">
+                <span>汇总类型：
+                </span>
+            </td>
+            <td>
+                <span class="inquiry-input">
+                    <select name="hztype" id="hztype" style="width: 458px;">
+                        <option value="0">按月汇总</option>
+                        <option value="1">按年汇总</option>
+                    </select>
+                </span>
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan="2">
+                <div style="text-align: center; width: 80%;">
+                    <a href="javascript:void(0)" class="easyui-linkbutton" style="width:300px; height:35px;" onclick="HZProSumbyzhtime()">保存</a>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+<script type="text/javascript">
+    $(function () {
+        YearMon();
+    })
+</script>
+<script src="~/Scripts/NAjs/PP_pulice.js"></script>

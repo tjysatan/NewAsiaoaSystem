@@ -1,0 +1,228 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>监控点管理</title>
+    <link rel="stylesheet" type="text/css" href="http://at.alicdn.com/t/font_1459473269_4751618.css">
+    <link href="~/Content/NewM2M/Index/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/Content/NewM2M/Index/css/style.css" rel="stylesheet">
+    <script src="~/Content/NewM2M/Index/js/jquery.min.js"></script>
+    <script src="~/Content/NewM2M/Index/js/bootstrap.min.js"></script>
+    <!--必要样式-->
+    <link rel="stylesheet" type="text/css" href="~/Content/NewM2M/Index/css/menu_elastic.css" />
+    <script src="~/Content/NewM2M/Index/js/snap.svg-min.js"></script>
+    <script type="text/javascript" src="../Content/M2Mv2/js/jquery.min.js"></script>
+    <script type="text/javascript" src="../Content/M2Mv2/js/jquery.leanModal.min.js"></script>
+    <link href="../Content/M2Mv2/css/jquery.uls.css" rel="stylesheet" />
+    <link href="../Content/M2Mv2/css/jquery.uls.grid.css" rel="stylesheet" />
+    <link href="../Content/M2Mv2/css/jquery.uls.lcd.css" rel="stylesheet" />
+
+
+    <script src="../Content/M2Mv2/js/jquery.uls.data.js"></script>
+    <script src="../Content/M2Mv2/js/jquery.uls.data.utils.js"></script>
+    <script src="../Content/M2Mv2/js/jquery.uls.lcd.js"></script>
+    <script src="../Content/M2Mv2/js/jquery.uls.languagefilter.js"></script>
+    <script src="../Content/M2Mv2/js/jquery.uls.regionfilter.js"></script>
+    <script src="../Content/M2Mv2/js/jquery.uls.core.js"></script>
+    <script src="../Scripts/layer/layer.js"></script>
+    <script src="../Scripts/jquery-1.9.1.min.js"></script>
+    <script src="../Scripts/jquery-easyui-1.4.1/jquery.easyui.min.js"></script>
+    <link href="../Scripts/jquery-easyui-1.4.1/themes/default/easyui.css" rel="stylesheet" />
+
+    <script src="../Scripts/jquery.form.js"></script>
+
+    <script type="text/javascript">
+
+        $(function () {
+            ajaxjsd();
+            ajaxjjd();
+        })
+        //接收点
+        function ajaxjsd() {
+            $.ajax({
+                url: "../Iot/GetjkdDATAajax",
+                type: "POST",
+                data: { zhId: '@ViewData["zhId"]', type: "0" },
+                dataType: "json",
+                async: true,
+                beforeSend: function () {
+                    ddchen();
+                },
+                success: function (response) {
+                    disLoading();
+                    var json = eval(response);
+                    htmljspj(json);
+                },
+                error: function (e) {
+                    disLoading();
+                    layer.alert("操作失败！", { icon: 2 });
+                }
+            })
+        }
+
+        //禁接点
+        function ajaxjjd() {
+            $.ajax({
+                url: "../Iot/GetjkdDATAajax",
+                type: "POST",
+                data: { zhId: '@ViewData["zhId"]', type: "1" },
+                dataType: "json",
+                async: true,
+                beforeSend: function () {
+                    ddchen();
+                },
+                success: function (response) {
+                    disLoading();
+                    var json = eval(response);
+                    htmlbjspj(json);
+                },
+                error: function (e) {
+                    disLoading();
+                    layer.alert("操作失败！", { icon: 2 });
+                }
+            })
+        }
+
+        //拼接html(接受告警监控点)
+        function htmljspj(str) {
+            var jsonstr = str;
+            var html = "";
+            html += '<ul class="ddlist">';
+            if (jsonstr != "" && jsonstr != null) {
+                for (var i = 0, j = jsonstr.length; i < j; i++) {
+                    html += '<li class="cdv dzi" style="font-size:12px">';
+                    html += '<p>监控点：' + jsonstr[i].jkdname;
+                    html += '</p>';
+                    html += '<p>SID：' + jsonstr[i].SID + '<button class="label label-warning pull-right" style="border:0px;padding: 6px 10px;" onclick="addordeljkxtz(&quot;' + jsonstr[i].Id + '&quot;,' + "1" + ')">取消通知</button></p>';
+                    html += '</li>';
+                }
+
+            }
+            else {
+                html += '<li>暂无,需要接收告警的监控点</li>';
+            }
+            html += '</ul>';
+            $("#sp1").html(html);
+        }
+        //拼接html(不接受告警的监控点)
+        function htmlbjspj(str) {
+            var jsonstr = str;
+            var html = "";
+            html += '<ul class="ddlist">';
+            if (jsonstr != "" && jsonstr != null) {
+                for (var i = 0, j = jsonstr.length; i < j; i++) {
+                    html += '<li class="cdv dzi">';
+                    html += '<p>监控点：' + jsonstr[i].jkdname;
+                    html += '</p>';
+                    html += '<p>SID：' + jsonstr[i].SID + '<button class="label label-warning pull-right" style="border:0px;padding: 6px 10px;background-color: #428bca;" onclick="addordeljkxtz(&quot;' + jsonstr[i].Id + '&quot;,' + "0" + ')">启用</button></p>';
+                    html += '</li>';
+                }
+
+            }
+            else {
+                html += '<li>暂无,不需要接收告警的监控点</li>';
+            }
+            html += '</ul>';
+            $("#sp2").html(html);
+        }
+
+        var loadi;
+        function ddchen() {
+            loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+        }
+        //关闭等待效果
+        function disLoading() {
+            layer.close(loadi);
+        }
+
+        //操作添加或者取消监控点微信通知
+        function addordeljkxtz(val, val2) {
+            $.ajax({
+                url: "../Iot/JKXQXORJSTZEide",
+                type: "POST",
+                data: { Id: val, type: val2 },
+                dataType: "html",
+                async: true,
+                beforeSend: function () {
+                    ddchen();
+                },
+                success: function (response) {
+                    disLoading();
+                    if (response == "0") {
+                        layer.alert("提交异常！", { icon: 2 }, function () { location.reload(); });
+                    }
+                    if (response == "1") {
+                        layer.alert("提交失败！", { icon: 2 }, function () { location.reload(); });
+                    }
+                    if (response == "2") {
+                        layer.alert("操作成功！", { icon: 1 }, function () { location.reload(); });
+                    }
+                },
+                error: function (e) {
+                    disLoading();
+                    layer.alert("操作失败！", { icon: 2 });
+                }
+            })
+        }
+
+        //刷新监控点
+        function shuaxinjkd() {
+            $.ajax({
+                url: "../Iot/shuaxinjkdEide",
+                type: "POST",
+                data: { nameId: '@ViewData["zhId"]' },
+                dataType: "html",
+                async: true,
+                beforeSend: function () {
+                    ddchen();
+                },
+                success: function (response) {
+                    disLoading();
+                    if (response == "0") {
+                        layer.alert("提交异常！", { icon: 2 }, function () { location.reload(); });
+                    }
+                    if (response == "1") {
+                        layer.alert("提交失败！", { icon: 2 }, function () { location.reload(); });
+                    }
+                    if (response == "2") {
+                        layer.alert("刷新成功！", { icon: 1 }, function () { location.reload(); });
+                    }
+                },
+                error: function (e) {
+                    disLoading();
+                    layer.alert("操作失败！", { icon: 2 });
+                }
+            })
+        }
+    </script>
+</head>
+<body class="huibg">
+    <nav class="navbar text-center">
+        <a class="navbar-tit center-block">监控点</a>
+    </nav>
+    <ul id="myTab" class="nav nav-tabs">
+        <li class="active"><a href="#sp1" data-toggle="tab">接收点</a>
+        </li>
+        <li><a href="#sp2" data-toggle="tab">禁接点</a></li>
+    </ul>
+    <div id="myTabContent" class="tab-content">
+        <div class="tab-pane fade in active" id="sp1">
+        </div>
+        <div class="tab-pane fade" id="sp2">
+        </div>
+      
+    </div>
+    <nav class="navbar text-center">
+         <a class="navbar-tit center-block" onclick="shuaxinjkd()">重置监控点</a>
+    </nav>
+</body>
+</html>

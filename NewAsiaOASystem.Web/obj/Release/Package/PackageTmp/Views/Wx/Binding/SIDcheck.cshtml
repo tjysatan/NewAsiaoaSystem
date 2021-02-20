@@ -1,0 +1,84 @@
+﻿@{
+    ViewBag.Title = "SIDcheck";
+}
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>上线收益情况</title>
+    <link href="~/Content/css/sid_style.css" rel="stylesheet" type="text/css">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="format-detection" content="telephone=no, email=no" />
+</head>
+<body>
+<header>
+    
+    <span>上线收益情况（@ViewData["CusName"]）</span>
+    <div class="clear"></div>
+    
+</header>
+ 
+
+<article class="info">
+   <ul>
+       <li>
+           <div class="left">
+              全部:
+           </div>
+           <div class="right"> @ViewData["Allcount"] /套
+           </div>
+           <div class="clear"></div>
+       </li>
+       <li>
+           <div class="left">
+               本月上线:
+           </div>
+           <div class="right">
+              @ViewData["monthNewSX"]/套
+           </div>
+           <div class="clear"></div>
+       </li>
+       <li>
+           <div class="left">
+               累计上线:
+           </div>
+           <div class="right">@ViewData["allsxcount"]/套
+           </div>
+           <div class="clear"></div>
+       </li>
+       <li>
+           <div class="left">
+               本月收益:
+           </div>
+           <div class="right">
+              @ViewData["profitM"]/元
+           </div>
+           <div class="clear"></div>
+       </li>
+       <li>
+           <div class="left">
+                次月收益：
+           </div>
+           <div class="right">
+              @ViewData["profitcM"]/元（预计）
+           </div>
+           <div class="clear"></div>
+       </li>
+       <li>
+           <div class="left">
+              累计收益：
+           </div>
+           <div class="right">
+             @ViewData["allprofit"]/元
+           </div>
+           <div class="clear"></div>
+       </li>
+   </ul>
+</article>
+</body>
+</html>
+
+
+ 

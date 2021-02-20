@@ -1,0 +1,536 @@
+﻿@model NewAsiaOASystem.ViewModel.PagerInfo<NewAsiaOASystem.ViewModel.DKX_CPInfoView>
+@{
+    ViewBag.Title = "电控箱方案库（电气工程师）";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@section HeadContent{
+    <script type="text/javascript">
+        $(function () {
+            BindGrid();
+        })
+
+        function BindGrid() {
+            @{
+                if (null != Model && null != Model.GetPagingDataJson)
+                {
+                    string json = Model.GetPagingDataJson;//获取json数据
+                    @: var jsonStr = @Html.Raw(json);
+                }
+             }
+            dataGrid(jsonStr);
+        }
+
+        function dataGrid(jsonStr){
+            if (typeof (jsonStr) != "undefined") {
+                var html = "";
+                html = '<table class="layui-table">';
+                html += '<thead>';
+                html+='<tr style="font-weight:bold;color:#000000">';
+                html+='<td width="5%"><input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" /></td>';
+                html+='<td width="15%">型号名称</td>';
+                html+='<td width="5%">功率</td>';
+                html+='<td width="8%">类型</td>';
+                html+='<td width="8%">工程</td>';
+                html+='<td width="10%">入库/异常</td>';
+                html+='<td width="10%">状态</td>';
+                html+='<td width="15%">功能简述</td>';
+                html+='<td width="15%">操作</td>';
+                html+='</tr>';
+                html+='</thead>';
+                for (var i = 0, j = jsonStr.length; i < j; i++)
+                {
+                    //工程师信息
+                    var gcsstr=AjaxGcsinfo(jsonStr[i].Gcs_name)
+                    var gcsnamestr="";
+                    if(gcsstr!=null&&gcsstr!="")
+                    {
+                        gcsnamestr=gcsstr.Name;
+                    }
+                    html+='<tr style="color:#000000">';
+                    html += '<td width="2%"><input type="checkbox" name="ContentChecked" value="' + jsonStr[i].Id + '"/></td>';
+                    html+='<td width="15%">'+jsonStr[i].Cpname+'</td>';
+                    html+='<td width="5%">'+jsonStr[i].Power+'/'+jsonStr[i].DW+'</td>';
+                    html+='<td width="8%">'+showddtype(jsonStr[i].Type,jsonStr[i].Isft)+'</td>';
+                    html+='<td width="8%">'+gcsnamestr+'</td>';
+                    if(jsonStr[i].IsDis=="1")
+                    {
+                        html+='<td width="10%">'+showDate(jsonStr[i].RK_time)+'/'+showDate(jsonStr[i].zgtime)+'</td>';
+                    }
+                    else
+                    {
+                        html+='<td width="10%">'+showDate(jsonStr[i].RK_time)+'</td>';
+                    }
+                    html+='<td width="10%">'+showcpzt(jsonStr[i].IsDis,jsonStr[i].zgyy)+'</td>';
+                    if(jsonStr[i].cpgnjs!=null&&jsonStr[i].cpgnjs)
+                        html+='<td width="10%">'+jsonStr[i].cpgnjs+'</td>';
+                    else
+                        html+='<td width="10%">-</td>';
+                    html+='<td width="15%"><div class="layui-btn-group">'+czbtnshow(jsonStr[i].Id,jsonStr[i].IsDis)+'</div></td>';
+                    html+='</tr>';
+                }
+                html += '</table>';
+                $("#content").html(html);
+            }
+        }
+
+        function SerchList(pageIndex)
+        {
+            $("input[name='pageIndex']").val(pageIndex);
+            var options = {
+                beforeSubmit: function () {
+                    return true;
+                },
+                dataType: "json",
+                success: function (context) {
+                    var data=eval(context.result);
+                    dataGrid(data);
+                    $(".pagin").html(context.PageN);//输出分页按钮
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $.messager.alert("操作提示", '查询失败请重试！', 'error');
+                }
+            }
+            $('#form1').ajaxSubmit(options);
+            return false;
+        }
+
+        //产品状态显示
+        function showcpzt(val,ycyy)
+        {
+            var str;
+            if(val=="0")
+            {
+                str="正常";
+            }
+            if(val=="1")
+            {
+                str='<span style="color:red">异常 ('+ycyy+')</span>'
+            }
+            if(val=="2")
+            {
+                str='<span style="color:#00ff21">待审核</span>';
+            }
+            if(val=="3")
+            {
+                str='<span style="color:red">未提交 </span>'
+            }
+            return str;
+        }
+
+        //操作按钮显示
+        function czbtnshow(val,val1)
+        {
+            var Id="'"+val+"'";
+            var type = "'" + val1 + "'";
+            var t = "";
+            var a = "";
+             var x = "";
+            if (val1 !== 3 && val1!==0) {//正常和尚未提交的不需要整改
+                t = '<a class="layui-btn layui-btn-primary layui-btn-small" onclick="gcszgbjurl(' + Id + ',' + type + ')">整改</a>';
+                a = '<a class="layui-btn layui-btn-primary layui-btn-small" onclick="upbomno(' + Id + ',' + type + ')">BOM</a>';
+                x = '<a class="layui-btn layui-btn-primary layui-btn-small" onclick="jcdateupdate(' + Id + ',' + type + ')">基础修改</a>';
+            }
+ 
+            var b = "";
+            if (val1 === 3) {//
+                b = '<a class="layui-btn layui-btn-primary layui-btn-small" onclick="tuzhizlbj(' + Id + ',' + type + ')">资料编辑</a>';
+            }
+            var z = "";
+            if (val1 === 0) {//正常状态的 可以查看资料
+                z='<a class="layui-btn layui-btn-primary layui-btn-small" onclick="ziliaochakan('+Id+')">资料</a>';
+            }
+            return t+z+x+b+a;
+        }
+
+        //工程师修改
+        function gcszgbjurl(Id,type)
+        {
+            if(type=="0")
+            {
+                layer.alert("产品正常,无需编辑！", { icon: 1 });
+                return false;
+            }
+            if(type=="3")
+            {
+                layer.alert("产品尚未提交,无需整改！", { icon: 1 });
+                return false;
+            }
+            layer.open({
+                type: 2,
+                title: ['资料编辑', 'font-size:14px;'],
+                area: ['900px', '450px'],
+                offset: '10px',
+                fixed: false, //不固定
+                maxmin: true,
+                content: '../DKX_DDtypeinfo/GCSRKzlbjView?Id='+Id,
+                //end: function () {
+                //    location.reload();
+                //}
+            })
+        }
+
+        //资料查看
+        function ziliaochakan(val)
+        {
+            layer.open({
+                type: 2,
+                title: ['资料查看', 'font-size:14px;'],
+                area: ['900px', '450px'],
+                offset: '10px',
+                fixed: false, //不固定
+                maxmin: true,
+                content: '../DKX_DDtypeinfo/FAKzlckView?Id='+val,
+                //end: function () {
+                //    location.reload();
+                //}
+            })
+        }
+        //修改BOM更新bom
+        function upbomno(Id,type){
+            if(type=="0")
+            {
+                layer.alert("产品正常,无法编辑BOM！", { icon: 1 });
+                return false;
+            }
+            if(type=="3")
+            {
+                layer.alert("产品尚未提交,无法编辑BOM！", { icon: 1 });
+                return false;
+            }
+            layer.open({
+                type: 2,
+                title: ['bom编号编辑', 'font-size:14px;'],
+                area: ['900px', '650px'],
+                offset: '10px',
+                fixed: false, //不固定
+                maxmin: true,
+                content: '../DKX_DDtypeinfo/FAKupdatebomnoView?Id='+Id,
+                //end: function () {
+                //    location.reload();
+                //}
+            })
+        }
+
+        //资料审核
+        function tuzhishenhe(val,val1)
+        {
+            if('@ViewData["SHQX"]'=="0")
+            {
+                if(val1=="2")
+                {
+                    layer.open({
+                        type: 2,
+                        title: ['资料审核', 'font-size:14px;'],
+                        area:['900px','450px'],
+                        offset: '10px',
+                        fixed: false, //不固定
+                        maxmin: true,
+                        content: '../DKX_DDtypeinfo/FAKZLSHView?Id='+val,
+                        //end: function () {
+                        //    location.reload();
+                        //}
+                    })
+                }
+                else
+                {
+                    layer.alert("该状态下无需审核。！", { icon: 2 });
+                    return false;
+                }
+            }
+            else
+            {
+                layer.alert("当前帐号无权审核图纸资料。！", { icon: 2 });
+                return false;
+            }
+        }
+
+        //新建现成方案
+        function xinjian()
+        {
+            layer.open({
+                type: 2,
+                title: ['现成方案', 'font-size:14px;'],
+                area: ['900px', '450px'],
+                offset: '10px',
+                fixed: false, //不固定
+                maxmin: true,
+                content: '../DKX_DDtypeinfo/FAKaddxcfajcView',
+                end: function () {
+                    location.reload();
+                }
+            })
+        }
+        //基础数据修改
+        function jcdateupdate(val,type)
+        {
+            if(type=="1")
+            {
+                layer.open({
+                    type: 2,
+                    title: ['基础数据修改', 'font-size:14px;'],
+                    area: ['900px', '450px'],
+                    offset: '10px',
+                    fixed: false, //不固定
+                    maxmin: true,
+                    content: '../DKX_DDtypeinfo/FAKaddxcfajcupdateView?Id='+val,
+                    //end: function () {
+                    //    location.reload();
+                    //}
+                })
+            }
+            else
+            {
+                layer.alert("当前状态,基础资料不可以修改！", { icon: 2 });
+                return false;
+            }
+        }
+        //图纸资料编辑
+        function tuzhizlbj(val,type)
+        {
+            if(type=="3")
+            {
+                layer.open({
+                    type: 2,
+                    title: ['图纸资料编辑', 'font-size:14px;'],
+                    area: ['900px', '450px'],
+                    offset: '10px',
+                    fixed: false, //不固定
+                    maxmin: true,
+                    content: '../DKX_DDtypeinfo/FAKzlBJView?Id='+val,
+                    //end: function () {
+                    //    location.reload();
+                    //}
+                })
+            }
+            else
+            {
+                layer.alert("当前状态,图纸资料不可以编辑！", { icon: 2 });
+                return false;
+            }
+        }
+
+        //电控箱类型显示
+        function showddtype(val,val2){
+            var jsonstr=@Html.Raw(ViewBag.MyJson);
+            var str;
+            if(jsonstr!=null){
+                for (var i = 0;i <jsonstr.length; i++) {
+                    if(jsonstr[i].Type==val)
+                    {
+                        str=jsonstr[i].Name;
+                        return str;
+                    }
+                }
+            }
+        }
+
+        var loadi;
+        function ddchen() {
+            loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+        }
+        //关闭等待效果
+        function disLoading() {
+            layer.close(loadi);
+        }
+
+        //批量刷新同步料单
+        function pltbliaodan()
+        {
+            //获取到选中值
+            var arr = GetGridSelete();
+            if (arr.length <= 0) {
+                layer.alert("请选择记录之后再操作批量刷新料单的功能！", { icon: 2 });
+                return false
+            }
+            else
+            {
+               
+                var b='' ;
+                for (var i = 0,j=arr.length; i < j; i++) {
+                    b=b+"'"+arr[i]+"',"
+                }
+                b=b.substr(0, b.length - 1);  
+              
+                $.ajax({
+                    url: "../DKX_DDtypeinfo/PLupdatecpBOMEide",
+                    type: "POST",
+                    data: { "Id":b },
+                    dataType: "json",
+                    async: true,
+                    beforeSend: function () {
+                        ddchen();
+                    },
+                    success: function (response) {
+                        disLoading();
+                        if (response.result == "error") {
+                            layer.alert("产品不存在！", { icon: 2 });
+                            return false;
+                        }
+                        if (response.result == "Success") {
+                            layer.alert("更新成功！成功更新："+response.res1+"条，更新失败："+response.res2+"条，料单不是关联K3:"+response.res3+"条，找不到料单："+response.res4 +"条", { icon: 1 });
+                            return false;
+                        }
+                        return false;
+
+                    },
+                    error: function (e) {
+                        disLoading();
+                        layer.alert("操作失败！", { icon: 2 });
+                        return false;
+                    }
+                })
+            }
+        }
+
+        //批量完成整改
+        function plwczg(){
+            layer.confirm('你确定进行批量修改操作？', {
+                btn: ['确定','取消'] //按钮
+            }, function(){
+                //获取到选中值
+                var arr = GetGridSelete();
+                if (arr.length <= 0) {
+                    layer.alert("请选择记录之后再操作批量完成整改的功能！", { icon: 2 });
+                    return false
+                }
+                else
+                {
+                    var b='' ;
+                    for (var i = 0,j=arr.length; i < j; i++) {
+                        b=b+"'"+arr[i]+"',"
+                    }
+                    b=b.substr(0, b.length - 1);  
+                    $.ajax({
+                        url: "../DKX_DDtypeinfo/PLwxzgEide",
+                        type: "POST",
+                        data: { "Id":b },
+                        dataType: "json",
+                        async: true,
+                        beforeSend: function () {
+                            ddchen();
+                        },
+                        success: function (response) {
+                            disLoading();
+                            if (response.result == "error") {
+                                layer.alert("产品不存在！", { icon: 2 });
+                                return false;
+                            }
+                            if (response.result == "Success") {
+                                layer.alert("更新成功！完成整改："+response.res1+"条，完成失败："+response.res2+"条，当前状态无法提交:"+response.res3+"条", { icon: 1 });
+                                return false;
+                            }
+                            return false;
+
+                        },
+                        error: function (e) {
+                            disLoading();
+                            layer.alert("操作失败！", { icon: 2 });
+                            return false;
+                        }
+                    })
+                }
+            }, function(){
+                
+            });
+        }
+    </script>
+}
+
+
+<div class="h-right">
+    <div class="h-right-c">
+        <!--查询条件-->
+        <div class="inquiry1">
+            <fieldset>
+                <legend>查询条件：</legend>
+                @using (Html.BeginForm("DkxcpSearchList", "DKX_DDtypeinfo", FormMethod.Post, new { id = "form1" }))
+                {
+                    @Html.Hidden("pageIndex");
+                    <ul>
+                        <li>
+                            <span>产品型号：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txtcpname" id="txtcpname" />
+                            </span>
+                        </li>
+                        <li>
+                            <span>功率：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txtgl" id="txtgl" />
+                            </span>
+                        </li>
+                        <li>
+                            <span>功率单位：</span>
+                            <span class="inquiry-input">
+                                <select id="txtdw" name="txtdw">
+                                    <option value="">全部</option>
+                                    <option value="KW">KW</option>
+                                    <option value="P">P</option>
+                                </select>
+                            </span>
+                        </li>
+                        <li>
+                            <span>产品类型：</span>
+                            <span class="inquiry-input">
+                                @Html.DropDownList("txtType", ViewData["aDTlist"] as SelectList)
+                            </span>
+                        </li>
+                        <li>
+                            <span>是否分体：</span>
+                            <span class="inquiry-input">
+                                <select id="txtft" name="txtft">
+                                    <option value="">全部</option>
+                                    <option value="0">一体</option>
+                                    <option value="1">分体</option>
+                                </select>
+                            </span>
+                        </li>
+                        <li>
+                            <span>工程师：</span>
+                            <span class="inquiry-input">
+                                @Html.DropDownList("txtGcs_name", ViewData["GCSDATA"] as SelectList)
+                            </span>
+                        </li>
+                        <li>
+                            <span>功能简述：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txtgnjs" id="txtgnjs" />
+                            </span>
+                        </li>
+                        <li style="*width: 100%; *margin: -10px 0 5px 90px;">
+                            <span class="inquiry-input">
+                                <button name="btnSerch" class="layui-btn" onclick="return SerchList(1)"><i class="layui-icon">&#xe615;</i>查询</button>
+                            </span>
+                            <span class="inquiry-input">
+                                <button class="layui-btn" onclick="xinjian(); return false; " id="parentIframe"><i class="layui-icon">&#xe608;</i> 新增</button>
+                            </span>
+                            <span class="inquiry-input">
+                                <button class="layui-btn" onclick="pltbliaodan(); return false;  " style="width: 110px"><i class="layui-icon">&#x1002;</i> BOM更新</button>
+                            </span>
+                            <span class="inquiry-input">
+                                <button class="layui-btn" onclick="plwczg();return false;" style="width: 110px">批量完成整改</button>
+                            </span>
+                        </li>
+                    </ul>
+                }
+            </fieldset>
+        </div>
+
+        <div class="h-table">
+            <div class="h-table-content" style="color: #9d9999;">
+                <div id="content"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--==========================输出分页按钮=========================-->
+<div class="pagin">
+    @if (ViewBag.PageNavigate == null)
+    {
+        @Html.ShowPageNavigate(Model.CurrentPageIndex, Model.PageSize, Model.RecordCount);
+    }
+</div>
+
+<script src="~/Scripts/NAjs/DKXpulice.js"></script>

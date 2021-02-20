@@ -1,0 +1,108 @@
+﻿@model NewAsiaOASystem.ViewModel.Flow_RoutineStockinfoView
+@{
+    ViewBag.Title = "常规电控箱销售";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+
+
+
+<div style="width: 80%; padding: 20px 20px 0 20px">
+    @using (Html.BeginForm("DKXEide", "Flow_RoutineStockinfo", FormMethod.Post, new { id = "form1" }))
+    {
+        <div class="layui-form-item">
+            <label class="layui-form-label">物料代码：</label>
+            <div class="layui-input-block">
+                @Html.TextBoxFor(m => m.P_Bianhao, new { placeholder = "物料代码", @class = "layui-input", @oninput = "oninputajax()" })
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block" style="color: red;" id="tscon">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">产品名称：</label>
+            <div class="layui-input-block">
+                @Html.TextBoxFor(m => m.P_Name, new { placeholder = "产品名称", @class = "layui-input", @readonly = "readonly" })
+            </div>
+        </div>
+        
+        <div class="layui-form-item">
+            <label class="layui-form-label">产品型号：</label>
+            <div class="layui-input-block">
+                @Html.TextBoxFor(m => m.P_Model, new { placeholder = "产品型号", @class = "layui-input", @readonly = "readonly" })
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">月用量：</label>
+            <div class="layui-input-block">
+                @Html.TextBoxFor(m => m.M_Consumption, new { placeholder = "月用量", @class = "layui-input" })
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">周用量：</label>
+            <div class="layui-input-block">
+                @Html.TextBoxFor(m => m.W_Consumption, new { placeholder = "周用量", @class = "layui-input" })
+            </div>
+        </div>
+        <div class="inquiry-input infor-b">
+            <span>
+                <button onclick="return SavaForm('/Flow_RoutineStockinfo/dkxlist')">保存</button></span><span>
+                    <button onclick="return RedirectUrl('/Flow_RoutineStockinfo/dkxlist')">返回</button></span>
+        </div>
+    }
+</div>
+<script type="text/javascript">
+    function oninputajax() {
+        var P_Bianhao = $("#P_Bianhao").val();
+        var json = AjaxGetk3infobybianma(P_Bianhao);
+        if (json == "" || json == null) {
+            $("#tscon").html("不存在该物料代码！");
+            $("#P_Name").val("");
+            $("#P_Model").val("");
+        }
+        else {
+            $("#tscon").html("");
+            $("#P_Bianhao").val(json.fnumber);
+            $("#P_Name").val(json.fname)
+            $("#P_Model").val(json.fmodel);
+        }
+    }
+
+    //获取产品的基础数据
+    function AjaxGetk3infobybianma(val) {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "/Flow_RoutineStockinfo/GetK3infobybianma",
+            data: { bianma: val },
+            dataType: "json",
+            async: false,
+            success: function (reslut) {
+                json = reslut;
+            },
+            error: function (e) {
+                alert("请求失败");
+            }
+        })
+        return json;
+    }
+
+    //保存表单
+    function SavaForm(url) {
+        var P_Bianhao = $("#P_Bianhao").val();
+        var P_Name = $("#P_Name").val();
+        if (P_Bianhao == "") {
+            alert("物料代码不为空！");
+            return false;
+        }
+        if (P_Name == "") {
+            alert("产品名称不为空！");
+            return false;
+        }
+
+        return submitForm(url);
+    }
+</script>

@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="NewAsiaOASystem.DBModel" assembly="NewAsiaOASystem.DBModel">
+  <class name="Flow_ProductionNoticeinfo" table="Flow_ProductionNoticeinfo">
+    <id name="Id" column="Id" type="string" unsaved-value="0">
+      <generator class="uuid.hex"/>
+    </id>
+
+ 
+    
+    <property name="Product_Id">
+      <column name="Product_Id" />
+    </property>
+
+    <property name="Product_Name">
+      <column name="Product_Name" />
+    </property>
+
+    <property name="Product_Bianhao">
+      <column name="Product_Bianhao" />
+    </property>
+
+    <property name="Xsorder_Id">
+      <column name="Xsorder_Id"/>
+    </property>
+
+    <property name="Number">
+      <column name="Number"/>
+    </property>
+
+    <property name="Type">
+      <column name="Type"/>
+    </property>
+
+    <property name="Yjdatetime">
+      <column name="Yjdatetime"/>
+    </property>
+
+    <property name="Sjdatetime">
+      <column name="Sjdatetime"/>
+    </property>
+
+    <property name="Createtime">
+      <column name="Createtime"/>
+    </property>
+
+    <property name="Status">
+      <column name="Status"/>
+    </property>
+ 
+  </class>
+</hibernate-mapping>

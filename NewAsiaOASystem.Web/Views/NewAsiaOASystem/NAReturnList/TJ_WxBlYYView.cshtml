@@ -1,0 +1,228 @@
+﻿@{
+    ViewBag.Title = "返退产品不良原因的统计";
+}
+
+<style>
+    table
+    {
+        border-collapse: collapse;
+        border: none;
+    }
+
+        table td
+        {
+            border: solid #e8e5e5 1px;
+            height: 35px;
+            padding: 0 0 0 5px;
+        }
+
+    .btnclass
+    {
+        width: 100px;
+        height: 35px;
+        background: #e8e5e5;
+        border: 1px #808080 solid;
+        margin-left: 20px;
+    }
+
+    .btnmonclass
+    {
+        width: 80px;
+        height: 25px;
+        background: #e8e5e5;
+        border: 1px #808080 solid;
+        margin-left: 20px;
+    }
+
+    .spfontclas
+    {
+        font-size: 14px;
+        font-family: '微软雅黑';
+    }
+</style>
+
+<script src="~/Scripts/layer/layer.js"></script>
+<script src="~/Scripts/highcharts.js"></script>
+<script src="~/Scripts/exporting.js"></script>
+
+<script type="text/javascript">
+
+    //年
+    function YYYYMMDDstart() {
+        MonHead = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+        //先给年下拉框赋内容   
+        var y = new Date().getFullYear();
+        for (var i = (y - 1) ; i < (y + 30) ; i++) //以今年为准，前30年，后30年   
+            document.reg_testdate.YYYY.options.add(new Option(" " + i, i));
+
+        //赋月份的下拉框   
+        for (var i = 1; i < 13; i++)
+            document.reg_testdate.MM.options.add(new Option(" " + i, i));
+
+        document.reg_testdate.YYYY.value = y;
+        document.reg_testdate.MM.value = new Date().getMonth() + 1;
+        var n = MonHead[new Date().getMonth()];
+        if (new Date().getMonth() == 1 && IsPinYear(YYYYvalue)) n++;
+        //  writeDay(n); //赋日期下拉框Author:meizz   
+        //  document.reg_testdate.DD.value = new Date().getDate();
+    }
+    if (document.attachEvent)
+        window.attachEvent("onload", YYYYMMDDstart);
+    else
+        window.addEventListener('load', YYYYMMDDstart, false);
+    function YYYYDD(str) //年发生变化时日期发生变化(主要是判断闰平年)   
+    {
+        var MMvalue = document.reg_testdate.MM.options[document.reg_testdate.MM.selectedIndex].value;
+        if (MMvalue == "") { var e = document.reg_testdate.DD; optionsClear(e); return; }
+        var n = MonHead[MMvalue - 1];
+        if (MMvalue == 2 && IsPinYear(str)) n++;
+        //writeDay(n)
+    }
+
+    //月
+    function MMDD(str)   //月发生变化时日期联动   
+    {
+        var YYYYvalue = document.reg_testdate.YYYY.options[document.reg_testdate.YYYY.selectedIndex].value;
+        if (YYYYvalue == "") { var e = document.reg_testdate.DD; optionsClear(e); return; }
+        var n = MonHead[str - 1];
+        if (str == 2 && IsPinYear(YYYYvalue)) n++;
+        // writeDay(n)
+    }
+
+    function IsPinYear(year)//判断是否闰平年   
+    {
+        return (0 == year % 4 && (year % 100 != 0 || year % 400 == 0));
+    }
+
+    $(function () {
+        TJFTSUM();
+    });
+
+     
+
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+
+    //获取产品数据统计数据
+    function TJFTSUM() {
+        var type = $("#px").val();
+        var Year = $("#YYYY").val();
+        var MM = $("#MM").val();
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "/NAReturnList/GetFtBlyysuminfobyYmandtype",
+            dataType: "json",
+            data: {Year:Year,Mon:MM, pxType: type },
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (reslut) {
+                disLoading();
+                json = eval(reslut);
+                HtmlPJ(json);
+                //pingtuhtml();
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("网络异常，请重试！", { icon: 2 })
+            }
+        })
+    }
+
+    //单独按照正序查询返退数据
+    function TJftsumzx() {
+        var type = $("#px").val();
+        var Year = $("#YYYY").val();
+        var MM = $("#MM").val();
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "/NAReturnList/GetFtBlyysuminfobyYmandtype",
+            dataType: "json",
+            data: { Year: Year, Mon: MM, pxType: type },
+            async: false,
+            success: function (reslut) {
+                json = eval(reslut);
+            },
+            error: function (e) {
+                layer.alert("网络异常，请重试！", { icon: 2 })
+            }
+        })
+        return json;
+    }
+
+    //html拼接
+    function HtmlPJ(str) {
+        var jsonStr;
+        jsonStr = str;
+        var html;
+        $("#content").html("");
+        if (jsonStr != null) {
+
+            for (var i = 0, j = jsonStr.length; i < j; i++) {
+                html += '<tr>';
+                html += '<td width="24%"  height="60px" align="center">' + jsonStr[i].CP_name + '</td>';
+              
+                html += '<td width="24%" height="60px" align="center">' + jsonStr[i].FT_SUM + '</td>';
+                html += '</tr>';
+            }
+        }
+        else {
+            html += '<tr>';
+            html += '<td colspan="3">~当前没有数据！</td>';
+            html += '</tr>';
+        }
+        $("#content").html(html);
+    }
+
+
+
+    
+
+   
+</script>
+
+
+<div style="width: 90%; margin: auto; margin-top: 20px; margin-bottom: 20px;">
+    <form name="reg_testdate">
+        <span class="inquiry-input">维修时间：
+        </span>
+        <span class="inquiry-input">
+            <select name="YYYY" id="YYYY" onchange="YYYYDD(this.value)">
+                <option value="">请选择 年</option>
+            </select>
+        </span>
+        <span class="inquiry-input">
+            <select name="MM" id="MM" onchange="MMDD(this.value)">
+                <option value="">选择 月</option>
+            </select>
+        </span>
+
+        <span class="spfontclas">排序：<select id="px" name="px" style="width: 100px; height: 25px; border: 1px solid #000000">
+            <option value="0">正序</option>
+            <option value="1">倒序</option>
+        </select>
+        </span>
+        <input type="button" class="btnmonclass" value="查询" onclick="TJFTSUM()" />
+    </form>
+</div>
+
+<table style="width: 90%; margin: auto">
+    <tr>
+        <td align="center" width="48%">不良原因</td>
+ 
+        <td align="center" width="48%">退货数量</td>
+    </tr>
+</table>
+<table style="width: 90%; margin: auto" id="content">
+</table>

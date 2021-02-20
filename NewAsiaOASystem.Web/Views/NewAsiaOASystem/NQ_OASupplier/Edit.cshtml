@@ -1,0 +1,1071 @@
+﻿@model NewAsiaOASystem.ViewModel.NQ_OASupplierView
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@using (Html.BeginForm("updateOASupplier", "NQ_OASupplier", FormMethod.Post, new { id = "form1" }))
+{
+
+    @Html.Hidden("Id", Model.Id)
+    @Html.Hidden("FLicenceExist", ViewData["FLicenceExist"])
+
+    @Html.Hidden("FISO9001Exist", ViewData["FISO9001Exist"])
+    @Html.Hidden("FISO14000Exist", ViewData["FISO14000Exist"])
+    @Html.Hidden("FPatentExist", ViewData["FPatentExist"])
+    @Html.Hidden("FOtherExist", ViewData["FOtherExist"])
+    @Html.Hidden("FQuestionnaireExist", ViewData["FQuestionnaireExist"])
+    @Html.Hidden("FAgentExist", ViewData["FAgentExist"])
+    @Html.Hidden("FAgentExist", ViewData["FAgentExist"])
+    @Html.Hidden("FSampleEvaluationExist", ViewData["FSampleEvaluationExist"])
+    @Html.Hidden("FQualityAgreementExist", ViewData["FQualityAgreementExist"])
+    @Html.Hidden("hiddenFSupplierType", Model.FSupplierType)
+    @Html.Hidden("fstatus", Model.supplierStatus.iStatus)
+
+    @Html.Hidden("FLicenceCount", ViewData["FLicenceCount"])
+    @Html.Hidden("FTaxCount", ViewData["FTaxCount"])
+    @Html.Hidden("FISO9001Count", ViewData["FISO9001Count"])
+    @Html.Hidden("FISO14000Count", ViewData["FISO14000Count"])
+    @Html.Hidden("FPatentCount", ViewData["FPatentCount"])
+    @Html.Hidden("FOtherCount", ViewData["FOtherCount"])
+    @Html.Hidden("FQuestionnaireCount", ViewData["FQuestionnaireCount"])
+    @Html.Hidden("FAgentCount", ViewData["FAgentCount"])
+    @Html.Hidden("FSampleEvaluationCount", ViewData["FSampleEvaluationCount"])
+    @Html.Hidden("FTrialProductionCount", ViewData["FTrialProductionCount"])
+    @Html.Hidden("FQualityAgreementCount", ViewData["FQualityAgreementCount"])
+    @Html.Hidden("FSupplierQuestionnaireCount", ViewData["FSupplierQuestionnaireCount"])
+
+    <div class="infor">
+        <p id="Ptitle"></p>
+        <div class="system-menu-set">
+            <ul class="infor-c">
+
+                <li>
+                    <span class="infor-c-width"><span style="color: red; font-size: 24px;vertical-align: middle; margin-left: 8px;width: 4px;">*</span>供应商名称：</span>
+                    <span class="infor-c-input">
+                        @Html.TextBoxFor(m => m.FName)
+                    </span>
+                </li>
+                <li>
+                    <span class="infor-c-width"><span style="color: red; font-size: 24px;vertical-align: middle; margin-left: 8px;width: 4px;">*</span>地址：</span>
+                    <span class="infor-c-input">@Html.TextBoxFor(m => m.FAddress)</span>
+                </li>
+                <li>
+                    <span class="infor-c-width">手机号：</span>
+                    <span class="infor-c-input">
+                        @Html.TextBoxFor(m => m.FMobilePhone)
+                    </span>
+                </li>
+            </ul>
+            <ul class="infor-c">
+                <li>
+                    <span class="infor-c-width"><span style="color: red; font-size: 24px;vertical-align: middle; margin-left: 8px;width: 4px;">*</span>联系人：</span>
+                    <span class="infor-c-input">@Html.TextBoxFor(m => m.FContact)</span>
+                </li>
+                <li>
+                    <span class="infor-c-width"><span style="color: red; font-size: 24px;vertical-align: middle; margin-left: 8px;width: 4px;">*</span>电话：</span>
+                    <span class="infor-c-input">
+                        @Html.TextBoxFor(m => m.FPhone)
+                    </span>
+                </li>
+                <li>
+                    <div class="inquiry-input">
+                        <span>
+                            <button onclick="return SaveBaseForm()">基础数据保存</button>
+                        </span>
+                    </div>
+                </li>
+            </ul>
+            <ul class="infor-c ">
+                <li>
+                    <span class="infor-c-width">供应商性质：</span>
+                    <span class="infor-c-input">
+                        @Html.RadioButtonFor(m => m.FSupplierType, 0, new { @id = "typeFactory", @name = "FSupplierType", @checked = "true", @onclick = "rdbSelected()", @style = "border:hidden" }) 厂家
+                        @Html.RadioButtonFor(m => m.FSupplierType, 1, new { @id = "typeAgent", @name = "FSupplierType", @onclick = "rdbSelected()", @style = "border:hidden" }) 代理商
+                    </span>
+                </li>
+            </ul>
+
+        </div>
+
+
+        @{
+            List<NewAsiaOASystem.ViewModel.NQ_SupplierAttachmentView> bindResultList = ViewBag.attachments;
+
+
+            List<NewAsiaOASystem.ViewModel.NQ_SupplierAttachmentView> att0 = new List<NewAsiaOASystem.ViewModel.NQ_SupplierAttachmentView>();
+            List<NewAsiaOASystem.ViewModel.NQ_SupplierAttachmentView> att1 = new List<NewAsiaOASystem.ViewModel.NQ_SupplierAttachmentView>();
+            List<NewAsiaOASystem.ViewModel.NQ_SupplierAttachmentView> att2 = new List<NewAsiaOASystem.ViewModel.NQ_SupplierAttachmentView>();
+            List<NewAsiaOASystem.ViewModel.NQ_SupplierAttachmentView> att3 = new List<NewAsiaOASystem.ViewModel.NQ_SupplierAttachmentView>();
+            List<NewAsiaOASystem.ViewModel.NQ_SupplierAttachmentView> att4 = new List<NewAsiaOASystem.ViewModel.NQ_SupplierAttachmentView>();
+            List<NewAsiaOASystem.ViewModel.NQ_SupplierAttachmentView> att5 = new List<NewAsiaOASystem.ViewModel.NQ_SupplierAttachmentView>();
+            List<NewAsiaOASystem.ViewModel.NQ_SupplierAttachmentView> att6 = new List<NewAsiaOASystem.ViewModel.NQ_SupplierAttachmentView>();
+            List<NewAsiaOASystem.ViewModel.NQ_SupplierAttachmentView> att7 = new List<NewAsiaOASystem.ViewModel.NQ_SupplierAttachmentView>();
+            List<NewAsiaOASystem.ViewModel.NQ_SupplierAttachmentView> att8 = new List<NewAsiaOASystem.ViewModel.NQ_SupplierAttachmentView>();
+            List<NewAsiaOASystem.ViewModel.NQ_SupplierAttachmentView> att9 = new List<NewAsiaOASystem.ViewModel.NQ_SupplierAttachmentView>();
+            List<NewAsiaOASystem.ViewModel.NQ_SupplierAttachmentView> att10 = new List<NewAsiaOASystem.ViewModel.NQ_SupplierAttachmentView>();
+            List<NewAsiaOASystem.ViewModel.NQ_SupplierAttachmentView> att11 = new List<NewAsiaOASystem.ViewModel.NQ_SupplierAttachmentView>();
+
+            if (bindResultList != null)
+            {
+                att0 = bindResultList.Where(p => p.FAttType == 0).ToList();
+                att1 = bindResultList.Where(p => p.FAttType == 1).ToList();
+                att2 = bindResultList.Where(p => p.FAttType == 2).ToList();
+                att3 = bindResultList.Where(p => p.FAttType == 3).ToList();
+                att4 = bindResultList.Where(p => p.FAttType == 4).ToList();
+                att5 = bindResultList.Where(p => p.FAttType == 5).ToList();
+                att6 = bindResultList.Where(p => p.FAttType == 6).ToList();
+                att7 = bindResultList.Where(p => p.FAttType == 7).ToList();
+                att8 = bindResultList.Where(p => p.FAttType == 8).ToList();
+                att9 = bindResultList.Where(p => p.FAttType == 9).ToList();
+                att10 = bindResultList.Where(p => p.FAttType == 10).ToList();
+                att11 = bindResultList.Where(p => p.FAttType == 11).ToList();
+            }
+
+
+            @* 营业执照(三证合一)  *@
+            <ul class="infor-c ">
+                <li>
+                    <span class="infor-c-width-upload"><span style="color: red; font-size: 24px;vertical-align: middle; margin-left: 8px;width: 4px;">*</span>营业执照(三证合一)：</span>
+                </li>
+                <li>
+                    <span class="infor-c-width">有效期至：</span>
+                    <span class="infor-c-input">
+
+                        @{
+                            if (att0.Count() > 0)
+                            {
+                                if (att0[0].isPermanent == 1)
+                                {
+                                    <input type="text" id="FLicenceDeadLine" name="FLicenceDeadLine" value="永不过期" disabled="disabled" />
+                                }
+                                else
+                                {
+                                    <input type="text" id="FLicenceDeadLine" name="FLicenceDeadLine" value="@(att0[0].FAttDeadline == null ? "" : att0[0].FAttDeadline.ToString("D") )" disabled="disabled" />
+                                }
+                            }
+                            else
+                            {
+                                <input type="text" id="FLicenceDeadLine" name="FLicenceDeadLine" value="" disabled="disabled" />
+                            }
+                        }
+                    </span>
+                </li>
+                <li>
+                    <span class="inquiry-input btn_att">
+                        @{
+                            if (att0.Count() > 0)
+                            {
+                                <a class="layui-btn layui-btn-primary" onclick="attachView(@att0[0].FAttType,@att0[0].seq);">编辑</a>
+                            }
+                            else
+                            {
+                                <a class="layui-btn layui-btn-primary" onclick="attachView(0,1);">编辑</a>
+                            }
+                        }
+                    </span>
+                </li>
+
+                @{
+                    if (att0.Count() > 0)
+                    {
+                        if (att0[0].FAttDeadline != null)
+                        {
+                            <li>
+                                <span class="inquiry-input btn_att">
+                                    <a class="layui-btn layui-btn-primary" onclick="return clearAtt('0',@Model.Id,@att0[0].seq)">清除附件</a>
+                                </span>
+                            </li>
+                        }
+                    }
+
+
+                }
+            </ul>
+
+
+            @* 税务登记证  *@
+            <ul class="infor-c ">
+                <li>
+                    <span class="infor-c-width-upload">税务登记证：</span>
+                </li>
+                <li>
+                    <span class="infor-c-width">有效期至：</span>
+                    <span class="infor-c-input">
+
+                        @{
+                            if (att1.Count() > 0)
+                            {
+                                if (att1[0].isPermanent == 1)
+                                {
+                <input type="text" name="FTaxDeadLine" value="永不过期" disabled="disabled" />
+                        }
+                        else
+                        {
+                <input type="text" name="FTaxDeadLine" value="@(att1[0].FAttDeadline == null ? "" : att1[0].FAttDeadline.ToString("D") )" disabled="disabled" />
+                        }
+                    }
+                    else
+                    {
+                <input type="text" name="FTaxDeadLine" value="" disabled="disabled" />
+                    }
+                        }
+                    </span>
+                </li>
+                <li>
+                    <span class="inquiry-input btn_att">
+                        @{
+                    if (att1.Count() > 0)
+                    {
+                <a class="layui-btn layui-btn-primary" onclick="attachView(@att1[0].FAttType,@att1[0].seq);">编辑</a>
+                    }
+                    else
+                    {
+                <a class="layui-btn layui-btn-primary" onclick="attachView(1,1);">编辑</a>
+                    }
+                        }
+                    </span>
+                </li>
+
+                @{
+            if (att1.Count() > 0)
+            {
+                if (att1[0].FAttDeadline != null)
+                {
+        <li>
+            <span class="inquiry-input btn_att">
+                <a class="layui-btn layui-btn-primary" onclick="return clearAtt('1',@Model.Id,@att1[0].seq)">清除附件</a>
+            </span>
+        </li>
+                }
+            }
+
+                }
+
+            </ul>
+
+                    @* ISO9001  *@
+                            <ul class="infor-c ">
+                                <li>
+                                    <span class="infor-c-width-upload">ISO9001：</span>
+                                </li>
+                                <li>
+                                    <span class="infor-c-width">有效期至：</span>
+                                    <span class="infor-c-input">
+
+                                        @{
+                                            if (att2.Count() > 0)
+                                            {
+                                                if (att2[0].isPermanent == 1)
+                                                {
+                        <input type="text" name="FISO9001DeadLine" value="永不过期" disabled="disabled" />
+                                }
+                                else
+                                {
+                        <input type="text" name="FISO9001DeadLine" value="@(att2[0].FAttDeadline == null ? "" : att2[0].FAttDeadline.ToString("D") )" disabled="disabled" />
+                                }
+                            }
+                            else
+                            {
+                        <input type="text" name="FISO9001DeadLine" value="" disabled="disabled" />
+                            }
+                                        }
+                                    </span>
+                                </li>
+                                <li>
+                                    <span class="inquiry-input btn_att">
+                                        @{
+                            if (att2.Count() > 0)
+                            {
+                        <a class="layui-btn layui-btn-primary" onclick="attachView(@att2[0].FAttType,@att2[0].seq);">编辑</a>
+                            }
+                            else
+                            {
+                        <a class="layui-btn layui-btn-primary" onclick="attachView(2,1);">编辑</a>
+                            }
+                                        }
+                                    </span>
+                                </li>
+
+                                @{
+                    if (att2.Count() > 0)
+                    {
+                        if (att2[0].FAttDeadline != null)
+                        {
+                <li>
+                    <span class="inquiry-input btn_att">
+                        <a class="layui-btn layui-btn-primary" onclick="return clearAtt('2',@Model.Id,@att2[0].seq)">清除附件</a>
+                    </span>
+                </li>
+                        }
+                    }
+
+                                }
+
+                            </ul>
+
+                            @* ISO14000  *@
+                                    <ul class="infor-c ">
+                                        <li>
+                                            <span class="infor-c-width-upload">ISO14000：</span>
+                                        </li>
+                                        <li>
+                                            <span class="infor-c-width">有效期至：</span>
+                                            <span class="infor-c-input">
+
+                                                @{
+                                                    if (att3.Count() > 0)
+                                                    {
+                                                        if (att3[0].isPermanent == 1)
+                                                        {
+                        <input type="text" name="FISO14000DeadLine" value="永不过期" disabled="disabled" />
+                                }
+                                else
+                                {
+                        <input type="text" name="FISO14000DeadLine" value="@(att3[0].FAttDeadline == null ? "" : att3[0].FAttDeadline.ToString("D") )" disabled="disabled" />
+                                }
+                            }
+                            else
+                            {
+                        <input type="text" name="FISO14000DeadLine" value="" disabled="disabled" />
+                            }
+                                                }
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span class="inquiry-input btn_att">
+                                                @{
+                            if (att3.Count() > 0)
+                            {
+                        <a class="layui-btn layui-btn-primary" onclick="attachView(@att3[0].FAttType,@att3[0].seq);">编辑</a>
+                            }
+                            else
+                            {
+                        <a class="layui-btn layui-btn-primary" onclick="attachView(3,1);">编辑</a>
+                            }
+                                                }
+                                            </span>
+                                        </li>
+
+                                        @{
+                    if (att3.Count() > 0)
+                    {
+                        if (att3[0].FAttDeadline != null)
+                        {
+                <li>
+                    <span class="inquiry-input btn_att">
+                        <a class="layui-btn layui-btn-primary" onclick="return clearAtt('3',@Model.Id,@att3[0].seq)">清除附件</a>
+                    </span>
+                </li>
+                        }
+                    }
+
+                                        }
+
+                                    </ul>
+
+                                    @* 专利证书  *@
+                                            <ul class="infor-c ">
+                                                <li>
+                                                    <span class="infor-c-width-upload">专利证书：</span>
+                                                </li>
+                                                <li>
+                                                    <span class="infor-c-width">有效期至：</span>
+                                                    <span class="infor-c-input">
+
+                                                        @{
+                                                            if (att4.Count() > 0)
+                                                            {
+                                                                if (att4[0].isPermanent == 1)
+                                                                {
+                    <input type="text" name="FPatentDeadLine" value="永不过期" disabled="disabled" />
+                            }
+                            else
+                            {
+                    <input type="text" name="FPatentDeadLine" value="@(att4[0].FAttDeadline == null ? "" : att4[0].FAttDeadline.ToString("D") )" disabled="disabled" />
+                            }
+                        }
+                        else
+                        {
+                    <input type="text" name="FPatentDeadLine" value="" disabled="disabled" />
+                        }
+                                                        }
+                                                    </span>
+                                                </li>
+                                                <li>
+                                                    <span class="inquiry-input btn_att">
+                                                        @{
+                        if (att4.Count() > 0)
+                        {
+                    <a class="layui-btn layui-btn-primary" onclick="attachView(@att4[0].FAttType,@att4[0].seq);">编辑</a>
+                        }
+                        else
+                        {
+                    <a class="layui-btn layui-btn-primary" onclick="attachView(4,1);">编辑</a>
+                        }
+                                                        }
+                                                    </span>
+                                                </li>
+
+                                                @{
+                if (att4.Count() > 0)
+                {
+                    if (att4[0].FAttDeadline != null)
+                    {
+                <li>
+                    <span class="inquiry-input btn_att">
+                        <a class="layui-btn layui-btn-primary" onclick="return clearAtt('4',@Model.Id,@att4[0].seq)">清除附件</a>
+                    </span>
+                </li>
+                    }
+                }
+
+                                                }
+
+                                            </ul>
+
+                                            @* 其他认证  *@
+                                                    <ul class="infor-c ">
+                                                        <li>
+                                                            <span class="infor-c-width-upload">其他认证：</span>
+                                                        </li>
+                                                        <li>
+                                                            <span class="infor-c-width">有效期至：</span>
+                                                            <span class="infor-c-input">
+
+                                                                @{
+                                                                    if (att5.Count() > 0)
+                                                                    {
+                                                                        if (att5[0].isPermanent == 1)
+                                                                        {
+                        <input type="text" name="FOtherDeadLine" value="永不过期" disabled="disabled" />
+                                }
+                                else
+                                {
+                        <input type="text" name="FOtherDeadLine" value="@(att5[0].FAttDeadline == null ? "" : att5[0].FAttDeadline.ToString("D") )" disabled="disabled" />
+                                }
+                            }
+                            else
+                            {
+                        <input type="text" name="FOtherDeadLine" value="" disabled="disabled" />
+                            }
+                                                                }
+                                                            </span>
+                                                        </li>
+                                                        <li>
+                                                            <span class="inquiry-input btn_att">
+                                                                @{
+                            if (att5.Count() > 0)
+                            {
+                        <a class="layui-btn layui-btn-primary" onclick="attachView(@att5[0].FAttType,@att5[0].seq);">编辑</a>
+                            }
+                            else
+                            {
+                        <a class="layui-btn layui-btn-primary" onclick="attachView(5,1);">编辑</a>
+                            }
+                                                                }
+                                                            </span>
+                                                        </li>
+
+                                                        @{
+                    if (att5.Count() > 0)
+                    {
+                        if (att5[0].FAttDeadline != null)
+                        {
+                <li>
+                    <span class="inquiry-input btn_att">
+                        <a class="layui-btn layui-btn-primary" onclick="return clearAtt('5',@Model.Id,@att5[0].seq)">清除附件</a>
+                    </span>
+                </li>
+                        }
+                    }
+
+                                                        }
+
+                                                    </ul>
+
+                                                    @* 供应商调查表  *@
+                                                            <ul class="infor-c ">
+                                                                <li>
+                                                                    <span class="infor-c-width-upload"><span style="color: red; font-size: 24px;vertical-align: middle; margin-left: 8px;width: 4px;">*</span>供应商调查表：</span>
+                                                                </li>
+                                                                <li>
+                                                                    <span class="infor-c-width">有效期至：</span>
+                                                                    <span class="infor-c-input">
+
+                                                                        @{
+                                                                            if (att6.Count() > 0)
+                                                                            {
+                                                                                if (att6[0].isPermanent == 1)
+                                                                                {
+                                                                                    <input type="text" id="FQuestionnaireDeadLine" name="FQuestionnaireDeadLine" value="永不过期" disabled="disabled" />
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <input type="text" id="FQuestionnaireDeadLine" name="FQuestionnaireDeadLine" value="@(att6[0].FAttDeadline == null ? "" : att6[0].FAttDeadline.ToString("D") )" disabled="disabled" />
+                                                                                }
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <input type="text" id="FQuestionnaireDeadLine" name="FQuestionnaireDeadLine" value="" disabled="disabled" />
+                                                                            }
+                                                                        }
+                                                                    </span>
+                                                                </li>
+                                                                <li>
+                                                                    <span class="inquiry-input btn_att">
+                                                                        @{
+                                                                            if (att6.Count() > 0)
+                                                                            {
+                                                                                <a class="layui-btn layui-btn-primary" onclick="attachView(@att6[0].FAttType,@att6[0].seq);">编辑</a>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <a class="layui-btn layui-btn-primary" onclick="attachView(6,1);">编辑</a>
+                                                                            }
+                                                                        }
+                                                                    </span>
+                                                                </li>
+
+                                                                @{
+                                                                    if (att6.Count() > 0)
+                                                                    {
+                                                                        if (att6[0].FAttDeadline != null)
+                                                                        {
+                                                                            <li>
+                                                                                <span class="inquiry-input btn_att">
+                                                                                    <a class="layui-btn layui-btn-primary" onclick="return clearAtt('6',@Model.Id,@att6[0].seq)">清除附件</a>
+                                                                                </span>
+                                                                            </li>
+                                                                        }
+                                                                    }
+
+                                                                }
+
+                                                            </ul>
+
+                                                            @* 代理证  *@
+                                                                    <ul class="infor-c " id="agentul">
+                                                                        <li>
+                                                                            <span class="infor-c-width-upload"><span style="color: red; font-size: 24px;vertical-align: middle; margin-left: 8px;width: 4px;">*</span>代理证：</span>
+                                                                        </li>
+                                                                        <li>
+                                                                            <span class="infor-c-width">有效期至：</span>
+                                                                            <span class="infor-c-input">
+
+                                                                                @{
+                                                                                    if (att7.Count() > 0)
+                                                                                    {
+                                                                                        if (att7[0].isPermanent == 1)
+                                                                                        {
+                                                                                            <input type="text" id="FAgentDeadLine" name="FAgentDeadLine" value="永不过期" disabled="disabled" />
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            <input type="text" id="FAgentDeadLine" name="FAgentDeadLine" value="@(att7[0].FAttDeadline == null ? "" : att7[0].FAttDeadline.ToString("D") )" disabled="disabled" />
+                                                                                        }
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <input type="text" id="FAgentDeadLine" name="FAgentDeadLine" value="" disabled="disabled" />
+                                                                                    }
+                                                                                }
+                                                                            </span>
+                                                                        </li>
+                                                                        <li>
+                                                                            <span class="inquiry-input btn_att">
+                                                                                @{
+                                                                                    if (att7.Count() > 0)
+                                                                                    {
+                                                                                        <a class="layui-btn layui-btn-primary" onclick="attachView(@att7[0].FAttType,@att7[0].seq);">编辑</a>
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <a class="layui-btn layui-btn-primary" onclick="attachView(7,1);">编辑</a>
+                                                                                    }
+                                                                                }
+                                                                            </span>
+                                                                        </li>
+
+                                                                        @{
+                                                                            if (att7.Count() > 0)
+                                                                            {
+                                                                                if (att7[0].FAttDeadline != null)
+                                                                                {
+                                                                                    <li>
+                                                                                        <span class="inquiry-input btn_att">
+                                                                                            <a class="layui-btn layui-btn-primary" onclick="return clearAtt('7',@Model.Id,@att7[0].seq)">清除附件</a>
+                                                                                        </span>
+                                                                                    </li>
+                                                                                }
+                                                                            }
+
+                                                                        }
+
+                                                                    </ul>
+
+                                                                    @* 样品评估  *@
+                                                                            <ul class="infor-c ">
+                                                                                <li>
+                                                                                    <span class="infor-c-width-upload">样品评估：</span>
+                                                                                </li>
+                                                                                <li>
+                                                                                    <span class="infor-c-width">有效期至：</span>
+                                                                                    <span class="infor-c-input" id="att8span_dead">
+                                                                                        @{
+                                                                                            if (att8.Count() > 0)
+                                                                                            {
+                                                                                                if (att8[0].isPermanent == 1)
+                                                                                                {
+                                                                                                    <input type="text" name="FSampleEvaluationDeadLine" value="永不过期" disabled="disabled" />
+                                                                                                }
+                                                                                                else
+                                                                                                {
+                                                                                                    <input type="text" name="FSampleEvaluationDeadLine" value="@(att8[0].FAttDeadline == null ? "" : att8[0].FAttDeadline.ToString("D") )" disabled="disabled" />
+                                                                                                }
+                                                                                            }
+                                                                                            else
+                                                                                            {
+                                                                                                <input type="text" name="FSampleEvaluationDeadLine" value="" disabled="disabled" />
+                                                                                            }
+                                                                                        }
+                                                                                    </span>
+                                                                                </li>
+                                                                                <li>
+                                                                                    <span class="inquiry-input btn_att" id="att8span_edit">
+                                                                                        @{
+                                                                                            if (att8.Count() > 0)
+                                                                                            {
+                                                                                                <a class="layui-btn layui-btn-primary" id="att8dead" onclick="attachView(@att8[0].FAttType,@att8[0].seq);">编辑</a>
+                                                                                            }
+                                                                                            else
+                                                                                            {
+                                                                                                <a class="layui-btn layui-btn-primary" id="att8dead" onclick="attachView(8,1);">编辑</a>
+                                                                                            }
+                                                                                        }
+                                                                                    </span>
+                                                                                </li>
+                                                                                @{
+                                                                                    if (att8.Count() > 0)
+                                                                                    {
+                                                                                        if (att8[0].FAttDeadline != null)
+                                                                                        {
+                                                                                            <li>
+                                                                                                <span class="inquiry-input btn_att" id="att8span_delete">
+                                                                                                    <a class="layui-btn layui-btn-primary" onclick="return clearAtt('8',@Model.Id,@att8[0].seq)">清除附件</a>
+                                                                                                </span>
+                                                                                            </li>
+                                                                                        }
+
+                                                                                    }
+
+                                                                                }
+                                                                                @if (att8.Count() > 0)
+                                                                                {
+                                                                                    List<SelectListItem> att8list = new List<SelectListItem>();
+                                                                                    int i = 1;
+                                                                                    foreach (var a in att8)
+                                                                                    {
+                                                                                        att8list.Add(new SelectListItem() { Text = i.ToString(), Value = a.seq.ToString() });
+                                                                                        i++;
+                                                                                    }
+
+                                                                                    int x = att8.Select(s => s.seq).ToList().Max();
+
+                                                                                    <li>
+                                                                                        <span class="infor-c-width">附件顺序：</span>
+                                                                                        <span class="inquiry-input">
+                                                                                            @Html.DropDownList("att8list", new SelectList(att8list, "Value", "Text"))
+                                                                                        </span>
+                                                                                    </li>
+                                                                                    <li>
+                                                                                        <span class="inquiry-input btn_att" id="att8span_add">
+                                                                                            <a class="layui-btn layui-btn-primary" onclick="attachView(@att8[0].FAttType,(@x + 1));">增加</a>
+                                                                                        </span>
+                                                                                    </li>
+                                                                                }
+                                                                            </ul>
+
+                                                                            @* 小批量试产  *@
+                                                                                    <ul class="infor-c ">
+                                                                                        <li>
+                                                                                            <span class="infor-c-width-upload">小批量试产：</span>
+                                                                                        </li>
+                                                                                        <li>
+                                                                                            <span class="infor-c-width">有效期至：</span>
+                                                                                            <span class="infor-c-input" id="att9span_dead">
+
+                                                                                                @{
+                                                                                                    if (att9.Count() > 0)
+                                                                                                    {
+                                                                                                        if (att9[0].isPermanent == 1)
+                                                                                                        {
+                                                                                                            <input type="text" name="FTrialProductionDeadLine" value="永不过期" disabled="disabled" />
+                                                                                                        }
+                                                                                                        else
+                                                                                                        {
+                                                                                                            <input type="text" name="FTrialProductionDeadLine" value="@(att9[0].FAttDeadline == null ? "" : att9[0].FAttDeadline.ToString("D") )" disabled="disabled" />
+                                                                                                        }
+                                                                                                    }
+                                                                                                    else
+                                                                                                    {
+                                                                                                        <input type="text" name="FTrialProductionDeadLine" value="" disabled="disabled" />
+                                                                                                    }
+                                                                                                }
+                                                                                            </span>
+                                                                                        </li>
+                                                                                        <li>
+                                                                                            <span class="inquiry-input btn_att" id="att9span_edit">
+                                                                                                @{
+                                                                                                    if (att9.Count() > 0)
+                                                                                                    {
+                                                                                                        <a class="layui-btn layui-btn-primary" onclick="attachView(@att9[0].FAttType,@att9[0].seq);">编辑</a>
+                                                                                                    }
+                                                                                                    else
+                                                                                                    {
+                                                                                                        <a class="layui-btn layui-btn-primary" onclick="attachView(9,1);">编辑</a>
+                                                                                                    }
+                                                                                                }
+                                                                                            </span>
+                                                                                        </li>
+
+                                                                                        @{
+                                                                                            if (att9.Count() > 0)
+                                                                                            {
+                                                                                                if (att9[0].FAttDeadline != null)
+                                                                                                {
+                                                                                                    <li>
+                                                                                                        <span class="inquiry-input btn_att" id="att9span_delete">
+                                                                                                            <a class="layui-btn layui-btn-primary" onclick="return clearAtt('9',@Model.Id,@att9[0].seq)">清除附件</a>
+                                                                                                        </span>
+                                                                                                    </li>
+                                                                                                }
+                                                                                            }
+
+                                                                                        }
+
+                                                                                        @if (att9.Count() > 0)
+                                                                                        {
+                                                                                            List<SelectListItem> att9list = new List<SelectListItem>();
+
+                                                                                            int i = 1;
+
+                                                                                            foreach (var a in att9)
+                                                                                            {
+                                                                                                att9list.Add(new SelectListItem() { Text = i.ToString(), Value = a.seq.ToString() });
+                                                                                                i++;
+                                                                                            }
+
+                                                                                            int x = att9.Select(s => s.seq).ToList().Max();
+
+
+                                                                                            <li>
+                                                                                                <span class="infor-c-width">附件顺序：</span>
+                                                                                                <span class="inquiry-input">
+                                                                                                    @Html.DropDownList("att9list", new SelectList(att9list, "Value", "Text"))
+                                                                                                </span>
+                                                                                            </li>
+
+                                                                                            <li>
+                                                                                                <span class="inquiry-input btn_att" id="att9span_add">
+                                                                                                    <a class="layui-btn layui-btn-primary" onclick="attachView(@att9[0].FAttType,(@x + 1));">增加</a>
+                                                                                                </span>
+                                                                                            </li>
+                                                                                        }
+                                                                                    </ul>
+
+                                                                                    @* 质量协议  *@
+                                                                                            <ul class="infor-c ">
+                                                                                                <li>
+                                                                                                    <span class="infor-c-width-upload"><span style="color: red; font-size: 24px;vertical-align: middle; margin-left: 8px;width: 4px;">*</span>质量协议：</span>
+
+                                                                                                </li>
+                                                                                                <li>
+                                                                                                    <span class="infor-c-width">有效期至：</span>
+                                                                                                    <span class="infor-c-input">
+
+                                                                                                        @{
+                                                                                                            if (att10.Count() > 0)
+                                                                                                            {
+                                                                                                                if (att10[0].isPermanent == 1)
+                                                                                                                {
+                        <input type="text" id="FQualityAgreementDeadLine" name="FQualityAgreementDeadLine" value="永不过期" disabled="disabled" />
+                                }
+                                else
+                                {
+                        <input type="text" id="FQualityAgreementDeadLine" name="FQualityAgreementDeadLine" value="@(att10[0].FAttDeadline == null ? "" : att10[0].FAttDeadline.ToString("D") )" disabled="disabled" />
+                                }
+                            }
+                            else
+                            {
+                        <input type="text" id="FQualityAgreementDeadLine" name="FQualityAgreementDeadLine" value="" disabled="disabled" />
+                            }
+                                                                                                        }
+                                                                                                    </span>
+                                                                                                </li>
+                                                                                                <li>
+                                                                                                    <span class="inquiry-input btn_att">
+                                                                                                        @{
+                            if (att10.Count() > 0)
+                            {
+                        <a class="layui-btn layui-btn-primary" onclick="attachView(@att10[0].FAttType,@att10[0].seq);">编辑</a>
+                            }
+                            else
+                            {
+                        <a class="layui-btn layui-btn-primary" onclick="attachView(10,1);">编辑</a>
+                            }
+                                                                                                        }
+                                                                                                    </span>
+                                                                                                </li>
+
+                                                                                                @{
+                    if (att10.Count() > 0)
+                    {
+                        if (att10[0].FAttDeadline != null)
+                        {
+                <li>
+                    <span class="inquiry-input btn_att">
+                        <a class="layui-btn layui-btn-primary" onclick="return clearAtt('10',@Model.Id,@att10[0].seq)">清除附件</a>
+                    </span>
+                </li>
+                        }
+                    }
+
+                                                                                                }
+                                                                                            </ul>
+
+                                                                                            @* 供应商评估表  *@
+                                                                                                    <ul class="infor-c ">
+                                                                                                        <li>
+                                                                                                            <span class="infor-c-width-upload">供应商评估表：</span>
+                                                                                                        </li>
+                                                                                                        <li>
+                                                                                                            <span class="infor-c-width">有效期至：</span>
+                                                                                                            <span class="infor-c-input">
+
+                                                                                                                @{
+                                                                                                                    if (att11.Count() > 0)
+                                                                                                                    {
+                                                                                                                        if (att11[0].isPermanent == 1)
+                                                                                                                        {
+                        <input type="text" name="FSupplierQuestionnaireDeadLine" value="永不过期" disabled="disabled" />
+                                }
+                                else
+                                {
+                        <input type="text" name="FSupplierQuestionnaireDeadLine" value="@(att11[0].FAttDeadline == null ? "" : att11[0].FAttDeadline.ToString("D") )" disabled="disabled" />
+                                }
+                            }
+                            else
+                            {
+                        <input type="text" name="FSupplierQuestionnaireDeadLine" value="" disabled="disabled" />
+                            }
+                                                                                                                }
+                                                                                                            </span>
+                                                                                                        </li>
+                                                                                                        <li>
+                                                                                                            <span class="inquiry-input btn_att">
+                                                                                                                @{
+                            if (att11.Count() > 0)
+                            {
+                        <a class="layui-btn layui-btn-primary" onclick="attachView(@att11[0].FAttType,@att11[0].seq);">编辑</a>
+                            }
+                            else
+                            {
+                        <a class="layui-btn layui-btn-primary" onclick="attachView(11,1);">编辑</a>
+                            }
+                                                                                                                }
+                                                                                                            </span>
+                                                                                                        </li>
+
+                                                                                                        @{
+                    if (att11.Count() > 0)
+                    {
+                        if (att11[0].FAttDeadline != null)
+                        {
+                <li>
+                    <span class="inquiry-input btn_att">
+                        <a class="layui-btn layui-btn-primary" onclick="return clearAtt('11',@Model.Id,@att11[0].seq)">清除附件</a>
+                    </span>
+                </li>
+                        }
+                    }
+
+                                                                                                        }
+                                                                                                    </ul>
+
+
+                                                                                                    <div class="inquiry-input infor-b">
+                                                                                                        <span>
+                                                                                                            <button onclick="return SaveForm()">保存</button>
+                                                                                                        </span>
+                                                                                                        <span>
+                                                                                                            <button onclick="return RedirectUrl('/NQ_OASupplier/List')">返回</button>
+                                                                                                        </span>
+                                                                                                    </div>
+
+        }
+
+
+    </div>
+                                                                                                            }
+<script src="~/Scripts/NAjs/NQ_OASupplier.js"></script>
+
+<style>
+    .btn_att {
+        margin-left: 30px;
+    }
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var sutype = $('#hiddenFSupplierType').val();
+
+        if (sutype == 0) {
+            $('#agentul').hide();
+        }
+        if (sutype == 1) {
+            $('#agentul').show();
+        }
+
+        $('#att8list').change(function(){
+            var supplierid = @Model.Id;
+            var atttype = 8;
+            var seq = $("#att8list").val();
+            var oplength = $("#att8list option").length ;
+
+            var maxseq = 1;
+
+            for(var i=0;i<oplength;i++){
+                
+                if ( maxseq < $("#att8list option")[i].value )
+                {
+                    maxseq = $("#att8list option")[i].value;
+                }
+            }
+            
+            var json;
+
+            $.ajax({
+                type: "POST",
+                url: '/NQ_SupplierAttachment/getAttatch',
+                data: { supplierid: supplierid, atttype:atttype, seq:seq },
+                async: false,
+                success: function (context) {
+                    if ("success" == context.result) {
+
+                        if (context.isPermanent == 1)
+                        {
+                            var html_dead = "<input type='text' name='FSampleEvaluationDeadLine' value='永不过期' disabled='disabled' />";
+                        }
+                        else
+                        {
+                            var html_dead = "<input type='text' name='FSampleEvaluationDeadLine' value='" +context.deadline+ "' disabled='disabled' />";
+                        }
+
+                        var html_edit = "<a class='layui-btn layui-btn-primary' id='att8dead' onclick='attachView("+atttype+","+seq+" );'>编辑</a>";
+
+                        var html_delete = "<a class='layui-btn layui-btn-primary' onclick='return clearAtt("+atttype+","+supplierid+","+seq+")'>清除附件</a>";
+
+                        var html_add = "<a class='layui-btn layui-btn-primary' onclick='attachView(" + atttype + "," + ( parseInt(maxseq) + 1) +");'>增加</a>";
+                        $('#att8span_dead').html(html_dead);
+
+                        $('#att8span_edit').html(html_edit);
+
+                        $('#att8span_delete').html(html_delete);
+
+                        $('#att8span_add').html(html_add);
+
+                        return true;
+                    }
+                },
+                error: function (e) {
+                    alert("请求失败！");
+                }
+            })
+
+            return false;
+
+        }
+        )
+
+        $('#att9list').change(function(){
+            var supplierid = @Model.Id;
+            var atttype = 9;
+            var seq = $("#att9list").val();
+            var oplength = $("#att9list option").length ;
+
+            //alert(oplength);
+            var json;
+
+            $.ajax({
+                type: "POST",
+                url: '/NQ_SupplierAttachment/getAttatch',
+                data: { supplierid: supplierid, atttype:atttype, seq:seq },
+                async: false,
+                success: function (context) {
+                    if ("success" == context.result) {
+
+                        if (context.isPermanent == 1)
+                        {
+                            var html_dead = "<input type='text' name='FTrialProductionDeadLine' value='永不过期' disabled='disabled' />";
+                        }
+                        else
+                        {
+                            var html_dead = "<input type='text' name='FTrialProductionDeadLine' value='" +context.deadline+ "' disabled='disabled' />";
+                        }
+
+                        var html_edit = "<a class='layui-btn layui-btn-primary' id='att9dead' onclick='attachView("+atttype+","+seq+" );'>编辑</a>";
+
+                        var html_delete = "<a class='layui-btn layui-btn-primary' onclick='return clearAtt("+atttype+","+supplierid+","+seq+")'>清除附件</a>";
+
+                        var html_add = "<a class='layui-btn layui-btn-primary' onclick='attachView(" + atttype + "," + ( parseInt(oplength) + 1) +");'>增加</a>";
+                        $('#att9span_dead').html(html_dead);
+
+                        $('#att9span_edit').html(html_edit);
+
+                        $('#att9span_delete').html(html_delete);
+
+                        $('#att9span_add').html(html_add);
+
+                        return true;
+                    }
+                },
+                error: function (e) {
+                    alert("请求失败！");
+                }
+            })
+            return false;
+        }
+        )
+    })
+
+
+
+    //判定失效
+    function clearAtt(atttype, supplierid,seq) {
+        $.messager.confirm('提示框', '你清除当前附件吗?', function (data) {
+            if (data) {
+                $.ajax({
+                    type: "POST",
+                    url: '/NQ_SupplierAttachment/clearAtt',
+                    data: { supplierid: supplierid, atttype: atttype ,seq:seq},
+                    async: false,
+                    success: function (context) {
+                        if ("success" == context.result) {
+                            location.reload();
+                        }
+                    },
+                    error: function (e) {
+                        alert("请求失败！");
+                    }
+                })
+            }
+        });
+
+        return false;
+    }
+
+    //
+
+
+</script>

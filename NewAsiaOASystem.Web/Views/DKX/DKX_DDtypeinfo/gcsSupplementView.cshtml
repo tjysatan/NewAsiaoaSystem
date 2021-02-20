@@ -1,0 +1,212 @@
+﻿@{
+    ViewBag.Title = "电气补录软件资料";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<script src="~/Scripts/NAjs/layui.js"></script>
+
+<script type="text/javascript">
+       $(function () {
+        var ddstr = AjaxGetddinfoyId();
+        ////功能简述赋值
+        //$("#gnjsstr").val(ddstr.gnjsstr);
+        ////订单Id和k3料单编号赋值
+        //$("#ddId").val(ddstr.Id);
+        //$("#K3LDBH").val(ddstr.KBomNo);
+        //if (ddstr.DD_Type <=3) {//不是plc 不需要上传软件和操作手册
+        //    $("#form7").attr("style", "display:none;");//隐藏div
+        //    $("#form8").attr("style", "display:none;");//隐藏div
+        //    $("#form9").attr("style", "display:none;");//隐藏div
+        //}
+        //获取生产订单的生产资料
+        var ziliaostr = AJaxziliaojson(ddstr.Id);
+        pjziliaohtml(ziliaostr,ddstr)
+       })
+
+        //拼接资料html
+    function pjziliaohtml(strjson, ddstr) {
+        if (strjson != null && strjson != "") {
+            
+           
+            //软件程序
+            var rjcxTtuzhistr = [];
+            //软件源程序
+            var rjycxtuzhistr = [];
+           
+            for (var i = 0; i < strjson.length; i++) {
+                
+                if (strjson[i].Zl_type == "8") {//软件程序（烧录软件）（仅仅plc 项目有）
+                    rjcxTtuzhistr.push(strjson[i])
+                }
+                if (strjson[i].Zl_type == "11") {//软件程序-源程序（仅仅plc 项目有）
+                    rjycxtuzhistr.push(strjson[i])
+                }
+            }
+            if (rjcxTtuzhistr != "" && rjcxTtuzhistr != null) {
+                var htmlrjcxtuzhi = "";
+                for (var i = 0, j = rjcxTtuzhistr.length; i < j; i++) {
+                    var id = "'" + rjcxTtuzhistr[i].Id + "'";
+                    htmlrjcxtuzhi += '<a  target="_blank" href="' + rjcxTtuzhistr[i].url + '">' + rjcxTtuzhistr[i].wjName + '</a>&nbsp;&nbsp; <a href="#" onclick="ziliaoDel(' + id + ')"><i class="layui-icon">&#xe640;</i></a>&nbsp;&nbsp;';
+                }
+                $("#rjxctcon").html(htmlrjcxtuzhi)
+            } else { $("#rjxctcon").html('<span style="color:red">暂无烧录程序</span>'); }
+            if (rjycxtuzhistr != "" && rjycxtuzhistr != null) {
+                var htmlrjycxtuzhi = "";
+                for (var i = 0, j = rjycxtuzhistr.length; i < j; i++) {
+                    var id = "'" + rjycxtuzhistr[i].Id + "'";
+                    htmlrjycxtuzhi += '<a  target="_blank" href="' + rjycxtuzhistr[i].url + '">' + rjycxtuzhistr[i].wjName + '</a>&nbsp;&nbsp; <a href="#" onclick="ziliaoDel(' + id + ')"><i class="layui-icon">&#xe640;</i></a>&nbsp;&nbsp;';
+                }
+                 $("#rjycxtcon").html(htmlrjycxtuzhi)
+            } else {
+                 $("#rjycxtcon").html('<span style="color:red">暂无源程序</span>');
+            }
+
+        } else {//资料为空时
+            $("#rjxctcon").html('<span style="color:red">暂无烧录程序</span>');
+            $("#rjycxtcon").html('<span style="color:red">暂无源程序</span>');
+        }
+    }
+
+        //获取订单信息
+    function AjaxGetddinfoyId() {
+        var json;
+        $.ajax({
+            url: "../DKX_DDtypeinfo/AjaxorderbyId",
+            type: "POST",
+            data: { Id: '@ViewData["Id"]' },
+            dataType: "JSON",
+            async: false,
+            success: function (response) {
+                json = eval(response);
+            },
+            error: function (e) {
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+        return json;
+    }
+
+        //获取资料数据
+    function AJaxziliaojson(Id) {
+        var json;
+        $.ajax({
+            url: "../DKX_DDtypeinfo/Getalltypeziliaojsonbyddid",
+            type: "POST",
+            data: { ddId: Id},
+            dataType: "JSON",
+            async: false,
+            success: function (response) {
+                json = eval(response);
+            },
+            error: function (e) {
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+        return json;
+    }
+
+       //
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+
+    //删除资料
+    function ziliaoDel(val) {
+        $.ajax({
+            url: "../DKX_DDtypeinfo/ziliaodel",
+            type: "POST",
+            data: { Id: val },
+            dataType: "html",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response == "0") {
+                    layer.alert("删除失败！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "1") {
+                    layer.alert("删除成功！", { icon: 1 }, function () { location.reload(); });
+                }
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+    }
+
+     //资料上传
+    function RjCXtuzhishangchuanSavaForm(fromname) {
+        //表单验证
+        var options = {
+            beforeSubmit: function () {
+                return true;
+            },
+            dataType: "json",//这里是指控制器处理后返回的类型，这里返回json格式。
+            success: function (context) {
+                if ("success" == context.result) {
+                    layer.alert("保存成功！", { icon: 1 }, function () { location.reload(); });
+                }
+                if ("error" == context.result) {
+                    layer.alert("提交失败，请重新操作！", { icon: 2 }, function () { location.reload(); });
+                }
+                if ("error1" == context.result) {
+                    layer.alert("请选择文件！", { icon: 2 }, function () { location.reload(); });
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $.messager.alert("操作提示", '操作失败！', 'error');
+            }
+        }
+        $('#'+fromname).ajaxSubmit(options);
+        return false; //为了不刷新页面,返回false
+    }
+</script>
+
+<div style="width: 90%; padding: 20px 20px 0 20px">
+    @using (Html.BeginForm("RjcxuploadEide", "DKX_DDtypeinfo", FormMethod.Post, new { id = "form7", enctype = "multipart/form-data" }))
+    {
+        <hr class="layui-bg-blue">
+        <input type="hidden" name="Id" value='@ViewData["Id"]' />
+        <table>
+            <tr>
+                <td width="120px">烧录程序：</td>
+                <td width="270px">
+                    <input type="file" name="image7" id="image7" class="layui-btn layui-btn-normal" style="width: 150px">
+                    <button type="button" class="layui-btn" onclick='RjCXtuzhishangchuanSavaForm("form7")'>开始上传</button>
+                </td>
+                <td id="rjxctcon"></td>
+            </tr>
+        </table>
+    }
+    @using (Html.BeginForm("RjycxuploadEide", "DKX_DDtypeinfo", FormMethod.Post, new { id = "form9", enctype = "multipart/form-data" }))
+    {
+        <hr class="layui-bg-blue">
+        <input type="hidden" name="Id" value='@ViewData["Id"]' />
+        <table>
+            <tr>
+                <td width="120px">源程序：</td>
+                <td width="270px">
+                    <input type="file" name="image9" id="image9" class="layui-btn layui-btn-normal" style="width: 150px">
+                    <button type="button" class="layui-btn" onclick='RjCXtuzhishangchuanSavaForm("form9")'>开始上传</button>
+                </td>
+                <td id="rjycxtcon"></td>
+            </tr>
+        </table>
+    }
+
+    <hr class="layui-bg-black">
+    <blockquote class="layui-elem-quote layui-quote-nm">
+        说明：<br />
+        1.只有订单为生产中状态的时候可以编辑软件资料<br />
+        2.只要上传成功即可<br />
+        3.只有plc项目可用
+    </blockquote>
+</div>

@@ -1,0 +1,95 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+    <link href="~/Content/css/style.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            //导航切换
+            $(".menuson li").click(function () {
+                $(".menuson li.active").removeClass("active")
+                $(this).addClass("active");
+            });
+
+            $('.title').click(function () {
+                var $ul = $(this).next('ul');
+                $('dd').find('ul').slideUp();
+                if ($ul.is(':visible')) {
+                    $(this).next('ul').slideUp();
+                } else {
+                    $(this).next('ul').slideDown();
+                }
+            });
+
+        })
+    </script>
+</head>
+<body style="background: #f0f9fd;">
+    <div class="lefttop"><span></span></div>
+
+    <!--重点单位管理-->
+    <!---- <div runat="server" id="unit" visible="false" style="">
+        <dl class="leftmenu">
+            <dd>
+                <div class="title"><span></span>基本信息</div>
+                <ul class="menuson">
+                    <li class="active"><cite></cite><a href="../user/SyspersonList" target="rightFrame">重点单位类型</a><i></i></li>
+                </ul>
+            </dd>
+        </dl>
+
+        <dl class="leftmenu">
+            <dd>
+                <div class="title"><span></span>一级防控目标</div>
+                <ul class="menuson" style="display: none;">
+                    <li><cite></cite><a href="../user/SyspersonList" target="rightFrame">重点单位管理</a><i></i></li>
+                     <li><cite></cite><a href="unitForm.aspx?type=1" target="rightFrame">分布地图</a><i></i></li>
+                </ul>
+            </dd>
+        </dl>
+
+        <dl class="leftmenu">
+            <dd>
+                <div class="title"><span></span>二级防控目标</div>
+                <ul class="menuson" style="display: none;">
+                    <li><cite></cite><a href="unitForm.aspx?type=2" target="rightFrame">重点单位管理</a><i></i></li>
+   
+                </ul>
+            </dd>
+        </dl>
+
+      
+    </div>---->
+
+
+
+
+    <div runat="server" id="sys" visible="false">
+        <dl class="leftmenu">
+            <dd>
+                <div class="title"><span></span>系统设置</div>
+                <ul class="menuson">
+                    <li class="active"><cite></cite><a href="../SysPerson/List" target="rightFrame">用户管理</a><i></i></li>
+
+                    <li class=""><cite></cite><a href="../SysDepartment/List" target="rightFrame">部门管理</a><i></i></li>
+
+                    <li class=""><cite></cite><a href="../SysRole/Index" target="rightFrame">角色管理</a><i></i></li>
+
+                    <li class=""><cite></cite><a href="../SysMenu/Index" target="rightFrame">菜单管理</a><i></i></li>
+
+                    <li class=""><cite></cite><a href="../SysButton/Index" target="rightFrame">按钮管理</a><i></i></li>
+
+                    <li class=""><cite></cite><a href="../SysLog_history/LogTab" target="rightFrame">日志管理</a><i></i></li>
+                </ul>
+            </dd>
+        </dl>
+    </div>
+</body>
+</html>

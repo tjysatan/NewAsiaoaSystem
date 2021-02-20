@@ -1,0 +1,100 @@
+﻿@model NewAsiaOASystem.ViewModel.WX_MenusView
+@{
+    ViewBag.Title = "自定义菜单编辑";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+@section HeadContent{
+    <script type="text/javascript">
+        $(function () {
+            if ("" == $("#Id").val())
+                $("#Ptitle").text("自定义菜单添加");
+            else
+                $("#Ptitle").text("自定义菜单编辑");
+        })
+    </script>
+}
+
+@using (Html.BeginForm("Edit", "WxMenu", FormMethod.Post, new { id = "form1" }))
+{         
+    @Html.HiddenFor(m => m.M_CreateTime);
+    @Html.HiddenFor(m => m.M_CreateUser)
+    @Html.HiddenFor(m => m.Id)
+
+     
+    <div class="infor">
+        @*<div class="h-right-title">您当前的位置：自定义菜单编辑</div>*@
+        <p id="Ptitle"></p>
+        <div class="system-menu-set">
+            <ul class="infor-c">
+                <li><span class="infor-c-width">菜单名称：</span><span class="infor-c-input">
+                    @Html.TextBoxFor(m => m.M_Name)</span></li>
+            </ul>
+            <ul class="infor-c ">
+                <li><span class="infor-c-width">菜单类型：</span>
+                    <span>
+                        <select class="add-function" name="M_Type">
+                            @{
+                                        if ("view".Equals(Convert.ToString(@Model.M_Type)) && null != @Model.Id)
+                                        {
+                                @:<option value="click">普通按钮</option>
+                                @:<option value="view" selected="selected">链接按钮</option>
+                                @:<option value="location_select">发送位置</option>
+                                       }
+                                        else
+                                        {
+                                @:<option value="click"  selected="selected">普通按钮</option>
+                                @:<option value="view">链接按钮</option>
+                                @:<option value="location_select">发送位置</option>
+                                      }
+
+                            }
+
+                        </select></span></li>
+            </ul>
+            <ul class="infor-c">
+                <li><span class="infor-c-width">关键词：</span>
+                    <span class="infor-c-input">
+                        @Html.TextBoxFor(m => m.M_Key)</span></li>
+            </ul>
+            <ul class="infor-c">
+                <li><span class="infor-c-width">菜单连接：</span>
+                    <span class="infor-c-input">
+                        @Html.TextBoxFor(m => m.M_Url)</span></li>
+            </ul>
+
+            <ul class="infor-c">
+                <li><span class="infor-c-width">菜单级别：</span>
+                    <span class="infor-c-input">
+                        <select class="add-function" name="M_Level">
+                            @{
+                                        if ("二级菜单".Equals(Convert.ToString(@Model.M_Level)) && null != @Model.Id)
+                                        {
+                                @:<option value="一级菜单">一级菜单</option>
+                                @:<option value="二级菜单" selected="selected">二级菜单</option>
+                                                }
+                                        else
+                                        {
+                                @:<option value="一级菜单"  selected="selected">一级菜单</option>
+                                @:<option value="二级菜单">二级菜单</option>
+                                      }
+                                                
+                            }
+
+                        </select></span></li>
+            </ul>
+            <ul class="infor-c ">
+                <li><span class="infor-c-width">上级菜单：</span>
+                    <span>
+                        @Html.DropDownList("MenuListData", ViewData["MenuList"] as SelectList, new { @class = "add-function" })
+                    </span></li>
+            </ul>
+             <ul class="infor-c">
+                <li><span class="infor-c-width">显示次序：</span><span class="infor-c-input">@Html.TextBoxFor(m => m.Sort)</span><span class="desc w-register"></span></li>
+            </ul>
+          
+        </div>
+        <div class="inquiry-input infor-b"><span>
+            <button onclick="return submitForm('/WxMenu/Index')">保存</button></span><span>
+                <button onclick="return RedirectUrl('/WxMenu/Index')">返回</button></span></div>
+    </div>
+}

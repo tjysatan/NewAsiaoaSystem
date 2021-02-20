@@ -1,0 +1,9 @@
+﻿<?xml version="1.0"  encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="NewAsiaOASystem.DBModel" assembly="NewAsiaOASystem.DBModel">
+	<class name="SysPersonDepartment" table="SysPersonDepartment">
+		<id name="DepartmentId" column="DepartmentId" type="string" unsaved-value="0"> 	  
+      
+    </id>      		
+		<property name="PersonId" column="PersonId" type="string"  />
+	</class>
+</hibernate-mapping>

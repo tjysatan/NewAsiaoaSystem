@@ -1,0 +1,226 @@
+﻿@{
+    ViewBag.Title = "检验明细打印";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<script src="~/Scripts/Printjs/LodopFuncs.js" type="text/javascript"></script>
+
+<script language="javascript" type="text/javascript">
+
+    var LODOP; //声明为全局变量
+    function myPreview1() {
+        LODOP = getLodop();
+        var strBodyStyle = "<style>" + document.getElementById("style1").innerHTML + "</style>";
+        var strFormHtml = strBodyStyle + "<body>" + document.getElementById("form1").innerHTML + "</body>";
+        //  LODOP.ADD_PRINT_HTM(20, 30, 980, 680, strFormHtml);
+        LODOP.ADD_PRINT_HTM(20, 30, "95%", 680, strFormHtml);
+        LODOP.SET_PRINT_PAGESIZE(2, 0, 0, "")
+        // LODOP.SET_PRINT_STYLEA(0, "AngleOfPageInside", 90);
+        // LODOP.SET_PRINT_PAGESIZE(1, 0, 0, "A4"); //A4纸张纵向打印
+        // LODOP.SET_SHOW_MODE("LANDSCAPE_DEFROTATED", 2);//横向时的正向显示
+        LODOP.PREVIEW();
+    };
+
+    $(function () {
+        htmlstr();
+    })
+
+    //根据返退货产品Id查找维修产品的明细ajax
+    function AjxaWxcpjson() {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "/IQC_Sop/GetshwcdataDY",
+            data: { strattime:'@ViewData["strattime"]',endtime:'@ViewData["endtime"]' },
+            dataType: "json",
+            async: false,
+            success: function (reslut) {
+                json = eval(reslut);
+            },
+            error: function (e) {
+                alert("网络异常！");
+            }
+        })
+        return json;
+    }
+
+    //获取检验人名称
+    function Getjyname(val)
+    {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "/IQC_Sop/GetsysnamebyId",
+            data: { Id: val},
+            dataType: "html",
+            async: false,
+            success: function (reslut) {
+                json = reslut;
+            },
+            error: function (e) {
+                alert("网络异常！");
+            }
+        })
+        return json;
+    }
+
+
+    //拼接返退维修产品记录的html
+    function htmlstr() {
+        var strjson = AjxaWxcpjson();
+        var html;
+        html = '<table class="table_con" style="width: 100%; color: #000; font-size: 13px; margin: auto;">';
+        html += '<tr>';
+        html += '<td>序号</td>';
+        html += '<td>检验日期</td>';
+        html += '<td>供应商名称</td>';
+        html += '<td>零件名称</td>';
+        html += '<td>零件规格</td>';
+        html += '<td>LOT NO</td>';
+        html += '<td>来料数量</td>';
+        html += '<td>抽样数量</td>';
+        html += '<td>不良数</td>';
+        html += '<td>不良明细</td>';
+        html += '<td>检验结果</td>';
+        html += '<td>IQC</td>';
+        html += '<td>进料批号</td>';
+        html += '<td>备注</td>';
+        html += '</tr>';
+        if (typeof (strjson) != "undefined") {
+            for (var i = 0, j = strjson.length; i < j; i++) {
+                var xh = i + 1;
+               
+                html += '<tr>';
+                html += '<td>' + xh + '</td>';
+                html += '<td>' + showDate(strjson[i].TJtime)+ '</td>';
+                html += '<td>' + strjson[i].Gysname + '</td>';
+                html += '<td>' + strjson[i].Yqjname + '</td>';
+                html += '<td>' + strjson[i].Yqjxh + '</td>';
+                html += '<td>' + strjson[i].LotNO + '</td>';
+                html += '<td>' + strjson[i].Llsum + '</td>';
+                html += '<td>' + strjson[i].Cjsum + '</td>';
+                html += '<td>' + strjson[i].BHgesum + '</td>';
+                html += '<td>' + strjson[i].blmxsm + '</td>';
+                html += '<td>' + showclzt(strjson[i].Jydjg) + '</td>';
+                html += '<td>' + Getjyname(strjson[i].Rdname) + '</td>';
+                html += '<td>' + strjson[i].Jyddno + '</td>';
+                html += '<td>' + strjson[i].beizhu + '</td>';
+                html += '</tr>';
+            }
+        }
+        html += '</table>';
+        $("#Htmlcon").html(html);
+    }
+
+    //
+    function showclzt(val)
+    {
+        if(val=="0")
+        {
+            return "合格";
+        }
+        if (val == "1") {
+            return "退货";
+        }
+        if (val == "2") {
+            return "特采";
+        }
+        if (val == "3") {
+            return "试用";
+        }
+        if (val == "4") {
+            return "未判断";
+        }
+        return "未判断";
+    }
+</script>
+
+
+<style id="style1">
+    .table_con
+    {
+        border-collapse: collapse;
+        border: none;
+    }
+
+        .table_con td
+        {
+            border: solid #000 1px;
+            height: 25px;
+            padding: 0 0 0 5px;
+        }
+
+    .Miantitle
+    {
+        width: 100%;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .hedertitle
+    {
+        width: 100%;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .fontsizetd
+    {
+        font-size: 14px;
+    }
+
+    .bhcss
+    {
+        width: 100%;
+        height: 50px;
+    }
+
+    .xkk
+    {
+        width: 5px;
+        height: 5px;
+        border: 1px solid #000;
+    }
+
+    i
+    {
+        width: 10px;
+        height: 10px;
+        line-height: 24px;
+        vertical-align: top;
+        margin: 4px 2px 0 0;
+        overflow: hidden;
+        border: 1px solid #000;
+        display: inline-block;
+    }
+</style>
+
+<div id="form1">
+   @* <div class="Miantitle">
+        新亚洲科技有限公司
+    </div>
+    <div class="hedertitle">
+        2017年客退品分析记录表
+    </div>*@
+    
+
+
+    <div id="Htmlcon">
+    </div>
+</div>
+
+<div style="width: 200px; height: 80px; overflow: hidden">
+    <div class="inquiry-input infor-b">
+        <span>
+            <button onclick="return myPreview1()">打印</button>
+        </span>
+        <span>
+           <button onclick="window.history.go(-1)">返回</button></span>
+    </div>
+</div>

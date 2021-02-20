@@ -1,0 +1,256 @@
+﻿body{margin:0; padding:0; border:0;}
+a, a:hover {color:#000; text-decoration:none;}
+li,ul,ol{margin:0;padding:0;list-style-type:none;}
+*{padding:0; margin:0;text-decoration:none; border:none; outline:none;}
+
+img{ border:0;}
+body{font-family:arial, "Hiragino Sans GB" , "Microsoft Yahei" ,sans-serif;}
+.mobile-wapper
+{
+    margin:0 auto;
+    width: 100%;
+    height: 100%; 
+}
+
+/*微信绑定系统登录*/
+
+.mobile-syetem{ width:240px; margin:0 auto;}
+.mobile-syetem ul{ float:left;}
+.mobile-syetem-land{ font-size:14px;margin: 40px auto;}
+.mobile-syetem-land li{ width:100%;  line-height:60px;_height:60px;}
+.mobile-syetem-land li button{ text-align:center;}
+.mobile-syetem-land li ol{float:left;}
+.mobile-syetem-user{width:20%;}
+.mobile-syetem-land-input { float:left;}
+.mobile-syetem-land-input input{width:100%;padding:4px 5px; height:27px;line-height:27px;}
+
+.mobile-syetem-land-input-p {float:left;}
+.mobile-syetem-land-input-p input{ width:100%;padding:4px 5px;margin-left:2px; margin-left:2px;*margin-left:2px; 
+                                   height:27px;
+                                   line-height:27px;}
+.b-username
+{
+    background-position: center center;
+    background-image: url('img/b_username.png');
+    background-repeat: no-repeat;
+    height:115px;
+}
+.b-username-font{text-align: center;font-size: 16px;font-weight: bold;}
+.mobile-syetem-land-icon
+{
+    background-image: url('img/mobile-land-icon.png');
+    background-repeat: no-repeat;
+    width:36px;
+    height:25px;
+    float:left;
+    
+}
+.land-icon{ background-position:0px -29px;}
+
+
+/*附近免疫点查询*/
+.mobile-title{ width:100%; height:45px;line-height:45px;background:#256ea7; color:#fff; text-align:center;}
+
+.mobile_child
+{
+  background-image: url('img/msg_tab_z.png');
+  background-repeat: no-repeat;
+  margin-right: 3px;
+  margin-top: -2px;
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+  display: inline-block;
+}
+.c2{background-position: 10px -555px;float: left;}
+.mobile-left{ padding-left:8px;}
+.serach{ background:#e8e7e7; height:15%; font-size:13px; line-height:40px;}
+
+.s-content{ height:20px;}
+.mobile-l select{  width:20%; height:25px;line-height:25px;}
+.mobile-l input{width:30%;height:25px;line-height:25px;}
+.mobile-a{ border:1px solid #bec0c2;}
+
+.mobile-adress{ margin:10px;}
+.map{ width:100%; height:300px;}
+.map img{ width:100%; height:100%;}
+
+.adress-content{ width:100%; float:left;}
+.adress-c{ float: left;width:99%; padding: 15px 0; background:#f7fbfe;}
+.adress-content dl{ margin:5px;}
+.adress-content dl dt{height:30px;float:left; }
+.adress-content dl dd{ width:96%; height:30px; line-height:30px;}
+.mobile-font{ font-weight:bold;}
+.mobile-font1{ color:#fff;  padding-top: 9px;}
+.mobile-font3{ color:#B3B3B3; font-size:12px;}
+.mobile_right{ float:right;font-size:14px;*margin-top:-25px;}
+.mobile-icon
+{
+    background-image: url('img/mobile-icon.png');
+    background-repeat: no-repeat;
+    width: 30px;
+    height: 30px;
+    float: left;
+}
+.m-icon1{background-position:0px -4px;}
+.m-icon2{background-position:0px -42px;}
+.mobile-left{ padding-left:42px; font-size:14px;}
+
+.mobile-foot
+
+{
+    width: 100%;
+    float: left;
+    background-image: url('img/mobile-foot-bg.png');
+    background-repeat: repeat-x;
+    _filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='img/mobile-foot-bg.png'); /* IE6 */
+    _background-image: none;
+    bottom: 0;
+    position: absolute;
+}
+.mobile-foot ul{ float:left; width:100%;}
+.mobile-foot ul li{ width:33.3%; float:left; height:90px;  vertical-align:middle;}
+.mobile-foot ul li span{ width:100%; float:left; text-align:center;}
+.mobile-menu-icon
+{
+    background-position: center center;
+    background-image: url('img/mobile-menu-icon.png');
+    background-repeat: no-repeat;
+    width: 45px;
+    height: 49px;
+    float: left;
+}
+.mobile-foot ul li span a:hover{ color:#fff; }
+.m-m-icon1{background-position:center 9px;}
+.m-m-icon2{background-position:center -39px;}
+.m-m-icon3{background-position:center -91px;}
+
+/*手机界面预约样式*/
+
+.mobile-order{ width:100%;}
+.mobile-order ul{ margin:30px;}
+.mobile-order ul li{ font-size:14px;line-height:45px;}
+
+.mobile-order ul li span select{ width:20%; height:25px;line-height:25px;}
+.mobile-order ul li span input{ height:25px; line-height:25px; }
+.mobile-order ul li span textarea{ width:40.8%; height:50px; line-height:25px; }
+
+
+.mobile-b{height:25px;  background:#e8e8e8; line-height:25px; padding:5px;}
+.mobile-p{ margin-left:8px; width:65px;}
+
+
+.mobile-button{   margin: 10px auto;width: 300px;padding-bottom: 20px;}
+.mobile-button ol{ float:left; padding-right:50px;}
+.mobile-btn {
+  display: inline-block;
+  zoom: 1;
+  height: 25px;
+  line-height: 25px;
+  padding: 0 20px;
+  color: #FFF;
+  font-weight: bold;
+  font-size: 14px;
+  text-align: center;
+  background: #256ea7;
+  border: none;
+  cursor: pointer;
+}
+
+.information ul{  float:left; width:100%;background: #f60;  margin-top: 10px; background:#fff;}
+.information ul li{ line-height:40px;  border-bottom: 1px solid #d4d4d4;
+  width: 100%;
+  float: left;}
+.information-search-c{  height:387px;left:50%;top:50%;}
+.information-search-c ul{  float:left; width:100%;  margin-top: 10px;}
+.information-search-c ul li{ line-height:40px;  width: 100%;float: left;}
+ .information h6{border-bottom: 1px solid #d4d4d4;}
+ .in-title{ background:#fff; height:50px; font-size:16px; line-height:50px;  text-align: center; }
+ .in-return
+{
+    float: left;
+    background-position: left center;
+    background-image: url('img/return.png');
+    background-repeat: no-repeat;
+    display: block;
+    width: 28px;
+    height: 27px;
+    padding-top:20px;
+}
+
+.in-user ol{ float:left;}
+.user-name{ width:30%;text-align:center;}
+.nickname{ width:70%;}
+.nickname1{ width:55%;}
+.management_inpt{width:250px;border: 1px solid #ccc;padding:4px 5px; height:40px;*+padding:0;}
+.management_inpt input{ *+height:20px; *+line-height:20px;*border:#fff;}
+.address_inpt{width:50%;border: 1px solid #ccc;padding:4px 5px; height:40px;*+padding:0;}
+.address_inpt input{ *+height:20px; *+line-height:20px;*border:#fff;}
+
+.s-radio span{ padding-left:10px;}
+.i-ta {
+  display: block;
+  width: 100%;
+  height: 48px;
+  margin-top:2px;
+  padding: 3px;
+  font-size: 12px;
+  float: left;
+  border:1px solid #e5e5e5;
+}
+.text_inpt{height: 60px;
+  float: left;
+  line-height: 60px;
+  width:75%;
+  }
+.info-but{ text-align:center;}
+
+/*接种类型*/
+.order-j-list{ float:left; }
+.order-j-list ol{ height:25px;}
+.order-j-list ol p{float:left;}
+
+.mobile-order1{ width:100%; float:left;}
+.mobile-order1 ul{  left: 30%;}
+.mobile-order1 ul li{ font-size:14px;line-height:45px;width: 100%;float: left;}
+.mobile-order1 ul li span{ float:left;}
+
+/*查询信息*/
+.search-child-p{ width:40%; font-size:12px;}
+
+/*问卷调查表*/
+.questionnaire{ margin:auto 10px;}
+
+
+.questionnaire-c-says table tr{float: left;width: 100%;}
+.questionnaire-c-says table tr td{ text-indent:2em; line-height:25px; font-size:13px;}
+.questionnaire-c-img
+{
+    background-image: url('img/questionnaire.png');
+    background-repeat: no-repeat;
+    background-position: center center;
+    height:45px; width:196px;
+    text-align: center;
+    margin: 20px 0;
+}
+.questionnaire-c-content{  margin: 20px 0;
+  float: left;
+  width: 100%;}
+.questionnaire-c-content h4{ font-size:14px; font-weight:normal; width:100%; float:left;  margin-top: 20px;}
+.questionnaire-c-table{ border:1px solid #256EA7; border-radius:6px;float:left;}
+.questionnaire-c-table td{padding: 5px;}
+.questionnaire-table-bottom{ border-bottom:1px solid #6DB2E7;width:100%; float:left;}
+.questionnaire-table-top{ border-top:1px solid #6DB2E7;width:100%; float:left;}
+.questionnaire-table-button{ display: inline-block;height: 36px;line-height: 36px;padding: 0px 20px;
+                             color: #FFF;font-weight: bold;font-size: 16px;text-align: center; background: #256EA7 none repeat scroll 0% 0%;
+                             border: medium none;border-radius: 3px;cursor: pointer;width: 100%;}
+
+.questionnaire-c-content ol{ width:100%; border-bottom:1px dashed #256EA7; padding:8px 0;}   
+.questionnaire-c-content ol a{ color:#256EA7; display:block;}    
+.questionnaire-c-content ol a:hover{ background:#256EA7; color:#fff;}         
+
+
+
+
+
+

@@ -1,0 +1,373 @@
+﻿@model NewAsiaOASystem.ViewModel.NAReturnListView
+@{
+    ViewBag.Title = "新的客服编辑页面";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<style>
+    .table_con
+    {
+        border-collapse: collapse;
+        border: none;
+    }
+
+        .table_con td
+        {
+            border: solid #eae5e5 1px;
+            height: 35px;
+            padding: 0 0 0 5px;
+        }
+
+    .btnspan button
+    {
+        width: 120px;
+        height: 30px;
+        background: #337CA8;
+    }
+
+    .daradcss
+    {
+        width: 200px;
+        height: 50px;
+        border: 1px solid #eae5e5;
+    }
+
+    .txtboxcss
+    {
+        width: 200px;
+        height: 30px;
+        border: 1px solid #eae5e5;
+    }
+</style>
+
+<script type="text/javascript">
+    $(function () {
+
+        //当前状态
+        var ft_dqzt = Showl_zt('@Model.L_type');
+        $("#dqzt").html(ft_dqzt);
+        var pname = AjaxPerson_Name('@Model.CreatePerson');//仓库管理员
+        $("#Pname").html(pname.UserName);
+        dataGrid();//返退产品明细
+        var Cust = AjaxCust_Name('@Model.C_Id');//客户信息
+        $("#Cname").html(Cust.Name);
+        $("#Clxr").html(Cust.LxrName);
+        $("#Ctel").html(Cust.Tel);
+
+        $('#SelectedCLData').combo({ editable: false, height: 25, panelHeight: 170 });
+        $('#Div_SelectedCLData').appendTo($('#SelectedCLData').combo('panel'));
+        $('#SelectedCLData').combo('setValue', '').combo('setText', '===请选择==');
+        GetproList();
+
+        $('#SelectedZTData').combo({ editable: false, height: 25, panelHeight: 150 });
+        $('#Div_SelectedZTData').appendTo($('#SelectedZTData').combo('panel'));
+
+        $('#SelectedyqclData').combo({ editable: false, height: 25, panelHeight: 150 });
+        $('#Div_SelectedyqclData').appendTo($('#SelectedyqclData').combo('panel'));
+        Getcljg();
+
+
+        var R_FTyyp = $("#R_FTyyp").val();//返退货原因1
+        if (R_FTyyp != null) {
+            SelectItem();
+        }
+        var R_FTyy = $("#R_FTyy").val();//返退货原因2
+        if (R_FTyy != null) {
+            GetproxhList(R_FTyyp, "1")
+            SelectItem();
+        }
+        var cljg = $("#R_CLjg").val();//处理结果
+        if (cljg != null) {
+            Getcljg();
+            SelectItem();
+            if (cljg == "1") {
+                $("#clfxjz").css('display', 'block');
+                $("#clqtsm").css('display', 'none')
+            }
+            else if (cljg == "2") {
+                $("#clfxjz").css('display', 'none');
+                $("#clqtsm").css('display', 'block');
+            }
+        }
+    })
+
+
+
+    //退货明细html拼接
+    function dataGrid() {
+        var jsonStr;
+        jsonStr = eval(ajaxthdetailjson('@Model.Id'));
+        $("#jbcon").html("");
+        if (jsonStr != null) {
+            if (typeof (jsonStr) != "undefined") {
+                var html = "";
+                html = '<table class="table_con" style="width: 100%; color: #000; font-size: 13px;">';
+                for (var i = 0, j = jsonStr.length; i < j; i++) {
+                    var Perinfo = GetPerinfobyId(jsonStr[i].P_Id);
+                    html += '<tr>';
+                    html += '<td width="30%">' + Perinfo.Pname + '</td>';
+                    if (Perinfo.P_xh != null)
+                        html += '<td width="20%">' + Perinfo.P_xh + '</td>';
+                    else
+                        html += '<td width="20%">-</td>';
+                    html += '<td width="10%">' + jsonStr[i].SL + '</td>';
+                    if (Perinfo.dw != null)
+                        html += '<td width="10%">' + Perinfo.dw + '</td>';
+                    else
+                        html += '<td width="10%">套</td>';
+                    if (jsonStr[i].Beizhu != null && jsonStr[i].Beizhu)
+                        html += '<td width="30%">' + jsonStr[i].Beizhu + '</td>';
+                    else
+                        html += '<td width="30%">-</td>';
+                    html += '</tr>';
+                }
+                html += '</table>';
+                $("#jbcon").html(html);
+            }
+        }
+    }
+
+    //客服编辑提交
+    function KFtijiao(val) {
+        var islx = val;//0 提交后关闭页面 1提交后留在页面
+        var PerListData = $("#PerListData").val();//产品类型
+        var R_FTdate = $("#R_FTdate").val();//返退时间
+        var SelectedCLData = $("input[name='SelectedCLData']").val();//返退原因1
+        var SelectedZTData = $("input[name='SelectedZTData']").val();//返退原因2
+        var qtyy = $("#R_FTyysm").val();//其他原因
+        var SelectedyqclData = $("input[name='SelectedyqclData']").val();//要求处理结果
+        var fxjz = $("#R_CLFY").val();//减帐
+        var qtcljg = $("#R_CLQTSM").val();//其他处理情况
+        var yf = $("#R_Yf").val();//运费
+        var sp = $("#R_sp").val();//索赔
+        var Remark1 = $("#Remark1").val();//补充要求
+        if (PerListData == "") {
+            $.messager.alert("操作提示", '请选择返退产品！', 'error');
+            return false;
+        }
+        if (R_FTdate == "") {
+            $.messager.alert("操作提示", '请选择返退时间！', 'error');
+            return false;
+        }
+        if (SelectedCLData == "") {
+            $.messager.alert("操作提示", '请选择返退原因！', 'error');
+            return false;
+        }
+        if (SelectedyqclData == "") {
+            $.messager.alert("操作提示", '请选择要求处理结果！', 'error');
+            return false;
+        }
+        if (yf == "") {
+            $.messager.alert("操作提示", '请填写运费，如果不产生运费可以填写0元！', 'error');
+            return false;
+        }
+        $.ajax({
+            url: "/NAReturnList/NewkfEide",
+            type: "POST",
+            data: { Id: '@Model.Id', cptyle: PerListData, ftdatetime: R_FTdate, ftyy1: SelectedCLData, ftyy2: SelectedZTData, qtyy: qtyy, cljg: SelectedyqclData, fxjz: fxjz, qtyqcl: qtcljg, yf: yf, sp: sp, bcyq: Remark1 },
+            dataType: "html",
+            async: false,
+            success: function (response) {
+                if ("0" == response) {//提交成
+                    if (islx == "0") {
+                        $.messager.alert("操作提示", '提交成功！', 'info', function () {
+                            var ParentObj = window.parent;//获取父窗口
+                            window.parent.$('#windowDia').window('close');
+                            window.parent.location = "/NAReturnList/kflist";
+                            return false;
+                        });
+                    }
+                    if (islx == "1") {
+                               $.messager.alert("操作提示", '提交成功！', 'info', function () {
+                          
+                            window.location = "/NAReturnList/NewkefuchuliView?id=" + '@Model.Id';
+                            return false;
+                        });
+                       // $.messager.alert("操作提示", '提交成功！', 'info');
+                    }
+                }
+                if ("1" == response)
+                {
+                    $.messager.alert("操作提示", '提交失败！', 'error');
+                }
+                if ("2" == response) {
+                    $.messager.alert("操作提示", '返退货单不存在！', 'error');
+                }
+                if ("3" == response) {
+                    $.messager.alert("操作提示", '提交失败！', 'error');
+                }
+                if ("4" == response) {
+                    $.messager.alert("操作提示", '相关部门已受理当前返退货单，您无权限编辑！', 'error');
+                }
+            },
+            error: function (e) {
+                $.messager.alert("操作提示", '网络异常,请重新提交！', 'error');
+                return false;
+            }
+        })
+    }
+
+    //刷新
+    function kfrefurbish()
+    {
+        window.location = "/NAReturnList/NewkefuchuliView?id=" + '@Model.Id';
+        return false;
+    }
+
+    //关闭当前页面
+    function closepage()
+    {
+        var ParentObj = window.parent;//获取父窗口
+        window.parent.$('#windowDia').window('close');
+        window.parent.location = "/NAReturnList/kflist";
+        return false;
+    }
+
+</script>
+
+@Html.HiddenFor(m => m.Id)
+@Html.HiddenFor(m => m.R_FTyyp)
+@Html.HiddenFor(m => m.R_FTyy)
+@Html.HiddenFor(m => m.R_CLjg)
+@Html.HiddenFor(m => m.Kfzy)
+@Html.HiddenFor(m => m.ClDate)
+<div id="tt" class="easyui-tabs" style="width: 98%; height: 450px; margin: auto;">
+
+    <div title="客服流程跟踪" style="padding: 20px;">
+
+        <table class="table_con" style="width: 100%; color: #000; font-size: 13px;">
+            <tr>
+                <td style="color:#ff0000">
+                 当前状态：<label id="dqzt"></label>
+                </td>
+                <td>
+                    <a onclick="Fthfhtype('@Model.Id','@Model.L_type','0')" class="btna1">返回上级</a>
+                    <a onclick="kfrefurbish()" class="btna1">刷　　新</a>
+                    <a onclick="closepage()" class="btna1">关闭当前页</a>
+                    <a onclick="PrintNaReturn('@Model.Id','@Model.L_type')" class="btna1">流程单打印</a>
+                </td>
+            </tr>
+        </table>
+
+        <table class="table_con" style="width: 100%; color: #000; font-size: 13px;">
+            <tr>
+                <td style="width: 40%">客户名称：<label id="Cname"></label></td>
+                <td style="width: 30%">联 系 人：<label id="Clxr"></label></td>
+                <td style="width: 30%">联系电话：<label id="Ctel"></label></td>
+            </tr>
+        </table>
+
+        <table class="table_con" style="width: 100%; color: #000; font-size: 13px; margin-top: 10px;">
+            <tr>
+                <td style="width: 40%">返退产品：@Html.DropDownList("PerListData", ViewData["perList"] as SelectList, new { @class = "add-function" })</td>
+                <td style="width: 30%">返退时间: @Html.TextBoxFor(m => m.R_FTdate, new { onclick = "WdatePicker()", @class = "txtboxcss" })</td>
+                <td style="width: 30%">返退数量: @Model.R_Number   套/件</td>
+            </tr>
+            <tr>
+                <td colspan="3">返退原因：<input id="SelectedCLData" name="SelectedCLData">
+                    <input id="SelectedZTData" name="SelectedZTData"></td>
+            </tr>
+            <tr>
+                <td colspan="3">
+
+                    <table style="border: none">
+                        <tr>
+                            <td style="border: none">其他原因：</td>
+                            <td style="border: none">@Html.TextAreaFor(m => m.R_FTyysm, new { @class = "daradcss" })</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="3">
+                    <table>
+                        <tr>
+                            <td style="border: none">处理结果：
+                                <input id="SelectedyqclData" name="SelectedyqclData">
+                            </td>
+                            <td style="border: none">
+                                <span id="clfxjz" style="display: none">
+                                    @Html.TextBoxFor(m => m.R_CLFY, new { @class = "text_field" })  元
+                                </span>
+                                <span id="clqtsm" style="display: none">
+                                    @Html.TextBoxFor(m => m.R_CLQTSM, new { @class = "text_field" })
+                                </span>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="3">涉及费用： @Html.TextBoxFor(m => m.R_Yf, new { @class = "text_field", @placeholder = "运费 单位元" })   @Html.TextBoxFor(m => m.R_sp, new { @class = "text_field", @placeholder = "客户索赔  单位元" })
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <table>
+                        <tr>
+                            <td style="border: none">补充要求：
+                            </td>
+                            <td>
+                                @Html.TextAreaFor(m => m.Remark1)
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="3" align="center">
+                    <a class="btna2" onclick='KFtijiao("0")'>提　交,并关闭页面</a>
+                     <a class="btna2" onclick='KFtijiao("1")'>提　交,并留在页面</a>
+                </td>
+            </tr>
+        </table>
+
+    </div>
+
+    <div title="返退信息" data-options="closable:false" style="padding: 10px;">
+        <table class="table_con" style="width: 100%; color: #000; font-size: 13px;">
+            <tr>
+                <td style="width: 50%">仓　　库：<label id="Pname"></label></td>
+                <td style="width: 50%">提交时间:@Model.CreateTime</td>
+            </tr>
+        </table>
+        <table class="table_con" style="width: 100%; color: #000; font-size: 13px;">
+            <tr>
+                <td>退货明细</td>
+            </tr>
+        </table>
+        <table class="table_con" style="width: 100%; color: #000; font-size: 13px;">
+            <tr>
+                <td style="width: 30%">产品名称</td>
+                <td style="width: 20%">产品型号</td>
+                <td style="width: 10%">退货数量</td>
+                <td style="width: 10%">单　　位</td>
+                <td style="width: 30%">备　　注</td>
+            </tr>
+        </table>
+        <!--返退货明细-->
+        <div id="jbcon">
+        </div>
+    </div>
+
+    
+</div>
+
+<!--返退货原因-->
+<div id="Div_SelectedCLData">
+    <div style="padding: 10px; font-size: 14px;" id="DivContent_SelectedCLData"></div>
+</div>
+
+
+<div id="Div_SelectedZTData">
+    <div style="padding: 10px; font-size: 14px;" id="DivContent_SelectedZTData"></div>
+</div>
+
+<!---要求处理结果---->
+<div id="Div_SelectedyqclData">
+    <div style="padding: 10px; font-size: 14px;" id="DivContent_SelectedyqclData"></div>
+</div>
+<script src="~/Scripts/NAjs/NAReturnList.js"></script>

@@ -1,0 +1,472 @@
+﻿@model NewAsiaOASystem.ViewModel.K3_wuliaoinfoView
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@using (Html.BeginForm("updateOABaseitem", "K3Basicdata", FormMethod.Post, new { id = "form1" }))
+{
+
+    @Html.Hidden("Id", Model.Id)
+
+    @Html.Hidden("fstatus", Model.itemStatus.iStatus)
+    <div class="infor">
+        <p id="Ptitle"></p>
+        <div class="system-menu-set">
+            <ul class="infor-c">
+                <li>
+                    <span class="infor-c-width">元器件编码：</span>
+                    <span class="infor-c-input">@Html.TextBoxFor(m => m.fnumber, new { disabled = "disabled" })</span>
+                </li>
+                <li>
+                    <span class="infor-c-width">元器件名称：</span>
+                    <span class="infor-c-input">
+                        @Html.TextBoxFor(m => m.fname, new { disabled = "disabled" })
+                    </span>
+                </li>
+                <li>
+                    <span class="infor-c-width">元器件型号：</span>
+                    <span class="infor-c-input">@Html.TextBoxFor(m => m.fmodel, new { disabled = "disabled" })</span>
+                </li>
+            </ul>
+            <ul class="infor-c">
+                <li>
+                    <span class="infor-c-width">单价：</span>
+                    <span class="infor-c-input">@Html.TextBoxFor(m => m.forderprice, new { disabled = "disabled" })</span>
+                </li>
+                <li>
+                    <span class="infor-c-width">单位名称：</span>
+                    <span class="infor-c-input">
+                        @Html.TextBoxFor(m => m.unitname, new { disabled = "disabled" })
+                    </span>
+                </li>
+                <li>
+                    <span class="infor-c-width">净重：</span>
+                    <span class="infor-c-input">
+                        @Html.TextBoxFor(m => m.fnetweight, new { disabled = "disabled" })
+                    </span>
+                </li>
+            </ul>
+            <ul class="infor-c ">
+                <li>
+                    <span class="infor-c-width">未关联供应商：</span>
+                </li>
+                <li>
+                    <span class="infor-c-input">
+                        @Html.DropDownList("notList", new SelectList(ViewBag.notSupplier, "Value", "Text"), new { @class = "add-function", @onSelect = "" })
+                    </span>
+                </li>
+
+                <li>
+                    <span class="infor-c-width">已关联供应商：</span>
+                </li>
+                <li>
+                    <span class="infor-c-input">
+                        @Html.DropDownList("hadList", new SelectList(ViewBag.hadSupplier, "Value", "Text"), new { @class = "add-function", @onSelect = "" })
+                    </span>
+                </li>
+            </ul>
+            <ul class="infor-c ">
+                <li>
+                    <span class="infor-c-width"><span style="color: red; font-size: 24px;vertical-align: middle; margin-left: 8px;width: 4px;">*</span>CCC证书：</span>
+                </li>
+                <li>
+                    <span class="infor-c-width">有效期至：</span>
+                    <span class="infor-c-input">
+                        <input type="text" id="CCCDDeadline" name="CCCDDeadline" value="@(ViewBag.CCCDeadline == null ? "":ViewBag.CCCDeadline.ToString("D") )" disabled="disabled" />
+                    </span>
+                </li>
+                <li>
+                    <span class="inquiry-input btn_att">
+                        <a class="layui-btn layui-btn-primary" onclick="attachView('0')">编辑</a>
+                    </span>
+                </li>
+            </ul>
+
+            <ul class="infor-c ">
+                <li>
+                    <span class="infor-c-width"><span style="color: red; font-size: 24px;vertical-align: middle; margin-left: 8px;width: 4px;">*</span>CQC证书：</span>
+                </li>
+                <li>
+                    <span class="infor-c-width">有效期至：</span>
+                    <span class="infor-c-input">
+                        <input type="text" id="CQCDeadLine" name="CQCDeadLine" value="@(ViewBag.CQCDeadLine == null ? "":ViewBag.CQCDeadLine.ToString("D") )" disabled="disabled" />
+                    </span>
+                </li>
+                <li>
+                    <span class="infor-c-input btn_att">
+                        <a class="layui-btn layui-btn-primary" onclick="attachView('1')">编辑</a>
+                    </span>
+                </li>
+            </ul>
+
+            <ul class="infor-c ">
+                <li>
+                    <span class="infor-c-width"><span style="color: red; font-size: 24px;vertical-align: middle; margin-left: 8px;width: 4px;">*</span>规格书：</span>
+                </li>
+                <li>
+                    <span class="infor-c-width">有效期至：</span>
+                    <span class="infor-c-input">
+                        <input type="text" id="SpecDeadLine" name="SpecDeadLine" value="@(ViewBag.SpecDeadLine == null ? "":ViewBag.SpecDeadLine.ToString("D") )" disabled="disabled" />
+                    </span>
+                </li>
+                <li>
+
+                    <span class="infor-c-input btn_att">
+                        <a class="layui-btn layui-btn-primary" onclick="attachView('2')">编辑</a>
+                    </span>
+                </li>
+            </ul>
+
+            <ul class="infor-c ">
+                <li>
+                    <span class="infor-c-width"><span style="color: red; font-size: 24px;vertical-align: middle; margin-left: 8px;width: 4px;">*</span>技术确认标准：</span>
+                </li>
+                <li>
+                    <span class="infor-c-width">有效期至：</span>
+                    <span class="infor-c-input">
+                        <input type="text" id="StdDeadLine" name="StdDeadLine" value="@(ViewBag.StdDeadLine == null ? "":ViewBag.StdDeadLine.ToString("D") )" disabled="disabled" />
+                    </span>
+                </li>
+                <li>
+
+                    <span class="infor-c-input btn_att">
+                        <a class="layui-btn layui-btn-primary" onclick="attachView('3')">编辑</a>
+                    </span>
+                </li>
+            </ul>
+            <ul class="infor-c ">
+                <li>
+                    <span class="infor-c-width">样品确认单：</span>
+                </li>
+                <li>
+                    <span class="infor-c-width">有效期至：</span>
+                    <span class="infor-c-input">
+                        <input type="text" id="SampleDeadLine" name="SampleDeadLine" value="@(ViewBag.SampleDeadLine == null ? "":ViewBag.SampleDeadLine.ToString("D") )" disabled="disabled" />
+                    </span>
+                </li>
+                <li>
+
+                    <span class="infor-c-input btn_att">
+                        <a class="layui-btn layui-btn-primary" onclick="attachView('4')">编辑</a>
+                    </span>
+                </li>
+            </ul>
+            <ul class="infor-c ">
+                <li>
+                    <span class="infor-c-width">质量协议：</span>
+                </li>
+
+                <li>
+                    <span class="infor-c-width">有效期至：</span>
+                    <span class="infor-c-input">
+                        <input type="text" id="QualityDeadLine" name="QualityDeadLine" value="@(ViewBag.QualityDeadLine == null ? "":ViewBag.QualityDeadLine.ToString("D") )" disabled="disabled" />
+                    </span>
+                </li>
+                <li>
+
+                    <span class="infor-c-input btn_att">
+                        <a class="layui-btn layui-btn-primary" onclick="attachView('5')">编辑</a>
+                    </span>
+                </li>
+            </ul>
+            <ul class="infor-c ">
+                <li>
+                    <span class="infor-c-width">供方季度/年度考核：</span>
+                </li>
+
+                <li>
+                    <span class="infor-c-width">有效期至：</span>
+                    <span class="infor-c-input">
+                        <input type="text" id="AppraisalsDeadLine" name="AppraisalsDeadLine" value="@(ViewBag.AppraisalsDeadLine == null ? "":ViewBag.AppraisalsDeadLine.ToString("D") )" disabled="disabled" />
+                    </span>
+                </li>
+                <li>
+
+                    <span class="infor-c-input btn_att">
+                        <a class="layui-btn layui-btn-primary" onclick="attachView('6')">编辑</a>
+                    </span>
+                </li>
+            </ul>
+
+        </div>
+        <div class="inquiry-input infor-b">
+            <span>
+                <button onclick="return SaveForm()">保存</button>
+            </span>
+            <span>
+                <button onclick="return RedirectUrl('/K3Basicdata/List')">返回</button>
+            </span>
+        </div>
+    </div>
+}
+
+<style>
+    .btn_att {
+        margin-left: 30px;
+    }
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        setDeadline("");
+
+    });
+
+    $(document).on("change", 'select#notList', function () {
+        setDeadline("not");
+
+    });
+
+    $(document).on("change", 'select#hadList', function () {
+        setDeadline("had");
+
+    });
+
+
+    function clearDeadline() {
+        $('#CCCDDeadline').val("");
+        $('#CQCDeadLine').val("");
+        $('#SpecDeadLine').val("");
+        $('#StdDeadLine').val("");
+        $('#SampleDeadLine').val("");
+        $('#QualityDeadLine').val("");
+        $('#AppraisalsDeadLine').val("");
+    }
+
+    function setDeadline(notorhad) {
+        var itemid = $('#Id').val();
+        var a = $('#AppraisalsDeadLine').val();
+        var notsupplierid = $("#notList option:selected").val();
+        var hadsupplierid = $("#hadList option:selected").val();
+
+        var selectsupplier = "";
+
+        if (notorhad == "not" && notsupplierid > 0) {
+            $("#hadList").val(-1);
+            selectsupplier = notsupplierid;
+        }
+        if (notorhad == "had" && hadsupplierid > 0) {
+            $("#notList").val(-1);
+            selectsupplier = hadsupplierid;
+        }
+
+        clearDeadline();
+
+        if (notsupplierid < 0 && hadsupplierid < 0) {
+            return false;
+        }
+
+        $.ajax({
+            //url: "../K3Basicdata/selectChanged?itemid=" + itemid + "&supplierid=" + selectsupplier,
+            url: "../K3Basicdata/selectChanged",
+            data: { itemid: itemid, supplierid:selectsupplier},
+            type: "post",
+            dataType: "json",
+            success: function (context) {
+                var data = eval(context.result);
+                if (typeof (data) != "undefined") {
+                    for (var i = 0, j = data.length; i < j; i++) {
+                        switch (data[i].FAttType) {
+                            case 0:
+                                $('#CCCDDeadline').val(showDate(data[i].FAttDeadline));
+                                break;
+                            case 1:
+                                $('#CQCDeadLine').val(showDate(data[i].FAttDeadline));
+                                break;
+                            case 2:
+                                $('#SpecDeadLine').val(showDate(data[i].FAttDeadline));
+                                break;
+                            case 3:
+                                $('#StdDeadLine').val(showDate(data[i].FAttDeadline));
+                                break;
+                            case 4:
+                                $('#SampleDeadLine').val(showDate(data[i].FAttDeadline));
+                                break;
+                            case 5:
+                                $('#QualityDeadLine').val(showDate(data[i].FAttDeadline));
+                                break;
+                            case 6:
+                                $('#AppraisalsDeadLine').val(showDate(data[i].FAttDeadline));
+                                break;
+                        }
+
+                    }
+                }
+
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(XMLHttpRequest);
+                alert(textStatus);
+                alert(errorThrown);
+            }
+        });
+    }
+
+    function attachView(atttype) {
+        //alert(1);
+        var val = $('#Id').val();
+        var hiddenftype = $('#hiddenFSupplierType').val();
+        var notsupplierid = $("#notList option:selected").val();
+        var hadsupplierid = $("#hadList option:selected").val();
+        var selectsupplier = "";
+
+        if (notsupplierid < 0 && hadsupplierid < 0) {
+            $.messager.alert("操作提示", "请选择一个供应商", "warning");
+            return false;
+        }
+
+        if (notsupplierid > 0) {
+            selectsupplier = notsupplierid;
+        } else
+            if (hadsupplierid > 0) {
+                selectsupplier = hadsupplierid;
+            }
+
+        //var selectedftype = $('input:radio[name="FSupplierType"]:checked').val();
+
+        //if (hiddenftype != selectedftype) {
+        //    $.messager.alert("操作提示", "更改供应商类型，请先保存基础数据", "warning");
+        //    return false;
+        //}
+
+        //if (val <= 0) {
+        //    $.messager.alert("操作提示", "请先保存供应商基础数据", "warning");
+        //    return false;
+        //}
+        layer.open({
+            type: 2,
+            title: ['元器件附件上传', 'font-size:14px;'],
+            area: ['800px', '450px'],
+            offset: '10px',
+            fixed: false, //不固定
+            maxmin: true,
+            content: '../NQ_BaseitemAttachment/BaseitemAttachEdit?itemid=' + val + '&atttype=' + atttype + '&supplierid=' + selectsupplier,
+            end: function () {           //关闭弹出层触发
+                //parent.location.reload();       //刷新父界面，可改为其他
+            }
+        });
+    }
+
+
+    function SaveForm() {
+        var rtn = validateSuBaseSave();
+        if (rtn == false)
+        { return false; }
+        return submitSupplierForm('/K3Basicdata/List', 'list');
+    }
+
+    function submitSupplierForm(RetUrl, submitType) {
+        //表单验证
+        var options = {
+            beforeSubmit: function () {
+                return true;
+            },
+            dataType: "json",//这里是指控制器处理后返回的类型，这里返回json格式。
+            success: function (context) {
+                if ("success" == context.result) {
+                    $.messager.alert("操作提示", '操作成功！', 'info', function () {
+                        if (submitType == 'edit') {
+                            //alert('edit');
+                            location.href = (RetUrl + context.id);
+                        }
+                        if (submitType == 'list') {
+                            //alert('list');
+                            location.href = RetUrl;
+                        }
+                    });
+                }
+                if ("error" == context.result) {
+                    $.messager.alert("操作提示", '操作失败！', 'error');
+                }
+                if ("error3" == context.result) {
+                    $.messager.alert("操作提示", '提交成功！', 'info', function () {
+                        location.href = RetUrl;
+                    });
+                }
+                if ("repeat" == context.result) {
+                    $.messager.alert("操作提示", '供应商代码不能重复！', 'error');
+                }
+                if ("FNumber" == context.result) {
+                    $.messager.alert("操作提示", '供应商代码必须输入！', 'error');
+                }
+                if ("FAddress" == context.result) {
+                    $.messager.alert("操作提示", '地址必须输入！', 'error');
+                }
+                if ("FContact" == context.result) {
+                    $.messager.alert("操作提示", '联系人必须输入！', 'error');
+                }
+                if ("FName" == context.result) {
+                    $.messager.alert("操作提示", '供应商名称必须输入！', 'error');
+                }
+                if ("FPhone" == context.result) {
+                    $.messager.alert("操作提示", '电话必须输入！', 'error');
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $.messager.alert("操作提示", '操作失败！', 'error');
+            }
+        }
+
+        //var status = $('#fstatus').val();
+
+        ////alert(status);
+
+        //if (status != 0) {
+        //    $.messager.confirm("操作提示", '保存后需要重新审核', function (data) {
+        //        if (data) {
+        //            $('#form1').ajaxSubmit(options);
+        //        }
+        //    });
+        //}
+        //else {
+        //    $('#form1').ajaxSubmit(options);
+        //}
+
+        $('#form1').ajaxSubmit(options);
+        return false; //为了不刷新页面,返回false
+    }
+
+    //验证保存必录项，包括附件上传项
+    function validateSuBaseSave() {
+        var notsupplierid = $("#notList option:selected").val();
+        var hadsupplierid = $("#hadList option:selected").val();
+
+        if (notsupplierid < 0 && hadsupplierid < 0) {
+            $.messager.alert("操作提示", "请选择一个供应商", "warning");
+            return false;
+        }
+        var rtn = validateEmpty();
+        if (rtn == false)
+        { return rtn;}
+
+    }
+
+    function validateEmpty() {
+        var CCCDDeadline = $('#CCCDDeadline').val();
+        var CQCDeadLine = $('#CQCDeadLine').val();
+        var SpecDeadLine = $('#SpecDeadLine').val();
+        var StdDeadLine = $('#StdDeadLine').val();
+        var SampleDeadLine = $('#SampleDeadLine').val();
+        var QualityDeadLine = $('#QualityDeadLine').val();
+        var AppraisalsDeadLine = $('#AppraisalsDeadLine').val();
+
+        if (CCCDDeadline == "") {
+            $.messager.alert("操作提示", "必须上传CCC证书", "warning");
+            return false;
+        }
+        if (CQCDeadLine == "") {
+            $.messager.alert("操作提示", "必须上传CQC证书", "warning");
+            return false;
+        }
+        if (SpecDeadLine == "") {
+            $.messager.alert("操作提示", "必须上传规格书", "warning");
+            return false;
+        }
+        if (StdDeadLine == "") {
+            $.messager.alert("操作提示", "必须技术确认标准", "warning");
+            return false;
+        }
+    }
+
+</script>

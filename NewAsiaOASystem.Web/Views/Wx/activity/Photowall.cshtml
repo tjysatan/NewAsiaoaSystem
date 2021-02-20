@@ -1,0 +1,105 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" href="../Content/wx/ZPQ/css/style.css" type="text/css" media="all" />
+    <script type="text/javascript" src="../Content/wx/ZPQ/js/jquery.min.js"></script>
+    <script src="~/Scripts/jquery-1.11.2.min.js"></script>
+    <script src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
+    <script src="~/Scripts/jquery.form.js"></script>
+    <script src="~/Scripts/jquery-easyui-1.4.1/jquery.easyui.min.js"></script>
+    <script src="~/Scripts/layer/layer.js"></script>
+    <title>新亚洲，智慧冷库控制方案提供商！</title>
+
+</head>
+<body>
+    <div style="width: 90%; margin: auto; text-align: center; line-height: 100px; font-size: 30px">
+        参加新亚洲现场抽奖活动名单墙
+    </div>
+    <div id="pic_show">
+        <ul id="Album">
+        </ul>
+    </div>
+
+    <div style="width: 100%; position:fixed;bottom:0;left:0;right:0; text-align: center; line-height: 40px;">
+        <input type="button" value="马上抽奖" onclick="return CJbtn()" style="width: 100px; height: 40px;" />
+    </div>
+</body>
+<script type="text/javascript" src="../Content/wx/ZPQ/js/album.js"></script>
+<script type="text/javascript">
+    Album.set('#Album');
+    window.setInterval(function () { Getsignupinfo() }, 10000);
+    $(function () {
+        Getsignupinfo();
+    })
+
+    //获取全部参加人信息
+    function Getsignupinfo() {
+        Album.set('#Album');
+        $.ajax({
+            type: "POST",
+            url: "/activity/Signupjson",
+            dataType: "json",
+            async: false,
+            success: function (reslut) {
+                var str = eval(reslut);
+                pjhtml(str);
+            },
+            error: function (e) {
+                alert("网络异常,请重试！");
+            }
+        })
+    }
+
+    //
+    function GetsignupinfoNew() {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "/activity/Signupjson",
+            dataType: "json",
+            async: false,
+            success: function (reslut) {
+                json = eval(reslut);
+
+            },
+            error: function (e) {
+                alert("网络异常,请重试！");
+            }
+        })
+        return json;
+    }
+
+    //拼接html
+    function pjhtml(str) {
+        var html = "";
+        html += '<li class="album_big"><a href="/" id="you_logo"><img src="../Content/wx/ZPQ/img/you.png" /></a></li>';
+        if (str != null) {
+            for (var i = 0, j = str.length; i < j; i++) {
+                html += '<li>';
+                html += '<a href="/"><em></em><img src="' + str[i].headimgurl + '" style="width:101px; height:101px;" /></a>';
+                html += '<div class="Album_info"><strong>昵称</strong><span>' + str[i].nickname + '</span><span><i></i><i></i></span></div>';
+                html += '</li>';
+            }
+        }
+        $("#Album").html(html);
+    }
+
+    //抽奖
+    function CJbtn() {
+        layer.open({
+            type: 2,
+            title: '新亚洲，智慧冷库控制方案提供商',
+            shadeClose: true,
+            shade: 0.8,
+            area: ['900px', '90%'],
+            content: '../activity/CJview'//iframe的url
+        });
+    }
+</script>
+</html>

@@ -1,0 +1,42 @@
+﻿@{
+    ViewBag.Title = "实时库存查看";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<style>
+    .table_con
+    {
+        border-collapse: collapse;
+        border: none;
+    }
+
+        .table_con td
+        {
+            border: solid #eae5e5 1px;
+            height: 35px;
+            padding: 0 0 0 5px;
+        }
+</style>
+
+<div id="Con">
+    <table class="table_con" style="width: 100%; color: #000; font-size: 13px;">
+        <tr>
+            <td>物料代码：</td>
+            <td>@ViewData["wldm"]</td>
+        </tr>
+        <tr>
+            <td>产品名称：</td>
+            <td>@ViewData["cpname"]</td>
+        </tr>
+        <tr>
+            <td>型号：</td>
+            <td>@ViewData["pmodel"]</td>
+        </tr>
+        <tr>
+            <td>当前库存：</td>
+            <td>@ViewData["kcsl"];</td>
+        </tr>
+    </table>
+</div>
+
+

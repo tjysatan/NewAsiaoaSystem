@@ -1,0 +1,109 @@
+﻿@model NewAsiaOASystem.ViewModel.IQC_llNoticeMXordinfoView
+@{
+    ViewBag.Title = "检验单的数量修改";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+
+<style>
+    .sopbtnsave
+    {
+        position: absolute;
+        width: 90%;
+        bottom: 5px;
+        text-align: center;
+    }
+
+    .soptopbtn
+    {
+        position: absolute;
+        width: 90%;
+        top: 1px;
+        text-align: center;
+    }
+</style>
+
+<script type="text/javascript">
+
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+
+    //提交修改
+    function CGXDAjax(val) {
+        var Id = '@Model.Id';
+        var SUM = $("#SUM").val();
+        if (SUM == "") {
+            layer.alert("请填写检验的数量！", { icon: 2 });
+            return false;
+        }
+        if (isNaN(SUM)) {
+            layer.alert("填写的检验数量为纯数字！", { icon: 2 });
+            return false;
+        }
+        $.ajax({
+            url: "../IQC_Sop/NumberUpdateEide",
+            type: "POST",
+            data: { Id: Id, sum: SUM },
+            dataType: "html",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response == "1") {
+
+                    layer.alert("提交成功！", { icon: 1 }, function () { location.reload(); });
+                }
+                if (response == "0") {
+                    layer.alert("提交异常！", { icon: 2 }, function () { location.reload();  });
+                }
+                if (response == "2") {
+                    layer.alert("修改提交异常！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "3") {
+                    layer.alert("数量不为空！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "4") {
+                    layer.alert("订单不存在！", { icon: 2 }, function () { location.reload(); });
+                }
+
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+    }
+
+
+    function guanbi() {
+        var index = parent.layer.getFrameIndex(window.name);
+        //关闭弹出层
+        parent.layer.close(index);
+    }
+</script>
+
+<div class="layui-tab-content" style="height: 100px;">
+    <div class="layui-tab-item layui-show">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">数量:</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="SUM" id="SUM" value='@Model.Sum'  class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <!--按钮-->
+        <div class="sopbtnsave">
+            <button class="layui-btn layui-btn-primary" onclick="return CGXDAjax()">提交</button>
+        </div>
+    </div>
+</div>

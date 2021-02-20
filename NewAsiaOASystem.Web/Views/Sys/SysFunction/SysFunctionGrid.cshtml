@@ -1,0 +1,86 @@
+﻿@model NewAsiaOASystem.ViewModel.PagerInfo<NewAsiaOASystem.ViewModel.SysFunctionView>
+@{
+    ViewBag.Title = "功能权限";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+
+@section HeadContent{
+    <script type="text/ecmascript">
+        $(function () {
+            BindGrid();
+        })
+        function BindGrid() {
+            @{
+                if (null != Model)
+                {
+                    string json = Model.GetPagingDataJson;//获取json数据
+                    @: var jsonStr =@Html.Raw(json); 
+                                                    //  @: $("#dg").datagrid('loadData', jsonStr); 
+                             }
+                 
+              }
+
+            if (typeof(jsonStr)!="undefined") {
+                var html="";
+                html='<table cellpadding="0" cellspacing="0">';
+                for (var i = 0,j=jsonStr.length; i < j; i++) {
+                    if (i%2==0)
+                        html+='<tr class="h-table-content-r1">';
+                    else
+                        html+='<tr class="h-table-content-r">';
+                    html+='<td width="30"><input type="checkbox" name="ContentChecked" value="'+jsonStr[i].Id+'"/></td>';
+                    html+='<td width="180">'+jsonStr[i].Name+'</td>';
+                    html+='<td width="200">'+jsonStr[i].ActionUrl+'</td>';
+                    if(jsonStr[i].Status==1)
+                        html+='<td width="90">启用</td>';
+                    else
+                        html+='<td width="90">禁用</td>';
+                    html+='<td width="150">'+showDate(jsonStr[i].CreateTime)+'</td>';
+                    html+='</tr>'
+                }
+                html+='</table>';
+                $(".h-table-content").append(html);
+            }
+         
+        }
+    </script>
+
+}
+
+
+<!--==================================数据列表=============================-->
+<div class="h-right">
+    <div class="h-right-c">
+@*        <div class="h-right-title">您当前的位置：功能权限管理</div>*@
+        <div class="inquiry-input" style="margin: 10px 0 10px 10px;">
+            <span class="inquiry-input">
+                <button onclick="addClick('/SysFunction/addPage')">添加</button></span>
+            <span class="inquiry-input">
+                <button onclick="del('/SysFunction/Delete')">删除</button></span>
+            <span class="inquiry-input">
+                <button onclick="update('/SysFunction/EditPage')">编辑</button></span>
+            <span class="inquiry-input">
+                <button onclick="location.href='/SysFunction/Index'">刷新</button></span>
+        </div>
+
+        <div class="h-table">
+            <div class="h-table-content">
+                <table cellpadding="0" cellspacing="0" class="h-right-table-title1" style="border: none;">
+                    <tr>
+                        <td width="30">
+                            <input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" /></td>
+                        <td width="180">功能名称</td>
+                        <td width="200">Action路径</td>
+                        <td width="90">状态</td>
+                        <td width="150">创建时间</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!--==========================输出分页按钮=========================-->
+<div class="pagin">
+    @Html.ShowPageNavigate(Model.CurrentPageIndex, Model.PageSize, Model.RecordCount)
+</div>

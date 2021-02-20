@@ -1,0 +1,64 @@
+﻿<?xml version="1.0"  encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="NewAsiaOASystem.DBModel" assembly="NewAsiaOASystem.DBModel">
+  <class name="WX_SendMessage" table="WX_SendMessage">
+    
+    <id name="S_Id" column="S_Id" type="string" unsaved-value="0">
+      <generator class="uuid.hex"/>
+    </id>
+    <property name="ToUserName">
+      <column name="ToUserName"/>
+    </property>
+    <property name="FromUserName">
+      <column name="FromUserName"/>
+    </property>
+    <property name="CreateTime">
+      <column name="CreateTime"/>
+    </property>
+    <property name="MsgType">
+      <column name="MsgType"/>
+    </property>
+    <property name="R_Content">
+      <column name="R_Content"/>
+    </property>
+    <property name="MsgId">
+      <column name="MsgId"/>
+    </property>
+    <property name="MediaId">
+      <column name="MediaId"/>
+    </property>
+    <property name="MusicURL">
+      <column name="MusicURL"/>
+    </property>
+    <property name="HQMusicUrl">
+      <column name="HQMusicUrl"/>
+    </property>
+    <property name="Title">
+      <column name="Title"/>
+    </property>
+    <property name="Description">
+      <column name="Description"/>
+    </property>
+    <property name="ThumbMediaId">
+      <column name="ThumbMediaId"/>
+    </property>
+    <property name="Articles">
+      <column name="Articles"/>
+    </property>
+    <property name="ArticleCount">
+      <column name="ArticleCount"/>
+    </property>
+    <property name="Url">
+      <column name="Url"/>
+    </property>
+    <property name="PicUrl">
+      <column name="PicUrl"/>
+    </property>
+    <property name="S_CreateTime">
+      <column name="S_CreateTime"/>
+    </property>
+    <property name="S_XMLData">
+      <column name="S_XMLData"/>
+    </property>
+
+  </class>
+</hibernate-mapping>

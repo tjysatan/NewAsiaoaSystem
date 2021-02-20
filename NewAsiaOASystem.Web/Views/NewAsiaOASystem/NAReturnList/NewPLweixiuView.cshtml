@@ -1,0 +1,331 @@
+﻿@{
+    ViewBag.Title = "新的批量编辑（维修）页面";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<script type="text/javascript">
+    $(function () {
+        YQJXZ();//元器件选择
+        $('#SelectedxxxData').combo({ editable: false, height: 25, panelHeight: 170 });
+        $('#Div_SelectedxxxData').appendTo($('#SelectedxxxData').combo('panel'));
+        $('#SelectedxxxData').combo('setValue', '').combo('setText', '===请选择==');
+        GetFXblxxxlist();
+        $('#SelectedxxData').combo({ editable: false, height: 25, panelHeight: 170 });
+        $('#Div_SelectedxxData').appendTo($('#SelectedxxData').combo('panel'));
+        $('#SelectedxxData').combo('setValue', '').combo('setText', '===请选择==');
+        GetFXxxList();
+        $('#SelectedyyData').combo({ editable: false, height: 25, panelHeight: 150 });
+        $('#Div_SelectedyyData').appendTo($('#SelectedyyData').combo('panel'));
+    })
+
+    //赋值
+
+
+    //检测是否再保
+    function dbJCZB() {
+        //生产时间
+        var scdate = $("#TH_SCdate").val();
+        var res;
+        if (scdate == "") {
+            alert("填写生产时间！");
+            return;
+        }
+        res = Ajaxjcsj(scdate, '@ViewData["R_Id"]');
+        $("#bxqk").val(res);
+    }
+
+    function Ajaxjcsj(scdatetime, r_Id) {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "/NAReturnList/JcMonecount",
+            data: { scdatetime: scdatetime, r_Id: r_Id },
+            dataType: "html",
+            async: false,
+            success: function (reslut) {
+                json = reslut;
+            },
+            error: function (e) {
+                alert("网络异常!");
+            }
+        })
+        return json;
+    }
+
+    //查询元器件信息根据名称
+    function ajaxYQJjson(r_id) {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "/NQ_YJinfo/Getyjinfobyname",
+            data: { name: r_id },
+            dataType: "json",
+            async: false,
+            success: function (reslut) {
+                json = reslut;
+            },
+            error: function (e) {
+                alert("请求失败!");
+            }
+        })
+        return json;
+    }
+
+    //根据元器件ID 查找元器件信息
+    function ajaxyjmodelbyidjson(Id) {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "/NQ_YJinfo/Getyjinfomodelbyid",
+            data: { Id: Id },
+            async: false,
+            success: function (reslut) {
+                json = eval('(' + reslut + ')');
+            },
+            error: function (e) {
+                alert("请求失败！");
+            }
+        })
+        return json;
+    }
+
+    function ajaxallyjinfo() {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "/NQ_YJinfo/Getyjinfo",
+            dataType: "json",
+            async: false,
+            success: function (reslut) {
+                json = reslut;
+            },
+            error: function (e) {
+                alert("请求失败!");
+            }
+        })
+        return json;
+    }
+
+    //元器件查找
+    function YQJXZ() {
+        var jsondate = ajaxYQJjson($("#tt").val());
+        var datajson = "";
+        if (jsondate != null) {
+            var j = 110;
+            if (jsondate.length < 110) {
+                j = jsondate.length
+            }
+            for (var i = 0; i < j; i++) {
+                datajson += '{title:"' + jsondate[i].Y_Name + ',' + jsondate[i].Y_Ggxh + '" ,Id:"' + jsondate[i].Id + '"},';
+            }
+
+        } else {
+            datajson += '{title:"没有记录"}';
+        }
+        //datajson = eval('[' + datajson + ']');
+        $("#tt").bigAutocomplete({
+            width: 156,
+            scrollHeight: 300,
+            data: datajson,
+            callback: function (data) {
+                $("#yjid").val(data.Id);
+            }
+        });
+    }
+
+    //表单提交
+    function pltjSavaForm() {
+        //表单验证
+        var options = {
+            beforeSubmit: function () {
+                return true;
+            },
+            dataType: "html",//这里是指控制器处理后返回的类型，这里返回json格式。
+            success: function (context) {
+                if ("2" == context) {
+                    $.messager.alert("操作提示", '操作成功！', 'info', function () {
+                        //location.reload();
+                        Closeiform();
+                    });
+                }
+                if ("1" == context)
+                {
+                    $.messager.alert("操作提示", '操作失败！', 'info')
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $.messager.alert("操作提示", '操作失败！', 'error');
+            }
+        }
+        $('#form1').ajaxSubmit(options);
+        return false; //为了不刷新页面,返回false
+    }
+
+    //直接关闭所有弹出框
+    function Closeiform() {
+        var index = parent.layer.getFrameIndex(window.name);
+        parent.layer.close(index);
+    }
+</script>
+
+<style>
+    .table_con {
+        border-collapse: collapse;
+        border: none;
+    }
+
+        .table_con td {
+            border: solid #eae5e5 1px;
+            height: 35px;
+            padding: 0 0 0 5px;
+        }
+
+    .btnspan button {
+        width: 120px;
+        height: 30px;
+        background: #337CA8;
+    }
+</style>
+
+@using (Html.BeginForm("NewcjwxtjEide", "NAReturnList", FormMethod.Post, new { id = "form1", enctype = "multipart/form-data" }))
+{
+    <input type="hidden" id="yjid" name="yjid" />
+    <input type="hidden" id="Id" name="Id" value='@ViewData["Id"]' />
+    <input type="hidden" id="R_Id" name="R_Id" value='@ViewData["R_Id"]' />
+    <div>
+        <table class="table_con" style="width: 100%; color: #000; font-size: 13px;">
+            <tr>
+                <td>
+                    <table style="width: 100%; border: none;">
+                        <tr style="border: none">
+                            <td style="border: none">
+                                生产批号：
+                                <span class="infor-c-input">
+                                    <input type="text" id="TH_SCdate" name="TH_SCdate" onclick="WdatePicker()" />-
+                                    <input type="text" id="TH_Ph" name="TH_Ph" />
+                                </span>
+                                保修：
+                                <span class="infor-c-input">
+                                    <input id="bxqk" name="bxqk" ondblclick="dbJCZB()" />
+                                </span>
+                            </td>
+                        </tr>
+
+                    </table>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <table style="width: 100%; border: none;">
+                        <tr>
+                            <td style="border: none">
+                                不良现象：<span class="infor-c-input"><input id="SelectedxxxData" name="SelectedxxxData"></span>
+                                不良原因：  <span class="infor-c-input">
+                                    <input id="SelectedxxData" name="SelectedxxData">
+                                </span>
+                                <span class="infor-c-input">
+                                    <input id="SelectedyyData" name="SelectedyyData">
+                                </span>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table style="width: 100%">
+                        <tr>
+                            <td style="border: none">
+                                分析人：<span class="infor-c-input"><input type="text" name="Analyst" id="Analyst" /></span>
+                                处理方式：
+                                <span class="infor-c-input">
+                                    <select id="TH_bz" name="TH_bz" style="width: 150px; height: 28px; border: 1px solid #808080">
+                                        <option value="报废">报废</option>
+                                        <option value="补新">补新</option>
+                                        <option value="正常">正常</option>
+                                        <option value="折价补新">折价补新</option>
+                                        <option value="修复">修复</option>
+                                        <option value="翻新">翻新</option>
+                                    </select>
+                                </span>
+
+                                备&nbsp;&nbsp;注：<span class="infor-c-input"><input type="text" name="TH_bz2" id="TH_bz2" /></span>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table style="width: 100%">
+                        <tr>
+                            <td style="border: none">
+                                受损图片： <span class="infor-c-input">
+                                    <input type="file" name="Image" />
+                                </span>
+                                受损图片：<span class="infor-c-input"><input type="file" name="Image2" /></span>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table style="width: 100%">
+                        <tr>
+                            <td style="border: none">
+                                元器件费：<span class="infor-c-input"><input type="text" id="TH_yqjjg" name="TH_yqjjg" /></span>
+                                人工费用：<span class="infor-c-input"><input type="text" id="TH_RGF" name="TH_RGF" /></span>
+                                包材费用：<span class="infor-c-input"><input type="text" id="TH_BCF" name="TH_BCF" /></span>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table style="width: 100%">
+                        <tr>
+                            <td style="border: none; width: 30%">
+                                元  器  件：
+                                <span class="infor-c-input">
+                                    <input type="text" id="tt" name="tt" value="" class="text" onkeyup="YQJXZ()" />
+                                </span>
+                            </td>
+                            <td style="border: none">
+                                <span class="btnspan">
+                                    <button onclick="return pltjSavaForm()">提交</button>
+                                </span>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+
+
+
+    <!--不良现象-->
+    <div id="Div_SelectedxxxData">
+        <div style="padding: 10px; font-size: 14px;" id="DivContent_SelectedxxxData"></div>
+    </div>
+    <!--不良原因-->
+    <div id="Div_SelectedxxData">
+        <div style="padding: 10px; font-size: 14px;" id="DivContent_SelectedxxData"></div>
+    </div>
+    <div id="Div_SelectedyyData">
+        <div style="padding: 10px; font-size: 14px;" id="DivContent_SelectedyyData"></div>
+    </div>
+}
+<script src="~/Scripts/NAjs/NQ_THinfoFX.js"></script>
+<script src="~/Scripts/NAjs/bigAutocomplete.js"></script>
+<style>
+    .bigautocomplete-layout {
+        width: 156px;
+        border: 1px solid #808080;
+        margin-left: 70px;
+    }
+</style>

@@ -1,0 +1,354 @@
+﻿@{
+    ViewBag.Title = "常规电控箱管理列表";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<style>
+    .titletjbg2
+    {
+        height: 40px;
+        line-height: 40px;
+        background: #fff;
+        float: left;
+        width: 100%;
+        border-radius: 4%;
+    }
+
+    .add-infor-title-bg_tj ul
+    {
+        padding: 10px;
+    }
+
+        .add-infor-title-bg_tj ul li
+        {
+            width: 20%;
+            float: left;
+            font-size: 15px;
+        }
+
+    .titletjbg2 ul
+    {
+        padding: 10px;
+    }
+
+        .titletjbg2 ul li
+        {
+            width: 20%;
+            float: left;
+            font-size: 15px;
+        }
+
+    .add-infor-title-bg_header
+    {
+        height: 46px;
+        line-height: 46px;
+        background: #e8e5e5;
+        float: left;
+        width: 100%;
+    }
+
+        .add-infor-title-bg_header ul
+        {
+            /*padding: 10px;*/
+        }
+
+            .add-infor-title-bg_header ul li
+            {
+                width: 20%;
+                float: left;
+                font-size: 18px;
+            }
+
+    #content table
+    {
+        border-collapse: collapse;
+        border: none;
+    }
+
+        #content table td
+        {
+            border: solid #e8e5e5 1px;
+        }
+
+    .a
+    {
+        position: relative;
+        top: expression(this.offsetParent.scrollTop);
+        text-align: center;
+        z-index: 10;
+    }
+
+    .mainDIV
+    {
+        overflow: scroll;
+        height: 380px;
+    }
+</style>
+
+<script type="text/javascript">
+    $(function () {
+        var sort = $("#Pxsort").val();
+        dataGrid(sort, "null","null");
+    })
+
+    function Paix() {
+        var sort = $("#Pxsort").val();
+        var wlsort = $("#wlsort").val();
+        var cpname = $("#cpname").val();
+        if (sort == "null" && wlsort == "null") {
+            $.messager.alert("操作提示", '请选择排序方式！', 'error');
+            return;
+        }
+        if (sort != "null" && wlsort != "null") {
+            $.messager.alert("操作提示", '同时只能选择一中排序方式', 'error');
+            return;
+        }
+        dataGrid(sort, wlsort, cpname);
+    }
+
+    function dataGrid(Sort, val,val1) {
+        var jsonStr;
+        jsonStr = AjxaCgPKCJSON(Sort, "0",val1,val)
+        $("#content").html("");
+        if (jsonStr != null) {
+            var html = "";
+            html += '<table style="width:100%; color:#000; font-size:13px; text-align:center;">';
+            for (var i = 0, j = jsonStr.length; i < j; i++) {
+                html += '<tr>';
+                html += '<td width="15%"  height="30px">' + jsonStr[i].P_Bianhao + '</td>';
+                html += '<td width="10%" height="30px">' + jsonStr[i].P_Name + '</td>';
+                html += '<td width="8%" height="30px">' + jsonStr[i].M_Consumption + '</td>';
+                html += '<td width="8%" height="30px">' + jsonStr[i].W_Consumption + '</td>';
+                html += '<td width="8%" height="30px">' + jsonStr[i].N_Stock + '</td>';
+                html += '<td width="8%" height="30px">' + jsonStr[i].A_Sum + '</td>';
+                if (jsonStr[i].Isbj == "1")
+                    html += '<td width="8%" height="30px" style="color:red">异常</td>';
+                else
+                    html += '<td width="8%" height="30px" color="red">正常</td>';
+                if (jsonStr[i].Isscing != "0")
+                    html += '<td width="10%" height="30px">生产中(' + jsonStr[i].Sjsc_Sum + ')</td>';
+                else
+                    html += '<td width="8%" height="30px">-</td>';
+                html += '<td width="8%" height="30px">' + jsonStr[i].SC_Sum + '</td>';
+                html += '<td width="" height="30px">' + czshow(jsonStr[i].Id, jsonStr[i].Isscing, "0") + '</td>';
+                html += '</tr>';
+            }
+            html += '</table>';
+            $("#content").html(html);
+        }
+
+    }
+
+    //获取全部的常规电控箱的数据
+    //产品库存情况数据
+    function AjxaCgPKCJSON(Sort, Category, cpname, wlsort) {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "../Flow_RoutineStockinfo/DKXGetDATAJson",
+            data: { Sort: Sort, Category: Category, cpname: cpname, wlsort: wlsort },
+            dataType: "json",
+            async: false,
+            success: function (reslut) {
+                json = reslut;
+            },
+            error: function (e) {
+                alert("请求失败");
+            }
+        })
+        return json;
+    }
+
+    //库存更新
+    function Updatekc() {
+        $.ajax({
+            type: "POST",
+            url: "/Flow_RoutineStockinfo/DKXUpdateInventory",
+            data: { type: "0" },
+            dataType: "json",
+            async: false,
+            success: function (reslut) {
+                window.location = "../Flow_RoutineStockinfo/dkxlist";
+            },
+            error: function (e) {
+                alert("请求失败");
+            }
+        })
+    }
+
+    //操作
+    function czshow(val, val2, val3) {
+        var Id = "'" + val + "'";
+        var scing = "'" + val2 + "'";
+        var s = '<a href="#" onclick="UpdateConsumption(' + Id + ')">用量</a>&nbsp;&nbsp;';
+        var t = '<a href="#" onclick="MakePlan(' + Id + "," + scing + "," + val3 + ')">计划</a>&nbsp;&nbsp;';
+        var z = '<a href="#" onclick="DetcgsccpEide(' + Id + "," + val3 + ')">删除</a>&nbsp;&nbsp;';
+        return s + t + z;
+    }
+
+    //用量（月，周）编辑页面
+    function UpdateConsumption(val) {
+        var id = val;
+        if (id != "") {
+            $('#windowDia').html("<iframe src=../Flow_RoutineStockinfo/DKXupdateConsumption?Id=" + id + " style='border:0px;' width='450px' height='230px'></iframe>");
+            $("#windowDia").window({
+                title: '用量修改',
+                modal: true,
+                closed: false,
+                width: 500,
+                height: 310,
+            });
+        }
+    }
+
+    //制定生产计划
+    function MakePlan(val, val2, val3) {
+        if (val2 == "0") {
+            var id = val;
+            if (id != "") {
+                $('#windowDia').html("<iframe src=../Flow_RoutineStockinfo/DKXPlanproductionView?Id=" + id + "&&type=" + val3 + "&&  style='border:0px;' width='500px' height='400px'></iframe>");
+                $("#windowDia").window({
+                    title: '生产计划',
+                    modal: true,
+                    closed: false,
+                    width: 560,
+                    height: 310,
+                });
+            }
+        } else {
+            $.messager.alert("操作提示", '已经存在生产计划单，无需重复下单！', 'error');
+        }
+    }
+
+    //删除页面（禁用页面）
+    function DetcgsccpEide(Id, type) {
+        $.messager.confirm("操作提示", '确定要删除该产品吗？', function (data) {
+            if (data) {
+                var shreslut = deleteEide(Id);
+                if (shreslut == "0") {
+                    $.messager.alert("提示", '该产品已经删除！', 'info', function () {
+                        if (type == "0")
+                            location.href = "../Flow_RoutineStockinfo/dkxlist";
+                        else
+                            location.href = "../Flow_RoutineStockinfo/dkxlist";
+                    });
+                }
+                else {
+                    $.messager.alert("提示", '删除失败！', 'info', function () {
+                        if (type == "0")
+                            location.href = "../Flow_RoutineStockinfo/dkxlist";
+                        else
+                            location.href = "../Flow_RoutineStockinfo/dkxlist";
+                    });
+                }
+            }
+        })
+    }
+
+    //删除
+    function deleteEide(val) {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "/Flow_RoutineStockinfo/DelcgscEide",
+            data: { Id: val },
+            dataType: "html",
+            async: false,
+            success: function (reslut) {
+                json = reslut;
+            },
+            error: function (e) {
+                alert("网路异常，请重试！");
+            }
+        })
+        return json;
+    }
+</script>
+
+
+
+<div class="infor">
+    <div class="inquiry1">
+        <fieldset>
+            <ul>
+                <li>
+                    <span>告警数排序：</span>
+                    <span class="inquiry-input">
+                        <select id="Pxsort" name="Pxsort">
+                            <option value="null">请选择</option>
+                            <option value="0">倒序</option>
+                            <option value="1">正序</option>
+                        </select>
+                    </span>
+                </li>
+                <li>
+                    <span>物料代码排序：</span>
+                    <span class="inquiry-input">
+                        <select id="wlsort" name="wlsort">
+                            <option value="null">请选择</option>
+                            <option value="0">倒序</option>
+                            <option value="1">正序</option>
+                        </select>
+                    </span>
+                </li>
+                <li>
+                    <span>产品名称：</span>
+                    <span class="inquiry-input">
+                        <input type="text" id="cpname" name="cpname" />
+                    </span>
+                </li>
+                <li>
+                    <span class="inquiry-input">
+                        <button type="button" onclick="Paix()">查询</button>
+                    </span>
+                    <span class="inquiry-input">
+                        <button type="button" onclick="return addClick('/Flow_RoutineStockinfo/DKXAddPage')">新增</button>
+                    </span>
+
+                    <span class="inquiry-input">
+                        <button type="button" onclick="return Updatekc()">更新库存</button>
+                    </span>
+                    <span class="inquiry-input">
+                        <button type="button" onclick="return addClick('/Flow_RoutineStockinfo/dkxlist')">刷新</button>
+                    </span>
+
+                </li>
+            </ul>
+        </fieldset>
+    </div>
+</div>
+
+<div style="width: 95%; margin: auto; margin-top: 10px; border: 1px solid #e8e5e5;">
+    <div class="add-infor-title-bg_header">
+        <table style="width: 100%; color: #000; font-size: 13px; text-align: center;">
+            <thead>
+                <tr class="a">
+                    <td width="15%">物料代码
+                    </td>
+                    <td width="10%">名称
+                    </td>
+                    <td width="8%">月用量
+                    </td>
+                    <td width="8%">周用量
+                    </td>
+                    <td width="8%">及时库存
+                    </td>
+                    <td width="8%">报警数量
+                    </td>
+                    <td width="8%">是否异常
+                    </td>
+                    <td width="8%">是否生产
+                    </td>
+                    <td width="8%">需要生产
+                    </td>
+                    <td width="">操作
+                    </td>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <div id="content" style="width: 100%;" class="mainDIV">
+    </div>
+</div>
+
+<div id="windowDia" class="easyui-window" closed="true" style="width: 600px; height: 500px; padding: 10px;"></div>

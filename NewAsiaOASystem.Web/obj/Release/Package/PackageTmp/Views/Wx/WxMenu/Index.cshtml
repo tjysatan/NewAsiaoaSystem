@@ -1,0 +1,130 @@
+﻿@model NewAsiaOASystem.ViewModel.PagerInfo<NewAsiaOASystem.ViewModel.WX_MenusView>
+@{
+    ViewBag.Title = "自定义菜单管理";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@section HeadContent{
+    <script src="~/Scripts/Sys/SysMenu.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            BindGrid();
+        })
+        function BindGrid() {
+             @{
+                
+                 if (null != Model)
+                 {
+                     string json = Model.GetPagingDataJson;//获取json数据
+                    @: var jsonStr =@Html.Raw(json); 
+                              //  @: $("#dg").datagrid('loadData', jsonStr); 
+                 }
+              }
+            if (typeof(jsonStr)!="undefined") {
+                var html="";
+                html='<table cellpadding="0" cellspacing="0">';
+                for (var i = 0,j=jsonStr.length; i < j; i++) {
+                    if (i%2==0)
+                        html+='<tr class="h-table-content-r1">';
+                    else
+                        html+='<tr class="h-table-content-r">';
+                    html+='<td width="30"><input type="checkbox" name="ContentChecked" value="'+jsonStr[i].Id+'"/></td>';
+                    if(jsonStr[i].M_ParentID==""||jsonStr[i].M_ParentID==null)
+                        html+='<td width="150">'+jsonStr[i].M_Name+'</td>';
+                    else
+                        html+='<td width="150">-</td>'
+                    if(jsonStr[i].M_ParentID!=""||jsonStr[i].M_ParentID!=null)
+                        html+='<td width="150">'+jsonStr[i].M_Name+'</td>';
+                    else
+                        html+='<td width="150">-</td>'
+                    if (jsonStr[i].M_Key!=null)
+                        html+='<td width="90">'+jsonStr[i].M_Key+'</td>';
+                    else
+                        html+='<td width="90">-</td>';
+                    if(jsonStr[i].M_Url!=null)
+                        html+='<td width="200">'+jsonStr[i].M_Url+'</td>';
+                    else
+                        html+='<td width="200">-</td>';
+                   
+                
+                    html+='<td width="150">'+showDate(jsonStr[i].M_CreateTime)+'</td>';
+                    html+="</tr>";
+                }
+                html+='</table>';
+                $(".h-table-content").append(html);
+            }
+        }
+    </script>
+}
+
+<!--==================================数据列表=============================-->
+<div class="h-right">
+    <div class="h-right-c">
+     @*   <div class="h-right-title">您当前的位置：自定义菜单管理</div>*@
+        <div class="inquiry-input" style="margin: 10px 0 10px 10px;">
+            <span class="inquiry-input">
+                <button onclick="addClick('/WxMenu/addPage')">添加菜单</button></span>
+            <span class="inquiry-input">
+                <button onclick="del('/WxMenu/Delete')">删除</button></span>
+            <span class="inquiry-input">
+                <button onclick="update('/WxMenu/EditPage')">编辑</button></span>
+            <span class="inquiry-input">
+                <button onclick="location.href='/WxMenu/Index'">刷新</button></span>
+        </div>
+
+        <div class="h-table">
+            <div class="h-table-content">
+                <table cellpadding="0" cellspacing="0" class="h-right-table-title1" style="border: 5px;">
+                    <tr>
+                        <td width="30">
+                            <input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" /></td>
+                        <td width="150">父级菜单</td>
+                        <td width="150">子菜单</td>
+                        <td width="90">关联关键词</td>
+                        <td width="200">URL</td>
+                        <td width="150">创建时间</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="inquiry-input" style="margin: 10px 0 10px 10px;">
+            @using (Html.BeginForm("GetWx_Menu", "WxMenu", FormMethod.Post, new { id = "form1" }))
+            { 
+              <div class="z_Menu">
+                    <span class="inquiry-inputM">
+                        <button onclick="return Wx_MenusubmitForm('/WxMenu/Index','form1')">生成自定义菜单</button>
+                    </span>
+                    <div style="padding-left: 10px;font-size:14px;color: red; margin-top:15px;">生成自定义菜单关键步骤:：</div>
+                    <div style="padding-left: 40px;font-size:14px;color: red;padding-top:5px; ">第一步：请完成【添加菜单】操作</div>
+                    <div style="padding-left: 40px;font-size:14px;color: red; ">第二步：请点击【生成自定义菜单】按钮</div>
+                    <div style="padding-left: 40px;font-size:14px;color: red; ">注：1级菜单最多只能开启3个，2级子菜单最多开启5个</div>
+                     <div style="padding-left: 40px;font-size:14px;color: red; ">官方说明：修改菜单后，微信用户需重新关注或者最迟隔天可看到修改后效果！</div>
+                </div>  
+            }
+
+        </div>
+    </div>
+
+</div>
+<!--==========================输出分页按钮=========================-->
+@* <div class="pagin">
+        @Html.ShowPageNavigate(Model.CurrentPageIndex, Model.PageSize, Model.RecordCount)
+    </div>*@
+
+
+
+
+
+
+
+
+@*@using (Html.BeginForm("DeleteWx_Menu", "WxMenu", FormMethod.Post, new { id = "form2" }))
+  { 
+        <div > <span class="inquiry-input"><button onclick="return Wx_MenusubmitForm('/WxMenu/Index','form2')">删除自定义菜单</button></span></div>
+ }
+
+@using (Html.BeginForm("CreateWx_Menu", "WxMenu", FormMethod.Post, new { id = "form3" }))
+  { 
+        <div > <span class="inquiry-input"><button onclick="return Wx_MenusubmitForm('/WxMenu/Index','form3')">创建自定义菜单</button></span></div>
+ }*@
+

@@ -1,0 +1,37 @@
+﻿<?xml version="1.0"  encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="NewAsiaOASystem.DBModel" assembly="NewAsiaOASystem.DBModel">
+  <class name="NQ_OASupplier" table="NQ_OASupplier">
+    <id name="Id" column="Id"  unsaved-value="0">
+      <generator class="identity"/>
+    </id>
+
+    <property name="FAddress" column="FAddress" />
+    <property name="FPhone" column="FPhone" />
+
+    <property name="FMobilePhone" column="FMobilePhone" />
+    <property name="FNumber" column="FNumber" />
+
+    <property name="FName" column="FName" />
+
+    <property name="FContact" column="FContact" />
+    <property name="FIsChecked" column="FIsChecked" />
+    <property name="FIsDeleted" column="FIsDeleted" />
+    <property name="FSupplierType" column="FSupplierType" />
+    <property name="FCreateDate" column="FCreateDate" />
+    <property name="FUpdateDate" column="FUpdateDate" />
+    <property name="FCreateUser" column="FCreateUser" />
+    <property name="FUpdateUser" column="FUpdateUser" />
+
+    <!--<bag name="baseitems" table="NQ_SupplierAndBaseitem"  >
+      <key column="supplierid"/>
+      <many-to-many class="NQ_SupplierAndBaseitem" column="itemid" not-found="ignore"/>
+    </bag>-->
+
+    <!--对应多个中间表-->
+    <bag name="baseitems" table="NQ_SupplierAndBaseitem" cascade="all" lazy="false" >
+      <key column="supplierid" ></key>
+      <many-to-many class="NQ_YJinfo" column="itemid"  not-found="ignore"></many-to-many>
+    </bag>
+
+  </class>
+</hibernate-mapping>

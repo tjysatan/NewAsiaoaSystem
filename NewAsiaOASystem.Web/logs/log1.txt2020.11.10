@@ -1,0 +1,15 @@
+2020-11-10 15:48:59,911 [6] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2020-11-10 15:48:59,911 [6] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2020-11-10 15:48:59,911 [6] ERROR ApplicationInfoLog [(null)] <(null)< - 未将对象引用设置到对象的实例。
+2020-11-10 15:48:59,911 [6] ERROR ApplicationInfoLog [(null)] <(null)< - Void loginsession(NewAsiaOASystem.ViewModel.SessionUser)
+2020-11-10 15:48:59,911 [6] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================
+2020-11-10 15:49:14,372 [5] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2020-11-10 15:49:14,372 [5] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2020-11-10 15:49:14,372 [5] ERROR ApplicationInfoLog [(null)] <(null)< - 未将对象引用设置到对象的实例。
+2020-11-10 15:49:14,372 [5] ERROR ApplicationInfoLog [(null)] <(null)< - Void loginsession(NewAsiaOASystem.ViewModel.SessionUser)
+2020-11-10 15:49:14,372 [5] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================
+2020-11-10 15:50:20,636 [49] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2020-11-10 15:50:20,636 [49] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2020-11-10 15:50:20,636 [49] ERROR ApplicationInfoLog [(null)] <(null)< - 未将对象引用设置到对象的实例。
+2020-11-10 15:50:20,636 [49] ERROR ApplicationInfoLog [(null)] <(null)< - System.Web.Mvc.ActionResult wxlist(System.Nullable`1[System.Int32])
+2020-11-10 15:50:20,636 [49] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================

@@ -1,0 +1,349 @@
+﻿@model NewAsiaOASystem.ViewModel.NAReturnListView
+@{
+    ViewBag.Title = "品保返退货编辑页面";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@section HeadContent{
+    <script type="text/javascript">
+        $(function () {
+            var pname = AjaxPerson_Name('@Model.CreatePerson');//仓库管理员
+            $("#Pname").html(pname.UserName);
+            dataGrid();//退货明细
+            var kfzyname = AjaxPerson_Name('@Model.Kfzy');//客服专员
+            $("#kfzyname").html(kfzyname.UserName);
+            var kfzgname = AjaxPerson_Name('@Model.Kfzg');//客服主管
+            $("#kfzgname").html(kfzgname.UserName);
+            var dqcjname = AjaxPerson_Name('@Model.R_CJFZR');//电气车间主管
+            $("#CQEname").html(dqcjname.UserName);
+            var Cust = AjaxCust_Name('@Model.C_Id');//客户信息
+            $("#Cname").html(Cust.Name);
+            $("#Clxr").html(Cust.LxrName);
+            $("#Ctel").html(Cust.Tel);
+            var Per = AjaxR_Product('@Model.R_pId');//返退产品信息
+            $("#R_Per").html(Per.Name)
+            var Resason = AjaxResasonjson('@Model.R_FTyyp');//父级返退货原因
+            $("#R_ResasonP").html(Resason.Name);
+            if ('@Model.R_FTyy' != null && '@Model.R_FTyy' != "") {
+                var ResasonS = AjaxResasonjson('@Model.R_FTyy');//
+               $("#R_Resason").html(ResasonS.Name);
+           }
+            if ('@Model.R_FTyysm' != null) {
+                $("#R_Rqtyy").html('@Model.R_FTyysm');
+            }
+            if ('@Model.R_CLjg' == "0") {
+                $("#r_cljg").html(Showcljg('@Model.R_CLjg'))
+            } else if ('@Model.R_CLjg' == "1") {
+                $("#r_cljg").html(Showcljg('@Model.R_CLjg') + '@Model.R_CLFY' + "元")
+            } else if ('@Model.R_CLjg' == "2") {
+                $("#r_cljg").html(Showcljg('@Model.R_CLjg') + '@Model.R_CLQTSM')
+            } else if ('@Model.R_CLjg' == "3") {
+                $("#r_cljg").html(Showcljg('@Model.R_CLjg'))
+            }
+            //电器车间
+            if('@Model.FTtype'=='0')
+            {
+                $("#ftlx").html("维修");
+                $("#sfzb").css('display', 'block');
+                if ('@Model.R_isbxqn' == '0')
+                {
+                    $("#sfzbn").html("是")
+                } else if ('@Model.R_isbxqn' == '1')
+                {
+                    $("#sfzbn").html("否")
+                }
+                $("#bzpd").css('display', 'none');
+                $("#qtqk").css('display', 'none');
+            } else if ('@Model.FTtype' == '1') {
+                $("#ftlx").html("翻新");
+                $("#bzpd").css('display', 'block');
+                $("#qtqk").css('display', 'block');
+                $("#pzpd").html(pzpd('@Model.R_Pzpd'))
+                if ('@Model.R_Pzpd' == '3')
+                {
+                    $("#qtqksm").html('@Model.R_qtqksm')
+                }
+                $("#fxjljs").css('display', 'block');
+               // $("#fxjljsc").html();
+            }
+            if ('@Model.R_bbzrbm' != "") {
+                @*   $("#zrbm").find("option[value='@Model.R_bbzrbm']").attr("selected", true);*@
+                $("#zrbm").val('@Model.R_bbzrbm')
+            }
+
+        })
+
+
+        //退货明细查看
+        function dataGrid() {
+            var jsonStr;
+            jsonStr = eval(ajaxthdetailjson('@Model.Id'));
+            $("#content").html("");
+            //var zsl = 0;//退货总数量
+            if (jsonStr != null) {
+                if (typeof (jsonStr) != "undefined") {
+                    var html = "";
+                    html = '<table cellpadding="0" cellspacing="0" style="width:100%;">';
+                    for (var i = 0, j = jsonStr.length; i < j; i++) {
+                        var Perinfo = GetPerinfobyId(jsonStr[i].P_Id);
+                        if (i % 2 == 0)
+                            html += '<tr class="h-table-content-r1">';
+                        else
+                            html += '<tr class="h-table-content-r">';
+                        html += '<td width="40%">' + Perinfo.Pname + '</td>';
+                        html += '<td width="30%">' + jsonStr[i].SL + '</td>';
+                        html += '<td width="230%">' + Perinfo.dw + '</td>';
+                        //html += '<td width="20%" align="center">' + czshow(jsonStr[i].Id) + '</td>';
+                        html += '</tr>';
+                        //zsl = Number(zsl) + Number(jsonStr[i].SL);
+                    }
+                    html += '</table>';
+                    //$("#zsl").val(zsl);
+                    $("#content").html(html);
+                }
+            }
+        }
+
+    </script>
+ 
+    }
+
+@using (Html.BeginForm("dzEide", "NAReturnList", FormMethod.Post, new { id = "form1" }))
+{
+    <div class="infor">
+        <div class="infor-content" style="width: 100%;">
+            @Html.HiddenFor(m => m.Id)
+            <!----返退货单ID---->
+            @Html.HiddenFor(m => m.FTtype)
+            @Html.HiddenFor(m => m.R_isbxqn)
+            @Html.HiddenFor(m => m.R_Pzpd)
+            @Html.HiddenFor(m=>m.R_bbzrbm)
+
+            <div class="add-infor-title">
+                <span class="w-register">退货单</span>
+                <span class="w-register" style="float:right; margin-right:10px; cursor:pointer" id="ckck" onclick="ckdetail()" >收起</span>
+            </div>
+            <div id="thdetail" style="display:block">
+            <ul class="infor-c  infor-c-bg">
+                <li class="infor-c-in"><span class="infor-c-width">仓库：</span><span class="infor-c-q"><label id="Pname"></label></span></li>
+                <li class="infor-c-in"><span class="infor-c-width">提交时间：</span><span class="infor-c-q">@Model.CreateTime</span></li>
+            </ul>
+             <!----退货产品明细---->
+           <div class="h-table-content"   style="width:100%; margin:0; padding:0;">
+              <div class="h-table-content">
+                   <table cellpadding="0" cellspacing="0" class="add-infor-title-bg" style="border: none; width: 100%;">
+                <tr>
+                    <td style="width: 40%">货品名称
+                    </td>
+                    <td style="width: 30%">数量
+                    </td>
+                    <td style="width: 30%">单位
+                    </td>
+                </tr>
+            </table>
+                   <div id="content"></div>
+              </div>
+          </div>
+            </div>
+
+            <!----基础信息---->
+            <div class="add-infor-title">
+                <span class="w-register">基础信息</span>
+                <span class="w-register" style="float:right; margin-right:10px; cursor:pointer" id="jcck" onclick="jcinfock()" >收起</span>
+            </div>
+             <div id="jcinfo" style="min-height:280px; display:block">
+            <ul class="infor-c">
+                <li class="infor-c-in"><span class="infor-c-width">客户名称：</span><span class="infor-c-q"><label id="Cname"></label></span></li>
+                <li class="infor-c-in"><span class="infor-c-width">客户联系人：</span><span class="infor-c-q"><label id="Clxr"></label></span></li>
+                <li class="infor-c-in"><span class="infor-c-width">联系电话：</span><span class="infor-c-q"><label id="Ctel"></label></span></li>
+            </ul>
+            <ul class="infor-c">
+                <li class="infor-c-in">
+                    <span class="infor-c-width">返退产品：</span>
+                    <span class="infor-c-q">
+                        <label id="R_Per"></label>
+                    </span>
+                </li>
+                <li class="infor-c-in">
+                    <span class="infor-c-width">返退时间：</span>
+                    <span class="infor-c-q">
+                        @Model.R_FTdate
+                    </span>
+                </li>
+                <li class="infor-c-in">
+                    <span class="infor-c-width">返退数量：</span>
+                    <span class="infor-c-q">@Model.R_Number   套/件</span>
+                </li>
+            </ul>
+            <ul class="infor-c">
+                <li class="infor-c-in">
+                    <span class="infor-c-width">返退货原因记录：</span>
+                    <span class="infor-c-q">
+                        <label id="R_ResasonP"></label>
+                        ,<label id="R_Resason"></label>
+                        <label id="R_Rqtyy"></label>
+                    </span>
+                </li>
+                <li class="infor-c-in">
+                    <span class="infor-c-width">要求处理结果：</span>
+                    <span class="infor-c-q">
+                        <label id="r_cljg"></label>
+                        <label id="r_jzfy"></label>
+                        <label id="r_qtyy"></label>
+                    </span>
+                </li>
+
+                <li class="infor-c-in">
+                    <span class="infor-c-width">涉及费用：</span>
+                    <span class="infor-c-q">运费 @Model.R_Yf 元 &nbsp;&nbsp;&nbsp;&nbsp;客户索赔 @Model.R_sp  元</span>
+                </li>
+            </ul>
+            <ul class="infor-c">
+                <li class="infor-c-in">
+                    <span class="infor-c-width">补充要求：</span>
+                    <span class="infor-c-q">@Model.Remark1</span>
+                </li>
+            </ul>
+            <ul class="infor-c">
+                <li class="infor-c-in">
+                    <span class="infor-c-width">客服专员：</span>
+                    <span class="infor-c-q">
+                        <label id="kfzyname"></label>
+                    </span>
+                </li>
+                <li class="infor-c-in">
+                    <span class="infor-c-width">客服主管：</span>
+                    <span class="infor-c-q">
+                        <label id="kfzgname"></label>
+                    </span>
+                </li>
+                <li class="infor-c-in">
+                    <span class="infor-c-width">日期：</span>
+                    <span class="infor-c-q">@Model.ClDate</span>
+                </li>
+            </ul>
+            </div>
+
+            <!----电气车间---->
+            <div class="add-infor-title">
+                <span class="w-register">电气车间</span>
+                <span class="w-register" style="float:right; margin-right:10px; cursor:pointer" id="dqcjck" onclick="cjinfock()" >收起</span>
+            </div>
+            <div id="dqcjinfo" style="display:block">
+            <ul class="infor-c">
+                <li class="infor-c-in">
+                    <span class="infor-c-width">返退类型：</span>
+                    <span class="infor-c-q" id="ftlx">
+                     
+                    </span>
+                </li>
+                <li class="infor-c-in" id="sfzb" style="display: none">
+                    <span class="infor-c-width">是否在保：</span>
+                    <span class="infor-c-q">
+                       <label id="sfzbn"></label>
+                    </span>
+                </li>
+                <li class="infor-c-in" id="fxjl" >
+                    @*<a class="infor-c-width" href="../NAReturnList/ThFXlist?Id=@Model.Id">维修分析记录</a>*@
+                    <a class="infor-c-width"  style="cursor:pointer" onclick="fxcktz('@Model.Id')">维修分析记录</a>
+                </li>
+                 
+                <li class="infor-c-in" id="bzpd" style="display: none">
+                    <span class="infor-c-width">品质判定:</span>
+                    <span class="infor-c-q">
+                    <label id="pzpd"></label>
+                    </span>
+                </li>
+                <li id="qtqk" style="display: none">
+                    <span class="infor-c-input">
+                        <label id="qtqksm"></label>
+                    </span>
+                </li>
+            </ul>
+            <ul class="infor-c" id="fxjljs" style="display: none">
+                <li>
+                    <span class="infor-c-width">翻新记录简述：</span>
+                    <span class="infor-c-input">
+                      @*  <label id="fxjljsc"></label>*@
+                        @Model.R_Fxjlcon
+                    </span>
+                </li>
+            </ul>
+            <ul class="infor-c">
+                <li class="infor-c-in">
+                    <span class="infor-c-width">元器件：</span>
+                    <span class="infor-c-q">
+                    @Model.R_YQJ 元
+                    </span>
+                </li>
+                 <li class="infor-c-in">
+                    <span class="infor-c-width">人工费：</span>
+                    <span class="infor-c-q">
+                       @Model.R_RGF 元
+                    </span>
+                </li>
+                <li class="infor-c-in">
+                    <span class="infor-c-width">包材费：</span>
+                    <span class="infor-c-q">
+                        @Model.R_BCF 元
+                    </span>
+                </li>
+            </ul>
+            <ul class="infor-c">
+                <li class="infor-c-in">
+                    <span class="infor-c-width">电气车间负责人：</span>
+                    <span class="infor-c-q">
+                        <label id="CQEname"></label>
+                    </span>
+                </li>
+                <li class="infor-c-in">
+                    <span class="infor-c-width">日期：</span>
+                    <span class="infor-c-q">
+                        @Model.R_cjcldate
+                    </span>
+                </li>
+               </ul>
+            </div>
+
+
+            <div class="add-infor-title-bg"><span class="w-register">品保部</span></div>
+
+            <ul class="infor-c">
+                <li>
+                    <span class="infor-c-width">责任判定：</span>
+                    <span class="infor-c-input">
+                        @Html.TextAreaFor(m => m.R_bbzrpd, new { @class = "text_field" });
+                    </span>
+                </li>
+                <li class="infor-c-in">
+                    <span class="infor-c-width">责任部门：</span>
+                    <span class="infor-c-input">
+                        <select id="zrbm" name="zrbm" multiple="multiple" style="border:1px solid #808080; height:100px;">
+                            <option value="品保部">品保部</option>
+                            <option value="技术部">技术部</option>
+                            <option value="制造部">制造部</option>
+                            <option value="营销部">营销部</option>
+                            <option value="其他部门">其他部门</option>
+                            <option value="客户单位">客户单位</option>
+                            <option value="仓库">仓库</option>
+                        </select>
+                        </span>
+                </li>
+                <li class="infor-c-in">
+
+                </li>
+            </ul>
+
+
+           <div class="inquiry-input infor-b">
+            <span>
+                <button onclick="return dzSavaForm()">保存</button></span><span>
+                <button onclick="return RedirectUrl('/NAReturnList/dzlist')">返回</button></span>
+           </div>
+        </div>
+          
+    </div>
+}
+
+<script src="~/Scripts/NAjs/NAReturnList.js"></script>
+<div id="windowDia" class="easyui-window" closed="true" style="width:680px; height: 600px; padding: 10px;"></div>

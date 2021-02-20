@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+    namespace="NewAsiaOASystem.DBModel" assembly="NewAsiaOASystem.DBModel">
+  <class name="WX_Menus" table="WX_Menus">
+     
+    <id name="Id" column="Id" type="string" unsaved-value="0">
+      <generator class="uuid.hex"/>
+    </id>
+   
+    <property name="M_Name">
+      <column name="M_Name"/>
+    </property>
+    <property name="M_Type">
+      <column name="M_Type"/>
+    </property>
+    <property name="M_Key">
+      <column name="M_Key"/>
+    </property>
+    <property name="M_Url">
+      <column name="M_Url"/>
+    </property>
+    <property name="M_Level">
+      <column name="M_Level"/>
+    </property>
+    <property name="M_ParentID">
+      <column name="M_ParentID"/>
+    </property>
+    <property name="M_IsValid">
+      <column name="M_IsValid"/>
+    </property>
+    <property name="M_CreateTime">
+      <column name="M_CreateTime"/>
+    </property>
+    <property name="M_CreateUser">
+      <column name="M_CreateUser"/>
+    </property>
+
+    <property name="Sort">
+      <column name="Sort"/>
+    </property>
+
+  </class>
+
+</hibernate-mapping>

@@ -1,0 +1,109 @@
+﻿@{
+    ViewBag.Title = "电控箱生产各个工段的人员";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<script src="~/Scripts/NAjs/layui.js"></script>
+<script type="text/javascript">
+
+    $(function () {
+        Getajaxjson();
+    })
+    //
+    function Getajaxjson()
+    {
+        $.ajax({
+            url: "../Flow_PlanProductioninfo/DKXscjhInfojson",
+            type: "POST",
+            data: { Id:'@ViewData["Id"]'},
+            dataType: "json",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                htmlpj(response)
+
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+    }
+   //html拼接
+    function htmlpj(str)
+    {
+        var strjson = str;
+        var html = "";
+        if (str != "" && str != null) {
+            if (strjson.gwy != null && strjson.gwy != "")  
+                html += '<table style="width: 100%"><tr><td>领料、拆包打底板:' + strjson.gwy + '</td></tr></table>';
+            else
+                html += '<table style="width: 100%"><tr><td>领料、拆包打底板:-</td></tr></table>';
+            html += '<hr class="layui-bg-blue">';
+            if (strjson.gwe != null && strjson.gwe != "")
+                html += '<table style="width: 100%"><tr><td>接控制线:' + strjson.gwe + '</td></tr></table>';
+            else
+                html += '<table style="width: 100%"><tr><td>接控制线:-</td></tr></table>';
+            html += '<hr class="layui-bg-blue">';
+            if (strjson.gws != null && strjson.gws != "")
+                html += '<table style="width: 100%"><tr><td>接主线:' + strjson.gws + '</td></tr></table>';
+            else
+                html += '<table style="width: 100%"><tr><td>接主线:-</td></tr></table>';
+            html += '<hr class="layui-bg-blue">';
+            if (strjson.gwsi != null && strjson.gwsi != "")
+                html += '<table style="width: 100%"><tr><td>上温控线、绕绕线:' + strjson.gwsi + '</td></tr></table>';
+            else
+                html += '<table style="width: 100%"><tr><td>上温控线、绕绕线:-</td></tr></table>';
+            html += '<hr class="layui-bg-blue">';
+            if (strjson.gww != null && strjson.gww != "")
+                html += '<table style="width: 100%"><tr><td>面板装箱:' + strjson.gww + '</td></tr></table>';
+            else
+                html += '<table style="width: 100%"><tr><td>面板装箱:-</td></tr></table>';
+            html += '<hr class="layui-bg-blue">';
+            if (strjson.gwl != null && strjson.gwl != "")
+                html += '<table style="width: 100%"><tr><td>底板装箱:' + strjson.gwl + '</td></tr></table>';
+            else
+                html += '<table style="width: 100%"><tr><td>底板装箱:-</td></tr></table>';
+            if (strjson.gwq != null && strjson.gwq != "")
+                html += '<table style="width: 100%"><tr><td>接温控线:' + strjson.gwq + '</td></tr></table>';
+            else
+                html += '<table style="width: 100%"><tr><td>接温控线:-</td></tr></table>';
+            html += '<hr class="layui-bg-blue">';
+            if (strjson.gwb != null && strjson.gwb != "")
+                html += '<table style="width: 100%"><tr><td>焊灯:' + strjson.gwb + '</td></tr></table>';
+            else
+                html += '<table style="width: 100%"><tr><td>焊灯:-</td></tr></table>';
+            html += '<hr class="layui-bg-blue">';
+            if (strjson.gwj != null && strjson.gwj != "")
+                html += '<table style="width: 100%"><tr><td>调式:' + strjson.gwj + '</td></tr></table>';
+            else
+                html += '<table style="width: 100%"><tr><td>调式:-</td></tr></table>';
+            html += '<hr class="layui-bg-blue">';
+            if (strjson.gwshi != null && strjson.gwshi != "")
+                html += '<table style="width: 100%"><tr><td>打包入库:' + strjson.gwshi + '</td></tr></table>';
+            else
+                html += '<table style="width: 100%"><tr><td>打包入库:-</td></tr></table>';
+            html += '<hr class="layui-bg-blue">';
+        }
+        else {
+            html = "无数据~~";
+        }
+        $("#constr").html(html);
+    }
+
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+ </script>
+
+<div style="width: 90%; padding: 20px 20px 0 20px" id="constr">
+
+</div>

@@ -1,0 +1,415 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{F20C75B3-412E-4673-9AF0-F65CF90590CC}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>NewAsiaOASystem.DBModel</RootNamespace>
+    <AssemblyName>NewAsiaOASystem.DBModel</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Spring.Core">
+      <HintPath>..\NewAsiaOASystem.Dao\bin\Debug\Spring.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Model\IQC\IQC_JYDDinfo.cs" />
+    <Compile Include="Model\IQC\IQC_JYDjyconinfo.cs" />
+    <Compile Include="Model\IQC\IQC_llNoticeMXordinfo.cs" />
+    <Compile Include="Model\IQC\IQC_llNoticeordinfo.cs" />
+    <Compile Include="Model\NAFlow\Flow_DKXPlanPPrintinfo.cs" />
+    <Compile Include="Model\NewAsiaOASystem\DKX\DKX_CONTROL_LIST.cs" />
+    <Compile Include="Model\NewAsiaOASystem\DKX\DKX_CONTROL_LIST_DETAIL.cs" />
+    <Compile Include="Model\NewAsiaOASystem\DKX\DKX_CPInfo.cs" />
+    <Compile Include="Model\NewAsiaOASystem\DKX\DKX_DDCLyqNoteInfo.cs" />
+    <Compile Include="Model\NewAsiaOASystem\DKX\DKX_DDinfo.cs" />
+    <Compile Include="Model\NewAsiaOASystem\DKX\DKX_DDtypeinfo.cs" />
+    <Compile Include="Model\NewAsiaOASystem\DKX\DKX_DKXtypeandgcs.cs" />
+    <Compile Include="Model\Iot\Bb_Update.cs" />
+    <Compile Include="Model\IQC\IQC_Jyconstrinfo.cs" />
+    <Compile Include="Model\IQC\IQC_Jyffinfo.cs" />
+    <Compile Include="Model\IQC\IQC_SopInfo.cs" />
+    <Compile Include="Model\NACG\CG_aqkc.cs" />
+    <Compile Include="Model\NAFlow\Flow_Ajaxtxdate.cs" />
+    <Compile Include="Model\NAFlow\Flow_NonSProductinfo.cs" />
+    <Compile Include="Model\NAFlow\Flow_PlanPPrintinfo.cs" />
+    <Compile Include="Model\NAFlow\Flow_PlanProductioninfo.cs" />
+    <Compile Include="Model\NAFlow\Flow_Pleasepurchaseinfo.cs" />
+    <Compile Include="Model\NAFlow\Flow_PleaseYQJinfo.cs" />
+    <Compile Include="Model\NAFlow\Flow_ProductionNoticeinfo.cs" />
+    <Compile Include="Model\NAFlow\Flow_RoutineStockinfo.cs" />
+    <Compile Include="Model\NewAsiaOASystem\20150509WL_Jxqnumber.cs" />
+    <Compile Include="Model\NewAsiaOASystem\Act_SignNamelistinfo.cs" />
+    <Compile Include="Model\NewAsiaOASystem\CG_Detailinfo.cs" />
+    <Compile Include="Model\NewAsiaOASystem\CG_info.cs" />
+    <Compile Include="Model\NewAsiaOASystem\DisImmuneCenter.cs" />
+    <Compile Include="Model\Iot\Point_info.cs" />
+    <Compile Include="Model\NewAsiaOASystem\DKX\DKX_GCSinfo.cs" />
+    <Compile Include="Model\NewAsiaOASystem\DKX\DKX_k3Bominfo.cs" />
+    <Compile Include="Model\NewAsiaOASystem\DKX\DKX_LCCZJLinfo.cs" />
+    <Compile Include="Model\NewAsiaOASystem\DKX\DKX_PAY_CONTROL_INFO.cs" />
+    <Compile Include="Model\NewAsiaOASystem\DKX\DKX_pjgdbinfo.cs" />
+    <Compile Include="Model\NewAsiaOASystem\DKX\DKX_Pleasepurchaseinfo.cs" />
+    <Compile Include="Model\NewAsiaOASystem\DKX\DKX_RKZLDataInfo.cs" />
+    <Compile Include="Model\NewAsiaOASystem\DKX\DKX_ZLDataInfo.cs" />
+    <Compile Include="Model\NewAsiaOASystem\DKX\NewChargebackReason.cs" />
+    <Compile Include="Model\NewAsiaOASystem\EP_jlinfo.cs" />
+    <Compile Include="Model\NewAsiaOASystem\K3\K3_wuliaoinfo.cs" />
+    <Compile Include="Model\NewAsiaOASystem\KSGZ\KS_CLPersonnelInfo.cs" />
+    <Compile Include="Model\NewAsiaOASystem\KSGZ\KS_ProblemTyle.cs" />
+    <Compile Include="Model\NewAsiaOASystem\KSGZ\KS_Trackinglistinfo.cs" />
+    <Compile Include="Model\NewAsiaOASystem\NACustomerinfo.cs" />
+    <Compile Include="Model\NewAsiaOASystem\NAReturnList.cs" />
+    <Compile Include="Model\NewAsiaOASystem\NA_AddresseeInfo.cs" />
+    <Compile Include="Model\NewAsiaOASystem\NA_Qyinfo.cs" />
+    <Compile Include="Model\NewAsiaOASystem\NA_Sharealike.cs" />
+    <Compile Include="Model\NewAsiaOASystem\NA_XSdetailsinfo.cs" />
+    <Compile Include="Model\NewAsiaOASystem\NA_XSinfo.cs" />
+    <Compile Include="Model\NewAsiaOASystem\NQCosttype.cs" />
+    <Compile Include="Model\NewAsiaOASystem\NQR_Product.cs" />
+    <Compile Include="Model\NewAsiaOASystem\NQR_Reason.cs" />
+    <Compile Include="Model\NewAsiaOASystem\NQ_Blinfo.cs" />
+    <Compile Include="Model\NewAsiaOASystem\NQ_Blxxinfo.cs" />
+    <Compile Include="Model\NewAsiaOASystem\NQ_CHdetailinfo.cs" />
+    <Compile Include="Model\NewAsiaOASystem\NQ_chuhuoinfon.cs" />
+    <Compile Include="Model\NewAsiaOASystem\NQ_GysInfo.cs" />
+    <Compile Include="Model\NewAsiaOASystem\NQ_productinfo.cs" />
+    <Compile Include="Model\NewAsiaOASystem\NQ_OASupplier.cs" />
+    <Compile Include="Model\NewAsiaOASystem\NQ_Supplier.cs" />
+    <Compile Include="Model\NewAsiaOASystem\NQ_BaseitemAttachment.cs" />
+    <Compile Include="Model\NewAsiaOASystem\NQ_SupplierAndBaseitem.cs" />
+    <Compile Include="Model\NewAsiaOASystem\NQ_SupplierAttachment.cs" />
+    <Compile Include="Model\NewAsiaOASystem\NQ_Thdetailinfo.cs" />
+    <Compile Include="Model\NewAsiaOASystem\NQ_THinfoFX.cs" />
+    <Compile Include="Model\NewAsiaOASystem\NQ_TjFtwxCPTypeSuminfo.cs" />
+    <Compile Include="Model\NewAsiaOASystem\NQ_YJinfo.cs" />
+    <Compile Include="Model\NewAsiaOASystem\Record\NA_CustomerRecord.cs" />
+    <Compile Include="Model\NewAsiaOASystem\Wlwdkx\WL_dkxthjlinfo.cs" />
+    <Compile Include="Model\NewAsiaOASystem\Wlwdkx\WL_Newgscinfo.cs" />
+    <Compile Include="Model\NewAsiaOASystem\Wlwdkx\WL_XFOrderinfo.cs" />
+    <Compile Include="Model\NewAsiaOASystem\WL_ DealerSalestarget.cs" />
+    <Compile Include="Model\NewAsiaOASystem\Wlwdkx\WL_CPInfo.cs" />
+    <Compile Include="Model\NewAsiaOASystem\Wlwdkx\WL_DkxInfo.cs" />
+    <Compile Include="Model\NewAsiaOASystem\Wlwdkx\WL_Gcsinfo.cs" />
+    <Compile Include="Model\NewAsiaOASystem\Wlwdkx\WL_SalesONlineratioinfo.cs" />
+    <Compile Include="Model\NewAsiaOASystem\Wlwdkx\WL_Salestarget.cs" />
+    <Compile Include="Model\NewAsiaOASystem\Wx_FTUserbdopenIdinfo.cs" />
+    <Compile Include="Model\NewAsiaOASystem\XSFXdqinfo.cs" />
+    <Compile Include="Model\NewAsiaOASystem\XSFXkhinfo.cs" />
+    <Compile Include="Model\NewAsiaOASystem\XSFXqxinfo.cs" />
+    <Compile Include="Model\NewAsiaOASystem\_20150510WL_ReturnVisit.cs" />
+    <Compile Include="Model\Perprofit\PP_Profitpointinfo.cs" />
+    <Compile Include="Model\Perprofit\PP_ProfitSummaryinfo.cs" />
+    <Compile Include="Model\Perprofit\PP_ProfuttoStaffInfo.cs" />
+    <Compile Include="Model\Perprofit\PP_ProfuttoStaffTDInfo.cs" />
+    <Compile Include="Model\Perprofit\PP_ShouruandzhichuDetailsinfo.cs" />
+    <Compile Include="Model\Perprofit\PP_Staffinfo.cs" />
+    <Compile Include="Model\Perprofit\PP_Teaminfo.cs" />
+    <Compile Include="Model\Perprofit\PP_TTShouruandzhichuDetailsinfo.cs" />
+    <Compile Include="Model\sbycjk\YCACCandSIDInfo.cs" />
+    <Compile Include="Model\sbycjk\YCAccountbindingInfo.cs" />
+    <Compile Include="Model\sbycjk\YCnoticeinfo.cs" />
+    <Compile Include="Model\Sys\SysMenu.cs" />
+    <Compile Include="Model\Sys\SysFunction.cs" />
+    <Compile Include="Model\Sys\SysRoleFun.cs" />
+    <Compile Include="Model\Vote\Vote_Config.cs" />
+    <Compile Include="Model\Vote\Vote_ip.cs" />
+    <Compile Include="Model\Vote\Vote_Question.cs" />
+    <Compile Include="Model\Vote\Vote_Subject.cs" />
+    <Compile Include="Model\Vote\Vote_Title.cs" />
+    <Compile Include="Model\Wx\WeChat_AnnualmeetingBarrage.cs" />
+    <Compile Include="Model\Wx\WeChat_AnnualmeetingSign.cs" />
+    <Compile Include="Model\Wx\WeChat_forwardInfo.cs" />
+    <Compile Include="Model\Wx\WeChat_OrderInfo.cs" />
+    <Compile Include="Model\Wx\WeChat_signuppersonInfo.cs" />
+    <Compile Include="Model\Wx\WeChat_SlyderpersonInfo.cs" />
+    <Compile Include="Model\Wx\Wechat_TXinfo.cs" />
+    <Compile Include="Model\Wx\WeixinMessage.cs" />
+    <Compile Include="Model\Wx\Wx_configinfo.cs" />
+    <Compile Include="Model\Wx\WX_Menus.cs" />
+    <Compile Include="Model\Wx\WX_Message.cs" />
+    <Compile Include="Model\Wx\WX_Message_News.cs" />
+    <Compile Include="Model\Wx\WX_M_new.cs" />
+    <Compile Include="Model\Wx\WX_OpenID.cs" />
+    <Compile Include="Model\Wx\Wx_openIdinfo.cs" />
+    <Compile Include="Model\Wx\WX_ReceiveMessage.cs" />
+    <Compile Include="Model\Wx\WX_SendC.cs" />
+    <Compile Include="Model\Wx\WX_SendMessage.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Model\Sys\SysAuthorize.cs" />
+    <Compile Include="Model\Sys\SysButton.cs" />
+    <Compile Include="Model\Sys\SysDepartment.cs" />
+    <Compile Include="Model\Sys\SysDepartmentRole.cs" />
+    <Compile Include="Model\Sys\SysLog.cs" />
+    <Compile Include="Model\Sys\SysLog_history.cs" />
+    <Compile Include="Model\Sys\SysMenuButton.cs" />
+    <Compile Include="Model\Sys\SysMenuRole.cs" />
+    <Compile Include="Model\Sys\Sysparameter.cs" />
+    <Compile Include="Model\Sys\SysPerson.cs" />
+    <Compile Include="Model\Sys\SysPersonDepartment.cs" />
+    <Compile Include="Model\Sys\SysRole.cs" />
+    <Compile Include="Model\Sys\SysRoleAuthorize.cs" />
+    <Compile Include="Model\Sys\SysRoleColumn.cs" />
+    <Compile Include="Model\Sys\SysRoleMenuButton.cs" />
+    <Compile Include="Model\Sys\SysRoleSysPerson.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\WLWDKX\WL_dkxthjlinfo.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\K3\K3_wuliaoinfo.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\NQ_BaseitemAttachment.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\NQ_OASupplier.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\DKX\DKX_DKXtypeandgcs.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\DKX\DKX_DDtypeinfo.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\DKX\DKX_GCSinfo.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\DKX\DKX_DDinfo.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\DKX\DKX_PAY_CONTROL_INFO.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\DKX\DKX_CONTROL_LIST.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\DKX\DKX_CONTROL_LIST_DETAIL.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\DKX\DKX_LCCZJLinfo.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\DKX\DKX_ZLDataInfo.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\DKX\DKX_CPInfo.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\DKX\DKX_RKZLDataInfo.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\DKX\DKX_k3Bominfo.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NAFlow\Flow_DKXPlanPPrintinfo.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\DKX\DKX_Pleasepurchaseinfo.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\KSGZ\KS_CLPersonnelInfo.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\KSGZ\KS_ProblemTyle.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\DKX\DKX_DDCLyqNoteInfo.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\IQC\IQC_llNoticeordinfo.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\IQC\IQC_llNoticeMXordinfo.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\IQC\IQC_JYDDinfo.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\IQC\IQC_JYDjyconinfo.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\DKX\DKX_pjgdbinfo.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\DKX\NewChargebackReason.hbm.xml" />
+    <Content Include="Mappings\NewAsiaOASystem\KSGZ\KS_Trackinglistinfo.hbm.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\NA_Sharealike.hbm.xml" />
+    <Content Include="Mappings\NewAsiaOASystem\NQ_Supplier.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\NQ_SupplierAttachment.hbm.xml" />
+    <EmbeddedResource Include="Mappings\Wx\Wx_configinfo.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mappings\Wx\Wx_openIdinfo.hbm.xml" />
+    <EmbeddedResource Include="Mappings\sbycjk\YCACCandSIDInfo.hbm.xml" />
+    <EmbeddedResource Include="Mappings\sbycjk\YCAccountbindingInfo.hbm.xml" />
+    <EmbeddedResource Include="Mappings\sbycjk\YCnoticeinfo.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\NQ_SupplierAndBaseitem.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\Record\NA_CustomerRecord.hbm.xml" />
+    <Content Include="obj\Debug\NewAsiaOASystem.DBModel.csproj.FileListAbsolute.txt" />
+    <Content Include="obj\Debug\NewAsiaOASystem.DBModel.dll" />
+    <Content Include="obj\Debug\NewAsiaOASystem.DBModel.pdb" />
+    <Content Include="obj\Release\NewAsiaOASystem.DBModel.csproj.FileListAbsolute.txt" />
+    <Content Include="obj\Release\NewAsiaOASystem.DBModel.dll" />
+    <Content Include="obj\Release\NewAsiaOASystem.DBModel.pdb" />
+    <EmbeddedResource Include="Mappings\Wx\WeChat_AnnualmeetingBarrage.hbm.xml" />
+    <EmbeddedResource Include="Mappings\Wx\WeChat_AnnualmeetingSign.hbm.xml" />
+    <EmbeddedResource Include="Mappings\Wx\WeChat_SlyderpersonInfo.hbm.xml" />
+    <EmbeddedResource Include="Mappings\Wx\WeChat_signuppersonInfo.hbm.xml" />
+    <EmbeddedResource Include="Mappings\Wx\Wechat_TXinfo.hbm.xml" />
+    <EmbeddedResource Include="Mappings\Wx\WeChat_OrderInfo.hbm.xml" />
+    <EmbeddedResource Include="Mappings\Wx\WeChat_forwardInfo.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mappings\Vote\Vote_ip.hbm.xml" />
+    <EmbeddedResource Include="Mappings\Vote\Vote_Question.hbm.xml" />
+    <EmbeddedResource Include="Mappings\Vote\Vote_Title.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mappings\Vote\Vote_Config.hbm.xml" />
+    <EmbeddedResource Include="Mappings\Vote\Vote_Subject.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mappings\Wx\WX_M_new.hbm.xml" />
+    <EmbeddedResource Include="Mappings\Wx\WX_SendC.hbm.xml" />
+    <EmbeddedResource Include="Mappings\Wx\WX_OpenID.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mappings\Wx\WX_Menus.hbm.xml" />
+    <EmbeddedResource Include="Mappings\Wx\WX_Message.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mappings\Wx\WX_Message_News.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mappings\Wx\WX_ReceiveMessage.hbm.xml" />
+    <EmbeddedResource Include="Mappings\Wx\WX_SendMessage.hbm.xml" />
+    <EmbeddedResource Include="Mappings\Sys\SysRoleFun.hbm.xml" />
+    <EmbeddedResource Include="Mappings\Sys\SysFunction.hbm.xml" />
+    <EmbeddedResource Include="Mappings\Sys\SysAuthorize.hbm.xml" />
+    <EmbeddedResource Include="Mappings\Sys\SysButton.hbm.xml" />
+    <EmbeddedResource Include="Mappings\Sys\SysDepartment.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mappings\Sys\SysDepartmentRole.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\DisImmuneCenter.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\NACustomerinfo.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\NQR_Product.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\NQCosttype.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\NQR_Reason.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\NAReturnList.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\NQ_productinfo.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\NQ_chuhuoinfon.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\NQ_CHdetailinfo.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\NQ_Thdetailinfo.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\NQ_THinfoFX.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\NQ_Blinfo.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\NQ_GysInfo.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\NQ_YJinfo.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\NQ_Blxxinfo.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\EP_jlinfo.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mappings\NACG\CG_aqkc.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\CG_info.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\CG_Detailinfo.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\NA_Qyinfo.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\WLWDKX\WL_CPInfo.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\WLWDKX\WL_Gcsinfo.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\WLWDKX\WL_DkxInfo.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\NA_XSinfo.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\NA_XSdetailsinfo.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\XSFXdqinfo.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\XSFXkhinfo.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\XSFXqxinfo.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\NA_AddresseeInfo.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\WLWDKX\WL_DealerSalestarget.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\WLWDKX\WL_SalesONlineratioinfo.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\20150509WL_Jxqnumber.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\WLWDKX\WL_ReturnVisit.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mappings\NAFlow\Flow_ProductionNoticeinfo.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mappings\NAFlow\Flow_RoutineStockinfo.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mappings\NAFlow\Flow_PlanProductioninfo.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mappings\NAFlow\Flow_Pleasepurchaseinfo.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NAFlow\Flow_PlanPPrintinfo.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NAFlow\Flow_NonSProductinfo.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NAFlow\Flow_Ajaxtxdate.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\NQ_TjFtwxCPTypeSuminfo.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\Act_SignNamelistinfo.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\WLWDKX\WL_Newgscinfo.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\IQC\IQC_SopInfo.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\IQC\IQC_Jyffinfo.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\IQC\IQC_Jyconstrinfo.hbm.xml" />
+    <Content Include="bin\Debug\NewAsiaOASystem.DBModel.dll" />
+    <Content Include="bin\Debug\NewAsiaOASystem.DBModel.pdb" />
+    <Content Include="bin\Release\NewAsiaOASystem.DBModel.dll" />
+    <Content Include="bin\Release\NewAsiaOASystem.DBModel.pdb" />
+    <Content Include="Mappings\NewAsiaOASystem\WLWDKX\WL_Salestarget.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\Wx_FTUserbdopenIdinfo.hbm.xml" />
+    <EmbeddedResource Include="Mappings\Perprofit\PP_Teaminfo.hbm.xml" />
+    <EmbeddedResource Include="Mappings\Perprofit\PP_Staffinfo.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\WLWDKX\WL_XFOrderinfo.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mappings\Perprofit\PP_Profitpointinfo.hbm.xml" />
+    <EmbeddedResource Include="Mappings\Perprofit\PP_ProfuttoStaffInfo.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mappings\Perprofit\PP_ShouruandzhichuDetailsinfo.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mappings\Perprofit\PP_ProfitSummaryinfo.hbm.xml" />
+    <EmbeddedResource Include="Mappings\Perprofit\PP_ProfuttoStaffTDInfo.hbm.xml" />
+    <EmbeddedResource Include="Mappings\Perprofit\PP_TTShouruandzhichuDetailsinfo.hbm.xml" />
+    <Content Include="Mappings\Sys\SysLog.hbm.xml" />
+    <EmbeddedResource Include="Mappings\Sys\SysLog_history.hbm.xml" />
+    <Content Include="Mappings\Sys\SysMenuButton.hbm.xml" />
+    <EmbeddedResource Include="Mappings\Sys\SysMenu.hbm.xml" />
+    <None Include="Mappings\Sys\SysMenuRole.hbm.xml" />
+    <Content Include="Mappings\Sys\Sysparameter.hbm.xml" />
+    <EmbeddedResource Include="Mappings\Sys\SysPerson.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Content Include="Mappings\Sys\SysPersonDepartment.hbm.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <EmbeddedResource Include="Mappings\Sys\SysRole.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mappings\Sys\SysRoleAuthorize.hbm.xml" />
+    <EmbeddedResource Include="Mappings\Sys\SysRoleColumn.hbm.xml" />
+    <EmbeddedResource Include="Mappings\Sys\SysRoleMenuButton.hbm.xml" />
+    <EmbeddedResource Include="Mappings\Sys\SysRoleSysPerson.hbm.xml" />
+    <None Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
+    <None Include="obj\Debug\NewAsiaOASystem.DBModel.csprojResolveAssemblyReference.cache" />
+    <None Include="obj\Release\DesignTimeResolveAssemblyReferencesInput.cache" />
+    <None Include="obj\Release\NewAsiaOASystem.DBModel.csprojResolveAssemblyReference.cache" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="obj\Debug\TempPE\" />
+    <Folder Include="obj\Release\TempPE\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

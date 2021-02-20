@@ -1,0 +1,73 @@
+﻿@{
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+
+<script type="text/javascript">
+    function addTab(title, url) {
+        var closable=true;
+        if (title == "主页")
+            closable = false;
+        if ($('#easyui-tabs').tabs('exists', title)) {
+            var content = '<iframe scrolling="auto" frameborder="0"  src="' + url + '" style="width:100%;height: 682px;"></iframe>';
+            $("#easyui-tabs").tabs('select', title);//选中指定标签
+            var tab = $("#easyui-tabs").tabs('getSelected');//获取被选中的选项卡对象
+            $('#easyui-tabs').tabs('update', {
+                tab: tab,
+                options: {
+                    title: title,
+                    content: content,
+                    closable: closable,
+                    fit: true,
+                    selected: true
+                }
+            });
+
+        }
+        else {
+            var content = '<iframe scrolling="auto" frameborder="0"  src="' + url + '" style="width:100%;height: 682px;"></iframe>';
+            $('#easyui-tabs').tabs('add', {
+                title: title,
+                content: content,
+                closable: closable
+            });
+        }
+    }
+
+    $(function () {
+        addTab("主页", "/Admin/h_right");
+    })
+
+    function CloseTab(title)
+    {
+        $("#easyui-tabs").tabs('close', title);
+    }
+</script>
+<script src="~/Scripts/NewAsiaOASystem/index.js"></script>
+<script src="~/Scripts/NewAsiaOASystem/word.js"></script>
+
+<div class="h-main" id="h-main" style="height: 775px;">
+    <div class="h-title">
+        <ul>
+            <li><span>您好：</span><span class="h-name">@ViewBag.user</span></li>
+            <li><span class="h-title-icon h-icon1"></span><span><a style="cursor: pointer;" onclick="addTab('密码修改', '/SysPerson/GoPasswordPage')" target="right">密码修改</a></span></li>
+            <li><span class="h-title-icon h-icon2"></span><span><a id="loginOut" href="/Login/Login">退出</a></span></li>
+        </ul>
+    </div>
+    <div class="h-down" id="h-down" style="height: 682px;">
+        <div class="d_div_l" style="height: 682px;">
+            <div class="h-left">
+                <div id="masterdiv">
+                    <div class="sub">
+                        <div class="menutitle"><a style="cursor: pointer;" onclick="addTab('主页', '/Admin/h_right')"><span class="h-left-icon h-left-icon1"></span><span class="w-user">主菜单</span></a><span class="h-left-icon h-left-icon5"></span></div>
+                        <div class="menuContent"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="d_div_r" style="height: 682px;">
+            <div id="easyui-tabs" class="easyui-tabs">
+            </div>
+        </div>
+    </div>
+</div>

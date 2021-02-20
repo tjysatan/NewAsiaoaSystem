@@ -1,0 +1,127 @@
+﻿@{
+    ViewBag.Title = "生产计划制定";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<script type="text/javascript">
+    $(function () {
+        var jsondata = GetCPinfojson();
+        if (typeof (jsondata) != "undefined") {
+            $("#Pname").val(jsondata.P_Name);//产品名称
+            $("#jyscsl").val(jsondata.SC_Sum);//建议生产计划
+            $("#scsl").val(jsondata.SC_Sum);//生产数量
+            $("#wl_haoma").val(jsondata.P_Bianhao);//产品的物料代码
+            $("#Id").val(jsondata.Id);//产品Id
+        }
+    })
+
+
+
+    //获取产品信息库存信息报警信息
+    function GetCPinfojson() {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "../Flow_RoutineStockinfo/GetRoutineStockinfoJson",
+            data: { Id: '@ViewData["Id"]' },
+            dataType: "json",
+            async: false,
+            success: function (reslut) {
+                json = reslut;
+            },
+            error: function (e) {
+                alert(e.error);
+                alert("失败！");
+            }
+        })
+        return json;
+    }
+
+
+    //保存产品的生产计划单
+    function InsertPlan()
+    {
+        var Id = $("#Id").val();//产品的ID
+        var Pname = $("#Pname").val();//产品名称
+        var wl_haoma = $("#wl_haoma").val();//物料代码
+        var scsl = $("#scsl").val();
+        if (scsl == "") {
+            layer.alert("生产数量不为空！", { icon: 2 });
+            $("#scsl").focus();
+            return;
+        }
+        $.ajax({
+            url: "../Flow_RoutineStockinfo/InsertPlanproduction",
+            type: "POST",
+            data: { "CpId": Id, "Cpname": Pname, "Cp_bianhao": wl_haoma, "scsl": scsl },
+            dataType: "html",
+            async: false,
+            success: function (response) {
+                if ("0" == response) {
+                    $.messager.alert("操作提示", '提交成功！', 'info', function () {
+                        var ParentObj = window.parent;//获取父窗口
+                        window.parent.$('#windowDia').window('close');
+                        if ('@ViewData["type"]' == "0") {
+                            window.parent.location = "/Flow_RoutineStockinfo/list";
+                        } else if ('@ViewData["type"]' == "1") {
+                            window.parent.location = "/Flow_RoutineStockinfo/gclist";
+                        }
+                        return false;
+                    });
+                } else if ("1" == response) {
+                    $.messager.alert("操作提示", '操作失败！', 'error');
+                }
+            },
+            error: function (e) {
+                $.messager.alert("操作提示", '操作失败！', 'error');
+            }
+        });
+    }
+
+    function closeUI() {
+        var ParentObj = window.parent;//获取父窗口
+        window.parent.$('#windowDia').window('close');
+    }
+
+
+</script>
+
+<input type="hidden" id="wl_haoma" name="wl_haoma" /><!--物料编码-->
+<input type="hidden" id="Id" name="Id" /><!--产品Id-->
+
+<div class="infor" style="width:500px; height:200px;">
+        <p id="Ptitle"></p>
+        <div class="system-menu-set">
+            <ul class="infor-c">
+                <li>
+                    <span class="infor-c-width">产品名称：</span>
+                    <span class="infor-c-input">
+                       <input type="text" readOnly="readOnly" id="Pname" name="Pname" />
+                    </span>
+                </li>
+            </ul>
+            <ul class="infor-c">
+                <li>
+                    <span class="infor-c-width">建议生产：</span>
+                    <span class="infor-c-input">
+                         <input type="text" readOnly="readOnly" id="jyscsl" name="jyscsl" />
+                    </span>
+                    /套
+                </li>
+            </ul>
+            <ul class="infor-c">
+                <li>
+                    <span class="infor-c-width">生产数量：</span>
+                    <span class="infor-c-input">
+                         <input type="text"  id="scsl" name="scsl" />
+                    </span>
+                    /套
+                </li>
+            </ul>
+        </div>
+         <div class="inquiry-input infor-b" style="width:450px;">
+            <span style="margin-left:100px;">
+                <button onclick="return InsertPlan()">提交</button></span><span>
+                <button onclick="return closeUI()">关闭</button></span>
+        </div>
+    </div>

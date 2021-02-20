@@ -1,0 +1,91 @@
+﻿@model NewAsiaOASystem.ViewModel._20150509WL_JxqnumberView
+@{
+    ViewBag.Title = "经销量编辑页面";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@using (Html.BeginForm("Edit", "WL_Jxqnumber", FormMethod.Post, new { id = "form1" }))
+{
+    @Html.HiddenFor(m=>m.Id)
+    <div class="infor">
+        <p id="Ptitle"></p>
+        <div class="system-menu-set">
+            <ul class="infor-c">
+
+                <li>
+                    <span class="infor-c-width">年份：</span>
+                    <span class="infor-c-input">@Html.DropDownList("SelectedYear", ViewData["YearList"] as SelectList, new { @class = "add-function" })</span>
+                    <span style="color: red; font-size: 24px; vertical-align: middle; margin-left: 8px;">*</span>
+                    <span class="desc w-register"></span>
+                </li>
+            </ul>
+            <ul class="infor-c">
+                <li>
+                    <span class="infor-c-width">经销量：</span>
+                    <span class="infor-c-input">@Html.TextBoxFor(m => m.Jxqnumber)</span>
+                    <span style="color: red; font-size: 24px; vertical-align: middle; margin-left: 8px;">*</span>
+                    <span class="desc w-register"></span>
+                </li>
+            </ul>
+            <ul class="infor-c">
+                <li>
+                    <span class="infor-c-width">经销商：</span>
+                    <span class="infor-c-input">@Html.DropDownList("SelectedCusId", ViewData["CustList"] as SelectList, new { @class = "add-function" })</span>
+                    <span style="color: red; font-size: 24px; vertical-align: middle; margin-left: 8px;">*</span>
+                    <span class="desc w-register"></span>
+                </li>
+            </ul>
+            <ul class="infor-c">
+               <li><span class="infor-c-width">状态：</span>
+                    <span>
+                        <select class="add-function" name="States">
+                            @{
+                              if ("1".Equals(Convert.ToString(@Model.States)) && null != @Model.Id)
+                              {
+                                @:<option value="0">启用</option>
+                                @:<option value="1" selected="selected">禁用</option>
+                              }
+                              else
+                              {
+                                @:<option value="0"  selected="selected">启用</option>
+                                @:<option value="1">禁用</option>
+                               }
+                                                
+                            }
+                        </select></span><span class="desc w-register"> 是否启</span></li>
+            </ul>
+        </div>
+
+         <div class="inquiry-input infor-b">
+            <span>
+                <button onclick="return SavaForm()">保存</button></span><span>
+                <button onclick="return RedirectUrl('/WL_Jxqnumber/List')">返回</button>
+            </span>
+        </div>
+    </div>
+}
+<script type="text/javascript">
+    $(function () {
+        if ("" == $("#Id").val())
+            $("#Ptitle").text("添加年经销量");
+        else
+            $("#Ptitle").text("修改年经销量");
+    })
+
+    //保存表单
+    function SavaForm() {
+        var Jxqnumber = $("#Jxqnumber").val();
+        var SelectedCusId = $("#SelectedCusId").val();
+        if (Jxqnumber == "") {
+            alert("请填写年经销量！");
+            return false;
+        }
+        if (SelectedCusId == "") {
+            alert("请选择经销商！");
+            return false;
+        }
+        return submitForm('/WL_Jxqnumber/List');
+    }
+
+  
+</script>

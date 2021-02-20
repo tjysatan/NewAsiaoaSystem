@@ -1,0 +1,90 @@
+﻿@{
+    ViewBag.Title = "维修图片查看";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<script type="text/javascript">
+    function opnimg(val) {
+        layer.open({
+            type: 2,
+            title: false,
+            area: ['630px', '460px'],
+            shade: 0.8,
+            closeBtn: 0,
+            shadeClose: true,
+            content: 'http://wx.chinanewasia.com/' + val,
+        });
+        layer.msg('点击任意处关闭');
+    }
+</script>
+
+<style>
+    .tdfont
+    {
+        font-size:14px;
+       color:#808080;
+       font-family:微软雅黑;
+    }
+</style>
+
+<div >
+    <form class="layui-form" action="">
+        <div class="layui-form-item">
+            <label class="layui-form-label">资料1：</label>
+            <div class="layui-input-block" style="line-height:35px">
+                @if (ViewData["img1"] != "" && ViewData["img1"] != null)
+                {
+
+
+                    <a href='@ViewData["img1"]' target="_blank" style="color:red"><i class="layui-icon layui-icon-link">图片/资料1 点击查看</i> </a>
+
+
+                }
+                else
+                {
+
+                    <p>没有上传资料1~</p>
+
+                }
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">资料2：</label>
+            <div class="layui-input-block" style="line-height:35px">
+                @if (ViewData["img2"] != "" && ViewData["img2"] != null)
+                {
+
+
+                    <a href='@ViewData["img2"]' target="_blank" style="color:red"><i class="layui-icon layui-icon-link">图片/资料2 点击查看</i> </a>
+
+
+                }
+                else
+                {
+
+                    <p>没有上传资料2~</p>
+
+                }
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">资料3：</label>
+            <div class="layui-input-block" style="line-height:35px">
+                @if (ViewData["img3"] != "" && ViewData["img3"] != null)
+                {
+
+
+                    <a href='@ViewData["img3"]' target="_blank" style="color:red"><i class="layui-icon layui-icon-link">图片/资料3 点击查看</i> </a>
+
+
+                }
+                else
+                {
+
+                    <p>没有上传资料3~</p>
+
+                }
+            </div>
+        </div>
+    </form>
+</div>

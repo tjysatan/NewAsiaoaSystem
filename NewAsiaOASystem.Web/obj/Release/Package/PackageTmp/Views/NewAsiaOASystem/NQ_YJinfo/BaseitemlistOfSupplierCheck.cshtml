@@ -1,0 +1,335 @@
+﻿@model NewAsiaOASystem.ViewModel.PagerInfo<NewAsiaOASystem.ViewModel.NQ_YJinfoView>
+
+@{
+    ViewBag.Title = "供应商对应元器件";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<style>
+    .tableheader {
+        font-size: 10px;
+    }
+</style>
+@section HeadContent{
+    <script type="text/javascript">
+        $(function () {
+            BindGrid();
+            var jsonStr2 = @Html.Raw(ViewBag.itemsList);
+            dataGrid2(jsonStr2);
+        })
+
+        function BindGrid() {
+            @{
+                if (null != Model && null != Model.GetPagingDataJson)
+                {
+                    string json = Model.GetPagingDataJson;//获取json数据
+                    @: var jsonStr = @Html.Raw(json);
+                                                                                                                                                                                                            }
+             }
+            dataGrid(jsonStr);
+        }
+
+        function dataGrid(jsonStr){
+            if (typeof (jsonStr) != "undefined") {
+                var html = "";
+                html = '<table cellpadding="0" cellspacing="0" style="width:100%;">';
+                for (var i = 0, j = jsonStr.length; i < j; i++) {
+                    if (i % 2 == 0)
+                        html += '<tr class="h-table-content-r1">';
+                    else
+                        html += '<tr class="h-table-content-r">';
+                    html += '<td width="5%"><input type="checkbox" name="ContentChecked2" value="' + jsonStr[i].Id + '"/></td>';
+                    //html += '<td width="10%">' + jsonStr[i].Y_Dm + '</td>';
+                    html += '<td width="15%">' + jsonStr[i].Y_Name + '</td>';
+                    html += '<td width="20%">' + jsonStr[i].Y_Ggxh + '</td>';
+                    html+='<td width="20%">'+jsonStr[i].Y_aqkc+'</td>';
+
+                    if(jsonStr[i].Y_iscg!=null)
+                    {
+                        if(jsonStr[i].Y_iscg=="0")
+                        {
+                            html+='<td width="20%">正常</td>';
+                        }
+                        else if(jsonStr[i].Y_iscg=="1")
+                        {
+                            html+='<td width="20%"  style="color:red">异常</td>';
+                        }
+                    }
+                    else
+                    {
+                        html += '<td width="20%"></td>';
+                    }
+                    if(jsonStr[i].Y_jcdatetime!=null)
+                        html+='<td width="20%">'+showDate(jsonStr[i].Y_jcdatetime)+'</td>';
+                    else
+                        html += '<td width="20%"></td>';
+                    html+='</tr>';
+                }
+                html += '</table>';
+                $("#contentAll").html(html);
+            }
+        }
+
+        function dataGrid2(jsonStr){
+            if (typeof (jsonStr) != "undefined") {
+                var html = "";
+                html = '<table cellpadding="0" cellspacing="0" style="width:100%;">';
+                for (var i = 0, j = jsonStr.length; i < j; i++) {
+                    if (i % 2 == 0)
+                        html += '<tr class="h-table-content-r1">';
+                    else
+                        html += '<tr class="h-table-content-r">';
+                    html += '<td width="5%"><input type="checkbox" name="ContentChecked" value="' + jsonStr[i].Id + '"/></td>';
+                    html += '<td width="15%">' + jsonStr[i].Y_Name + '</td>';
+                    html += '<td width="20%">' + jsonStr[i].Y_Ggxh + '</td>';
+                    html+='<td width="20%">'+jsonStr[i].Y_aqkc+'</td>';
+
+                    if(jsonStr[i].Y_iscg!=null)
+                    {
+                        if(jsonStr[i].Y_iscg=="0")
+                        {
+                            html+='<td width="20%">正常</td>';
+                        }
+                        else if(jsonStr[i].Y_iscg=="1")
+                        {
+                            html+='<td width="20%"  style="color:red">异常</td>';
+                        }
+                    }
+                    else
+                    {
+                        html += '<td width="20%"></td>';
+                    }
+
+                    if(jsonStr[i].Y_jcdatetime!=null)
+                        html+='<td width="20%">'+showDate(jsonStr[i].Y_jcdatetime)+'</td>';
+                    else
+                        html += '<td width="20%"></td>';
+
+                    html+='</tr>';
+                }
+                html += '</table>';
+                $("#contentItems").html(html);
+            }
+        }
+
+        //获取已经选中
+        function ajaxSelectedList(ss) {
+            var txtsearch = $("#txtSearch_WName").val();
+            var supplierid = $("#supplierid").val();
+
+            $.ajax({
+                type: "POST",
+                url: "/NQ_YJinfo/ajaxSelectedList",
+                data: { supplierid: supplierid,txtsearch:txtsearch },
+                async: false,
+                success: function (content) {
+                    var jsonstr = eval(content.result);
+                    dataGrid2(jsonstr);
+                },
+                error: function (e) {
+                    alert("请求失败！");
+                }
+            })
+            return false;
+        }
+
+        //获取未选中list
+        function ajaxAllList(ss) {
+            var txtsearch = $("#txtSearch_YName").val();
+            var supplierid = $("#supplierid").val();
+
+            $.ajax({
+                type: "POST",
+                url: "/NQ_YJinfo/ajaxAllList",
+                data: { supplierid: supplierid, txtsearch:txtsearch },
+                async: false,
+                success: function (content) {
+                    var jsonstr = eval(content.result);
+                    $(".pagin").html(content.PageN);
+                    dataGrid(jsonstr);
+                },
+                error: function (e) {
+                    alert("请求失败！");
+                }
+            })
+            return false;
+        }
+
+        //关联数据
+        function saveItem(url,itemid,supplierid) {
+            var json;
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: { supplierid: supplierid, itemid:itemid },
+                async: false,
+                success: function (context) {
+                    if ("success" == context.result) {
+                        ajaxSelectedList(supplierid);
+                        ajaxAllList(supplierid);
+                        return true;
+                    }
+                },
+                error: function (e) {
+                    alert("请求失败！");
+                }
+            })
+            return false;
+        }
+
+        //删除数据
+        function deleteItem(url,itemid,supplierid) {
+            var json;
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: { supplierid: supplierid, itemid:itemid },
+                async: false,
+                success: function (context) {
+
+                    if ("success" == context.result) {
+
+                        ajaxSelectedList(supplierid);
+                        ajaxAllList(supplierid);
+
+                        return true;
+                    }
+                },
+                error: function (e) {
+                    alert("请求失败！");
+                }
+            })
+            return false;
+        }
+
+        //pageIndex当前页
+        function SerchList(pageIndex)
+        {
+            $("input[name='pageIndex']").val(pageIndex);
+            var options = {
+                beforeSubmit: function () {
+                    return true;
+                },
+                dataType: "json",
+                success: function (context) {
+                    var data=eval(context.result);
+                    dataGrid(data);
+                    $(".pagin").html(context.PageN);//输出分页按钮
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+
+                    $.messager.alert("操作提示", '查询失败请重试！', 'error');
+                }
+            }
+            $('#form1').ajaxSubmit(options);
+            return false;
+        }
+
+        function connectitems(url) {
+            var arr = GetGridSelete2();
+            var supplierid = $('#supplierid').val();
+
+            if (arr.length > 1) {
+                $.messager.alert("操作提示", "只能选择一个！", "warning");
+            }
+            else if (arr.length <= 0) {
+                $.messager.alert("操作提示", "请先选择一条记录后再编辑！", "warning");
+            }
+            else {
+                $.messager.confirm('提示框', '你确定要关联供应商吗?', function (data) {
+                    if (data) {
+                        //location.href = url + "?itemid=" + arr[0]+ "&supplierid=" + supplierid;
+                        saveItem(url,arr[0],supplierid) ;
+                    }
+                } );
+            }
+            return false;
+        }
+
+        function disconnectitems(url) {
+            var arr = GetGridSelete();
+            var supplierid = $('#supplierid').val();
+
+            if (arr.length > 1) {
+                $.messager.alert("操作提示", "只能选择一个！", "warning");
+            }
+            else if (arr.length <= 0) {
+                $.messager.alert("操作提示", "请先选择一条记录后再编辑！", "warning");
+            }
+            else {
+                $.messager.confirm('提示框', '你确定取消要关联供应商吗?', function (data) {
+                    if (data) {
+                        //location.href = url + "?itemid=" + arr[0]+ "&supplierid=" + supplierid;
+                        deleteItem(url,arr[0],supplierid) ;
+                    }
+                } );
+            }
+            return false;
+        }
+
+    </script>
+}
+
+<div id="RoleManage" class="easyui-tabs" style="width: 1000px; height: 600px; margin: 20px; padding: 0px;">
+    <div title="已关联元器件" style="overflow: auto; padding: 20px;">
+        <!--已经关联元器件-->
+
+        <fieldset class="layui-elem-field" style="width: 95%; margin: auto;">
+            <legend style="font-size: 12px;">已经关联元器件</legend>
+            <div class="layui-field-box">
+
+                <span>供应商名称：</span>
+                <span class="inquiry-input">
+                    <input type="text" name="txtSearch_Name" value="@ViewBag.suppliername" disabled="disabled" readonly="readonly" />
+                </span>
+                <span>物料名称：</span>
+                <span class="inquiry-input">
+                    <input type="text" name="txtSearch_WName" id="txtSearch_WName" />
+                </span>
+
+                <span class="inquiry-input">
+                    <button name="btnSerch" onclick="return ajaxSelectedList($('#supplierid').val())">查询</button>
+                </span>
+                @{
+                    if (ViewBag.isShowTab == 1)
+                    {
+
+
+                        <div class="layui-inline">
+                            <span class="inquiry-input">
+                                <button onclick="return disconnectitems('/NQ_YJinfo/deleteItemFromSupplier')">删除关联</button>
+                            </span>
+                        </div>
+                    }
+
+                }
+            </div>
+            <div class="h-table">
+                <div class="h-table-content">
+                    <table cellpadding="0" cellspacing="0" class="h-right-table-title1" style="border: none;width:100%;">
+                        <tr>
+                            <td width="5%">
+                                <input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" />
+                            </td>
+
+                            <td width="15%">元器件名称</td>
+                            <td width="20%">规格</td>
+
+                            <td width="20%">检测时间</td>
+                            <td width="20%">采购状态</td>
+                            <td width="20%">设置</td>
+                        </tr>
+                    </table>
+                    <div id="contentItems"></div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+    @Html.Hidden("supplierid", ViewData["supplierid"])
+
+
+
+</div>
+
+<script src="~/Scripts/NAjs/NQ_OASupplier.js"></script>

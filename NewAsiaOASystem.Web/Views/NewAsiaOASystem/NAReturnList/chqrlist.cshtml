@@ -1,0 +1,135 @@
+﻿@model NewAsiaOASystem.ViewModel.PagerInfo<NewAsiaOASystem.ViewModel.NAReturnListView>
+@{
+    ViewBag.Title = "品保出货单确认";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@section HeadContent{
+    <script type="text/javascript">
+        $(function () {
+            BindGrid();
+        })
+        function BindGrid() {
+            @{
+                if (null != Model && null != Model.GetPagingDataJson)
+                {
+                    string json = Model.GetPagingDataJson;//获取json数据
+                    @: var jsonStr = @Html.Raw(json);
+                }
+             }
+            dataGrid(jsonStr);
+        }
+
+        function dataGrid(jsonStr)
+        {
+            if (typeof (jsonStr) != "undefined") {
+                var html = "";
+                var url="'"+"/NAReturnList/chshview"+"'";
+                var Id="";
+                html = '<table cellpadding="0" cellspacing="0" style="width:100%;">';
+                for (var i = 0, j = jsonStr.length; i < j; i++) {
+                    Id="'"+jsonStr[i].Id+"'";
+                    if (i % 2 == 0)
+                        html += '<tr class="h-table-content-r1">';
+                    else
+                        html += '<tr class="h-table-content-r">';
+                    html += '<td width="5%"><input type="checkbox" name="ContentChecked" value="' + jsonStr[i].Id + '"/></td>';
+                    html += '<td width="20%">' +ShowCustName(jsonStr[i].C_Id) + '</td>';
+                    if(jsonStr[i].R_isty==null)
+                    {
+                        html +='<td width="20%">待签字</td>';
+                    }else if(jsonStr[i].R_isty=="0"){
+                        html+='<td width="20%">同意出货</td>';
+                    }else {
+                        html+='<td width="20%">不同意</td>';
+                    }
+                    html += '<td width="10%">' +showCHtype(jsonStr[i].NQ_Type)+ '</td>';
+                    if(jsonStr[i].CreateTime!=null)
+                        html += '<td width="10%">' + showDate(jsonStr[i].CreateTime) + '</td>';
+                    else
+                        html += '<td width="10%"></td>';
+                    html += '<td width="25%"><a onclick="chqrview('+url+','+Id+','+jsonStr[i].NQ_Type +')" style="cursor: pointer;">审核确认</a>&nbsp;&nbsp;<a onclick="lcgz('+Id+','+jsonStr[i].L_type+')" style="cursor: pointer;"> 流程跟踪</a></td>';
+                    html+='</tr>';
+                }
+                html += '</table>';
+                $("#content").html(html);
+            }
+        }
+
+        //pageIndex当前页
+        function SerchList(pageIndex)
+        {
+            $("input[name='pageIndex']").val(pageIndex);
+            var options = {
+                beforeSubmit: function () {
+                    return true;
+                },
+                dataType: "json",
+                success: function (context) {
+                    var data=eval(context.result);
+                    dataGrid(data);
+                    $(".pagin").html(context.PageN);//输出分页按钮
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $.messager.alert("操作提示", '查询失败请重试！', 'error');
+                }
+            }
+            $('#form1').ajaxSubmit(options);
+            return false;
+        }
+
+    </script>
+}
+
+<!--==================================数据列表=============================-->
+<div class="h-right">
+    <div class="h-right-c">
+    
+        <!--查询条件-->
+        @using (Html.BeginForm("chSearchList", "NAReturnList", FormMethod.Post, new { id = "form1" }))
+        {
+            @Html.Hidden("pageIndex");
+           <input type="hidden" value="@ViewData["roletype"]" id="roletype" name="roletype" />
+            <div class="inquiry1">
+                <fieldset>
+                    <legend>查询条件：</legend>
+                    <ul>
+                        <li><span>客户：</span> 
+                            <span class="inquiry-input">
+                                <input type="text" name="txtSearch_Name" /></span></li>
+                        <li style="*width: 100%; *margin: -10px 0 5px 90px;"><span class="inquiry-input">
+                            <button name="btnSerch" onclick="return SerchList(1)">查询</button>
+                        </span></li>
+                    </ul>
+                </fieldset>
+            </div>
+        }
+        <div class="h-table">
+            <div class="h-table-content">
+                <table cellpadding="0" cellspacing="0" class="h-right-table-title1" style="border: none;width:100%;">
+                    <tr>
+                        <td width="5%">
+                            <input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" /></td>
+                        <td width="20%">客户</td>
+                        <td width="20%">确认状态</td>
+                        <td width="10%">出单状态</td>
+                        <td width="10%">退货时间</td>
+                        <td width="25%">操作</td>
+                    </tr>
+                </table>
+                <div id="content"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!--==========================输出分页按钮=========================-->
+<div class="pagin">
+    @if (ViewBag.PageNavigate == null)
+    {
+        @Html.ShowPageNavigate(Model.CurrentPageIndex, Model.PageSize, Model.RecordCount);
+    }
+</div>
+     <script src="~/Scripts/NAjs/NAReturnList.js"></script>

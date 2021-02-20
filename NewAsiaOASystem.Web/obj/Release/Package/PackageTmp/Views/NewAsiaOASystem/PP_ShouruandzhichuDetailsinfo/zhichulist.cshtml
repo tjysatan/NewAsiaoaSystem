@@ -1,0 +1,149 @@
+﻿@model NewAsiaOASystem.ViewModel.PagerInfo<NewAsiaOASystem.ViewModel.PP_ShouruandzhichuDetailsinfoView>
+@{
+    ViewBag.Title = "支出明细列表";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@section HeadContent{
+    <script type="text/javascript">
+        $(function () {
+            BindGrid();
+        })
+
+        function BindGrid() {
+            @{
+                if (null != Model && null != Model.GetPagingDataJson)
+                {
+                    string json = Model.GetPagingDataJson;//获取json数据
+                    @: var jsonStr = @Html.Raw(json);
+                }
+             }
+            dataGrid(jsonStr);
+        }
+
+        function dataGrid(jsonStr){
+            if (typeof (jsonStr) != "undefined") {
+                var html = "";
+                html = '<table class="layui-table">';
+                html += '<thead>';
+                html+='<tr>';
+                html+='<td width="5%"><input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" /></td>';
+                html+='<td width="15%">姓名</td>';
+                html+='<td width="15%">收入项</td>';
+                html+='<td width="10%">数量</td>';
+                html+='<td width="15%">支出</td>';
+                html+='<td width="15%">支出时间</td>';
+                html+='<td width="20%">操作</td>';
+                html+='</tr>';
+                html+='</thead>';
+                for (var i = 0, j = jsonStr.length; i < j; i++) {
+                    html+='<tr>';
+                    html += '<td width="5%"><input type="checkbox" name="ContentChecked" value="' + jsonStr[i].Id + '"/></td>';
+                    html += '<td width="15%">' +AJaxstafiinfbyId(jsonStr[i].StafitId).Sat_Name + '</td>';
+                    html+='<td width="15%">'+AJaxProfitbyID(jsonStr[i].ProfutId).Rwname+'</td>';
+                    html += '<td width="10%">' +jsonStr[i].Sum + '</td>';
+                    html+='<td width="15%">'+jsonStr[i].Total+'</td>';
+                    html+='<td width="15%">'+jsonStr[i].jl_time+'</td>';
+                    html+='<td width="20%">—</td>';
+                    html+='</tr>';
+                }
+                html += '</table>';
+                $("#content").html(html);
+            }
+        }
+
+        function SerchList(pageIndex)
+        {
+            $("input[name='pageIndex']").val(pageIndex);
+            var options = {
+                beforeSubmit: function () {
+                    return true;
+                },
+                dataType: "json",
+                success: function (context) {
+                    var data=eval(context.result);
+                    dataGrid(data);
+                    $(".pagin").html(context.PageN);//输出分页按钮
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $.messager.alert("操作提示", '查询失败请重试！', 'error');
+                }
+            }
+            $('#form1').ajaxSubmit(options);
+            return false;
+        }
+    </script>
+}
+
+
+<div class="h-right">
+    <div class="h-right-c">
+        <!--查询条件-->
+        @using (Html.BeginForm("zhichuSearchList", "PP_ShouruandzhichuDetailsinfo", FormMethod.Post, new { id = "form1" }))
+        {
+            @Html.Hidden("pageIndex");
+            <div class="inquiry1">
+                <fieldset>
+                    <legend>查询条件：</legend>
+                    <ul>
+                        <li>
+                            <span>员工姓名：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="Name" />
+                            </span>
+                        </li>
+                        <li>
+                            <span>支出项：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="xmname" />
+                            </span>
+                        </li>
+                        <li>
+                            <span>支出时间：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="startwctime" onclick="WdatePicker()" />-
+                                 <input type="text" name="endwctime" onclick="WdatePicker()" />
+                            </span>
+                        </li>
+                        <li>
+                            <span>记录时间：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="startc_time" onclick="WdatePicker()" />-
+                                <input type="text" name="endc_time" onclick="WdatePicker()" />
+                            </span>
+                        </li>
+
+
+                        <li style="*width: 100%; *margin: -10px 0 5px 90px;"><span class="inquiry-input">
+                            <button name="btnSerch" onclick="return SerchList(1)">查询</button>
+                        </span>
+                        </li>
+                        <li>
+                            @*<span class="inquiry-input">
+                                <button onclick="return addClick('/PP_Staffinfo/addPage')">添加</button></span>*@
+                            @*           <span class="inquiry-input">
+                                <button onclick="return update('/PP_Staffinfo/EditPage')">编辑</button></span>*@
+                            <span class="inquiry-input">
+                                <button onclick="return addClick('/PP_ShouruandzhichuDetailsinfo/zhichulist')">刷新</button></span></li>
+                    </ul>
+                </fieldset>
+            </div>
+        }
+        <div class="h-table">
+            <div class="h-table-content">
+
+                <div id="content"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--==========================输出分页按钮=========================-->
+<div class="pagin">
+    @if (ViewBag.PageNavigate == null)
+    {
+        @Html.ShowPageNavigate(Model.CurrentPageIndex, Model.PageSize, Model.RecordCount);
+    }
+</div>
+
+<script src="~/Scripts/NAjs/PP_pulice.js"></script>

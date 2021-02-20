@@ -1,0 +1,251 @@
+﻿@model NewAsiaOASystem.ViewModel.PagerInfo<NewAsiaOASystem.ViewModel.PP_TTShouruandzhichuDetailsinfoView>
+@{
+    ViewBag.Title = "团队不固定分配列表";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@section HeadContent{
+    <script type="text/javascript">
+
+        $(function () {
+            BindGrid();
+        })
+
+        function BindGrid() {
+            @{
+                if (null != Model && null != Model.GetPagingDataJson)
+                {
+                    string json = Model.GetPagingDataJson;//获取json数据
+                    @: var jsonStr = @Html.Raw(json);
+                }
+             }
+            dataGrid(jsonStr);
+        }
+
+        function dataGrid(jsonStr){
+            if (typeof (jsonStr) != "undefined") {
+                var html = "";
+                html = '<table class="layui-table">';
+                html += '<thead>';
+                html+='<tr>';
+                html+='<td width="5%"><input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" /></td>';
+                html+='<td width="25%">名称</td>';
+                html+='<td width="10%">数量</td>';
+                html+='<td width="10%">收入</td>';
+                html+='<td width="15%">收入时间</td>';
+                html+='<td width="10%">是否分配</td>';
+                html+='<td width="25%">操作</td>';
+                html+='</tr>';
+                html+='</thead>'
+                for (var i = 0, j = jsonStr.length; i < j; i++) {
+                    html+='<tr>';
+                    html += '<td width="5%"><input type="checkbox" name="ContentChecked" value="' + jsonStr[i].Id + '"/></td>';
+                    html += '<td width="25%">' +AJaxProfitbyID(jsonStr[i].ProfutId).Rwname + '</td>';
+                    html+='<td width="10%">'+jsonStr[i].Sum+'</td>';
+                    html += '<td width="10%">' +jsonStr[i].Total + '</td>';
+                    html+='<td width="15%">'+jsonStr[i].jl_time+'</td>';
+                    html+='<td width="10%">'+Isfpshow(jsonStr[i].Iswcfp)+'</td>';
+                    html+='<td width="25%"><div class="layui-btn-group">'+FPlistbtn(jsonStr[i].Id)+'</div></td>';
+                    html+='</tr>';
+                }
+                html += '</table>';
+                $("#content").html(html);
+            }
+        }
+
+        function SerchList(pageIndex)
+        {
+            $("input[name='pageIndex']").val(pageIndex);
+            var options = {
+                beforeSubmit: function () {
+                    return true;
+                },
+                dataType: "json",
+                success: function (context) {
+                    var data=eval(context.result);
+                    dataGrid(data);
+                    $(".pagin").html(context.PageN);//输出分页按钮
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $.messager.alert("操作提示", '查询失败请重试！', 'error');
+                }
+            }
+            $('#form1').ajaxSubmit(options);
+            return false;
+        }
+
+        //增加团体收入明细
+        function AddTTsr()
+        {
+            layer.open({
+                type: 2,
+                title: ['团队收入项明细增加（不固定分配）', 'font-size:14px;'],
+                area: ['900px', '450px'],
+                offset: '10px',
+                fixed: false, //不固定
+                maxmin: true,
+                content: '../PP_Staffinfo/TTProfuttwelist',
+                end: function () {
+                    location.reload();
+                }
+
+            });
+            return false;
+        }
+
+        //是否分配状态显示
+        function Isfpshow(val)
+        {
+            if(val=="1")
+            {
+                return "未分配";
+            }
+            else
+            {
+                return "已分配";
+            }
+        }
+
+        //列表操作
+        function FPlistbtn(val)
+        {
+            var Id = "'" + val + "'";
+            var s='<a class="layui-btn layui-btn-primary layui-btn-small" onclick="FPTTsrtwe('+Id+')">分配</a>';
+            var t='<a class="layui-btn layui-btn-primary layui-btn-small" onclick="UrlTTsrmxtweEide('+Id+')">修改</a>';
+            var z='<a class="layui-btn layui-btn-primary layui-btn-small" onclick="DelTTsrmxEide('+Id+')">删除</a>';
+            return s+t+z;
+        }
+
+        //团队项目收入分配
+        function FPTTsrtwe(val)
+        {
+            layer.open({
+                type: 2,
+                title: ['团体项目收入分配（不固定分配）', 'font-size:14px;'],
+                area: ['900px', '450px'],
+                offset: '10px',
+                fixed: false, //不固定
+                maxmin: true,
+                content: '../PP_Staffinfo/TTsrtweFPmxView?TTsrtweId='+val,
+                end: function () {
+                    location.reload();
+                }
+
+            });
+            return false;
+        }
+
+        //团队收入明细编辑（不固定分配）
+        function UrlTTsrmxtweEide(val)
+        {
+            layer.open({
+                type: 2,
+                title: ['团体项目收入修改（不固定分配）', 'font-size:14px;'],
+                area: ['900px', '450px'],
+                offset: '10px',
+                fixed: false, //不固定
+                maxmin: true,
+                content: '../PP_Staffinfo/UpDateTTtwemxView?TTsrxmId='+val,
+                end: function () {
+                    location.reload();
+                }
+
+            });
+        }
+
+        //团队项目收入明细删除
+        function DelTTsrmxEide(val)
+        {
+            $.ajax({
+                type: "POST",
+                url: "/PP_Staffinfo/DelTTsrmxtweEide",
+                data: { "TTsrmxId": val },
+                dataType: "json",
+                async: true,
+                beforeSend: function () {
+                    ddchen();
+                },
+                success: function (context) {
+                    disLoading();
+                    if (context == "0") {
+                        layer.alert("成功删除！", { icon: 1 },function (){  location.reload();});
+                        return false;
+                    }
+                    if (context == "1") {
+                        layer.alert("删除失败！", { icon: 2 },function (){  location.reload();});
+                        return false;
+                    }
+                    
+                },
+                error: function (e) {
+                    disLoading();
+                    alert("请求失败");
+                }
+            })
+        }
+    </script>
+}
+
+
+<fieldset class="layui-elem-field" style="width: 95%; margin: auto;">
+    <legend style="font-size: 12px;">查询条件</legend>
+    <div class="layui-field-box">
+        @using (Html.BeginForm("TTsrtweSearchList", "PP_Staffinfo", FormMethod.Post, new { id = "form1" }))
+        {
+            @Html.Hidden("pageIndex");
+            <div class="layui-inline">
+                <label class="layui-form-label">收入名称：</label>
+                <div class="layui-input-block">
+                    <input type="text" id="cpname" name="cpname" lay-verify="title" autocomplete="off" placeholder="收入名称" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">收入时间:</label>
+                <div class="layui-input-block">
+                    <input type="text" id="jltime" name="jltime" lay-verify="title" autocomplete="off" placeholder="收入时间" class="layui-input" onclick="WdatePicker()" />
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">是否分配：</label>
+                <div class="layui-input-inline">
+                    <select id="Iswcfp" name="Iswcfp" style="border: 1px solid #e5e5e5; width: 100px; height: 38px;">
+                        <option value="">全部</option>
+                        <option value="1">未分配</option>
+                        <option value="0">已分配</option>
+                    </select>
+                </div>
+            </div>
+
+            <button class="layui-btn layui-btn-primary" onclick="return SerchList(1)">
+                <i class="layui-icon" style="font-size: 16px; color: #1E9FFF;">&#xe615;</i> 查询
+            </button>
+            <button class="layui-btn layui-btn-primary" onclick="AddTTsr();return false;">
+                <i class="layui-icon" style="font-size: 16px; color: #1E9FFF;">&#xe654;</i> 增加
+            </button>
+          
+        }
+        @*  onClick=“submitAction();return false;”*@
+        @* <button class="layui-btn layui-btn-primary" onclick="return NewPLwx()">
+            <i class="layui-icon" style="font-size: 16px; color: #1E9FFF;">&#xe642;</i> 批量处理</button>*@
+        @*        <button class="layui-btn layui-btn-primary" onclick="return fkzj()">
+            <i class="layui-icon" style="font-size: 16px; color: #1E9FFF;">&#xe654;</i> 增加
+        </button>*@
+        @*   <button class="layui-btn layui-btn-primary" onclick="return fthmxpldel()">
+            <i class="layui-icon" style="font-size: 16px; color: #1E9FFF;">&#xe640;</i> 批量删除
+        </button>*@
+
+    </div>
+</fieldset>
+
+
+<div id="content" style="padding: 0 10px 0 10px"></div>
+
+
+<!--==========================输出分页按钮=========================-->
+<div class="pagin">
+    @if (ViewBag.PageNavigate == null)
+    {
+        @Html.ShowPageNavigate(Model.CurrentPageIndex, Model.PageSize, Model.RecordCount);
+    }
+</div>
+<script src="~/Scripts/NAjs/PP_pulice.js"></script>

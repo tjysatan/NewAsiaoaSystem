@@ -1,0 +1,625 @@
+﻿@model NewAsiaOASystem.ViewModel.NQ_OASupplierView
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@using (Html.BeginForm("updateOASupplier", "NQ_OASupplier", FormMethod.Post, new { id = "form1" }))
+{
+
+    @Html.Hidden("Id", Model.Id)
+    @Html.Hidden("FLicenceExist", ViewData["FLicenceExist"])
+    
+    @Html.Hidden("FISO9001Exist", ViewData["FISO9001Exist"])
+    @Html.Hidden("FISO14000Exist", ViewData["FISO14000Exist"])
+    @Html.Hidden("FPatentExist", ViewData["FPatentExist"])
+    @Html.Hidden("FOtherExist", ViewData["FOtherExist"])
+    @Html.Hidden("FQuestionnaireExist", ViewData["FQuestionnaireExist"])
+    @Html.Hidden("FAgentExist", ViewData["FAgentExist"])
+    @Html.Hidden("FAgentExist", ViewData["FAgentExist"])
+    @Html.Hidden("FSampleEvaluationExist", ViewData["FSampleEvaluationExist"])
+    @Html.Hidden("FQualityAgreementExist", ViewData["FQualityAgreementExist"])
+    @Html.Hidden("hiddenFSupplierType", Model.FSupplierType)
+    @Html.Hidden("fstatus", Model.supplierStatus.iStatus)
+
+    @Html.Hidden("FLicenceCount", ViewData["FLicenceCount"])
+    @Html.Hidden("FTaxCount", ViewData["FTaxCount"])
+    @Html.Hidden("FISO9001Count", ViewData["FISO9001Count"])
+    @Html.Hidden("FISO14000Count", ViewData["FISO14000Count"])
+    @Html.Hidden("FPatentCount", ViewData["FPatentCount"])
+    @Html.Hidden("FOtherCount", ViewData["FOtherCount"])
+    @Html.Hidden("FQuestionnaireCount", ViewData["FQuestionnaireCount"])
+    @Html.Hidden("FAgentCount", ViewData["FAgentCount"])
+    @Html.Hidden("FSampleEvaluationCount", ViewData["FSampleEvaluationCount"])
+    @Html.Hidden("FTrialProductionCount", ViewData["FTrialProductionCount"])
+    @Html.Hidden("FQualityAgreementCount", ViewData["FQualityAgreementCount"])
+    @Html.Hidden("FSupplierQuestionnaireCount", ViewData["FSupplierQuestionnaireCount"])
+
+    <div class="infor">
+        <p id="Ptitle"></p>
+        <div class="system-menu-set">
+            <ul class="infor-c">
+
+                <li>
+                    <span class="infor-c-width"><span style="color: red; font-size: 24px;vertical-align: middle; margin-left: 8px;width: 4px;">*</span>供应商名称：</span>
+                    <span class="infor-c-input">
+                        @Html.TextBoxFor(m => m.FName)
+                    </span>
+                </li>
+                <li>
+                    <span class="infor-c-width"><span style="color: red; font-size: 24px;vertical-align: middle; margin-left: 8px;width: 4px;">*</span>地址：</span>
+                    <span class="infor-c-input">@Html.TextBoxFor(m => m.FAddress)</span>
+                </li>
+                <li>
+                    <span class="infor-c-width">手机号：</span>
+                    <span class="infor-c-input">
+                        @Html.TextBoxFor(m => m.FMobilePhone)
+                    </span>
+                </li>
+            </ul>
+            <ul class="infor-c">
+                <li>
+                    <span class="infor-c-width"><span style="color: red; font-size: 24px;vertical-align: middle; margin-left: 8px;width: 4px;">*</span>联系人：</span>
+                    <span class="infor-c-input">@Html.TextBoxFor(m => m.FContact)</span>
+                </li>
+                <li>
+                    <span class="infor-c-width"><span style="color: red; font-size: 24px;vertical-align: middle; margin-left: 8px;width: 4px;">*</span>电话：</span>
+                    <span class="infor-c-input">
+                        @Html.TextBoxFor(m => m.FPhone)
+                    </span>
+                </li>
+                <li>
+                    <div class="inquiry-input">
+                        <span>
+                            <button onclick="return SaveBaseForm()">基础数据保存</button>
+                        </span>
+                    </div>
+                </li>
+            </ul>
+            <ul class="infor-c ">
+                <li>
+                    <span class="infor-c-width">供应商性质：</span>
+                    <span class="infor-c-input">
+                        @Html.RadioButtonFor(m => m.FSupplierType, 0, new { @id = "typeFactory", @name = "FSupplierType", @checked = "true", @onclick = "rdbSelected()", @style = "border:hidden" }) 厂家
+                        @Html.RadioButtonFor(m => m.FSupplierType, 1, new { @id = "typeAgent", @name = "FSupplierType", @onclick = "rdbSelected()", @style = "border:hidden" }) 代理商
+                    </span>
+                </li>
+            </ul>
+            <ul class="infor-c ">
+                <li>
+                    <span class="infor-c-width-upload"><span style="color: red; font-size: 24px;vertical-align: middle; margin-left: 8px;width: 4px;">*</span>营业执照(三证合一)：</span>
+                </li>
+                <li>
+                    <span class="infor-c-width">有效期至：</span>
+                    <span class="infor-c-input">
+                    @{
+                        if (ViewBag.FLicencePermanent == 1)
+                        {
+                            <input type="text" name="FLicenceDeadline" value="永不过期" disabled="disabled" />
+                        }
+                        else
+                        {
+                            <input type="text" name="FLicenceDeadline" value="@(ViewBag.FLicenceDeadline == null ? "":ViewBag.FLicenceDeadline.ToString("D") )" disabled="disabled" />
+                        }
+                    }
+                    </span>
+                </li>
+                <li>
+                    <span class="inquiry-input btn_att">
+                        <a class="layui-btn layui-btn-primary" onclick="attachView('0','1');">编辑</a>
+                    </span>
+                </li>
+                @{
+                    if (ViewBag.FLicenceDeadline != null)
+                    {
+                        <li>
+                            <span class="inquiry-input btn_att">
+                                <a class="layui-btn layui-btn-primary" onclick="return clearAtt('0',@Model.Id)">清除附件</a>
+                            </span>
+                        </li>
+                    }
+
+                }
+
+            </ul>
+
+            <ul class="infor-c ">
+                <li>
+                    <span class="infor-c-width-upload">税务登记证：</span>
+                </li>
+                <li>
+                    <span class="infor-c-width">有效期至：</span>
+                    <span class="infor-c-input">
+                        @{
+                            if (ViewBag.FTaxNumPermanent == 1)
+                            {
+                                <input type="text" name="FTaxDeadLine" value="永不过期" disabled="disabled" />
+                            }
+                            else
+                            {
+                                <input type="text" name="FTaxDeadLine" value="@(ViewBag.FTaxDeadLine == null ? "":ViewBag.FTaxDeadLine.ToString("D") )" disabled="disabled" />
+                            }
+                        }
+
+                        @*<input type="text" name="FTaxDeadLine" value="@(ViewBag.FTaxDeadLine == null ? "":ViewBag.FTaxDeadLine.ToString("D") )" disabled="disabled" />*@
+                    </span>
+                </li>
+                <li>
+                    <span class="infor-c-input btn_att">
+                        <a class="layui-btn layui-btn-primary" onclick="attachView('1', '1')">编辑</a>
+                    </span>
+                </li>
+                @{
+                    if (ViewBag.FTaxDeadLine != null)
+                    {
+                        <li>
+                            <span class="inquiry-input btn_att">
+                                <a class="layui-btn layui-btn-primary" onclick="return clearAtt('1',@Model.Id)">清除附件</a>
+                            </span>
+                        </li>
+                    }
+
+                }
+            </ul>
+
+            <ul class="infor-c ">
+                <li>
+                    <span class="infor-c-width-upload">@*<span style="color: red; font-size: 24px;vertical-align: middle; margin-left: 8px;width: 4px;">*</span>*@ ISO9001：</span>
+                </li>
+                <li>
+                    <span class="infor-c-width">有效期至：</span>
+                    <span class="infor-c-input">
+                        @{
+                            if (ViewBag.FISO9001Permanent == 1)
+                            {
+                                <input type="text" name="FISO9001DeadLine" value="永不过期" disabled="disabled" />
+                            }
+                            else
+                            {
+                                <input type="text" name="FISO9001DeadLine" value="@(ViewBag.FISO9001DeadLine == null ? "":ViewBag.FISO9001DeadLine.ToString("D") )" disabled="disabled" />
+                            }
+                        }
+
+                        @*<input type="text" name="FISO9001DeadLine" value="@(ViewBag.FISO9001DeadLine == null ? "":ViewBag.FISO9001DeadLine.ToString("D") )" disabled="disabled" />*@
+                    </span>
+                </li>
+                <li>
+
+                    <span class="infor-c-input btn_att">
+                        <a class="layui-btn layui-btn-primary" onclick="attachView('2', '1')">编辑</a>
+                    </span>
+                </li>
+                @{
+                    if (ViewBag.FISO9001DeadLine != null)
+                    {
+                        <li>
+                            <span class="inquiry-input btn_att">
+                                <a class="layui-btn layui-btn-primary" onclick="return clearAtt('2',@Model.Id)">清除附件</a>
+                            </span>
+                        </li>
+                    }
+
+                }
+            </ul>
+
+            <ul class="infor-c ">
+                <li>
+                    <span class="infor-c-width-upload">ISO14000：</span>
+                </li>
+                <li>
+                    <span class="infor-c-width">有效期至：</span>
+                    <span class="infor-c-input">
+                        @{
+                            if (ViewBag.FISO14000Permanent == 1)
+                            {
+                                <input type="text" name="FISO14000DeadLine" value="永不过期" disabled="disabled" />
+                            }
+                            else
+                            {
+                                <input type="text" name="FISO14000DeadLine" value="@(ViewBag.FISO14000DeadLine == null ? "":ViewBag.FISO14000DeadLine.ToString("D") )" disabled="disabled" />
+                            }
+                        }
+
+                        @*<input type="text" name="FISO14000DeadLine" value="@(ViewBag.FISO14000DeadLine == null ? "":ViewBag.FISO14000DeadLine.ToString("D") )" disabled="disabled" />*@
+                    </span>
+                </li>
+                <li>
+
+                    <span class="infor-c-input btn_att">
+                        <a class="layui-btn layui-btn-primary" onclick="attachView('3', '1')">编辑</a>
+                    </span>
+                </li>
+                @{
+                    if (ViewBag.FISO14000DeadLine != null)
+                    {
+                        <li>
+                            <span class="inquiry-input btn_att">
+                                <a class="layui-btn layui-btn-primary" onclick="return clearAtt('3',@Model.Id)">清除附件</a>
+                            </span>
+                        </li>
+                    }
+
+                }
+            </ul>
+            <ul class="infor-c ">
+                <li>
+                    <span class="infor-c-width-upload">专利证书：</span>
+                </li>
+                <li>
+                    <span class="infor-c-width">有效期至：</span>
+                    <span class="infor-c-input">
+                        @{
+                            if (ViewBag.FPatentPermanent == 1)
+                            {
+                                <input type="text" name="FPatentDeadLine" value="永不过期" disabled="disabled" />
+                            }
+                            else
+                            {
+                                <input type="text" name="FPatentDeadLine" value="@(ViewBag.FPatentDeadLine == null ? "":ViewBag.FPatentDeadLine.ToString("D") )" disabled="disabled" />
+                            }
+                        }
+
+                        @*<input type="text" name="FPatentDeadLine" value="@(ViewBag.FPatentDeadLine == null ? "":ViewBag.FPatentDeadLine.ToString("D") )" disabled="disabled" />*@
+                    </span>
+                </li>
+                <li>
+
+                    <span class="infor-c-input btn_att">
+                        <a class="layui-btn layui-btn-primary" onclick="attachView('4', '1')">编辑</a>
+                    </span>
+                </li>
+                @{
+                    if (ViewBag.FPatentDeadLine != null)
+                    {
+                        <li>
+                            <span class="inquiry-input btn_att">
+                                <a class="layui-btn layui-btn-primary" onclick="return clearAtt('4',@Model.Id)">清除附件</a>
+                            </span>
+                        </li>
+                    }
+
+                }
+            </ul>
+            <ul class="infor-c ">
+                <li>
+                    <span class="infor-c-width-upload">其他认证：</span>
+                </li>
+
+                <li>
+                    <span class="infor-c-width">有效期至：</span>
+                    <span class="infor-c-input">
+                        @{
+                            if (ViewBag.FOtherPermanent == 1)
+                            {
+                                <input type="text" name="FOtherDeadLine" value="永不过期" disabled="disabled" />
+                            }
+                            else
+                            {
+                                <input type="text" name="FOtherDeadLine" value="@(ViewBag.FOtherDeadLine == null ? "":ViewBag.FOtherDeadLine.ToString("D") )" disabled="disabled" />
+                            }
+                        }
+
+                        @*<input type="text" name="FOtherDeadLine" value="@(ViewBag.FOtherDeadLine == null ? "":ViewBag.FOtherDeadLine.ToString("D") )" disabled="disabled" />*@
+                    </span>
+                </li>
+                <li>
+
+                    <span class="infor-c-input btn_att">
+                        <a class="layui-btn layui-btn-primary" onclick="attachView('5', '1')">编辑</a>
+                    </span>
+                </li>
+                @{
+                    if (ViewBag.FOtherDeadLine != null)
+                    {
+                        <li>
+                            <span class="inquiry-input btn_att">
+                                <a class="layui-btn layui-btn-primary" onclick="return clearAtt('5',@Model.Id)">清除附件</a>
+                            </span>
+                        </li>
+                    }
+
+                }
+            </ul>
+            <ul class="infor-c ">
+                <li>
+                    <span class="infor-c-width-upload"><span style="color: red; font-size: 24px;vertical-align: middle; margin-left: 8px;width: 4px;">*</span>供应商调查表：</span>
+                </li>
+
+                <li>
+                    <span class="infor-c-width">有效期至：</span>
+                    <span class="infor-c-input">
+                        @{
+                            if (ViewBag.FQuestionnairePermanent == 1)
+                            {
+                                <input type="text" name="FQuestionnaireDeadLine" value="永不过期" disabled="disabled" />
+                            }
+                            else
+                            {
+                                <input type="text" name="FQuestionnaireDeadLine" value="@(ViewBag.FQuestionnaireDeadLine== null ? "":ViewBag.FQuestionnaireDeadLine.ToString("D") )" disabled="disabled" />
+                            }
+                        }
+
+                        @*<input type="text" name="FQuestionnaireDeadLine" value="@(ViewBag.FQuestionnaireDeadLine == null ? "":ViewBag.FQuestionnaireDeadLine.ToString("D") )" disabled="disabled" />*@
+                    </span>
+                </li>
+                <li>
+
+                    <span class="infor-c-input btn_att">
+                        <a class="layui-btn layui-btn-primary" onclick="attachView('6', '1')">编辑</a>
+                    </span>
+                </li>
+                @{
+                    if (ViewBag.FQuestionnaireDeadLine != null)
+                    {
+                        <li>
+                            <span class="inquiry-input btn_att">
+                                <a class="layui-btn layui-btn-primary" onclick="return clearAtt('6',@Model.Id)">清除附件</a>
+                            </span>
+                        </li>
+                    }
+
+                }
+            </ul>
+            <ul class="infor-c" id="agentul">
+                <li>
+                    <span class="infor-c-width-upload"><span style="color: red; font-size: 24px;vertical-align: middle; margin-left: 8px;width: 4px;">*</span>代理证：</span>
+                </li>
+
+                <li>
+                    <span class="infor-c-width">有效期至：</span>
+                    <span class="infor-c-input">
+                        @{
+                            if (ViewBag.FAgentPermanent == 1)
+                            {
+                                <input type="text" name="FAgentDeadLine" value="永不过期" disabled="disabled" />
+                            }
+                            else
+                            {
+                                <input type="text" name="FAgentDeadLine" value="@(ViewBag.FAgentDeadLine== null ? "":ViewBag.FAgentDeadLine.ToString("D") )" disabled="disabled" />
+                            }
+                        }
+
+                        @*<input type="text" name="FAgentDeadLine" value="@(ViewBag.FAgentDeadLine == null ? "":ViewBag.FAgentDeadLine.ToString("D") )" disabled="disabled" />*@
+                    </span>
+                </li>
+                <li>
+                    <span class="infor-c-input btn_att">
+                        <a class="layui-btn layui-btn-primary" onclick="attachView('7', '1')">编辑</a>
+                    </span>
+                </li>
+                @{
+                    if (ViewBag.FAgentDeadLine != null)
+                    {
+                        <li>
+                            <span class="inquiry-input btn_att">
+                                <a class="layui-btn layui-btn-primary" onclick="return clearAtt('7',@Model.Id)">清除附件</a>
+                            </span>
+                        </li>
+                    }
+
+                }
+            </ul>
+            <ul class="infor-c ">
+                <li>
+                    <span class="infor-c-width-upload">样品评估：</span>
+                </li>
+
+                <li>
+                    <span class="infor-c-width">有效期至：</span>
+                    <span class="infor-c-input">
+                        @{
+                            if (ViewBag.FSampleEvaluationPermanent == 1)
+                            {
+                                <input type="text" name="FSampleEvaluationDeadLine" value="永不过期" disabled="disabled" />
+                            }
+                            else
+                            {
+                                <input type="text" name="FSampleEvaluationDeadLine" value="@(ViewBag.FSampleEvaluationDeadLine== null ? "":ViewBag.FSampleEvaluationDeadLine.ToString("D") )" disabled="disabled" />
+                            }
+                        }
+
+                        @*<input type="text" name="FSampleEvaluationDeadLine" value="@(ViewBag.FSampleEvaluationDeadLine == null ? "":ViewBag.FSampleEvaluationDeadLine.ToString("D") )" disabled="disabled" />*@
+                    </span>
+                </li>
+                <li>
+
+                    <span class="infor-c-input btn_att">
+                        <a class="layui-btn layui-btn-primary" onclick="attachView('8', '1')">编辑</a>
+                    </span>
+                </li>
+                @{
+                    if (ViewBag.FSampleEvaluationDeadLine != null)
+                    {
+                        <li>
+                            <span class="inquiry-input btn_att">
+                                <a class="layui-btn layui-btn-primary" onclick="return clearAtt('8',@Model.Id)">清除附件</a>
+                            </span>
+                        </li>
+                    }
+
+                }
+                <li>
+                    <span class="infor-c-width">审核状态：</span>
+                    <span class="infor-c-input">
+                        @Html.DropDownList("statusList", new SelectList(ViewBag.searchStatus, "Value", "Text"))
+                    </span>
+                </li>
+            </ul>
+            <ul class="infor-c ">
+                <li>
+                    <span class="infor-c-width-upload">小批量试产：</span>
+                </li>
+
+                <li>
+                    <span class="infor-c-width">有效期至：</span>
+                    <span class="infor-c-input">
+                        @{
+                            if (ViewBag.FTrialProductionPermanent == 1)
+                            {
+                                <input type="text" name="FTrialProductionDeadLine" value="永不过期" disabled="disabled" />
+                            }
+                            else
+                            {
+                                <input type="text" name="FTrialProductionDeadLine" value="@(ViewBag.FTrialProductionDeadLine== null ? "":ViewBag.FTrialProductionDeadLine.ToString("D") )" disabled="disabled" />
+                            }
+                        }
+
+
+                        @*<input type="text" name="FTrialProductionDeadLine" value="@(ViewBag.FTrialProductionDeadLine == null ? "":ViewBag.FTrialProductionDeadLine.ToString("D") )" disabled="disabled" />*@
+                    </span>
+                </li>
+                <li>
+
+                    <span class="infor-c-input btn_att">
+                        <a class="layui-btn layui-btn-primary" onclick="attachView('9', '1')">编辑</a>
+                    </span>
+                </li>
+                @{
+                    if (ViewBag.FTrialProductionDeadLine != null)
+                    {
+                        <li>
+                            <span class="inquiry-input btn_att">
+                                <a class="layui-btn layui-btn-primary" onclick="return clearAtt('9',@Model.Id)">清除附件</a>
+                            </span>
+                        </li>
+                    }
+
+                }
+            </ul>
+            <ul class="infor-c ">
+                <li>
+                    <span class="infor-c-width-upload"><span style="color: red; font-size: 24px;vertical-align: middle; margin-left: 8px;width: 4px;">*</span>质量协议：</span>
+                </li>
+
+                <li>
+                    <span class="infor-c-width">有效期至：</span>
+                    <span class="infor-c-input">
+                        @{
+                            if (ViewBag.FQualityAgreementPermanent == 1)
+                            {
+                                <input type="text" name="FQualityAgreementDeadLine" value="永不过期" disabled="disabled" />
+                            }
+                            else
+                            {
+                                <input type="text" name="FQualityAgreementDeadLine" value="@(ViewBag.FQualityAgreementDeadLine== null ? "":ViewBag.FQualityAgreementDeadLine.ToString("D") )" disabled="disabled" />
+                            }
+                        }
+
+                        @*<input type="text" name="FQualityAgreementDeadLine" value="@(ViewBag.FQualityAgreementDeadLine == null ? "":ViewBag.FQualityAgreementDeadLine.ToString("D") )" disabled="disabled" />*@
+                    </span>
+                </li>
+                <li>
+
+                    <span class="infor-c-input btn_att">
+                        <a class="layui-btn layui-btn-primary" onclick="attachView('10', '1')">编辑</a>
+                    </span>
+                </li>
+                @{
+                    if (ViewBag.FQualityAgreementDeadLine != null)
+                    {
+                        <li>
+                            <span class="inquiry-input btn_att">
+                                <a class="layui-btn layui-btn-primary" onclick="return clearAtt('10',@Model.Id)">清除附件</a>
+                            </span>
+                        </li>
+                    }
+
+                }
+            </ul>
+            <ul class="infor-c ">
+                <li>
+                    <span class="infor-c-width-upload">供应商评估表：</span>
+                </li>
+
+                <li>
+                    <span class="infor-c-width">有效期至：</span>
+                    <span class="infor-c-input">
+                        @{
+                            if (ViewBag.FSupplierQuestionnairePermanent == 1)
+                            {
+                                <input type="text" name="FSupplierQuestionnaireDeadLine" value="永不过期" disabled="disabled" />
+                            }
+                            else
+                            {
+                                <input type="text" name="FSupplierQuestionnaireDeadLine" value="@(ViewBag.FSupplierQuestionnaireDeadLine== null ? "":ViewBag.FSupplierQuestionnaireDeadLine.ToString("D") )" disabled="disabled" />
+                            }
+                        }
+
+                        @*<input type="text" name="FSupplierQuestionnaireDeadLine" value="@(ViewBag.FSupplierQuestionnaireDeadLine == null ? "":ViewBag.FSupplierQuestionnaireDeadLine.ToString("D") )" disabled="disabled" />*@
+                    </span>
+                </li>
+                <li>
+
+                    <span class="infor-c-input btn_att">
+                        <a class="layui-btn layui-btn-primary" onclick="attachView('11', '1')">编辑</a>
+                    </span>
+                </li>
+                @{
+                    if (ViewBag.FSupplierQuestionnaireDeadLine != null)
+                    {
+                        <li>
+                            <span class="inquiry-input btn_att">
+                                <a class="layui-btn layui-btn-primary" onclick="return clearAtt('11',@Model.Id)">清除附件</a>
+                            </span>
+                        </li>
+                    }
+
+                }
+            </ul>
+        </div>
+        <div class="inquiry-input infor-b">
+            <span>
+                <button onclick="return SaveForm()">保存</button>
+            </span>
+            <span>
+                <button onclick="return RedirectUrl('/NQ_OASupplier/List')">返回</button>
+            </span>
+        </div>
+    </div>
+                    }
+
+<script src="~/Scripts/NAjs/NQ_OASupplier.js"></script>
+
+<style>
+    .btn_att {
+        margin-left: 30px;
+    }
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var sutype = $('#hiddenFSupplierType').val();
+
+        if (sutype == 0) {
+            $('#agentul').hide();
+        }
+        if (sutype == 1) {
+            $('#agentul').show();
+        }
+    })
+
+    //判定失效
+    function clearAtt(atttype, supplierid) {
+        $.messager.confirm('提示框', '你清除当前附件吗?', function (data) {
+            if (data) {
+                $.ajax({
+                    type: "POST",
+                    url: '/NQ_SupplierAttachment/clearAtt',
+                    data: { supplierid: supplierid, atttype: atttype },
+                    async: false,
+                    success: function (context) {
+                        if ("success" == context.result) {
+                            location.reload();
+                        }
+                    },
+                    error: function (e) {
+                        alert("请求失败！");
+                    }
+                })
+            }
+        });
+
+        return false;
+    }
+
+</script>

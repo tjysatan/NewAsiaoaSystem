@@ -1,0 +1,303 @@
+﻿@model NewAsiaOASystem.ViewModel.PagerInfo<NewAsiaOASystem.ViewModel.WL_DkxInfoView>
+@{
+    ViewBag.Title = "上线电控箱工程商回访";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@section HeadContent{
+    <script type="text/javascript">
+        $(function () {
+            BindGrid();
+            $("#Rvtype").val("0")
+        })
+        function BindGrid() {
+            @{
+                if (null != Model && null != Model.GetPagingDataJson)
+                {
+                    string json = Model.GetPagingDataJson;//获取json数据
+                    @: var jsonStr = @Html.Raw(json);
+                }
+             }
+            dataGrid(jsonStr);
+        }
+
+        function dataGrid(jsonStr)
+        {
+            if (typeof (jsonStr) != "undefined") {
+                var html = "";
+                html = '<table cellpadding="0" cellspacing="0" style="width:100%;">';
+                for (var i = 0, j = jsonStr.length; i < j; i++) {
+                    if (i % 2 == 0)
+                        html += '<tr class="h-table-content-r1">';
+                    else
+                        html += '<tr class="h-table-content-r">';
+                    html += '<td width="5%"><input type="checkbox" name="ContentChecked" value="' + jsonStr[i].Id + '"/></td>';
+                    html += '<td width="10%">' + jsonStr[i].WL_SSD + '</td>';
+              
+                    if(jsonStr[i].Xs_datetime==null||jsonStr[i].Xs_datetime==""){
+                        html+='<td width="8%">未销售</td>';
+                    }else
+                    {
+                        html+='<td width="8%">'+showDate(jsonStr[i].Xs_datetime)+'</td>';
+                    }
+              
+                    if(jsonStr[i].Xs_gcsId==null||jsonStr[i].Xs_gcsId==""){
+                        html+='<td width="10%">未上线</td>';
+                    }else
+                    {
+                        html+='<td width="10%">'+AjaxGcsjsonbyId(jsonStr[i].Xs_gcsId).DW_name+'</td>';
+                    }
+                    if(jsonStr[i].Sx_time==null||jsonStr[i].Sx_time==""){
+                        html+='<td width="8%">'+checkIsnotOnline(jsonStr[i].Xs_datetime)+'</td>';
+                    }
+                    else
+                    {
+                        html+='<td width="8%">'+showDate(jsonStr[i].Sx_time)+'</td>';
+                    }
+                  
+ 
+                    if(jsonStr[i].WL_zt=="0"){
+                        html+='<td width="5%">未售</td>';
+                    }else if(jsonStr[i].WL_zt=="1"){
+                        html+='<td width="5%">已售</td>';
+                    }else if(jsonStr[i].WL_zt=="2"){
+                        html+='<td width="5%">在线</td>';
+                    }else if(jsonStr[i].WL_zt=="3"){
+                        html+='<td width="5%">返修</td>';
+                    }
+                    html+='<td width="10%">'+czshowcs(jsonStr[i].Id)+'</td>';
+                    html+='</tr>';
+                }
+                html += '</table>';
+                $("#content").html(html);
+            }
+        }
+        //pageIndex当前页
+        function SerchList(pageIndex)
+        {
+            $("input[name='pageIndex']").val(pageIndex);
+            var options = {
+                beforeSubmit: function () {
+                    return true;
+                },
+                dataType: "json",
+                success: function (context) {
+                    var data=eval(context.result);
+                    dataGrid(data);
+                    $(".pagin").html(context.PageN);//输出分页按钮
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $.messager.alert("操作提示", '查询失败请重试！', 'error');
+                }
+            }
+            $('#form1').ajaxSubmit(options);
+            return false;
+        }
+        //查询客户信息
+        function AjaxCust_Name(Id) {
+            var json;
+            $.ajax({
+                type: "POST",
+                url: "/Api/NAWebApi/GetNACusjs",
+                data: { "": Id },
+                dataType: "json",
+                async: false,
+                success: function (reslut) {
+                  
+                    json = eval('(' + reslut + ')');
+                },
+                error: function (e) {
+                    alert("请求失败");
+                }
+            })
+            return json;
+        }
+
+        function AjaxGcsjsonbyId(Id){
+            var json;
+            $.ajax({
+                type: "POST",
+                url: "/WL_Gcsinfo/GetGcsjsonbyId",
+                data: {Id: Id },
+                dataType: "json",
+                async: false,
+                success: function (reslut) {
+                    json = eval(reslut);
+                },
+                error: function (e) {
+                    alert("请求失败");
+                }
+            })
+            return json;
+        }
+        
+        //操作
+        function czshowcs(val) {        
+            var Id = "'" + val + "'";
+            var z='<a href="#" onclick="SDSXsidbyID(' + Id + ')">回访</a>&nbsp;&nbsp;';
+            return z;
+        }
+
+        //回访
+        function csSIDbyId(val){
+            $.messager.confirm("操作提示", '确定要初始化此电控箱吗？', function (data) {
+                if(data){
+                    var flay=CSHsidbyID(val);
+                    if(flay=="true"){
+                        $.messager.alert("提示", '初始化成功！','info', function () {
+                            location.href = "../WL_DkxInfo/list";
+                        });
+                    }else
+                    {
+                        $.messager.alert("提示", '初始化失败！','error', function () {
+                            location.href = "../WL_DkxInfo/list";
+                        });
+                    }
+                }
+            })
+        }
+
+        //初始化电控箱信息ajax
+        function CSHsidbyID(Id){
+            var json;
+            $.ajax({
+                type: "POST",
+                url: "/WL_DkxInfo/cshSID",
+                data: {Id: Id },
+                dataType: "json",
+                async: false,
+                success: function (reslut) {
+                    json =reslut.status;
+                },
+                error: function (e) {
+                    alert("请求失败");
+                }
+            })
+            return json;
+        }
+        //回访
+        function SDSXsidbyID(Id){
+            var id = Id;
+            if (id != "") {
+                $('#windowDia').html("<iframe src=../WL_DkxInfo/RvgcsView?Sid=" + id + "&&Rvtype="+"0"+"  style='border:0px;' width='500px' height='400px'></iframe>");
+                $("#windowDia").window({
+                    title: '工程商回访记录',
+                    modal: true,
+                    closed: false,
+                    width: 555,
+                    height:460,
+                    top: ($(window).height() - 555) * 0.5,
+                    left: ($(window).width() - 460) * 0.5,
+                });
+            }
+        }
+
+        function checkIsnotOnline(xs_time)
+        {
+            var sl;
+            $.ajax({
+                type: "POST",
+                url: "../WL_DkxInfo/checkIsnotOnline",
+                dataType: "json",
+                data: { Xs_time: xs_time},
+                async: false,
+                success: function (reslut) {
+                    sl = reslut.status;
+                },
+                error: function (e) {
+                    alert(e.error);
+                    alert("失败！");
+                }
+            })
+            return sl;
+        }
+
+    </script>
+}
+
+
+ <div class="h-right">
+    <div class="h-right-c">
+       <!--查询条件-->
+        @using (Html.BeginForm("RvSearchList", "WL_DkxInfo", FormMethod.Post, new { id = "form1" }))
+        {
+            @Html.Hidden("pageIndex");
+             @Html.Hidden("Rvtype");
+            <div class="inquiry1">
+                <fieldset>
+                    <legend>查询条件：</legend>
+                    <ul>
+                        <li><span>经销权：</span>
+                            <span class="inquiry-input">
+                                @Html.DropDownList("txtSearch_Name", ViewData["CustList"] as SelectList, new { @class="add-function"})
+                            </span>
+                        </li>
+                        <li>
+                            <span>买一送一：</span>
+                             <span class="inquiry-input">
+                                @Html.DropDownList("txtSearch_Name2", ViewData["Cus2tList"] as SelectList, new { @class="add-function"})
+                            </span>
+                        </li>
+                        <li>
+                            <span>是否回访：</span>
+                            <span>
+                                <select id="wl_zt" name="wl_zt" class="add-function">
+                                    <option value="1">未回访</option>
+                                    <option value="0">全部</option>
+                                    <option value="2">已回访</option>
+                                </select>
+                            </span>
+                        </li>
+
+                        <li>
+                            <span>上线时间：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txtSearch_startdate" onclick="WdatePicker()" />
+                            </span>
+                               到 <span class="inquiry-input"><input type="text" name="txtSearch_enddate" onclick="WdatePicker()" /></span>
+                        </li>
+                        <li style="*width: 100%; *margin: -10px 0 5px 90px;"><span class="inquiry-input">
+                            <button name="btnSerch" onclick="return SerchList(1)">查询</button>
+                        </span>
+                        </li>
+                        <li>
+                            <span class="inquiry-input">
+                            <button onclick="return addClick('/WL_DkxInfo/addPage')">添加</button></span>
+                           @* <span class="inquiry-input">
+                                <button onclick="return del('/WL_DkxInfo/Delete')">删除</button></span>*@
+                            <span class="inquiry-input">
+                                <button onclick="return update('/WL_DkxInfo/EditPage')">编辑</button></span>
+                            <span class="inquiry-input">
+                                <button onclick="return addClick('/WL_DkxInfo/List')">刷新</button></span></li>
+                    </ul>
+                </fieldset>
+            </div>
+        }
+        <div class="h-table">
+            <div class="h-table-content">
+                <table cellpadding="0" cellspacing="0" class="h-right-table-title1" style="border: none;width:100%;">
+                    <tr>
+                        <td width="5%">
+                            <input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" /></td>
+                        <td width="10%">SID</td>
+                        <td width="8%">销售时间</td>
+                        <td width="10%">工程商</td>
+                        <td width="8%">上线时间</td>
+                        <td width="5%">状态</td>
+                        <td width="10%">操作</td>
+                    </tr>
+                </table>
+                <div id="content"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--==========================输出分页按钮=========================-->
+<div class="pagin">
+    @if (ViewBag.PageNavigate == null)
+    {
+        @Html.ShowPageNavigate(Model.CurrentPageIndex, Model.PageSize, Model.RecordCount);
+    }
+</div>
+<div id="windowDia" class="easyui-window" closed="true" style="width:600px; height:400px; padding:10px;"></div>

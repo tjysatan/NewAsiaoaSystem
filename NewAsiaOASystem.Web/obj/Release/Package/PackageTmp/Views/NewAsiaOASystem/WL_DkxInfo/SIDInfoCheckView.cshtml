@@ -1,0 +1,104 @@
+﻿@{
+    ViewBag.Title = "电控箱的详细信息";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<style>
+    .table_con
+    {
+        border-collapse: collapse;
+        border: none;
+    }
+
+        .table_con td
+        {
+            border: solid #eae5e5 1px;
+            height: 35px;
+            padding: 0 0 0 5px;
+        }
+
+    .btnspan button
+    {
+        width: 120px;
+        height: 30px;
+        background: #337CA8;
+    }
+</style>
+
+<script type="text/javascript">
+    //首次加载
+    $(function () {
+        GCShtml();
+    })
+
+    //html 工程商信息
+    function GCShtml() {
+        var jsonStr = AJAXgcsinfobysid('@ViewData["sid"]');
+        $("#gcscon").html("");
+        if (jsonStr != null) {
+            if (typeof (jsonStr) != "undefined") {
+                var html = "";
+                html = '<table class="table_con" style="width: 100%; color: #000; font-size: 13px;">';
+                html += '<tr>';
+                html += '<td width="20%">工程商：</td>';
+                html += '<td >' + jsonStr.user_name + '</td>';
+                html += '</tr>';
+                html += '<tr>';
+                html += '<td width="20%">联系电话：</td>';
+                html += '<td >' + jsonStr.mobile + '</td>';
+                html += '</tr>';
+                html += '<tr>';
+                html += '<td width="20%">SID号：</td>';
+                html += '<td >' + jsonStr.sid + '</td>';
+                html += '</tr>';
+                html += '</table>';
+                $("#gcscon").html(html);
+            }
+        }
+    }
+    //获取工程商信息
+    function AJAXgcsinfobysid(val) {
+        var str;
+        $.ajax({
+            url: "/WL_DkxInfo/AJaxNewgcsinfobysid",
+            type: "POST",
+            data: { sid: val },
+            dataType: "json",
+            async: false,
+            success: function (response) {
+                str = eval(response);
+            },
+            error: function (e) {
+                $.messager.alert("操作提示", '网络异常,请刷新！', 'error');
+                return false;
+            }
+        })
+        return str;
+    }
+</script>
+
+<div id="tt" class="easyui-tabs" style="width: 98%; height: 450px; margin: auto;">
+    <div title="工程商" data-options="closable:false" style="padding: 20px;">
+        @*    <a class="btna2" onclick="quanbudingzewancheng()">定责完成</a>
+
+        <table class="table_con" style="width: 100%; color: #000; font-size: 13px; margin-top: 20px;" id="wxmxcon" name="wxmxcon">
+        </table>*@
+        <table class="table_con" style="width: 100%; color: #000; font-size: 13px; margin-top: 20px;" id="gcscon" name="gcscon">
+            <tr>
+                <td>工程商：</td>
+                <td></td>
+
+            </tr>
+            <tr>
+                <td>联系电话：</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>SID:</td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+

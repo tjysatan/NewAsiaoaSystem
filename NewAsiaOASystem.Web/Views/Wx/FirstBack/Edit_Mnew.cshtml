@@ -1,0 +1,94 @@
+﻿@model NewAsiaOASystem.DBModel.WX_Message
+@{
+    ViewBag.Title = "Edit_Mnew";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@section HeadContent{
+    <script type="text/javascript">
+        $(function () {
+            if ("" == $("#Id").val())
+                $("#Ptitle").text("关键词添加");
+            else
+                $("#Ptitle").text("关键词编辑");
+        })
+    </script>
+}
+
+@using (Html.BeginForm("Edit_new", "FirstBack", FormMethod.Post, new { id = "form1" }))
+{         
+    @Html.HiddenFor(m => m.A_CreateTime);
+    @Html.HiddenFor(m => m.A_CreateUser)
+    @Html.HiddenFor(m => m.A_id)
+    @Html.HiddenFor(m => m.MsgType)
+    <div class="infor">
+    @*    <div class="h-right-title">您当前的位置：多图文信息编辑</div>*@
+        <p id="Ptitle"></p>
+        <div class="system-menu-set">
+            <ul class="infor-c">
+                <li><span class="infor-c-width">关键词：</span><span class="infor-c-input">
+                    @Html.TextBoxFor(m => m.A_KeyWord)</span></li>
+            </ul>
+
+            <ul class="infor-c " style="display: none">
+                <li><span class="infor-c-width">消息类型：</span></li>
+                <li><span>
+
+
+                    <select class="add-function" name="MsgType">
+                        @{
+                                        if ("text".Equals(Convert.ToString(@Model.MsgType)) && null != @Model.A_id)
+                                        {
+                            @:<option value="news">文本消息</option>
+@*                                @:<option value="news" selected="selected">图文消息</option>*@
+                                        }
+                                        else
+                                        {
+                            @:<option value="news"  selected="selected">文本消息</option>
+@*                                @:<option value="news">图文消息</option>*@
+                                        }
+                                                
+                        }
+
+                    </select>
+                </span>
+
+                </li>
+            </ul>
+
+            <ul class="infor-c">
+                <li><span class="infor-c-width">是否默认：</span>
+                    <span>
+                        <select class="add-function" name="IsDefaultMessage">
+                            @{
+                                        if ("False".Equals(Convert.ToString(@Model.IsDefaultMessage)) && null != @Model.A_id)
+                                        {
+                                @:<option value="True">是</option>
+                                @:<option value="False" selected="selected">否</option>
+                                                }
+                                        else
+                                        {
+                                @:<option value="True"  selected="selected">是</option>
+                                @:<option value="False">否</option>
+                                      }
+                                                
+                            }
+
+                        </select></span></li>
+            </ul>
+
+              <ul class="infor-c">
+                <li><span class="infor-c-width">选择图文消息：</span>
+                    <span class="infor-c-input">
+                    </span>
+                </li>
+            </ul>
+ 
+        </div>
+        <div class="inquiry-input infor-b">
+            <span>
+                <button onclick="return submitForm('/FirstBack/Index')">保存</button></span><span>
+                    <button onclick="return RedirectUrl('/FirstBack/Index')">返回</button></span>
+        </div>
+    </div>
+}

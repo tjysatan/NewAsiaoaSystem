@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="NewAsiaOASystem.DBModel" assembly="NewAsiaOASystem.DBModel">
+  <class name="DKX_k3Bominfo" table="DKX_k3Bominfo">
+    <id name="Id" column="Id" type="string" unsaved-value="0">
+      <generator class="uuid.hex"/>
+    </id>
+    <property name="dd_Id" column="dd_Id"  />
+    <property name="FnumberBom" column="FnumberBom"  />
+    <property name="FNumber" column="FNumber"  />
+    <property name="FItemName" column="FItemName"  />
+    <property name="FModel" column="FModel"  />
+    <property name="FBaseUnitID" column="FBaseUnitID"  />
+    <property name="FAuxQty" column="FAuxQty"  />
+    <property name="C_time" column="C_time"  />
+    <property name="Beizhu" column="Beizhu"  />
+    <property name="Beizhu1" column="Beizhu1"  />
+    <property name="Beizhu2" column="Beizhu2"  />
+  </class>
+</hibernate-mapping>

@@ -1,0 +1,344 @@
+﻿@model NewAsiaOASystem.ViewModel.PagerInfo<NewAsiaOASystem.ViewModel.IQC_llNoticeMXordinfoView>
+@{
+    ViewBag.Title = "K3同步的来料通知单明细管理列表";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@section HeadContent{
+    <script type="text/javascript">
+        $(function () {
+            BindGrid();
+        })
+
+        function BindGrid() {
+            @{
+                if (null != Model && null != Model.GetPagingDataJson)
+                {
+                    string json = Model.GetPagingDataJson;//获取json数据
+                    @: var jsonStr = @Html.Raw(json);
+                }
+             }
+            dataGrid(jsonStr);
+        }
+
+        function dataGrid(jsonStr){
+            if (typeof (jsonStr) != "undefined") {
+                var html = "";
+                html = '<table class="layui-table">';
+                html += '<thead>';
+                html+='<tr>';
+                html+='<td width="5%"><input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" /></td>';
+                html+='<td width="15%">单号</td>';
+                html+='<td width="10%">元器件</td>';
+                html+='<td width="10%">型号</td>';
+                html+='<td width="10%">数量</td>';
+                html+='<td width="10%">供应商</td>';
+                html+='<td width="10%">时间</td>';
+                html+='<td width="10%">状态</td>';
+                html+='<td width="20%">操作</td>';
+                html+='</tr>';
+                html+='</thead>';
+                for (var i = 0, j = jsonStr.length; i < j; i++) {
+                    html+='<tr>';
+                    html += '<td width="5%"><input type="checkbox" name="ContentChecked" value="' + jsonStr[i].Id + '"/></td>';
+                    html += '<td width="15%">' + jsonStr[i].DDNO + '</td>';
+                    html+='<td width="10%">'+jsonStr[i].Yqjname+'</td>';
+                    html += '<td width="10%">' +jsonStr[i].Yqjxh + '</td>';
+                    html += '<td width="10%">' +jsonStr[i].Sum + '</td>';
+                    html += '<td width="10%">' +jsonStr[i].gysname + '</td>';
+                    html += '<td width="10%">' +showDate(jsonStr[i].C_time) + '</td>';
+                    if(jsonStr[i].Isjy=="0")
+                        html += '<td width="10%" style="color:red">未生成</td>';
+                    else
+                        html += '<td width="10%">已生成</td>';
+                    html+='<td width="20%"><div class="layui-btn-group">'+caozuo(jsonStr[i].Id,jsonStr[i].Isjy,jsonStr[i].DDNO)+'</div></td>';
+                    html+='</tr>';
+                }
+                html += '</table>';
+                $("#content").html(html);
+            }
+        }
+
+        function SerchList(pageIndex)
+        {
+            $("input[name='pageIndex']").val(pageIndex);
+            var options = {
+                beforeSubmit: function () {
+                    return true;
+                },
+                dataType: "json",
+                success: function (context) {
+                    var data=eval(context.result);
+                    dataGrid(data);
+                    $(".pagin").html(context.PageN);//输出分页按钮
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $.messager.alert("操作提示", '查询失败请重试！', 'error');
+                }
+            }
+            $('#form1').ajaxSubmit(options);
+            return false;
+        }
+
+        var loadi;
+        function ddchen() {
+            loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+        }
+
+        //关闭等待效果
+        function disLoading() {
+            layer.close(loadi);
+        }
+
+        //同步数据
+        function TBDATA()
+        {
+            $.ajax({
+                type: "POST",
+                url: "../IQC_Sop/k3llNoticeInterface",
+                dataType: "html",
+                async: true,
+                beforeSend: function () {
+                    ddchen();
+                },
+                success: function (reslut) {
+                    disLoading();
+                    if (reslut == "2") {
+                        layer.alert("提交成功！", { icon: 1 }, function () { location.reload(); })
+                    }
+                    if (reslut == "1") {
+                        layer.alert("当前已经是最新的数据了！", { icon: 1 }, function () { location.reload(); })
+                    }
+                    if (reslut == "0") {
+                        layer.alert("提交异常！", { icon: 2 }, function () { location.reload(); })
+                    }
+                },
+                error: function (e) {
+                    disLoading();
+                    layer.alert("网络异常，请重试！", { icon: 2 }, function () { location.reload(); })
+                }
+            })
+        }
+
+        //列表按钮
+        function caozuo(Id,type,ddno)
+        {
+            Id="'"+Id+"'";
+            type="'"+type+"'";
+            ddno="'"+ddno+"'";
+            var s = '<a class="layui-btn layui-btn-primary layui-btn-small" onclick="JYDinfo('+Id+','+type+')">检验单</a>';
+            var t='<a class="layui-btn layui-btn-primary layui-btn-small" onclick="shuaxinTZDmx('+ddno+')">刷新</a>';
+            var a='<a class="layui-btn layui-btn-primary layui-btn-small" onclick="Updatesum('+Id+')">数量编辑</a>';
+            var b='<a class="layui-btn layui-btn-primary layui-btn-small" onclick="delmx('+Id+')">删除</a>';
+            return s+t+a+b;
+        }
+
+        //检验单打开
+        //打开作业流程单基本信息填写页面
+        function JYDinfo(val,val1)
+        {
+            if(val1=="0")
+            {
+                layer.open({
+                    type: 2,
+                    title: ['检验单', 'font-size:14px;'],
+                    area: ['800px', '450px'],
+                    offset: '10px',
+                    fixed: false, //不固定
+                    maxmin: true,
+                    content: '../IQC_Sop/JYDSCView?Id='+val,
+                });
+            }else
+            {
+                layer.alert("<检验测试单>已经生成,可以去往<检验测试单列表>中做进一步编辑！", { icon: 2 });
+            }
+        }
+
+        //修改数量
+        function Updatesum(val)
+        {
+            layer.open({
+                type: 2,
+                title: ['检验单数量修改', 'font-size:14px;'],
+                area: ['500px', '250px'],
+                offset: '10px',
+                fixed: false, //不固定
+                maxmin: true,
+                content: '../IQC_Sop/NumberUpdateView?Id='+val,
+            });
+        }
+
+        var loadi;
+        function ddchen() {
+            loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+        }
+        //关闭等待效果
+        function disLoading() {
+            layer.close(loadi);
+        }
+
+        //刷新相同单号的所有明细
+        function shuaxinTZDmx(val)
+        {
+            $.messager.confirm("操作提示", '刷新后会重新初始化该通知单号下面所有的检验明细,你确定刷新码？', function (data) {
+                if(data){
+                    $.ajax({
+                        url: "../IQC_Sop/DGJYTZDshuaxin",
+                        type: "POST",
+                        data: { ddno: val},
+                        dataType: "html",
+                        async: true,
+                        beforeSend: function () {
+                            ddchen();
+                        },
+                        success: function (response) {
+                            disLoading();
+                            if (response == "0") {
+                                layer.alert("提交异常！", { icon: 2 }, function () { location.reload(); });
+                            }
+                            if (response == "1") {
+                                layer.alert("资料同步失败！", { icon: 2 }, function () { location.reload(); });
+                            }
+                            if(response=="2"){
+                                layer.alert("资料明细复制异常！", { icon: 2 }, function () { location.reload(); });
+                            }
+                            if(response=="3")
+                            {
+                                layer.alert("刷新成功！", { icon: 1 }, function () {  location.reload();  });
+                            }
+                        },
+                        error: function (e) {
+                            disLoading();
+                            layer.alert("操作失败！", { icon: 2 });
+                        }
+                    })
+                }
+            })
+        }
+
+        //删除
+        function delmx(val)
+        {
+            $.messager.confirm("操作提示", '删除后数据就不存在了,你确定要删除吗？', function (data) {
+                if(data){
+                    $.ajax({
+                        url: "../IQC_Sop/llNoticedel",
+                        type: "POST",
+                        data: { Id: val},
+                        dataType: "html",
+                        async: true,
+                        beforeSend: function () {
+                            ddchen();
+                        },
+                        success: function (response) {
+                            disLoading();
+                            if (response == "0") {
+                                layer.alert("提交异常！", { icon: 2 }, function () { location.reload(); });
+                            }
+                            if (response == "1") {
+                                layer.alert("删除成功！", { icon: 1 }, function () { location.reload(); });
+                            }
+                            if(response=="2"){
+                                layer.alert("删除失败！", { icon: 2 }, function () { location.reload(); });
+                            }
+                            if(response=="3")
+                            {
+                                layer.alert("订单不存在！", { icon: 2 }, function () {  location.reload();  });
+                            }
+                        },
+                        error: function (e) {
+                            disLoading();
+                            layer.alert("操作失败！", { icon: 2 });
+                        }
+                    })
+                }
+            })
+        }
+
+    </script>
+}
+<div class="h-right">
+    <div class="h-right-c">
+        <!--查询条件-->
+
+        <div class="inquiry1">
+            <fieldset>
+                <legend>查询条件：</legend>
+                @using (Html.BeginForm("llNoticeSearchList", "IQC_Sop", FormMethod.Post, new { id = "form1" }))
+                {
+                    @Html.Hidden("pageIndex");
+                    <ul>
+                        <li>
+                            <span>通知单单号：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txtddno" id="txtddno" />
+                            </span>
+                        </li>
+                        <li>
+                            <span>物料代码：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txtyqjwl" id="txtyqjwl" />
+                            </span>
+                        </li>
+                        <li><span>物料型号：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txtyqjname" id="txtyqjname" />
+                            </span>
+                        </li>
+                        <li><span>供应商代码：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txtgyswl" id="txtgyswl" />
+                            </span>
+                        </li>
+                        <li><span>供应商名称：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txtgyqname" id="txtgyqname" />
+                            </span>
+                        </li>
+                        <li>
+                            <span>生产检验单：</span>
+                            <span class="inquiry-input">
+                                <select id="txtIsscjyd" name="txtIsscjyd">
+                                    <option value="">全部</option>
+                                    <option value="0">未生成</option>
+                                    <option value="1">已生成</option>
+                                </select>
+                            </span>
+                        </li>
+
+                        <li style="*width: 100%; *margin: -10px 0 5px 90px;"><span class="inquiry-input">
+                            <button name="btnSerch" class="layui-btn" onclick="return SerchList(1)"><i class="layui-icon">&#xe615;</i>查询</button>
+                        </span>
+                        </li>
+                    </ul>
+                }
+                <ul>
+
+                    <li>
+                        <span class="inquiry-input">
+                            <button class="layui-btn" onclick="TBDATA()"><i class="layui-icon">&#xe608;</i> 同步数据</button>
+                        </span>
+                        <span class="inquiry-input">
+                            <button class="layui-btn" onclick="return addClick('/IQC_Sop/llNoticelist')"><i class="layui-icon">&#x1002;</i>刷新</button></span>
+                    </li>
+                </ul>
+            </fieldset>
+        </div>
+
+
+        <div class="h-table">
+            <div class="h-table-content">
+
+                <div id="content"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--==========================输出分页按钮=========================-->
+<div class="pagin">
+    @if (ViewBag.PageNavigate == null)
+    {
+        @Html.ShowPageNavigate(Model.CurrentPageIndex, Model.PageSize, Model.RecordCount);
+    }
+</div>

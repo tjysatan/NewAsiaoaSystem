@@ -1,0 +1,5 @@
+2020-11-28 21:01:24,816 [35] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2020-11-28 21:01:24,816 [35] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2020-11-28 21:01:24,816 [35] ERROR ApplicationInfoLog [(null)] <(null)< - 无法将类型为“System.Object[]”的对象强制转换为类型“PointData”。
+2020-11-28 21:01:24,827 [35] ERROR ApplicationInfoLog [(null)] <(null)< - System.Web.Mvc.FileResult ExcelExportStatisticsCpsum(System.String, System.String)
+2020-11-28 21:01:24,827 [35] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================

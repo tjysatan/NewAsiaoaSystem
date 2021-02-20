@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="NewAsiaOASystem.DBModel" assembly="NewAsiaOASystem.DBModel">
+  <class name="NA_CustomerRecord" table="NA_CustomerRecord">
+    <id name="Id" column="Id" type="string" unsaved-value="0">
+      <generator class="uuid.hex"/>
+    </id>
+
+    <property name="Rcusname">
+      <column name="Rcusname"/>
+    </property>
+    <property name="Rlegalperson"> 
+      <column name="Rlegalperson"/>
+    </property>
+    <property name="Rlptel">
+      <column name="Rlptel"/>
+    </property>
+    <property name="Rpurchasename">
+      <column name="Rpurchasename"/>
+    </property>
+    <property name="RPTel">
+      <column name="RPTel"/>
+    </property>
+    <property name="Rtyle">
+      <column name="Rtyle"/>
+    </property>
+    <property name="Rcptyle">
+      <column name="Rcptyle"/>
+    </property>
+    <property name="RnameId">
+      <column name="RnameId"/>
+    </property>
+    <property name="Rname">
+      <column name="Rname"/>
+    </property>
+    <property name="Rdatatime">
+      <column name="Rdatatime"/>
+    </property>
+    <property name="Rexpiredatetime">
+      <column name="Rexpiredatetime"/>
+    </property>
+    <property name="RengineerId">
+      <column name="RengineerId"/>
+    </property>
+    <property name="Rengineer">
+      <column name="Rengineer"/>
+    </property>
+    <property name="RengneerTel">
+      <column name="RengneerTel"/>
+    </property>
+    <property name="Roverdue">
+      <column name="Roverdue"/>
+    </property>
+    <property name="Rdeal">
+      <column name="Rdeal"/>
+    </property>
+    <property name="c_time">
+      <column name="c_time"/>
+    </property>
+  </class>
+</hibernate-mapping>

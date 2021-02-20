@@ -1,0 +1,8 @@
+F:\新疆侨瑞欣源电子 工作\维稳信息化平台_政府通令\Code\ViewModel\bin\Debug\CommandSystem.ViewModel.dll
+F:\新疆侨瑞欣源电子 工作\维稳信息化平台_政府通令\Code\ViewModel\bin\Debug\CommandSystem.ViewModel.pdb
+F:\新疆侨瑞欣源电子 工作\维稳信息化平台_政府通令\Code\ViewModel\obj\Debug\CommandSystem.ViewModel.dll
+F:\新疆侨瑞欣源电子 工作\维稳信息化平台_政府通令\Code\ViewModel\obj\Debug\CommandSystem.ViewModel.pdb
+E:\公司项目\社区\IOT_Community\trunk\ViewModel\bin\Debug\CommandSystem.ViewModel.dll
+E:\公司项目\社区\IOT_Community\trunk\ViewModel\bin\Debug\CommandSystem.ViewModel.pdb
+E:\公司项目\社区\IOT_Community\trunk\ViewModel\obj\Debug\CommandSystem.ViewModel.dll
+E:\公司项目\社区\IOT_Community\trunk\ViewModel\obj\Debug\CommandSystem.ViewModel.pdb

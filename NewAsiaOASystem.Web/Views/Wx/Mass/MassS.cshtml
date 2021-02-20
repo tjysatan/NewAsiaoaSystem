@@ -1,0 +1,91 @@
+﻿@model DiseaseControl.ViewModel.PagerInfo<DiseaseControl.ViewModel.WX_Message_NewsView>
+@{
+    ViewBag.Title = "群发消息选择";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+
+@section HeadContent{
+    <script src="~/Scripts/Sys/SysMenu.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            BindGrid();
+        })
+        function BindGrid() {
+             @{
+                
+                 if (null != Model)
+                 {
+                     string json = Model.GetPagingDataJson;//获取json数据
+                    @: var jsonStr =@Html.Raw(json); 
+                              //  @: $("#dg").datagrid('loadData', jsonStr); 
+                 }
+              }
+            if (typeof(jsonStr)!="undefined") {
+                var html="";
+                html='<table cellpadding="0" cellspacing="0">';
+                for (var i = 0,j=jsonStr.length; i < j; i++) {
+                    if (i%2==0)
+                        html+='<tr class="h-table-content-r1">';
+                    else
+                        html+='<tr class="h-table-content-r">';
+                    html+='<td width="30"><input type="checkbox" name="ContentChecked" value="'+jsonStr[i].N_id+'"/></td>';
+                    html+='<td width="180">'+jsonStr[i].Title+'</td>';
+                        html+='<td width="90">'+jsonStr[i].Description+'</td>';
+                        html+='<td width="200">'+jsonStr[i].PicUrl+'</td>';
+                        html+='<td width="150">'+jsonStr[i].Url+'</td>';
+                
+                    html+="</tr>";
+                }
+                html+='</table>';
+                $(".h-table-content").append(html);
+            }
+        }
+    </script>
+}
+
+  <!--==================================数据列表=============================-->
+    <div class="h-right">
+        <div class="h-right-c">
+            <div class="h-right-title">您当前的位置：群发消息</div>
+            <div class="inquiry-input" style="margin: 10px 0 10px 10px;">
+                <span class="inquiry-input">
+                    <button onclick="addClick('/Mass/')">图文选择</button></span>
+                <span class="inquiry-input">
+                    <button onclick="addClick('/Mass/Index')">图文添加</button></span>
+               
+            </div>
+           
+            <div class="h-table">
+                <div class="h-table-content">
+                    <table cellpadding="0" cellspacing="0" class="h-right-table-title1" style="border: 5px;">
+                        <tr>
+                            <td width="30"><input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()"/></td>
+                            <td width="180">文章标题</td>
+                            <td width="90">简介</td>
+                            <td width="200">图片URL</td>
+                           
+                            <td width="150">文章连接</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+             <div class="inquiry-input" style="margin: 10px 0 10px 10px;">
+               @using (Html.BeginForm("GetWx_Menu", "WxMenu", FormMethod.Post, new { id = "form1" }))
+             { 
+               <div class="z_Menu"> 
+                   <span class="inquiry-input">
+                   <button onclick="return Wx_MenusubmitForm('/WxMenu/Index','form1')">发送</button>
+                     </span>  
+               </div>
+            }
+                  
+              </div>
+        </div>
+    </div>
+
+
+
+
+

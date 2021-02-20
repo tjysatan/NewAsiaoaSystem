@@ -1,0 +1,212 @@
+﻿@model NewAsiaOASystem.ViewModel.PagerInfo<NewAsiaOASystem.ViewModel.NACustomerinfoView>
+
+@{
+    ViewBag.Title = "客户管理";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+
+@section HeadContent{
+    <script type="text/javascript">
+        $(function () {
+            $("#txtSearch_Name").val('@ViewData["name"]');
+            $("#txtSearch_lxrName").val('@ViewData["lxrname"]');
+            $("#Tel").val('@ViewData["tel"]');
+            $("#Isds").val('@ViewData["isly"]');
+            $("#wljxs").val('@ViewData["jxstype"]');
+            $("#Isjy").val('@ViewData["isqy"]');
+            BindGrid();
+        })
+        function BindGrid() {
+            @{
+                if (null != Model && null != Model.GetPagingDataJson)
+                {
+                    string json = Model.GetPagingDataJson;//获取json数据
+                    @: var jsonStr = @Html.Raw(json);
+                   
+                }
+             }
+            dataGrid(jsonStr);
+        }
+
+        function dataGrid(jsonStr)
+        {
+            if (typeof (jsonStr) != "undefined") {
+                var html = "";
+                html = '<table class="layui-table">';
+                html += '<thead>';
+                html+='<tr>';
+                html+='<td width="5%"><input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" /></td>';
+                html+='<td width="15%">客户名称</td>';
+                html+='<td width="10%">联系人</td>';
+                html+='<td width="10%">联系电话</td>';
+                html+='<td width="25%">地址</td>';
+                html+='<td width="10%">状态</td>';
+                html+='<td width="10%">电商Id</td>';
+                html+=' <td width="15%">创建时间</td>';
+                html+='</tr>';
+                html+='</thead>';
+                for (var i = 0, j = jsonStr.length; i < j; i++) {
+                    html+='<tr>';
+                    html += '<td width="5%"><input type="checkbox" name="ContentChecked" value="' + jsonStr[i].Id + '"/></td>';
+                    html += '<td width="15%">' + jsonStr[i].Name + '</td>';
+                    if(jsonStr[i].LxrName!=null)
+                        html += '<td width="10%">' + jsonStr[i].LxrName + '</td>';
+                    else
+                        html += '<td width="10%"></td>';
+                    if(jsonStr[i].Tel!=null)
+                        html += '<td width="10%">' + jsonStr[i].Tel + '</td>';
+                    else
+                        html += '<td width="10%"></td>';
+                    if(jsonStr[i].Adress!=null)
+                        html += '<td width="25%">' + jsonStr[i].Adress + '</td>';
+                    else
+                        html += '<td width="25%"></td>';
+                    
+                    if(jsonStr[i].Status!=null)
+                        html += '<td width="10%">' + showVal(jsonStr[i].Status) + '</td>';
+                    else
+                        html += '<td width="10%">-</td>';
+                    if(jsonStr[i].Isds=="1")
+                        html+='<td width="10%">电商</td>';
+                    else
+                        html += '<td width="10%">非电商</td>';
+                    if(jsonStr[i].CreateTime!=null)
+                        html += '<td width="15%">' + showDate(jsonStr[i].CreateTime) + '</td>';
+                    else
+                        html += '<td width="15%"></td>';
+
+                    html+='</tr>';
+                }
+                html += '</table>';
+                $("#content").html(html);
+            }
+        }
+
+        //pageIndex当前页
+        function SerchList(pageIndex)
+        {
+            $("input[name='pageIndex']").val(pageIndex);
+            var options = {
+                beforeSubmit: function () {
+                    return true;
+                },
+                dataType: "json",
+                success: function (context) {
+                    var data=eval(context.result);
+                    dataGrid(data);
+                    $(".pagin").html(context.PageN);//输出分页按钮
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $.messager.alert("操作提示", '查询失败请重试！', 'error');
+                }
+            }
+            $('#form1').ajaxSubmit(options);
+            return false;
+        }
+
+        //导出excl 数据
+        function ExportEPJSON()
+        {
+            window.location.href="../NACustomerinfo/DCCusinfo";
+        }
+    </script>
+}
+
+<!--==================================数据列表=============================-->
+<div class="h-right">
+    <div class="h-right-c">
+        @*   <div class="h-right-title">您当前的位置：免疫点管理</div>*@
+        <!--查询条件-->
+        @using (Html.BeginForm("SearchList", "NACustomerinfo", FormMethod.Post, new { id = "form1" }))
+        {
+            @Html.Hidden("pageIndex");
+            <div class="inquiry1">
+                <fieldset>
+                    <legend>查询条件：</legend>
+                    <ul>
+                        <li><span>客户名称：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txtSearch_Name" id="txtSearch_Name" /></span></li>
+                        <li><span>联系人：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txtSearch_lxrName" id="txtSearch_lxrName" /></span></li>
+                        <li>
+                            <span>电话：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="Tel" id="Tel" /></span>
+                        </li>
+                        <li>
+                            <span>客户来源：</span>
+                            <span>
+                                <select id="Isds" name="Isds" class="add-function">
+                                    <option value="">全部</option>
+                                    <option value="0">非电商</option>
+                                    <option value="1">电商</option>
+                                </select>
+                            </span>
+                        </li>
+                        <li>
+                            <span>经销商类别：</span>
+                            <span>
+                                <select id="wljxs" name="wljxs" class="add-function">
+                                    <option value="">全部</option>
+                                    <option value="0">普通经销</option>
+                                    <option value="1">物联网经销</option>
+                                    <option value="2">买一送一</option>
+                                </select>
+                            </span>
+                        </li>
+                        <li>
+                            <span>是否启用：</span>
+                            <span>
+                                <select id="Isjy" name="Isjy" class="add-function">
+                                    <option value="1">启用</option>
+                                    <option value="0">禁用</option>
+                                </select>
+                            </span>
+                        </li>
+                        <li style="*width: 100%; *margin: -10px 0 5px 90px;">
+                            <span class="inquiry-input">
+                                <button class="layui-btn" onclick="return SerchList(1)"><i class="layui-icon">&#xe615;</i> 查询</button>
+                            </span>
+                        </li>
+                        <li>
+                            <span class="inquiry-input">
+                                <button class="layui-btn" onclick="return addClick('/NACustomerinfo/addPage')"><i class="layui-icon">&#xe608;</i> 添加</button>
+                            </span>
+                            <span class="inquiry-input">
+                                <button class="layui-btn" onclick="update('/NACustomerinfo/EditPage');return  false;"><i class="layui-icon">&#xe642;</i> 编辑</button>
+                            </span>
+                            <span class="inquiry-input">
+                                <button class="layui-btn" onclick="del('/NACustomerinfo/Delete');return  false;"><i class="layui-icon">&#xe640;</i> 删除</button>
+                            </span>
+                            <span class="inquiry-input">
+                                <button class="layui-btn" onclick="return addClick('/NACustomerinfo/List')"><i class="layui-icon">&#x1002;</i> 刷新</button>
+                            </span>
+
+                             <span class="inquiry-input">
+                                <button type="button" onclick="return ExportEPJSON()">记录导出</button>
+                            </span>
+                        </li>
+                    </ul>
+                </fieldset>
+            </div>
+        }
+        <div class="h-table">
+            <div class="h-table-content">
+                <div id="content"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!--==========================输出分页按钮=========================-->
+<div class="pagin">
+    @if (ViewBag.PageNavigate == null)
+    {
+        @Html.ShowPageNavigate(Model.CurrentPageIndex, Model.PageSize, Model.RecordCount);
+    }
+</div>

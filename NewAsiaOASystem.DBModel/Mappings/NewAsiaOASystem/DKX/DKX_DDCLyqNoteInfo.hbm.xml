@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="NewAsiaOASystem.DBModel" assembly="NewAsiaOASystem.DBModel">
+  <class name="DKX_DDCLyqNoteInfo" table="DKX_DDCLyqNoteInfo">
+    <id name="Id" column="Id" type="string" unsaved-value="0">
+      <generator class="uuid.hex"/>
+    </id>
+    <property name="DD_Id" column="DD_Id"  />
+    <property name="DD_DH" column="DD_DH"  />
+    <property name="Type" column="Type"  />
+    <property name="C_time" column="C_time"  />
+    <property name="Xml" column="Xml"  />
+    <property name="Jsname" column="Jsname"  />
+    <property name="fsdxtype" column="fsdxtype"  />
+    <property name="fstype" column="fstype"  />
+  </class>
+</hibernate-mapping>

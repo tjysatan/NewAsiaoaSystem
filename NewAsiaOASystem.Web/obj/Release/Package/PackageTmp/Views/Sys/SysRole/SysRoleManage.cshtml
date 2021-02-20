@@ -1,0 +1,74 @@
+﻿@{
+    ViewBag.Title = "角色管理";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<div>
+  @*  <img src="~/Content/images/use.ico" style="width: 25px; height: 25px; float: left;" />*@
+    <h1 style="margin-left: 25px;">权限管理</h1>
+    <input id="RoleId" type="hidden"  value="@ViewBag.RoleId" />
+</div>
+
+<!--Tabs-->
+
+<div id="RoleManage" class="easyui-tabs" style="width: 560px; height: 320px; margin: 20px; padding: 0px;">
+    <div title="菜单权限" style="overflow: auto; padding: 20px;">
+        <table id="MenuDg" class="easyui-treegrid" style="width: 100%; height: auto" data-options="idField:'id',treeField:'text',singleSelect:false">
+            <thead>
+                <tr>
+                    <th data-options="field:'id',checkbox:true,align:'center'"></th>
+                    <th data-options="field:'text',width:'90%',aligh:'center'" style="padding-left:200px">名称</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+
+    <div id="ButtonAuth" title="功能权限" style="overflow: auto; padding: 20px;" >
+        <table id="ButtonDg" class="easyui-datagrid" style="width: 100%; height: auto">
+            <thead>
+                <tr>
+                    <th data-options="field:'Id',checkbox:true,align:'center'"></th>
+                    <th data-options="field:'Name',width:'40%',align:'center'">功能名称</th>
+                    <th data-options="field:'ActionUrl',width:'59%',align:'center'">Action路径</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <!--
+    <div title="数据权限" style="overflow: auto; padding: 20px;display:none;">
+        <table id="DataDg" class="easyui-treegrid" style="width: 100%; height: auto" data-options="idField:'id',treeField:'text',singleSelect:false">
+            <thead>
+                <tr>
+                    <th data-options="field:'id',checkbox:true,align:'center'"></th>
+                    <th data-options="field:'text',width:'99%',align:'center'">名称</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <div title="字段权限" style="overflow: auto; padding: 20px;display:none;">
+        <div id="FieldAuth">
+            <table id="FieldDg" class="easyui-treegrid" style="width: 100%; height: auto" data-options="idField:'id',treeField:'text',singleSelect:false">
+                <thead>
+                    <tr>
+                        <th data-options="field:'text',width:'33%',align:'center'">名称</th>
+                        <th data-options="field:'input',width:'33%',align:'center',formatter:GetYesInput">允许</th>
+                        <th data-options="field:'inputOne',width:'33%',align:'center',formatter:GetNoInput">拒绝</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>-->
+</div>
+<!--按钮-->
+<div style="text-align: center; padding: 5px; width: 300px;">
+    <a href="javascript:void(0)" class="easyui-linkbutton" onclick="SaveSysRoleAuth()">保存</a>
+</div>
+<script src="~/Scripts/Sys/SysRole.js"></script>
+<script type="text/javascript">
+    $(function () {
+        AjaxMenu();//菜单权限
+        //GetSysAuthorize();//数据权限
+        AjaxFunc();//功能权限
+        GetSelectedAuth();//绑定选中的权限
+    })
+</script>

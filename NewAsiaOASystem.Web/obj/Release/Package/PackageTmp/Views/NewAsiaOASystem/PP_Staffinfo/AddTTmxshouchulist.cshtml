@@ -1,0 +1,136 @@
+﻿@model NewAsiaOASystem.ViewModel.PagerInfo<NewAsiaOASystem.ViewModel.PP_ProfitpointinfoView>
+@{
+    ViewBag.Title = "增加团体收入";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@section HeadContent{
+    <script type="text/javascript">
+        $(function () {
+            $("#wctime").val('@ViewData["TDtime"]');
+            BindGrid();
+        })
+        function BindGrid() {
+            @{
+                if (null != Model && null != Model.GetPagingDataJson)
+                {
+                    string json = Model.GetPagingDataJson;//获取json数据
+                    @: var jsonStr = @Html.Raw(json);
+                }
+             }
+            dataGrid(jsonStr);
+        }
+
+        function dataGrid(jsonStr){
+            if (typeof (jsonStr) != "undefined") {
+                var html = "";
+                html = '<table class="table_listNew">';
+                html+='<tr>';
+                html+='<td width="5%"><input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" /></td>';
+                html+='<td width="20%">名称</td>';
+                html+='<td width="15%">单位时间价值</td>';
+                html+='<td width="10%">单位</td>';
+                html+='<td width="20%">描述</td>';
+                html+='</tr>';
+                for (var i = 0, j = jsonStr.length; i < j; i++) {
+                    if (i % 2 == 0)
+                        html += '<tr class="h-table-content-r">';
+                    else
+                        html += '<tr class="h-table-content-r1">';
+                    html += '<td width="5%"><input type="checkbox" name="ContentChecked" value="' + jsonStr[i].Id + '"/></td>';
+                    html += '<td width="20%">' + jsonStr[i].Rwname + '</td>';
+                    html+='<td width="15%">'+jsonStr[i].Rwfz+'</td>';
+                    html += '<td width="10%">' +jsonStr[i].Rwdw+ '</td>';
+                    html+='<td width="20%">'+jsonStr[i].Rwms+'</td>';
+                    html+='</tr>';
+                }
+                html += '</table>';
+                $("#content").html(html);
+            }
+        }
+
+        function SerchList(pageIndex)
+        {
+            $("input[name='pageIndex']").val(pageIndex);
+            var options = {
+                beforeSubmit: function () {
+                    return true;
+                },
+                dataType: "json",
+                success: function (context) {
+                    var data=eval(context.result);
+                    dataGrid(data);
+                    $(".pagin").html(context.PageN);//输出分页按钮
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $.messager.alert("操作提示", '查询失败请重试！', 'error');
+                }
+            }
+            $('#form1').ajaxSubmit(options);
+            return false;
+        }
+    </script>
+}
+
+
+<div class="h-right">
+    <div class="h-right-c">
+        @using (Html.BeginForm("TTsrzcSearchList", "PP_Staffinfo", FormMethod.Post, new { id = "form1" }))
+        {
+            @Html.Hidden("pageIndex");
+         
+            <div class="inquiry1">
+                <fieldset>
+                    <legend>查询条件：</legend>
+                    <ul>
+                        <li><span>收入项名称：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txtSearch_Name" /></span></li>
+
+                        <li style="*width: 100%; *margin: -10px 0 5px 90px;"><span class="inquiry-input">
+                            <button name="btnSerch" onclick="return SerchList(1)">查询</button>
+                        </span></li>
+                    </ul>
+                </fieldset>
+            </div> 
+        }
+        <input type="hidden" id="teamId" name="teamId" value='@ViewData["teamId"]' />
+        <input type="hidden" id="type" name="type" value="0" />
+        <div class="h-table">
+            <div class="h-table-content">
+                <div id="content"></div>
+            </div>
+        </div>
+
+        <div class="pp_txt_max" style="background-image: none;">
+            <ul>
+                <li>
+                    <span>数量：</span>
+                    <span class="infor-c-input">
+                        <input type="text" name="sl" id="sl" value="1" />
+                    </span>
+                </li>
+                <li>
+                    <span>完成时间：</span>
+                    <span class="infor-c-input">
+                        <input type="text" name="wctime" id="wctime" onclick="WdatePicker()" />
+                    </span>
+                </li>
+            </ul>
+        </div>
+
+        <div style="text-align: center; width: 100%;">
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="TTAddshouruEide('1')">提交,关闭页面</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="TTAddshouruEide('0')">提交,继续添加</a>
+        </div>
+
+        <!--==========================输出分页按钮=========================-->
+        <div class="pagin">
+            @if (ViewBag.PageNavigate == null)
+            {
+                @Html.ShowPageNavigate(Model.CurrentPageIndex, Model.PageSize, Model.RecordCount);
+            }
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/NAjs/PP_pulice.js"></script>

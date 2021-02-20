@@ -1,0 +1,546 @@
+﻿@model NewAsiaOASystem.ViewModel.PagerInfo<NewAsiaOASystem.ViewModel.EP_jlinfoView>
+@{
+    ViewBag.Title = "快递单打印记录列表";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<style>
+    .BB {
+        color: #00FF00;
+    }
+</style>
+<script async="" src="../Scripts/Blob.js"></script>
+<script async="" src="../Scripts/FileSaver.js"></script>
+@section HeadContent{
+    <script type="text/javascript">
+        $(function () {
+            //document.getElementById("saveBtn").onclick = function (event) {
+            //    event.preventDefault();
+            //    var BB = self.Blob;
+            //    saveAs(
+            //          new BB(
+            //              ["\ufeff" + document.getElementById("PrintA").value] //\ufeff防止utf8 bom防止中文乱码
+            //            , { type: "text/plain;charset=utf8" }
+            //        )
+            //        , document.getElementById("filename").value
+            //    );
+            //};
+            $("#lxrname").val('@ViewData["lxrname"]');
+            $("#txtSearch_Name").val('@ViewData["Name"]');
+            $("#txtrlis").val('@ViewData["rlis"]');
+            $("#stratrldate").val('@ViewData["stratrldate"]');
+            $("#endrldate").val('@ViewData["endrldate"]');
+            $("#dystratrldate").val('@ViewData["dystratrldate"]');
+            $("#dyendrldate").val('@ViewData["dyendrldate"]')
+            BindGrid();
+            //EPdataGrid();
+        })
+
+        function BindGrid() {
+            @{
+                if (null != Model && null != Model.GetPagingDataJson)
+                {
+                    string json = Model.GetPagingDataJson;//获取json数据
+                    
+                    @:var pageIndex=@Html.Raw(Model.CurrentPageIndex);
+                                                        @: var jsonStr = @Html.Raw(json);
+                }
+             }
+            dataGrid(jsonStr,pageIndex);
+            $("#pageIndex").val(pageIndex);
+        }
+
+        //导出数据拼接
+        function EPdataGrid()
+        {
+            var Jsonstr=ExportEPJSON();
+            var str = "快递公司,快递单号,发货时间,收件人";
+            if (Jsonstr != null) {
+                for (var i = 0,j=Jsonstr.length; i < j; i++) {
+                    var kdgs=kdgsname(Jsonstr[i].Kdgs);
+                    str = str + "\n" +kdgs+ "," +"'"+ Jsonstr[i].Kd_no+"," + Jsonstr[i].RL_datetime+"," + Jsonstr[i].QRsjName;
+                }
+                document.getElementById("PrintA").innerHTML = str;
+            }
+        }
+
+        function dataGrid(jsonStr)
+        {
+            if (typeof (jsonStr) != "undefined") {
+                var html = "";
+                html = '<table cellpadding="0" cellspacing="0" style="width:100%;">';
+                for (var i = 0, j = jsonStr.length; i < j; i++) {
+                    var jjPersondata=AjaxPerson_Name(jsonStr[i].JjId)
+                    if (i % 2 == 0)
+                        html += '<tr class="h-table-content-r1" id="'+jsonStr[i].Id+'">';
+                    else
+                        html += '<tr class="h-table-content-r"  id="'+jsonStr[i].Id+'">';
+                    html += '<td width="3%"><input type="checkbox" name="ContentChecked" value="' + jsonStr[i].Id + '"/></td>';
+                    html += '<td width="10%">'+ShowCustName(jsonStr[i].SjId) + '</td>';
+                    if(jsonStr[i].Source=="0"){
+                        html+='<td width="5%">'+ShowCustlxrName(jsonStr[i].SjId)+'</td>';
+                    }
+                    else if(jsonStr[i].Source=="1")
+                    {
+                        html+='<td width="5%">'+AjaxAddresseeinfobyCustId(jsonStr[i].SjaddId).Aname+'</td>';
+                    }
+                    else if (jsonStr[i].Source == "2"||jsonStr[i].Source == "3") {
+                        if (jsonStr[i].SjaddId != null && jsonStr[i].SjaddId != "") {
+                            html += '<td width="5%">' + AjaxAddresseeinfobyCustId(jsonStr[i].SjaddId).Aname + '</td>';
+                        }
+                        else {
+                            html += '<td width="5%">' + ShowCustlxrName(jsonStr[i].SjId) + '</td>';
+                        }
+                    }
+
+                    if(jjPersondata!=null){
+                        html += '<td width="5%">' +jjPersondata.UserName+ '</td>';
+                    }else
+                    {
+                        html += '<td width="5%">-</td>';
+                    }
+                    html += '<td width="8%">' +kdgsname(jsonStr[i].Kdgs)+ '</td>';
+                    if(jsonStr[i].Kd_no!=null)
+                        html += '<td width="10%">' +jsonStr[i].Kd_no + '</td>';
+                    else
+                        html+='<td width="10%">未录单</td>';
+
+                    if(jsonStr[i].RL_datetime!=null)
+                        html += '<td width="8%">' + showDate(jsonStr[i].RL_datetime) + '</td>';
+                    else
+                        html += '<td width="8%">未录单</td>';
+                    if(jsonStr[i].DHyjdatetime!=null)
+                        html += '<td width="8%">' + showDate(jsonStr[i].DHyjdatetime) + '</td>';
+                    else
+                        html += '<td width="8%"></td>';
+                    if(jsonStr[i].DHsjdatetime!=null)
+                        html += '<td width="8%">' + showDate(jsonStr[i].DHsjdatetime) + '</td>';
+                    else
+                        html += '<td width="8%"></td>';
+                    if(jsonStr[i].DHno!=null)
+                        html += '<td width="5%">' + showDate(jsonStr[i].DHno) + '</td>';
+                    else
+                        html += '<td width="5%">未录</td>';
+                    if(jsonStr[i].RL_Is!=null)
+                        html += '<td width="5%">' +jlzt(jsonStr[i].RL_Is) + '</td>';
+                    else
+                        html += '<td width="5%">未录</td>';
+                    if(jsonStr[i].Jjdatetime!=null)
+                        html += '<td width="8%">' +showDate(jsonStr[i].Jjdatetime)+ '</td>';
+                    else
+                        html += '<td width="8%"></td>';
+                    if(jsonStr[i].k3_ddno!=null)
+                        html += '<td width="8%">' +jsonStr[i].k3_ddno+ '</td>';
+                    else
+                        html += '<td width="8%"></td>';
+                    html+='<td width="10%">'+wlshow(jsonStr[i].RL_Is,jsonStr[i].Kdgs,jsonStr[i].Kd_no,jsonStr[i].Id,jjPersondata.Tel,jsonStr[i].Source)+'</td>';
+                    html+='</tr>';
+                }
+                html += '</table>';
+                $("#content").html(html);
+            }
+        }
+
+        //pageIndex当前页
+        function SerchList(pageIndex)
+        {
+            $("input[name='pageIndex']").val(pageIndex);
+            //EPdataGrid();
+            var options = {
+                beforeSubmit: function () {
+                    return true;
+                },
+                dataType: "json",
+                success: function (context) {
+                    var data=eval(context.result);
+                    dataGrid(data);
+                    $(".pagin").html(context.PageN);//输出分页按钮
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $.messager.alert("操作提示", '查询失败请重试！', 'error');
+                }
+            }
+            $('#form1').ajaxSubmit(options);
+            return false;
+        }
+
+        //快递公司名称
+        function kdgsname(val){
+            var kdnam;
+            if(val!=""){
+                if (val == "sh") {
+                    kdnam = "盛辉物流";
+                } else if (val == "sf") {
+                    kdnam = "顺丰快递";
+                } else if (val == "db") {
+                    kdnam = "德邦快递";
+                } else if (val == "zt") {
+                    kdnam = "中通快递";
+                } else if (val == "tdhy") {
+                    kdnam = "天地华宇";
+                } else if (val == "JJ") {
+                    kdnam = "佳吉物流";
+                } else if (val == "ycky") {
+                    kdnam = "远成快运";
+                } else if (val == "ztky") {
+                    kdnam = "中通快运";
+                } else if (val == "dbwl") {
+                    kdnam = "德邦物流";
+                } else if (val == "an") {
+                    kdnam = "安能物流";
+                }
+            }
+            return kdnam;
+        }
+
+        //记录状态
+        function jlzt(val){
+            var zt;
+            if(val=="0"){
+                zt="未录单";
+            }else if(val=="1"){
+                zt="未到货";
+            }else if(val=="2"){
+                zt="已签收";
+            }
+            return zt;
+        }
+
+        //物流情况查询
+        function editwl(rlis,gs,dh,Id,tel) {
+            $('#'+Id).removeClass('h-table-content-r1');
+            $('#'+Id).addClass('BB');
+            var pageIndex=$("#pageIndex").val();
+            if(rlis!=0){
+                if (gs != "") {
+                    var gsdm;
+                    gsdm=gs;
+                    //$('#windowDia').html("<iframe src=../EP_jlinfo/wlview?typeCom=" + gsdm + "&&nu="+dh+ "&&Id="+Id+"&&Pageindex="+pageIndex+"&tel="+tel+"  style='border:0px;' width='600px' height='500px'></iframe>");
+                    //$("#windowDia").window({
+                    //    title: '物流跟踪',
+                    //    modal: true,
+                    //    closed: false,
+                    //    width: 680,
+                    //    height: 500,
+                    //});
+                    layer.open({
+                        type: 2,
+                        title: ['物流跟踪', 'font-size:14px;'],
+                        area: ['610px', '500px'],
+                        offset: '10px',
+                        fixed: false, //不固定
+                        maxmin: true,
+                        content: '../EP_jlinfo/wlview?typeCom=' + gsdm + '&nu=' + dh + '&Id=' + Id + '&Pageindex=' + pageIndex + '&tel=' + tel,
+                        //end: function () {
+                        //    location.reload();
+                        //}
+                    })
+                }
+            }else{
+                alert("快递单号尚未录入，暂时无法查看物流情况！");
+            }
+
+            return false;
+        }
+
+        //操作
+        function wlshow(val1,val,val2,val3,val4,val5) {
+            var rlis="'"+val1+"'";
+            var gs = "'" + val + "'";
+            var dh="'"+val2+"'";
+            var Id="'"+val3+"'";
+            var tel = "'" + val4 + "'";
+            var Source="'" + val5 + "'";
+            var t = '<a href="#" onclick="InputEx('+rlis +',' + gs + ','+dh +','+Id +')">录单</a>&nbsp;';
+            var s = '<a href="#" onclick="editwl(' + rlis + ',' + gs + ',' + dh + ',' + Id + ',' + tel + ')">物流</a>&nbsp;';
+            var z = '<a href="#" onclick="opendbprint(' + Id + ')">打印</a>';
+            if (val5 == "3") {
+                return t + s + z;
+            } else { return t+s; }
+           
+        }
+
+        function opendbprint(id) {
+            layer.open({
+                type: 2,
+                title: ['德邦快递云下单', 'font-size:14px;'],
+                area: ['660px', '500px'],
+                offset: '10px',
+                fixed: false, //不固定
+                maxmin: true,
+                content: "../EP_jlinfo/dblistPrint?Id=" + id,
+                end: function () {
+                    //location.reload();
+                }
+            })
+        }
+
+        //快递单号录入
+        function InputEx(rlis,gs,dh,Id){
+            $('#'+Id).removeClass('h-table-content-r1');
+            $('#'+Id).addClass('BB');
+            var pageIndex=$("#pageIndex").val();
+            //$('#windowDia').html("<iframe src=../EP_jlinfo/EditPageUI?id=" + Id + "&&Pageindex="+pageIndex+ "&&  style='border:0px;' width='610px' height='700px'></iframe>");
+            //$("#windowDia").window({
+            //    title: '快递单号录入',
+            //    modal: true,
+            //    closed: false,
+            //    width: 680,
+            //    height: 700,
+            //});
+            layer.open({
+                type: 2,
+                title: ['快递单号录入', 'font-size:14px;'],
+                area: ['610px', '400px'],
+                offset: '10px',
+                fixed: false, //不固定
+                maxmin: true,
+                content: '../EP_jlinfo/EditPageUI?id=' + Id + '&Pageindex=' + pageIndex,
+                end: function () {
+                    location.reload();
+                }
+            })
+            
+        }
+        //打印到货记录
+        function DYdhqk(){
+            var arr = GetGridSelete();//获取选择的记录ID
+            var OpenUrl="/EP_jlinfo/Pdhview";//打印页面路径
+            if (arr.length <= 0) {
+                $.messager.alert("操作提示", "请先选择一条记录再打印！", "warning");
+            }else if(arr.length > 11) {
+                $.messager.alert("操作提示", "一次最多选择11条记录打印！", "warning");
+            }
+            else{
+                $.messager.confirm('提示框', '你确定要打印吗?', function (data) {
+                    if (data) {
+                        var id = '';//所有记录Id
+                        for (var i = 0, j = arr.length; i < j; i++) {
+                            id = id+ arr[i] + ","
+                        }
+                        id = id.substring(0, id.length - 1);
+                        window.open(OpenUrl + "?id=" + id, "news", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,top=50,left=300,width=740px,height=1100px,resizable=no")
+                    }
+                })
+            }
+            return false;
+        }
+
+        /*
+       修改记录
+        */
+        function rdupdate(OpenUrl) {
+            //获取到选中值
+            var arr = GetGridSelete();
+            if (arr.length > 1) {
+                $.messager.alert("操作提示", "只能选择一个！", "warning");
+            }
+            else if (arr.length <= 0) {
+                $.messager.alert("操作提示", "请先选择一条记录后再编辑！", "warning");
+            }
+            else {
+                location.href = OpenUrl + "?id=" + arr[0]+"&&Pageindex="+ $("#pageIndex").val();
+            }
+            return false;
+        }
+
+        //根据收件人  查找收件人信息 （电商平台）
+        function AjaxAddresseeinfobyCustId(Id) {
+            var json;
+            $.ajax({
+                type: "POST",
+                url: "../NA_XSinfo/GetaddresseeInfobyCustId",
+                data: { Id: Id },
+                dataType: "json",
+                async: false,
+                success: function (reslut) {
+                    json = eval(reslut);
+                },
+                error: function (e) {
+                    alert("请求失败");
+                }
+            })
+            return json;
+        }
+
+        //导出excl 数据
+        function ExportEPJSON()
+        {
+            var txtSearch_Name=$("#txtSearch_Name").val();//手机单位
+            var txtrlis=$("#txtrlis").val();//状态
+            var stratrldate=$("#stratrldate").val();//寄件开始时间
+            var endrldate=$("#endrldate").val();//寄件结束时间
+            var dystratrldate=$("#dystratrldate").val();//打印开始时间
+            var dyendrldate=$("#dyendrldate").val();//打印结束时间
+            var kdgs=$("#kdgs").val();//快递公司
+            var k3_ddno=$("#k3_ddno").val();//快递公司
+            window.location.href="../EP_jlinfo/DCEP_JLDATA?txtSearch_Name="+txtSearch_Name+"&txtrlis="+txtrlis+"&stratrldate="+stratrldate+"&endrldate="+endrldate+"&dystratrldate="+dystratrldate+"&dyendrldate="+dyendrldate+"&kdgs="+kdgs+"&K3DDNO="+k3_ddno;
+        }
+
+        //按月打印
+        function EPjlbyM()
+        {
+            var stratrldate=$("#stratrldate").val();//寄件开始时间
+            var endrldate=$("#endrldate").val();//寄件结束时间
+            if(stratrldate=="")
+            {
+                alert('请选择寄件开始时间!');
+                return;
+            }
+            if(endrldate=="")
+            {
+                $.messager.alert("操作提示", "请选择寄件结束时间！", "warning");
+                return false;
+            }
+            window.location.href="../EP_jlinfo/EPJLbymonView?starttime="+stratrldate+"&endtime="+endrldate;
+        }
+
+    </script>
+}
+
+
+
+
+<input type="hidden" name="filename" id="filename" value="快递单打印数据.xls" />
+
+<div class="h-right">
+    <div class="h-right-c">
+        <!--查询条件-->
+
+        <div class="inquiry1">
+            <fieldset>
+                <legend>查询条件：</legend>
+                @using (Html.BeginForm("SearchList", "EP_jlinfo", FormMethod.Post, new { id = "form1" }))
+                {
+                    @Html.Hidden("pageIndex");
+                    <ul>
+                        <li><span>收件单位：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txtSearch_Name" id="txtSearch_Name" /></span></li>
+                        <li>
+                            <span>收件人：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="lxrname" id="lxrname" />
+                            </span>
+                        </li>
+                        <li>
+                            <span>K3单号：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="k3_ddno" id="k3_ddno" />
+                            </span>
+                        </li>
+                        <li><span>状态：</span>
+                            <span class="inquiry-input">
+                                <select id="txtrlis" name="txtrlis">
+                                    <option value="">全部</option>
+                                    <option value="0">未录单</option>
+                                    <option value="1">未到货</option>
+                                    <option value="2">已签收</option>
+                                </select>
+                            </span>
+                        </li>
+                        <li>
+                            <span>快递公司：</span>
+                            <span class="inquiry-input">
+                                <select id="kdgs" name="kdgs">
+                                    <option value="">全部</option>
+                                    <option value="sh">盛辉物流</option>
+                                    <option value="sf">顺丰快递</option>
+                                    <option value="db">德邦快递</option>
+                                    <option value="dbwl">德邦物流</option>
+                                    <option value="zt">中通快递</option>
+                                    <option value="tdhy">天地华宇</option>
+                                    <option value="ycky">远成快运</option>
+                                    <option value="JJ">佳吉物流</option>
+                                    <option value="ztky">中通快运</option>
+                                    <option value="an">安能物流</option>
+                                </select>
+                            </span>
+                        </li>
+                        <li><span>寄件时间：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="stratrldate" id="stratrldate" onclick="WdatePicker()" />
+                                -
+                                <input type="text" name="endrldate" id="endrldate" onclick="WdatePicker()" />
+                            </span>
+                        </li>
+                        <li><span>打印时间：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="dystratrldate" id="dystratrldate" onclick="WdatePicker()" />
+                                -
+                                <input type="text" name="dyendrldate" id="dyendrldate" onclick="WdatePicker()" />
+                            </span>
+                        </li>
+
+                        <li style="*width: 100%; *margin: -10px 0 5px 90px;">
+                            <span class="inquiry-input">
+                                <button name="btnSerch" onclick="return SerchList(1)">查询</button>
+                            </span>
+                        </li>
+                        <li>
+                            <span class="inquiry-input">
+                                <button onclick="return rdupdate('/EP_jlinfo/EditPage')">录单</button>
+                            </span>
+                            <span class="inquiry-input">
+                                <button onclick="return DYdhqk()">到货打印</button>
+                            </span>
+                            <span class="inquiry-input">
+                                <button onclick="return del('/EP_jlinfo/Delete')">删除</button></span>
+                            <span class="inquiry-input">
+                                <button onclick="return addClick('/EP_jlinfo/List')">刷新</button>
+                            </span>
+
+                            <span class="inquiry-input">
+                                <button type="button" onclick="return ExportEPJSON()">记录导出</button>
+                            </span>
+                        </li>
+                    </ul>
+                }
+                <ul>
+                    <li>
+                        <span class="inquiry-input">
+                            <button onclick="EPjlbyM()">按月打印</button>
+                        </span>
+                    </li>
+                </ul>
+            </fieldset>
+        </div>
+
+        <div class="h-table">
+            <div class="h-table-content">
+                <table cellpadding="0" cellspacing="0" class="h-right-table-title1" style="border: none; width: 100%;">
+                    <tr>
+                        <td width="3%">
+                            <input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" /></td>
+                        <td width="10%">收件单位</td>
+                        <td width="5%">收件人</td>
+                        <td width="5%">寄件人</td>
+                        <td width="8%">快递公司</td>
+                        <td width="10%">快递单号</td>
+                        <td width="8%">寄件时间</td>
+                        <td width="8%">预计到货</td>
+                        <td width="8%">实际到货</td>
+                        <td width="5%">到货数量</td>
+                        <td width="5%">状态</td>
+
+                        <td width="8%">打印时间</td>
+                        <td width="8%">K3单号</td>
+                        <td width="10%">操作</td>
+                    </tr>
+                </table>
+                <div id="content"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--==========================输出分页按钮=========================-->
+<div class="pagin">
+    @if (ViewBag.PageNavigate == null)
+    {
+        @Html.ShowPageNavigate(Model.CurrentPageIndex, Model.PageSize, Model.RecordCount);
+    }
+</div>
+
+<script src="~/Scripts/NAjs/NAReturnList.js"></script>
+<div id="windowDia" class="easyui-window" closed="true" style="width: 680px; height: 600px; padding: 10px;"></div>

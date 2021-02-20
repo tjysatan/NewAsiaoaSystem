@@ -1,0 +1,354 @@
+﻿@model NewAsiaOASystem.ViewModel.PagerInfo<NewAsiaOASystem.ViewModel.DKX_DDinfoView>
+@{
+    ViewBag.Title = "电控箱生产情况汇总";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@section HeadContent{
+    <script src="~/Scripts/highcharts.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            BindGrid();
+        })
+
+        function BindGrid() {
+            @{
+                if (null != Model && null != Model.GetPagingDataJson)
+                {
+                    string json = Model.GetPagingDataJson;//获取json数据
+                    @: var jsonStr = @Html.Raw(json);
+                }
+             }
+            dataGrid(jsonStr);
+        }
+
+        function dataGrid(jsonStr){
+            if (typeof (jsonStr) != "undefined") {
+                var html = "";
+                html = '<table class="layui-table">';
+                html += '<thead>';
+                html+='<tr style="font-weight:bold;color:#000000">';
+                html+='<td width="10%">生产批号</td>';
+                html+='<td width="10%">客户</td>';
+                html+='<td width="10%">订单型号/功率</td>';
+                html+='<td width="10%">进度</td>';
+                html+='<td width="10%">下单时间</td>';
+                html+='<td width="10%">完成时间</td>';
+                html+='<td width="10%">进行天数</td>';
+                html+='<td width="20%">操作</td>';
+                html+='</tr>';
+                html+='</thead>';
+                for (var i = 0, j = jsonStr.length; i < j; i++)
+                {
+                    html+='<tr style="color:#000">';
+                    html+='<td width="10%">'+jsonStr[i].DD_Bianhao+'</td>';
+                    html+='<td width="10%">'+jsonStr[i].KHname+'</td>';
+                    html+='<td width="10%">'+jsonStr[i].DD_DHType+'('+jsonStr[i].POWER+'/'+jsonStr[i].dw+')</td>';
+                    html+='<td width="10%">'+ztshow(jsonStr[i].DD_ZT)+'</td>';
+                    html+='<td width="10%">'+jsonStr[i].C_time+'</td>';
+                    if(jsonStr[i].Fhdatetime!=null&&jsonStr[i].Fhdatetime!="")
+                        html+='<td width="10%">'+jsonStr[i].Fhdatetime+'</td>';
+                    else
+                        html+='<td width="10%">-</td>';
+                    html+='<td width="10%">'+AjaxGetjxTs(jsonStr[i].DD_ZT,jsonStr[i].C_time,jsonStr[i].Fhdatetime)+'天</td>';
+                    html+='<td width="20%">'+czbtnshow(jsonStr[i].Id)+'</td>';
+                    html+='</tr>';
+                }
+                html += '</table>';
+                $("#content").html(html);
+
+                var strsjson=AJAXGettjsum();
+               
+                if(strsjson!=""&&strsjson!=null)
+                {
+                    
+                    var wcbl=(strsjson.zcwcsum/strsjson.wcsum*100).toFixed(2);
+                    var html="";
+                    html='<table class="layui-table">';
+                    html+='<tr style="color:#000">';
+                    html+='<td>订单总量：'+strsjson.zlsum+'</td>';
+                    html+='<td colspan="8">在途量：'+strsjson.ZTsum+'</td>';
+                    html+=' <td colspan="3">完成量：'+strsjson.wcsum+'</td>';
+                    html+='</tr>';
+                    html+='<tr>';
+                    html+='<td></td>';
+                    html+='<td>待制图:'+strsjson.dztsum+'</td>';
+                    html+='<td>制图中:'+strsjson.ztzsum+'</td>';
+                    html+='<td>待审核:'+strsjson.dshsum+'</td>';
+                    html+='<td>物料确认:'+strsjson.dscsum+'</td>';
+                    html+='<td>缺料:'+strsjson.qlsum+'</td>';
+                    html+='<td>可生产:'+strsjson.kscsum+'</td>';
+                    html+='<td>生产中:'+strsjson.sczsum+'</td>';
+                    html+='<td>待发货:'+strsjson.dfhsum+'</td>';
+                    html+='<td style="color:red">逾期完成:'+strsjson.yqwcsum+'</td>';
+                    html+='<td>正常完成:'+strsjson.zcwcsum+'</td>';
+                    html+='<td>'+wcbl+'%</td>';
+                    html+='</tr>';
+                    html+='</table>';
+                    $("#tjsum").html(html);
+                }
+            }
+        }
+        //操作按钮
+        function czbtnshow(val) {
+            var Id = "'" + val + "'";
+            var z = '<a class="layui-btn layui-btn-primary layui-btn-small" onclick="ckczji(' + Id + ')">逾期记录</a>';
+            return z;
+        }
+
+        function SerchList(pageIndex)
+        {
+            $("input[name='pageIndex']").val(pageIndex);
+            var options = {
+                beforeSubmit: function () {
+                    return true;
+                },
+                dataType: "json",
+                success: function (context) {
+                    var data=eval(context.result);
+                    dataGrid(data);
+                    $(".pagin").html(context.PageN);//输出分页按钮
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $.messager.alert("操作提示", '查询失败请重试！', 'error');
+                }
+            }
+            $('#form1').ajaxSubmit(options);
+            return false;
+        }
+
+        function ztshow(val){
+            if(val==8){
+                return "完成";
+            }
+            if(val==7)
+            {
+                return "待发货"
+            }
+            if(val==6)
+            {
+                return "生产中"
+            }
+            if(val==5)
+            {
+                return "缺料"
+            }
+            if(val==4)
+            {
+                return "可生产"
+            }
+            if(val==3)
+            {
+                return "待生产"
+            }
+            if(val==-2)
+            {
+                return "待审核"
+            }
+            if(val==2)
+            {
+                return "制图中"
+            }
+            if(val==1)
+            {
+                return "待制图"
+            }
+            if(val==-1)
+            {
+                return "未提交"
+            }
+        }
+
+        //获取进行天数
+        function AjaxGetjxTs(zt,time1,time2){
+            var type=0;
+            if(zt=="8")
+                type=1;
+            var zs;
+            $.ajax({
+                url: "../DKX_DDtypeinfo/GetTSbytime",
+                type:"html",
+                data: { type: type,starttime:time1,endtime:time2},
+                dataType: "html",
+                async: false,
+                success: function (response){
+                    zs=response
+                },
+                error: function (e) {
+                   
+                    layer.alert("操作失败！", { icon: 2 });
+                }
+            })
+            return zs;
+        }
+
+        //查看操作记录
+        function ckczji(val) {
+            layer.open({
+                type: 2,
+                title: ['逾期通知数据', 'font-size:14px;'],
+                area: ['900px', '450px'],
+                offset: '10px',
+                fixed: false, //不固定
+                maxmin: true,
+                content: '../DKX_DDtypeinfo/YQZTinfoView?Id=' + val,
+                //end: function () {
+                //    location.reload();
+                //}
+            })
+        }
+
+        //获取各个状态的数据
+        function AJAXGettjsum()
+        {
+            var starttime=$("#txtstarttime").val();
+            var endtime=$("#txtendtime").val();
+            var json;
+            $.ajax({
+                url: "../DKX_DDtypeinfo/TJglsum",
+                type: "POST",
+                dataType: "JSON",
+                data:{starttime:starttime,endtime:endtime},
+                async: false,
+                success: function (response) {
+                    json = eval(response);
+                },
+                error: function (e) {
+                    layer.alert("操作失败！", { icon: 2 });
+                }
+            })
+            return json;
+        }
+
+
+        //导出excl 数据
+        function ExportEPJSON()
+        {
+            var txt_DD_Bianhao=$("#txt_DD_Bianhao").val(); 
+            var txt_KHname=$("#txt_KHname").val(); 
+            var txtdd_zt=$("#txtdd_zt").val(); 
+            var txtIsyq=$("#txtIsyq").val(); 
+            var txtstarttime=$("#txtstarttime").val(); 
+            var txtendtime=$("#txtendtime").val(); 
+         
+            window.location.href="../DKX_DDtypeinfo/DC_DDINFO?DD_Bianhao="+txt_DD_Bianhao+"&khname="+txt_KHname+"&DD_ZT="+txtdd_zt+"&Isyq="+txtIsyq+"&starttime="+txtstarttime+"&endtime="+txtendtime;
+        }
+
+    </script>
+}
+
+
+<div class="h-right">
+    <div class="h-right-c">
+        <!--查询条件-->
+        <div class="inquiry1">
+            <fieldset>
+                <legend>查询条件：</legend>
+                @using (Html.BeginForm("dkxscinfoSearchList", "DKX_DDtypeinfo", FormMethod.Post, new { id = "form1" }))
+                {
+                    @Html.Hidden("pageIndex");
+                    <ul>
+                        <li>
+                            <span>生产批号：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txt_DD_Bianhao" id="txt_DD_Bianhao" />
+                            </span>
+                        </li>
+                        <li>
+                            <span>客户名称：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txt_KHname" id="txt_KHname" />
+                            </span>
+                        </li>
+                        <li>
+                            <span>状态：</span>
+                            <span class="inquiry-input">
+                                <select id="txtdd_zt" name="txtdd_zt">
+                                    <option value="">全部</option>
+                                    <option value="-1">未提交</option>
+                                    <option value="1">待制图</option>
+                                    <option value="2">制图中</option>
+                                    <option value="-2">待审核</option>
+                                    <option value="3">待生产</option>
+                                    <option value="4">可生产</option>
+                                    <option value="5">缺料</option>
+                                    <option value="6">生产中</option>
+                                    <option value="7">待发货</option>
+                                    <option value="8">完成</option>
+                                </select>
+                            </span>
+                        </li>
+                        <li>
+                            <span>逾期：</span>
+                            <span class="inquiry-input">
+                                <select id="txtIsyq" name="txtIsyq">
+                                    <option value="">请选择</option>
+                                    <option value="0">在途逾期</option>
+                                    <option value="1">完成逾期</option>
+                                </select>
+                            </span>
+                        </li>
+                        <li><span>下单时间：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txtstarttime" id="txtstarttime" onclick="WdatePicker()" />
+                                -
+                                <input type="text" name="txtendtime" id="txtendtime" onclick="WdatePicker()" />
+                            </span>
+                        </li>
+                        <li style="*width: 100%; *margin: -10px 0 5px 90px;">
+                            <span class="inquiry-input">
+                                <button name="btnSerch" class="layui-btn" onclick="return SerchList(1)"><i class="layui-icon">&#xe615;</i>查询</button>
+                            </span>
+                               <span class="inquiry-input">
+                                <button type="button" onclick="return ExportEPJSON()">记录导出</button>
+                            </span>
+                        </li>
+                        <li>
+                            <span class="inquiry-input">
+                                <button class="layui-btn" onclick="return addClick('/DKX_DDtypeinfo/dkxscinfoList')"><i class="layui-icon">&#x1002;</i>刷新</button></span>
+                        </li>
+
+                    </ul>
+                }
+            </fieldset>
+        </div>
+        <div class="h-table">
+            <div class="h-table-content" style="color: #9d9999;">
+
+                @*<table class="layui-table">
+                    <tr>
+                        <td>订单总量：12</td>
+                        <td colspan="8">在途量：8</td>
+                        <td colspan="2">完成量：4</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>待制图</td>
+                        <td>制图中</td>
+                        <td>待审核</td>
+                        <td>物料确认</td>
+                        <td>缺料</td>
+                        <td>可生产</td>
+                        <td>生产中</td>
+                        <td>待发货</td>
+                        <td>正常完成</td>
+                        <td>逾期完成</td>
+                    </tr>
+                </table>*@
+                <div id="tjsum"></div>
+                <div id="content"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--==========================输出分页按钮=========================-->
+<div class="pagin">
+    @if (ViewBag.PageNavigate == null)
+    {
+        @Html.ShowPageNavigate(Model.CurrentPageIndex, Model.PageSize, Model.RecordCount);
+    }
+</div>
+
+<script src="~/Scripts/NAjs/DKXpulice.js"></script>

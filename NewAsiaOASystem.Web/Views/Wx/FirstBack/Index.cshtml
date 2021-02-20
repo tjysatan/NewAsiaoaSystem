@@ -1,0 +1,261 @@
+﻿@model NewAsiaOASystem.ViewModel.PagerInfo<NewAsiaOASystem.ViewModel.WX_MessageView>
+@{
+    ViewBag.Title = "关键词回复管理列表";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@section HeadContent{
+    <script src="~/Scripts/Sys/SysMenu.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            BindGrid();
+        })
+        function BindGrid() {
+             @{
+                
+                 if (null != Model)
+                 {
+                     string json = Model.GetPagingDataJson;//获取json数据
+                    @: var jsonStr =@Html.Raw(json); 
+                              //  @: $("#dg").datagrid('loadData', jsonStr); 
+                 }
+              }
+            dataGrid(jsonStr);
+        }
+        function dataGrid(jsonStr)
+        {
+            if (typeof(jsonStr)!="undefined") {
+                var html="";
+                html = '<table class="layui-table">';
+                html += '<thead>';
+                html+='<tr>';
+                html+='<td width="5%"><input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" /></td>';
+                html+='<td width="25%">关键词</td>';
+                html+='<td width="15%">类型</td>';
+                html+='<td width="15%">是否默认</td>';
+                html+=' <td width="15%">创建时间</td>';
+                html+=' <td width="35%">操作</td>';
+                html+='</tr>';
+                html+='</thead>';
+                for (var i = 0,j=jsonStr.length; i < j; i++) {
+                    html+='<tr>';
+                    html+='<td width="30"><input type="checkbox" name="ContentChecked" value="'+jsonStr[i].A_id+'"/></td>';
+                    html+='<td width="180">'+jsonStr[i].A_KeyWord+'</td>';
+                    if (jsonStr[i].MsgType!=null)
+                        html+='<td width="90">'+showtype(jsonStr[i].MsgType)+'</td>';
+                    else
+                        html+='<td width="90"></td>';
+
+                    html+='<td width="200">'+showmr(jsonStr[i].IsDefaultMessage)+'</td>';
+                   
+                    html+='<td width="150">'+showDate(jsonStr[i].A_CreateTime)+'</td>';
+                    html+='<td><div class="layui-btn-group">'+listbtnshow(jsonStr[i].A_id)+'</div></td>';
+                    html+="</tr>";
+                }
+                html+='</table>';
+                $("#content").html(html);
+            }
+        }
+
+        //pageIndex当前页
+        function SerchList(pageIndex)
+        {
+            $("input[name='pageIndex']").val(pageIndex);
+            var options = {
+                beforeSubmit: function () {
+                    return true;
+                },
+                dataType: "json",
+                success: function (context) {
+                    var data=eval(context.result);
+                    dataGrid(data);
+                    $(".pagin").html(context.PageN);//输出分页按钮
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $.messager.alert("操作提示", '查询失败请重试！', 'error');
+                }
+            }
+            $('#form1').ajaxSubmit(options);
+            return false;
+        }
+
+        //列表中操作按钮
+        function listbtnshow(val)
+        {
+            var id = "'" + val + "'";
+            var s = '<a class="layui-btn layui-btn-primary layui-btn-small" onclick="EideUrl('+id+')">编辑</a>';
+            var z = '<button class="layui-btn layui-btn-primary layui-btn-small" onclick="DelUrl(' + id + ')">删除</button>';
+            return s+z;
+        } 
+
+        //编辑页面
+        function  EideUrl(Id)
+        {
+            window.location.href="../FirstBack/EditPage?id="+Id;
+        }
+        //删除跳转
+        function DelUrl(Id)
+        {
+            $.messager.confirm("操作提示", '确定要删除吗？', function (data) {
+                if (data) {
+                   
+                    var str = DelEide(Id);
+                    if (str == "0") {
+                        layer.alert("删除成功！", { icon: 1 }, function () { location.reload(); });
+                        return false;
+                    }
+                    else {
+                        layer.alert("删除失败！", { icon: 2 }, function () { location.reload(); });
+                        return false;
+                    }
+                }
+            })
+        }
+
+        //删除
+        function DelEide(val)
+        {
+            var json;
+            $.ajax({
+                type: "POST",
+                url: "/FirstBack/NewKeyDel",
+                data: { id: val },
+                dataType: "html",
+                async: false,
+                success: function (reslut) {
+                    json = reslut;
+                },
+                error: function (e) {
+                    alert("网路异常，请重试！");
+                }
+            })
+            return json;
+        }
+    </script>
+}
+
+
+<!--==================================数据列表=============================-->
+<div class="h-right">
+    <div class="h-right-c">
+        @using (Html.BeginForm("SearchList", "FirstBack", FormMethod.Post, new { id = "form1" }))
+        {
+            @Html.Hidden("pageIndex");
+            <div class="inquiry1">
+                <fieldset>
+                    <legend>查询条件：</legend>
+                    <ul>
+                        <li>
+                            <span>关键词：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="A_KeyWord" />
+                            </span>
+                        </li>
+                        <li>
+                            <span>类型：</span>
+                            <span class="inquiry-input">
+                                <select id="MsgType" name="MsgType" class="add-function">
+                                    <option value="">全部</option>
+                                    <option value="text">文本</option>
+                                    <option value="new">图文</option>
+                                </select>
+                            </span>
+                        </li>
+                        <li>
+                            <span>是否默认：</span>
+                            <span class="inquiry-input">
+                                <select id="IsDefaultMessage" name="IsDefaultMessage" class="add-function">
+                                    <option value="">全部</option>
+                                    <option value="true">是</option>
+                                    <option value="false">否</option>
+                                </select>
+                            </span>
+                        </li>
+                        <li style="*width: 100%; *margin: -10px 0 5px 90px;">
+                            <span class="inquiry-input">
+                                <button class="layui-btn" onclick="return SerchList(1)"><i class="layui-icon">&#xe615;</i> 查询</button>
+                            </span>
+                        </li>
+                        <li>
+                            <span class="inquiry-inputM">
+                                <button class="layui-btn" onclick="return addClick('/FirstBack/addPage')"><i class="layui-icon">&#xe608;</i> 新增文本</button>
+                            </span>
+                        </li>
+                        <li>
+                            <span class="inquiry-inputM">
+                                <button class="layui-btn" onclick="return addClick('/FirstBack/addPage_New')"><i class="layui-icon">&#xe608;</i> 新增图文</button>
+                            </span>
+                        </li>
+                        <li>
+                            <span class="inquiry-input">
+                                <button class="layui-btn" onclick="return wxdel('/FirstBack/Delete');"><i class="layui-icon">&#xe640;</i> 删除</button>
+                            </span>
+                        </li>
+                        <li>
+                            <span class="inquiry-input">
+                                <button class="layui-btn" onclick="return update('/FirstBack/EditPage')"><i class="layui-icon">&#xe642;</i> 编辑</button>
+                            </span>
+                            <span class="inquiry-input">
+                                <button class="layui-btn" onclick="return addClick('/FirstBack/Index')"><i class="layui-icon">&#x1002;</i> 刷新</button>
+                            </span>
+                        </li>
+                    </ul>
+                </fieldset>
+            </div>
+        }
+        <div class="inquiry-input" style="margin: 10px 0 10px 10px;">
+            @*        <span class="inquiry-inputM">
+                <button onclick="addClick('/FirstBack/addPage')">新增文本自定回复</button></span>
+            <span class="inquiry-inputM">
+                <button onclick="addClick('/FirstBack/addPage_New')">新增图文自定回复</button></span>
+
+            <span class="inquiry-input">
+                <button onclick="wxdel('/FirstBack/Delete')">删除</button></span>
+            <span class="inquiry-input">
+                <button onclick="update('/FirstBack/EditPage')">编辑</button></span>
+            <span class="inquiry-input">
+                <button onclick="location.href='/FirstBack/Index'">刷新</button></span>
+            <span class="inquiry-input">
+                <button onclick="S_Mass('/FirstBack/S_ALL')">群发消息(@ViewData["SMcount"])</button></span>
+
+            <select class="add-function" id="YHtype">
+                <option value="0">请选择群发用户</option>
+                <option value="1">全部微信用户</option>
+                <option value="2">系统绑定用户</option>
+            </select>*@
+
+
+        </div>
+
+        <div class="h-table">
+            <div class="h-table-content">
+                <div id="content"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--==========================输出分页按钮=========================-->
+<div class="pagin">
+    <table style="width: 100%">
+        <tr>
+            <td>@Html.ShowPageNavigate(Model.CurrentPageIndex, Model.PageSize, Model.RecordCount)</td>
+        </tr>
+        @*<tr>
+                <td>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:red">注：1.关键词为“subscribe”未首次关注回复 请勿删除<br />&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.默认状态为true 的是默认回复的。建议保存一个，如果多个的话系统将自动随机发送一个。</span> </td>
+            </tr>*@
+        <tr>
+            <td style="color: red; font-size: 14px;">
+                <div style="padding-left: 10px;">注：</div>
+                <div style="padding-left: 30px; line-height: 26px;">1.关键词“subscribe”为微信用户首次关注回复的内容 请勿删除</div>
+                <div style="padding-left: 30px; line-height: 26px;">2.关键词默认状态为true 的是默认回复的。系统建议保存一个默认回复的关键词，若有多个，则系统将随机发送一个</div>
+            </td>
+        </tr>
+    </table>
+
+</div>
+
+
+@*@using (Html.BeginForm("test", "FirstBack", FormMethod.Post, new { id = "form1" }))
+  { 
+<div ><button onclick="return submitForm('/WxMenu/Index')">保存</button></div>
+ }*@

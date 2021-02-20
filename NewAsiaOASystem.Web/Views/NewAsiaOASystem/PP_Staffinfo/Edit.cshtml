@@ -1,0 +1,74 @@
+﻿@model NewAsiaOASystem.ViewModel.PP_StaffinfoView
+@{
+    ViewBag.Title = "个人（员工）信息编辑";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@using (Html.BeginForm("Edit", "PP_Staffinfo", FormMethod.Post, new { id = "form1" }))
+{
+    @Html.HiddenFor(m => m.Id);
+    @Html.HiddenFor(m => m.C_time);
+    @Html.HiddenFor(m=>m.type);
+    @Html.HiddenFor(m=>m.Proportion);
+    <div class="infor">
+        <div class="system-menu-set">
+            <ul class="infor-c">
+                <li>
+                    <span class="infor-c-width">姓名：</span>
+                    <span class="infor-c-input">@Html.TextBoxFor(m => m.Sat_Name)</span>
+                    <span style="color: red; font-size: 24px; vertical-align: middle; margin-left: 8px;">*</span>
+                    <span class="desc w-register"></span>
+                </li>
+            </ul>
+            <ul class="infor-c">
+                <li>
+                    <span class="infor-c-width">电话：</span>
+                    <span class="infor-c-input">@Html.TextBoxFor(m => m.Sat_Tel)</span>
+                    <span style="color: red; font-size: 24px; vertical-align: middle; margin-left: 8px;">*</span>
+                    <span class="desc w-register"></span>
+                </li>
+            </ul>
+            <ul class="infor-c">
+                <li>
+                    <span class="infor-c-width">性别：</span>
+                    <span class="infor-c-input">
+                         <select class="add-function" name="Sat_Sex">
+                            @{
+                                   if ("0".Equals(Convert.ToString(@Model.Sat_Sex)) && null != @Model.Id)
+                                   {
+                                @:<option value="0" selected="selected">男</option>
+                                @:<option value="1">女</option>
+                                   }
+                                   else
+                                   {
+                                @:<option value="0">男</option>
+                                @:<option value="1" selected="selected">女</option>
+                                   }
+                            }
+                        </select>
+                    </span>
+                    <span style="color: red; font-size: 24px; vertical-align: middle; margin-left: 8px;"></span>
+                    <span class="desc w-register"></span>
+                </li>
+            </ul>
+ 
+            <ul class="infor-c">
+                <li>
+                    <span class="infor-c-width">所属团队：</span>
+                    <span class="infor-c-input">@Html.DropDownList("ADListData", ViewData["teamname"] as SelectList, new { @class = "add-function" });</span>
+                    <span style="color: red; font-size: 24px; vertical-align: middle; margin-left: 8px;"></span>
+                    <span class="desc w-register"></span>
+                </li>
+            </ul>
+            
+ 
+        </div>
+        <div class="inquiry-input infor-b">
+            <span>
+                <button onclick="return SatffSavaForm()">保存</button></span><span>
+                    <button onclick="return RedirectUrl('/PP_Staffinfo/List')">返回</button>
+                </span>
+        </div>
+    </div>
+}
+<script src="~/Scripts/NAjs/PP_pulice.js"></script>

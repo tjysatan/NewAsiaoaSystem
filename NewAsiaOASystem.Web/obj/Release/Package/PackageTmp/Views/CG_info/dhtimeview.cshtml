@@ -1,0 +1,65 @@
+﻿@model NewAsiaOASystem.ViewModel.CG_infoView
+@{
+    ViewBag.Title = "到货时间确定";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@using (Html.BeginForm("Editdhtime", "CG_info", FormMethod.Post, new { id = "form1" }))
+{
+    @Html.HiddenFor(m => m.Id);
+    @Html.HiddenFor(m => m.GysId);
+    @Html.HiddenFor(m => m.GysDm);
+    @Html.HiddenFor(m => m.Cg_xdtime);
+    @Html.HiddenFor(m => m.Cg_xdname);
+    @Html.HiddenFor(m => m.Cg_Isdh);
+    @Html.HiddenFor(m=>m.Cg_sgjqtime);
+    @Html.HiddenFor(m=>m.Cg_jqqrtime);
+    <table style="width:300px;">
+        <tr>
+            <td><span class="infor-c-width">到货时间:</span></td>
+            <td> <span class="infor-c-input">@Html.TextBoxFor(m => m.Cg_dhtime, new { onclick="WdatePicker()"})</span></td>
+        </tr>
+        <tr>
+            <td style=" height:30px;" colspan="2"></td>
+        </tr>
+        <tr>
+            <td colspan="2" algin="center">
+                   <div class="inquiry-input" >
+             <span style="margin-left:100px;">
+                <button onclick="return  dhtimeSavaForm()">保存</button>
+            </span>
+               </div>
+            </td>
+        </tr>
+    </table>
+}
+
+<script type="text/javascript">
+
+    function dhtimeSavaForm() {
+        //表单验证
+        var options = {
+            beforeSubmit: function () {
+                return true;
+            },
+            dataType: "json",//这里是指控制器处理后返回的类型，这里返回json格式。
+            success: function (context) {
+                if ("success" == context.result) {
+                    var ParentObj = window.parent;//获取父窗口
+                    window.parent.$('#windowDia').window('close');
+                    window.parent.location = '/CG_info/List';
+                }
+                if ("error" == context.result) {
+                    $.messager.alert("操作提示", '设置失败！', 'error');
+                }
+                if ("error1" == context.result) {
+                    $.messager.alert("操作提示", '已经到货，不能设置交期！', 'error');
+                }
+            }
+
+        }
+        $('#form1').ajaxSubmit(options);
+        return false; //为了不刷新页面,返回false 
+    }
+</script>
+

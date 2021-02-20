@@ -1,0 +1,236 @@
+﻿@model NewAsiaOASystem.ViewModel.NAReturnListView
+@{
+    ViewBag.Title = "kfEditPage";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+@section HeadContent{
+<script type="text/javascript">
+    $(function () {
+        var pname = AjaxPerson_Name('@Model.CreatePerson');
+        $("#Pname").html(pname.UserName);
+        var Cust = AjaxCust_Name('@Model.C_Id');
+        $("#Cname").html(Cust.Name);
+        $("#Clxr").html(Cust.LxrName);
+        $("#Ctel").html(Cust.Tel);
+        //产品退货明细
+        dataGrid();
+
+        $('#SelectedCLData').combo({ editable: false, height: 25, panelHeight: 170 });
+        $('#Div_SelectedCLData').appendTo($('#SelectedCLData').combo('panel'));
+        $('#SelectedCLData').combo('setValue', '').combo('setText', '===请选择==');
+        GetproList();
+
+        $('#SelectedZTData').combo({ editable: false, height: 25, panelHeight: 150 });
+        $('#Div_SelectedZTData').appendTo($('#SelectedZTData').combo('panel'));
+
+        $('#SelectedyqclData').combo({ editable: false, height: 25, panelHeight: 150 });
+        $('#Div_SelectedyqclData').appendTo($('#SelectedyqclData').combo('panel'));
+        Getcljg();
+
+
+        var R_FTyyp = $("#R_FTyyp").val();//返退货原因1
+        if (R_FTyyp != null) {
+            SelectItem();
+        }
+        var R_FTyy = $("#R_FTyy").val();//返退货原因2
+        if (R_FTyy != null) {
+            GetproxhList(R_FTyyp, "1")
+            SelectItem();
+        }
+        var cljg = $("#R_CLjg").val();//处理结果
+        if (cljg != null) {
+            Getcljg();
+            SelectItem();
+            if (cljg == "1") {
+                $("#clfxjz").css('display', 'block');
+                $("#clqtsm").css('display', 'none')
+            }
+            else if (cljg == "2") {
+                $("#clfxjz").css('display', 'none');
+                $("#clqtsm").css('display', 'block');
+            }
+        }
+
+    })
+
+    //退货明细查看
+    function dataGrid() {
+        var jsonStr;
+        jsonStr = eval(ajaxthdetailjson('@Model.Id'));
+            $("#content").html("");
+            if (jsonStr != null) {
+                if (typeof (jsonStr) != "undefined") {
+                    var html = "";
+                    html = '<table cellpadding="0" cellspacing="0" style="width:100%;">';
+                    for (var i = 0, j = jsonStr.length; i < j; i++) {
+                        var Perinfo = GetPerinfobyId(jsonStr[i].P_Id);
+                        if (i % 2 == 0)
+                            html += '<tr class="h-table-content-r1">';
+                        else
+                            html += '<tr class="h-table-content-r">';
+                        html += '<td width="40%">' + Perinfo.Pname + '</td>';
+                        html += '<td width="30%">' + jsonStr[i].SL + '</td>';
+                        html += '<td width="230%">' + Perinfo.dw + '</td>';
+                        html += '</tr>';
+                    }
+                    html += '</table>';
+                    $("#content").html(html);
+                }
+            }
+        }
+
+</script>
+    }
+
+@using (Html.BeginForm("kfEdit", "NAReturnList", FormMethod.Post, new { id = "form1" }))
+{
+<div class="infor">
+      <div class="infor-content" style="width:100%;">
+           @Html.HiddenFor(m => m.Id)
+           @Html.HiddenFor(m => m.R_FTyyp)
+           @Html.HiddenFor(m => m.R_FTyy)
+           @Html.HiddenFor(m => m.R_CLjg)
+           @Html.HiddenFor(m=>m.Kfzy)
+           @Html.HiddenFor(m=>m.ClDate)
+       <div class="add-infor-title">
+           <span class="w-register">退货单</span>
+           <span class="w-register" style="float:right; margin-right:10px; cursor:pointer" id="ckck" onclick="ckdetail()" >收起</span>
+       </div>
+       <div id="thdetail" style="display:block">
+         <ul class="infor-c  infor-c-bg">
+            <li class="infor-c-in"><span class="infor-c-width">仓库：</span><span class="infor-c-q"><label id="Pname" ></label></span></li>
+            <li class="infor-c-in"><span class="infor-c-width">提交时间：</span><span class="infor-c-q">@Model.CreateTime</span></li>
+        </ul>
+        <!----退货产品明细---->
+          <div class="h-table-content"  style="width:100%; margin:0; padding:0;">
+              <div class="h-table-content">
+                   <table cellpadding="0" cellspacing="0" class="add-infor-title-bg" style="border: none; width: 100%;">
+                <tr>
+                    <td style="width: 40%">货品名称
+                    </td>
+                    <td style="width: 30%">数量
+                    </td>
+                    <td style="width: 30%">单位
+                    </td>
+                </tr>
+            </table>
+                   <div id="content"></div>
+              </div>
+          </div>
+       </div>
+
+        <div class="add-infor-title-bg"><span class="w-register">返退货流程跟踪单</span></div>
+         <ul class="infor-c  infor-c-bg">
+            <li class="infor-c-in"><span class="infor-c-width">客户名称：</span><span class="infor-c-q"><label id="Cname" ></label></span></li>
+            <li class="infor-c-in"><span class="infor-c-width">客户联系人：</span><span class="infor-c-q"><label id="Clxr" ></label></span></li>
+            <li class="infor-c-in"><span class="infor-c-width">联系电话：</span><span class="infor-c-q"><label id="Ctel" ></label></span></li>
+        </ul>
+
+           <ul class="infor-c">
+            <li class="infor-c-in">
+                <span class="infor-c-width">返退产品：</span>
+                <span class="infor-c-input">
+                     @Html.DropDownList("PerListData", ViewData["perList"] as SelectList, new { @class = "add-function" })
+                </span>
+            </li>
+            <li class="infor-c-in">
+                <span class="infor-c-width">返退时间：</span>
+               <span class="infor-c-input">
+                    @Html.TextBoxFor(m => m.R_FTdate, new { onclick = "WdatePicker()" })
+                </span>
+            </li>
+               
+            <li class="infor-c-in">
+                <span class="infor-c-width">返退数量：</span>
+                <span class="infor-c-q">@Model.R_Number   套/件</span>
+            </li>
+
+        </ul>
+
+
+        <ul class="infor-c">
+            <li class="infor-c-in">
+                <span class="infor-c-width">返退货原因：</span>
+                <span class="infor-c-q" *width: 0px;">
+                     <input id="SelectedCLData" name="SelectedCLData">  
+                </span>
+                
+            </li>
+            <li>
+                <span class="infor-c-q" *width: 0px;"><input id="SelectedZTData" name="SelectedZTData" ></span>
+            </li>
+         
+        </ul>
+           <ul class="infor-c">
+            <li>
+                <span class="infor-c-width">返退其他原因：</span>
+                <span class="infor-c-input">
+                   @Html.TextAreaFor(m => m.R_FTyysm)
+                </span>
+            </li>
+           </ul>
+            <ul class="infor-c">
+            <li>
+                <span class="infor-c-width">要求处理结果：</span>
+                <span class="infor-c-input">
+                 <input id="SelectedyqclData" name="SelectedyqclData" >
+                </span>
+            </li>
+                <li>
+                 <span  id="clfxjz" style="display:none">
+                  @Html.TextBoxFor(m => m.R_CLFY, new { @class = "text_field" })  元
+                </span>
+                </li>
+               
+                 <li>
+                 <span  id="clqtsm" style="display:none">
+                  @Html.TextBoxFor(m => m.R_CLQTSM, new { @class = "text_field" })
+                </span>
+                </li>
+               
+           </ul>
+
+           <ul class="infor-c">
+            <li>
+                <span class="infor-c-width">涉及费用：</span>
+                <span>
+                 运费：  @Html.TextBoxFor(m => m.R_Yf, new { @class = "text_field" })  元
+                </span>
+                <span>
+                 客户索赔：  @Html.TextBoxFor(m => m.R_sp, new { @class = "text_field" }) 元
+                </span>
+            </li>
+          </ul>
+          
+           <ul class="infor-c">
+            <li>
+                <span class="infor-c-width">补充要求：</span>
+                <span class="infor-c-input">
+                   @Html.TextAreaFor(m => m.Remark1)
+                </span>
+            </li>
+           </ul>
+      </div>
+     <div class="inquiry-input infor-b">
+            <span>
+                <button onclick="return kfSavaForm()">确认</button></span><span>
+                <button onclick="return RedirectUrl('/NAReturnList/kflist')">返回</button></span>
+     </div>
+    
+</div>
+}
+<!--返退货原因-->
+	<div id="Div_SelectedCLData">
+		<div style="padding:10px;font-size:14px;" id="DivContent_SelectedCLData"></div>
+	</div>
+
+	<div id="Div_SelectedZTData">
+		<div style="padding:10px;font-size:14px;" id="DivContent_SelectedZTData"></div>
+	</div>
+
+<!---要求处理结果---->
+	<div id="Div_SelectedyqclData">
+		<div style="padding:10px;font-size:14px;" id="DivContent_SelectedyqclData"></div>
+	</div>
+
+<script src="~/Scripts/NAjs/NAReturnList.js"></script>

@@ -1,0 +1,141 @@
+﻿@{
+    ViewBag.Title = "Lodop 测试页面中通快递单打印";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+<script src="~/Scripts/Printjs/LodopFuncs.js" type="text/javascript"></script>
+<script src="~/Scripts/NAjs/Printjs.js"></script>
+<script src="~/Scripts/NAjs/layui.js"></script>
+<script type="text/javascript">
+
+    var LODOP; //声明为全局变量 
+    function myPreview() {
+        var aa = $("#pmS").val();
+        CreateFullBill(aa);
+        LODOP.ADD_PRINT_SETUP_BKIMG("<img border='0' width='819px' src='http://wx.chinanewasia.com/Content/kdimg/L_ZT.jpg'>");
+        LODOP.SET_SHOW_MODE("BKIMG_IN_PREVIEW", 1); //注："BKIMG_IN_PREVIEW"-预览包含背景图 "BKIMG_IN_FIRSTPAGE"- 仅首页包含背景图
+        LODOP.PREVIEW(); //打印预览
+        Closetk();
+    };
+    function Design1() {
+        CreateFullBill();
+        LODOP.ADD_PRINT_SETUP_BKIMG("<img border='0' width='819px' src='http://wx.chinanewasia.com/Content/kdimg/L_ZT.jpg'>");
+        LODOP.PRINT_DESIGN();
+    };
+
+    function CreateFullBill(val) {
+        LODOP = getLodop();
+        LODOP.PRINT_INIT("套打中通的模板");
+        LODOP.PRINT_INITA(-10, -20, 750, 500, "套打中通的模板");
+        LODOP.SET_PRINT_STYLE("FontSize", 16);
+        var userinfo = AjaxPerson_Name('@ViewData["UID"]');//当前登录的用户信息
+        var fname = userinfo.UserName;//发货人
+        var ftel = userinfo.Tel;//发货人电话
+        LODOP.ADD_PRINT_TEXT(107, 125, 75, 25, fname);
+        LODOP.ADD_PRINT_TEXT(140, 125, 253, 45, "太仓市花墙工业区新亚路二号");
+        LODOP.ADD_PRINT_TEXT(192, 125, 250, 25, "苏州新亚科技有限公司");
+        LODOP.ADD_PRINT_TEXT(218, 125, 214, 25, ftel);
+        var Cus_info = AjaxCust_Name('@ViewData["Id"]');//客户信息
+               var sname = Cus_info.LxrName;//收货人
+               var sAdress = Cus_info.Adress;//收货地址
+               var sdw = Cus_info.Name;//收货单位
+               var stel = Cus_info.Tel;//收货电话
+               LODOP.ADD_PRINT_TEXT(108, 464, 75, 25, sname);
+               LODOP.ADD_PRINT_TEXT(139, 459, 249, 45, sAdress);
+               LODOP.ADD_PRINT_TEXT(192, 462, 248, 25, sdw);
+               LODOP.ADD_PRINT_TEXT(218, 462, 243, 25, stel);
+               //var cpm = $("#pmS").val();
+               //alert(cpm);
+               LODOP.ADD_PRINT_TEXT(248, 102, 95, 25, val);
+
+               var jdata = GetNewdatetimejson();//寄件日期
+               LODOP.ADD_PRINT_TEXT(380, 124, 100, 25, fname);
+               LODOP.ADD_PRINT_TEXT(382, 257, 145, 25, jdata);
+
+           };
+
+           function Closetk() {
+               var ParentObj = window.parent;//获取父窗口
+               window.parent.$('#windowDia').window('close');
+               window.parent.location = "/ExpressPrinting/printlist";
+           };
+
+    //推送打印订单
+           function tsdyorder() {
+               $.ajax({
+                   url: "../EP_jlinfo/ZTorderts",
+                   type: "POST",
+                   dataType: "html",
+                   async: true,
+                   beforeSend: function () {
+                       ddchen();
+                   },
+                   success: function (response) {
+                       disLoading();
+                       if (response == "A200") {
+                           layer.alert("订单入库成功！(A200)", { icon: 1 }, function () { Closetk() });
+                       }
+                       if (response == "A210") {
+                           layer.alert("发货手机和电话号码都是空!(A210)", { icon: 2 });
+                       }
+                       if (response == "A220") {
+                           layer.alert("没有找到shopKey对应的店铺!(A220)", { icon: 2 });
+                       }
+
+                       if (response == "A230") {
+                           layer.alert("该订单已经打印发货,不能修改!(A220)", { icon: 2 });
+                       }
+                       if (response == "A240") {
+                           layer.alert("订单入库异常!(A240)", { icon: 2 });
+                       }
+                       if (response == "A250") {
+                           layer.alert("存在必填字段为空!(A250)", { icon: 2 });
+                       }
+                       if (response == "A260") {
+                           layer.alert("收件手机和电话号码都是空!(A260)", { icon: 2 });
+                       }
+                       if (response == "1") {
+                           layer.alert("订单入库异常。", { icon: 2 });
+                       }
+                       if (response == "0") {
+                           layer.alert("重新打开打印页面。", { icon: 2 });
+                       }
+
+                   },
+                   error: function (e) {
+                       disLoading();
+                       layer.alert("操作失败！", { icon: 2 });
+                   }
+               })
+           }
+
+           var loadi;
+           function ddchen() {
+               loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+           }
+           //关闭等待效果
+           function disLoading() {
+               layer.close(loadi);
+           }
+
+</script>
+
+<div style="width: 400px; height: 100px; overflow: hidden">
+    <div class="inquiry-input infor-b">
+        <span>
+<button onclick="return tsdyorder()">订单推送</button>
+        </span>
+        <span>
+            <button onclick="return myPreview()">打印</button></span>
+        <span>
+            <button onclick="return Closetk()">关闭</button></span>
+    </div>
+    <select id="pmS" name="pmS">
+        <option value="温控器">温控器</option>
+        <option value="电控箱">电控箱</option>
+        <option value="发票">发票</option>
+        <option value="其他">其他</option>
+    </select>
+</div>
+
+
+

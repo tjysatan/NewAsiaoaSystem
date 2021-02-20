@@ -1,0 +1,329 @@
+﻿@model NewAsiaOASystem.ViewModel.PagerInfo<NewAsiaOASystem.ViewModel.Flow_PlanProductioninfoView>
+@{
+    ViewBag.Title = "技术生产通知单审核列表";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@section HeadContent{
+    <script type="text/javascript">
+     
+        //window.setInterval(function () { Ajaxsctztx();},10000);
+        $(function () {
+          
+            BindGrid();
+        })
+
+        function BindGrid() {
+            @{
+                if (null != Model && null != Model.GetPagingDataJson)
+                {
+                    string json = Model.GetPagingDataJson;//获取json数据
+                    @:var pageIndex=@Html.Raw(Model.CurrentPageIndex);
+                                @: var jsonStr = @Html.Raw(json);
+                }
+             }
+            dataGrid(jsonStr,pageIndex);
+            $("#pageIndex").val(pageIndex);
+        }
+
+        function dataGrid(jsonStr)
+        {
+            if (typeof (jsonStr) != "undefined") {
+                var html = "";
+                html = '<table cellpadding="0" cellspacing="0" style="width:100%;">';
+                for (var i = 0, j = jsonStr.length; i < j; i++) {
+                    if (i % 2 == 0)
+                        html += '<tr class="h-table-content-r1" id="'+jsonStr[i].Id+'">';
+                    else
+                        html += '<tr class="h-table-content-r"  id="'+jsonStr[i].Id+'">';
+                    html += '<td width="5%"><input type="checkbox" name="ContentChecked" value="' + jsonStr[i].Id + '"/></td>';
+                    html += '<td width="10%">'+jsonStr[i].P_CPname + '</td>';
+                    html += '<td width="10%">'+jsonStr[i].P_Pianhao + '</td>';
+                    html += '<td width="10%">'+jsonStr[i].P_SCnumber + '</td>';
+                    html += '<td width="10%">'+showsczt(jsonStr[i].P_Issc) + '</td>';
+                    html += '<td width="10%">'+showDate(jsonStr[i].C_time) + '</td>';
+                    if(jsonStr[i].YJdatetime!=""&&jsonStr[i].YJdatetime!=null)
+                        html+= '<td width="10%">'+showDate(jsonStr[i].YJdatetime) + '</td>';
+                    else
+                        html+= '<td width="10%">--</td>';
+                    if(jsonStr[i].wcdatetime!=""&&jsonStr[i].wcdatetime!=null)
+                        html+= '<td width="10%">'+showDate(jsonStr[i].wcdatetime) + '</td>';
+                    else
+                        html+= '<td width="10%">--</td>';
+                    html += '<td width="25%">' + sccz(jsonStr[i].Id, jsonStr[i].P_Issc, jsonStr[i].P_Pianhao, jsonStr[i].P_SCnumber, jsonStr[i].Isprint)+'</td>';
+                   
+                    html+='</tr>';
+                }
+                html += '</table>';
+                $("#content").html(html);
+            }
+        }
+
+        //pageIndex当前页
+        function SerchList(pageIndex)
+        {
+            $("input[name='pageIndex']").val(pageIndex);
+            var options = {
+                beforeSubmit: function () {
+                    return true;
+                },
+                dataType: "json",
+                success: function (context) {
+                    var data=eval(context.result);
+                    dataGrid(data);
+                    $(".pagin").html(context.PageN);//输出分页按钮
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $.messager.alert("操作提示", '查询失败请重试！', 'error');
+                }
+            }
+            $('#form1').ajaxSubmit(options);
+            return false;
+        }
+
+        //返回状态
+        function showsczt(val){
+            if(val=="0")
+                return "生产中";
+            if(val=="1")
+                return "缺料";
+            if(val=="2")
+                return "待生产";
+            if(val=="3")
+                return "完成";
+            if(val=="4")
+                return "待技术确认"
+        }
+
+        //返回操作
+        function sccz(val, val2, val3, val4, Isprint)
+        {
+            var Id="'"+val+"'";
+            var Issc="'"+val2+"'";
+            var wl_bh="'"+val3+"'";
+            var scsl = "'" + val4 + "'";
+            var printIs = "'" + Isprint+"'";
+            var f = '<a href="#" onclick="JsPPlan('+Id+","+Issc+')">编辑</a>&nbsp;&nbsp;'
+            var t = '<a href="#" onclick="GetBomkc(' + Id + "," + wl_bh + "," + scsl + ')">料单</a>&nbsp;&nbsp;'
+            var s = '<a href="#" onclick="ppview(' + Id + ')">查看</a>&nbsp;&nbsp;'
+            var z = '<a href="#" onclick="PrintPlanSC(' + Id + ',' + printIs + ',' + Issc + ')">打印</a>&nbsp;&nbsp;'
+            return f+t+s+z;
+        }
+
+        //打印生产通知单页面  val2 记录是否打印 val1 生产计划单Id
+        function PrintPlanSC(val1, val2, Issc) {
+            if (Issc == "4") {
+                layer.alert("请先完成技术确认！", { icon: 2 });
+                return;
+            }
+            if (val2 == "1") {
+                $.messager.confirm("操作提示", '生产通知单已经打印过了，您还需要再次打印吗？', function (data) {
+                    if (data) {
+                        $('#windowDia').html("<iframe src=../Flow_PlanProductioninfo/PlanPrint?Id=" + val1 + "&&  style='border:0px;' width='650px' height='500px'></iframe>");
+                        $("#windowDia").window({
+                            title: '生产通知单打印',
+                            modal: true,
+                            closed: false,
+                            width: 700,
+                            height: 500,
+                            top: 0
+                        });
+                    }
+                })
+            } else {
+                $('#windowDia').html("<iframe src=../Flow_PlanProductioninfo/PrintPlanView?Id=" + val1 + "&&  style='border:0px;' width='650px' height='500px'></iframe>");
+                $("#windowDia").window({
+                    title: '生产通知单打印',
+                    modal: true,
+                    closed: false,
+                    width: 700,
+                    height: 500,
+                    top: 0
+                });
+            }
+        }
+
+        //BOM表查看
+        function GetBomkc(val,val2,val3){
+            var pageIndex=$("#pageIndex").val();
+            $('#windowDia').html("<iframe src=../Flow_PlanProductioninfo/BOMView?Id=" + val + "&&scNumber="+val3+ "&&wl_dm="+val2+ "&&  style='border:0px;' width='610px'; height='400px';></iframe>");
+            $("#windowDia").window({
+                title: 'BOM查看以及库存',
+                modal: true,
+                closed: false,
+                width: 650,
+                 height: 460,
+                 top:0
+            });
+            
+        }
+
+        // 通知单审核页面
+        function JsPPlan(val1,val2)
+        {
+            if(val2=="4"||val2=="2"){
+                $('#windowDia').html("<iframe src=../Flow_PlanProductioninfo/PplanJsEdit?Id=" + val1 + "&&  style='border:0px;' width='640px' height='400px'></iframe>");
+                $("#windowDia").window({
+                    title: '技术审核',
+                    modal: true,
+                    closed: false,
+                    width: 700,
+                    height: 500,
+                    top:0
+                });
+            }
+            else
+            {
+                $.messager.alert("提示", '生产部门已经处理，无法编辑！','error');
+            }
+            
+        }
+
+        //生产通知单页面
+        function ppview(val) {
+              $('#windowDia').html("<iframe src=../Flow_PlanProductioninfo/SCPPView?Id=" + val + "&&  style='border:0px;' width='640px' height='400px'></iframe>");
+                $("#windowDia").window({
+                    title: '生产通知单详情',
+                    modal: true,
+                    closed: false,
+                    width: 700,
+                    height: 500,
+                    top:0
+                });
+        }
+
+        //生产完成操作
+        function CompleteSC(val){
+            $.messager.confirm("操作提示", '确定生产完成吗？', function (data) {
+                if(data){
+                    var flay=CSHsidbyID(val);
+                    if(flay=="true"){
+                        $.messager.alert("提示", '提交成功！','info', function () {
+                            location.href = "../Flow_PlanProductioninfo/list";
+                        });
+                    }else
+                    {
+                        $.messager.alert("提示", '提交失败！','error', function () {
+                            location.href = "../Flow_PlanProductioninfo/list";
+                        });
+                    }
+                }
+            })
+        }
+
+        //定时执行的ajax(生产通知单的状态变化的提醒)
+        function Ajaxsctztx(){
+            var json;
+            $.ajax({
+                type: "POST",
+                url: "../Flow_NonSProductinfo/AJAXtxdatejson",
+                data: { Type:"0",tzdtype:"0,1"},
+                dataType: "json",
+                async: false,
+                success: function (reslut) {
+                    json = eval(reslut);
+                    if(json!=null){
+                        alert(json.length);
+                    }else
+                    {
+                        alert("没有提醒！");
+                    }
+                },
+                error: function (e) {
+                    alert("请求失败");
+                }
+            })
+            return json;
+        }
+
+       
+
+    </script>
+}
+
+<!--==================================数据列表=============================-->
+
+<div class="h-right">
+    <div class="h-right-c">
+        <!--查询条件-->
+        @using (Html.BeginForm("SearchList", "Flow_PlanProductioninfo", FormMethod.Post, new { id = "form1" }))
+        {
+            @Html.Hidden("pageIndex");
+            <input type="hidden" id="p_type" name="p_type" value="1,2" />
+            <div class="inquiry1">
+                <fieldset>
+                    <legend>查询条件：</legend>
+                    <ul>
+                        <li><span>产品名称：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="CPname" /></span></li>
+                        <li><span>物料代码：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="wl_bm" /></span></li>
+                        <li><span>状态：</span>
+                            <span class="inquiry-input">
+                                <select name="Isscing">
+                                    <option value="">全部</option>
+                                    <option value="2">待生产</option>
+                                    <option value="0">生产中</option>
+                                    <option value="1">缺料</option>
+                                    <option value="4">待技术确认</option>
+                                    <option value="3">完成</option>
+                                </select>
+                            </span>
+                        </li>
+                        <li><span>下单时间：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="starttime" onclick="WdatePicker()" />
+                                -
+                                <input type="text" name="endtime" onclick="WdatePicker()" />
+                            </span>
+                        </li>
+
+                        <li style="*width: 100%; *margin: -10px 0 5px 90px;"><span class="inquiry-input">
+                            <button name="btnSerch" onclick="return SerchList(1)">查询</button>
+                        </span></li>
+                        <li>
+                            <span class="inquiry-input">
+                                <button onclick="return addClick('/Flow_PlanProductioninfo/JsPplanlistView')">刷新</button>
+                            </span>
+                        </li>
+                    </ul>
+                </fieldset>
+            </div>
+        }
+
+        <div class="h-table">
+            <div class="h-table-content">
+                <table cellpadding="0" cellspacing="0" class="h-right-table-title1" style="border: none; width: 100%;">
+                    <tr>
+                        <td width="5%">
+                            <input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" /></td>
+                        <td width="10%">产品名称</td>
+                        <td width="10%">代码</td>
+                        <td width="10%">生产数量</td>
+                        <td width="10%">状态</td>
+                        <td width="10%">创建时间</td>
+                        <td width="10%">预计完成</td>
+                        <td width="10%">实际完成</td>
+                        <td width="25%">操作</td>
+                    </tr>
+                </table>
+                <div id="content"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!--==========================输出分页按钮=========================-->
+<div class="pagin">
+    @if (ViewBag.PageNavigate == null)
+    {
+        @Html.ShowPageNavigate(Model.CurrentPageIndex, Model.PageSize, Model.RecordCount);
+    }
+</div>
+
+<div id="windowDia" class="easyui-window" closed="true" style="width: 680px; height: 600px; padding: 10px;"></div>
+

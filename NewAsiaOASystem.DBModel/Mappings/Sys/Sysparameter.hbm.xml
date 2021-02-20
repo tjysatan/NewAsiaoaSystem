@@ -1,0 +1,16 @@
+﻿<?xml version="1.0"  encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="NewAsiaOASystem.DBModel" assembly="NewAsiaOASystem.DBModel">
+	<class name="Sysparameter" table="Sysparameter">
+		<id name="Id" column="Id" type="string" unsaved-value="0">
+      			      			
+      	</id>      		
+		<property name="Value" column="Value" type="string"  />
+		<property name="Edit" column="Edit" type="int"  />
+		<property name="Description" column="Description" type="string"  />
+		<property name="CreatePerson" column="CreatePerson" type="string"  />
+		<property name="CreateTime" column="CreateTime" type="decimal"  />
+		<property name="UpdatePerson" column="UpdatePerson" type="string"  />
+		<property name="UpdateTime" column="UpdateTime" type="DateTime"  />
+				
+	</class>
+</hibernate-mapping>

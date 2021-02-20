@@ -1,0 +1,80 @@
+﻿@model NewAsiaOASystem.ViewModel.NQ_YJinfoView
+@{
+    ViewBag.Title = "元器件编辑页面";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@using (Html.BeginForm("Edit", "NQ_YJinfo", FormMethod.Post, new { id = "form1" }))
+{
+    @Html.HiddenFor(m => m.CreateTime);
+    @Html.HiddenFor(m => m.CreatePerson)
+    @Html.HiddenFor(m => m.UpdateTime)
+    @Html.HiddenFor(m => m.UpdatePerson)
+    @Html.HiddenFor(m => m.Id)
+    @Html.HiddenFor(m=>m.Y_aqkc)
+    @Html.HiddenFor(m=>m.Y_kc)
+    @Html.HiddenFor(m=>m.Y_DQYL)
+    @Html.HiddenFor(m=>m.Y_DQDJZ)
+    @Html.HiddenFor(m=>m.Y_iscg)
+    @Html.HiddenFor(m=>m.Y_cgSL)
+    @Html.HiddenFor(m=>m.Y_CYZ)
+    @Html.HiddenFor(m=>m.Y_Syzyl)
+    @Html.HiddenFor(m=>m.Y_cgzt)
+    @Html.HiddenFor(m=>m.Y_jcdatetime)
+  <div class="infor">
+        <p id="Ptitle"></p>
+        <div class="system-menu-set">
+            <ul class="infor-c">
+                <li><span class="infor-c-width">物料代码：</span><span class="infor-c-input">@Html.TextBoxFor(m => m.Y_Dm)</span><span style="color:red;font-size:24px;vertical-align: middle;margin-left: 8px;">*</span><span class="desc w-register"></span></li>
+            </ul>
+            <ul class="infor-c">
+                <li><span class="infor-c-width">物料名称：</span><span class="infor-c-input">@Html.TextBoxFor(m => m.Y_Name)</span><span style="color:red;font-size:24px;vertical-align: middle;margin-left: 8px;">*</span><span class="desc w-register"></span></li>
+            </ul>
+            <ul class="infor-c">
+                <li><span class="infor-c-width">物料规格：</span><span class="infor-c-input">@Html.TextBoxFor(m => m.Y_Ggxh)</span><span style="color:red;font-size:24px;vertical-align: middle;margin-left: 8px;">*</span><span class="desc w-register"></span></li>
+            </ul>
+            <ul class="infor-c">
+                <li><span class="infor-c-width">物料价格：</span><span class="infor-c-input">@Html.TextBoxFor(m => m.Y_DJ)</span><span style="color:red;font-size:24px;vertical-align: middle;margin-left: 8px;"></span><span class="desc w-register"></span></li>
+            </ul>
+             <ul class="infor-c ">
+                <li><span class="infor-c-width">供应商：</span>
+                    <span>
+                        @Html.DropDownList("GYSListData", ViewData["ReasonList"] as SelectList, new { @class="add-function"})
+                    </span>
+                    <span class="desc w-register">*</span>
+                </li>
+            </ul>
+          
+            <ul class="infor-c">
+                <li><span class="infor-c-width">显示次序：</span><span class="infor-c-input">@Html.TextBoxFor(m => m.Sort)</span><span class="desc w-register"></span></li>
+            </ul>
+          
+            <ul class="infor-c ">
+                <li><span class="infor-c-width">状态：</span>
+                    <span>
+                        <select class="add-function" name="Status">
+                            @{
+                              if ("0".Equals(Convert.ToString(@Model.Status)) && null != @Model.Id)
+                              {
+                                @:<option value="1">启用</option>
+                                @:<option value="0" selected="selected">禁用</option>
+                              }
+                              else
+                              {
+                                @:<option value="1"  selected="selected">启用</option>
+                                @:<option value="0">禁用</option>
+                               }
+                                                
+                            }
+                        </select></span><span class="desc w-register"> 是否启</span></li>
+            </ul>
+        </div>
+        <div class="inquiry-input infor-b">
+            <span>
+                <button onclick="return SavaForm()">保存</button></span><span>
+                <button onclick="return RedirectUrl('/NQ_YJinfo/List')">返回</button>
+            </span>
+        </div>
+    </div>  
+}
+ <script src="~/Scripts/NAjs/NQ_YJinfo.js"></script>

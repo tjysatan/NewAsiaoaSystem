@@ -1,0 +1,200 @@
+﻿@{
+    ViewBag.Title = "团队收入（不固定分配） 分配明细";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+
+<script type="text/javascript">
+
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+
+    $(function () {
+
+        //html拼接
+        HTMLpj();
+    })
+
+    //获取分配明细
+    function ajaxgetfpmx() {
+        var json;
+        $.ajax({
+            url: "../PP_Staffinfo/AjaxTTsrtwefpmxjson",
+            type: "POST",
+            data: { TTsrmxId: '@ViewData["TTsrtweId"]' },
+            dataType: "json",
+            async: false,
+
+            success: function (response) {
+
+                json = eval(response);
+            },
+            error: function (e) {
+
+                layer.alert("网络异常！", { icon: 2 });
+            }
+        })
+        return json;
+    }
+
+    //分配明细HTML拼接
+    function HTMLpj() {
+        var jsonStr = ajaxgetfpmx();
+        var html = "";
+        if (jsonStr != null) {
+            if (typeof (jsonStr) != "undefined") {
+                html = '<table class="layui-table">';
+                html += '<colgroup>';
+                html += '<col width="10%">';
+                html += '<col width="20%">';
+                html += '<col width="20%">';
+                html += '<col width="20%">';
+                html += '<col width="30%">';
+                html += '<col>';
+                html += '</colgroup>';
+                html += '<thead>';
+                html += '<tr>';
+                html += '<th>序号</th>';
+                html += '<th>员工</th>';
+                html += '<th>收入</th>';
+                html += '<th>占比</th>';
+                html += '<th>操作</th>';
+                html += '</tr>';
+                html += '</thead>';
+                html += '<tbody>';
+                for (var i = 0, j = jsonStr.length; i < j; i++) {
+                    var xh = i + 1;
+                    html += '<tr>';
+                    html += '<td>' + xh + '</td>';
+                    html += '<td>' + AJaxstafiinfbyId(jsonStr[i].StafitId).Sat_Name + '</td>';
+                    html += '<td>' + jsonStr[i].Total + '元</td>';
+                    html += '<td>' + jsonStr[i].Sum + '%</td>';
+                    html += '<td>-</td>';
+                    html += '</tr>';
+                }
+
+                html += '</tbody>';
+                html += '</table>';
+            }
+        }
+        else {
+            html = '<table class="layui-table">';
+            html += '<tr>';
+            html += '<td>没有分配内容</td>';
+            html += '</tr>';
+            html += '</table>';
+        }
+        $("#conter").html(html);
+    }
+
+
+
+    //根据个人（员工）Id查找个人数据
+    function AJaxstafiinfbyId(val) {
+        var str;
+        $.ajax({
+            type: "POST",
+            url: "/PP_Staffinfo/AjaxGetstafiinfo",
+            data: { "Id": val },
+            dataType: "json",
+            async: false,
+            success: function (context) {
+                str = eval(context);
+            },
+            error: function (e) {
+                alert("请求失败");
+            }
+        })
+        return str;
+    }
+
+    //直接关闭所有弹出框
+    function Closeiform() {
+        var index = parent.layer.getFrameIndex(window.name);
+        parent.layer.close(index);
+    }
+
+    //增加员工分配明细
+    function Addfpmx() {
+        layer.open({
+            type: 2,
+            title: ['团队收入分配（不固定分配）', 'font-size:14px;'],
+            area: ['800px', '400px'],
+            offset: '10px',
+            fixed: false, //不固定
+            maxmin: true,
+            content: '../PP_Staffinfo/FPstafflist?TTsrmxId=' + '@ViewData["TTsrtweId"]',
+            end: function () {
+                location.reload();
+            }
+        });
+        return false;
+    }
+
+    //完成分页
+    function wcfp()
+    {
+        var zb = '@ViewData["zb"]';
+        if (zb < 100)
+        {
+            alert("还有未分配的部分！");
+            return false;
+        }
+        $.ajax({
+            type: "POST",
+            url: "/PP_Staffinfo/WCfpEide",
+            data: { "TTsrmxId": '@ViewData["TTsrtweId"]' },
+            dataType: "json",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (context) {
+                disLoading();
+                if (context == "0") {
+                    layer.alert("还有未分配的部分！", { icon: 2 });
+                    return false;
+                }
+                if (context == "1") {
+                    layer.alert("不存在该团队收入明细！", { icon: 2 });
+                    return false;
+                }
+                if (context == "2") {
+                    layer.alert("应完成分配，不需要提交！", { icon: 2 });
+                    return false;
+                }
+                if (context == "3") {
+                    layer.alert("提交成功！", { icon: 1 });
+                    return false;
+                }
+            },
+            error: function (e) {
+                disLoading();
+                alert("请求失败");
+            }
+        })
+    }
+</script>
+
+<fieldset class="layui-elem-field" style="width: 95%; margin: auto;">
+    <legend style="font-size: 12px;">——</legend>
+    <div class="layui-field-box">
+        @ViewData["xnname"]  总收入：@ViewData["totle"] 元     已经分配：@ViewData["zb"]  %        
+        <button class="layui-btn layui-btn-primary" onclick="return Addfpmx()">
+            增加分配
+        </button>
+
+        <button class="layui-btn layui-btn-primary" onclick="return wcfp()">
+            完成分配
+        </button>
+    </div>
+</fieldset>
+
+<div id="conter" style="padding: 0 10px 0 10px">
+</div>

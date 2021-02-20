@@ -1,0 +1,24 @@
+﻿<?xml version="1.0"  encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="NewAsiaOASystem.DBModel" assembly="NewAsiaOASystem.DBModel">
+  <class name="NQ_GysInfo" table="NQ_GysInfo">
+    <id name="Id" column="Id" type="string" unsaved-value="0">
+      <generator class="uuid.hex"/>
+    </id>
+
+    <property name="G_Dm" column="G_Dm" />
+    <property name="G_Name" column="G_Name" />
+    <property name="G_Lxr" column="G_Lxr" />
+
+    <property name="G_Dz" column="G_Dz" />
+    <property name="G_Tel" column="G_Tel" />
+    <property name="CreatePerson" column="CreatePerson" />
+
+    <property name="CreateTime" column="CreateTime" />
+    <property name="UpdatePerson" column="UpdatePerson" />
+    <property name="UpdateTime" column="UpdateTime" />
+    
+     <property name="Status" column="Status" />
+    <property name="Sort" column="Sort" />
+   </class>
+</hibernate-mapping>
+  

@@ -1,0 +1,232 @@
+﻿ @{
+    ViewBag.Title = "采购单详情查看页面";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<script type="text/javascript">
+    $(function () {
+        var Cgdmodeljson = GetCgdinfojson('@ViewData["gysId"]');//采购单信息
+        var Gysmodeljson = GetGysinfojson(Cgdmodeljson.GysId);//供应商信息
+        dataGrid(Cgdmodeljson.Id);
+        $("#Cname").html(Gysmodeljson.G_Name)
+        if (Gysmodeljson.G_Lxr != null) {
+            $("#Clxr").html(Gysmodeljson.G_Lxr);
+        } else {
+            $("#Clxr").html("暂无");
+        }
+        if (Gysmodeljson.G_Tel != null) {
+            $("#Ctel").html(Gysmodeljson.G_Tel)
+        } else {
+            $("#Ctel").html("暂无");
+        }
+    })
+
+
+    function dataGrid(val) {
+        var jsonStr;
+        jsonStr = eval(Getcgmxjson(val));
+        $("#content").html("");
+        if (jsonStr != null) {
+            if (typeof (jsonStr) != "undefined") {
+                var html = "";
+                html = '<table cellpadding="0" cellspacing="0" style="width:100%;">';
+                var yqjmodel;
+                for (var i = 0, j = jsonStr.length; i < j; i++) {
+                    yqjmodel = eval(Getyqjmodeljson(jsonStr[i].YqjId))
+                    if (i % 2 == 0)
+                        html += '<tr class="h-table-content-r1">';
+                    else
+                        html += '<tr class="h-table-content-r">';
+                    html += '<td width="20%">' + yqjmodel.Y_Name + '</td>';
+                    html += '<td width="20%">' + yqjmodel.Y_Ggxh + '</td>';
+                    html += '<td width="10%">' + jsonStr[i].Cgsl + '</td>';
+                    html += '<td width="10%">' + jsonStr[i].sjcgsl + '</td>';
+                    html += '<td width="10%">' + jsonStr[i].Dhsl + '</td>';
+                    html += '<td width="20%">' + sjdh(jsonStr[i].Id) + "&nbsp;&nbsp;" + delmx(jsonStr[i].Id) + '</td>';
+                    html += '</tr>';
+                }
+                html += '</table>';
+                $("#content").html(html);
+            }
+        }
+    }
+
+    //根据ID 查找采购单信息
+    function GetCgdinfojson(val) {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "/CG_info/GetCGdjson",
+            data: { Id: val },
+            dataType: "json",
+            async: false,
+            success: function (result) {
+                json = result;
+            },
+            error: function (e) {
+                alert("请求失败！");
+            }
+        })
+        return json;
+    }
+    //根据供应商ID 查找供应商信息
+    function GetGysinfojson(val) {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "/CG_info/GetgysinfoJson",
+            data: { Id: val },
+            dataType: "json",
+            async: false,
+            success: function (result) {
+                json = result;
+            },
+            error: function (e) {
+                alert("请求失败!");
+            }
+        })
+        return json;
+    }
+    //根据采购单ID 查找采购明细
+    function Getcgmxjson(val) {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "/CG_info/Getcgmxjson",
+            data: { Id: val },
+            dataType: "json",
+            async: false,
+            success: function (result) {
+                json = result;
+            },
+            error: function (e) {
+                alert("请求失败！");
+            }
+        })
+        return json;
+    }
+    //根据元器件ID 查找元器件信息
+    function Getyqjmodeljson(val) {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "/CG_info/Getyqjmodeljson",
+            data: { Id: val },
+            dataType: "json",
+            async: false,
+            success: function (result) {
+                json = result;
+            },
+            error: function (e) {
+                alert("请求失败！");
+            }
+        })
+        return json;
+    }
+
+
+    //删除明细
+    function Deletemx(val) {
+        $.ajax({
+            type: "POST",
+            url: "/CG_info/cgmxdelete",
+            data: { Id: val },
+            dataType: "json",
+            async: false,
+            success: function (result) {
+                    var Cgdmodeljson = GetCgdinfojson('@ViewData["gysId"]');//采购单信息
+                    var Gysmodeljson = GetGysinfojson(Cgdmodeljson.GysId);//供应商信息
+                    dataGrid(Cgdmodeljson.Id);
+                    $("#Cname").html(Gysmodeljson.G_Name)
+                    if (Gysmodeljson.G_Lxr != null) {
+                        $("#Clxr").html(Gysmodeljson.G_Lxr);
+                    } else {
+                        $("#Clxr").html("暂无");
+                    }
+                    if (Gysmodeljson.G_Tel != null) {
+                        $("#Ctel").html(Gysmodeljson.G_Tel)
+                    } else {
+                        $("#Ctel").html("暂无");
+                    }
+              
+            },
+            error: function (e) {
+                alert("请求失败！");
+            }
+        })
+    }
+
+    //删除
+    function delmx(val1) {
+        val1 = "'" + val1 + "'";
+        var s = '<a href="#" onclick="Deletemx(' + val1 + ')">删除</a>&nbsp;&nbsp;';
+        return s;
+    }
+
+    //实际到货数量编辑
+    function sjdh(val1) {
+        val1 = "'" + val1 + "'";
+        var s = '<a href="#" onclick="editdhsl(' + val1 + ')">编辑</a>&nbsp;&nbsp;';
+        return s;
+    }
+
+    //实际到货数量修改
+    function editdhsl(id) {
+        $('#windowDia').html("<iframe src=../CG_info/cgslView?Id=" + id + "&&   style='border:0px;' width='300px' height='170px'></iframe>");
+        $("#windowDia").window({
+            title: '实际到货数量编辑',
+            modal: true,
+            closed: false,
+            width: 400,
+            height: 200,
+        });
+    }
+
+
+
+</script>
+
+<div class="infor">
+    <div class="infor-content" style="width: 100%;">
+        <div class="add-infor-title-bg">
+             <div style="width: 100px; height: 35px; margin: auto; font-size: 16px;">
+                 采购单
+             </div>
+        </div>
+
+          <ul class="infor-c">
+            <li class="infor-c-in"><span class="infor-c-width">供应商：</span><span class="infor-c-q"><label id="Cname"></label></span></li>
+            <li class="infor-c-in"><span class="infor-c-width">联系人：</span><span class="infor-c-q"><label id="Clxr"></label></span></li>
+            <li class="infor-c-in"><span class="infor-c-width">电话：</span><span class="infor-c-q"><label id="Ctel"></label></span></li>
+        </ul>
+
+         <div class="h-table" style="width:100%; margin:0; padding:0;">
+              <div class="h-table-content">
+               <table cellpadding="0" cellspacing="0" class="h-right-table-title1" style="border: none; width: 100%;">
+                <tr>
+                    <td style="width:20%">
+                        产品名称
+                    </td>
+                    <td style="width:20%">
+                        产品型号
+                    </td>
+                    <td style="width:10%">
+                       计划采购
+                    </td>
+                    <td style="width:10%">
+                        实际采购
+                    </td>
+                    <td style="width:10%">
+                        到货数量
+                    </td>
+                    <td style="width:20%">
+                        操作
+                    </td>
+                </tr>
+            </table>
+                 <div id="content"></div>
+              </div>
+         </div>
+    </div>
+</div>
+<div id="windowDia" class="easyui-window" closed="true" style="width:400px; height:250px; padding:10px;"></div>

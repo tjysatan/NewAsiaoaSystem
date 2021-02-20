@@ -1,0 +1,245 @@
+﻿@model NewAsiaOASystem.ViewModel.NQ_SupplierAttachmentView
+@{
+    ViewBag.Title = "NQ_SupplierAttachmentView";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<style>
+    .sopbtnsave {
+        position: absolute;
+        width: 90%;
+        bottom: 5px;
+        text-align: center;
+    }
+
+    .soptopbtn {
+        position: absolute;
+        width: 90%;
+        top: 1px;
+        text-align: center;
+    }
+</style>
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;"></fieldset>
+
+<div class="layui-tab" lay-filter="test">
+    <ul class="layui-tab-title">
+        <li class="layui-this" lay-id="11">上传附件内部序号: @Model.seq</li>
+    </ul>
+    <div class="layui-tab-content" style="height: 100px;">
+        <div class="layui-tab-item layui-show">
+            @using (Html.BeginForm("SupplierAttachSave", "NQ_SupplierAttachment", FormMethod.Post, new { id = "form1", enctype = "multipart/form-data" }))
+            {
+                @Html.HiddenFor(m => m.id);
+                @Html.Hidden("fsupplierid", ViewData["SupplierID"]);
+                @Html.HiddenFor(m => m.FAttType);
+                @Html.HiddenFor(m => m.seq);
+                @Html.HiddenFor(m => m.FAttDeadline);
+
+                @Html.Hidden("fstatus", ViewData["SupplierStatus"]);
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">供应商名称：</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="fsuppliername" id="fsuppliername" lay-verify="required" value="@ViewBag.SupplierName" autocomplete="off" class="layui-input" readonly="readonly"/>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">供应商类型：</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="fsuppliertype" id="fsuppliertype" lay-verify="required" autocomplete="off" class="layui-input" readonly="readonly"/>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">资料类型：</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="fatttypename" id="fatttypename" lay-verify="required" autocomplete="off" class="layui-input" readonly="readonly" />
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">有效期限：</label>
+                        <div class="layui-input-inline" id="fdate">
+                            @if (Model.isPermanent == 1)
+                            {
+                                <input type="text" name="txtAttdeadline" id="txtAttdeadline" lay-verify="required\date" value="永不过期"  autocomplete="off" class="layui-input" />
+                            }
+                            else
+                            {
+                                <input type="text" name="txtAttdeadline" id="txtAttdeadline" lay-verify="required\date" value="@Model.FAttDeadline.ToString("yyyy-MM-dd")" onclick="WdatePicker()" autocomplete="off" class="layui-input" />
+                            }
+                            
+                        </div>
+
+                    </div>
+
+                    <div class="layui-inline">
+                        <label class="layui-form-label">上传图片：</label>
+                        <div class="layui-input-inline">
+                            <input type="file" name="image" id="image" class="layui-input">
+
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">长期有效：</label>
+                        <div class="layui-input-inline">
+                                @if (Model.isPermanent == 1)
+                                {
+                                    <input type="checkbox" name="isNeverExpired" id="isNeverExpired" onchange="isSelected()" checked="checked" class="layui-input" />
+                                }
+                                else
+                                {
+                                    <input type="checkbox" name="isNeverExpired" id="isNeverExpired" onchange="isSelected()" class="layui-input" />
+                                }
+                            
+                        </div>
+
+                    </div>
+
+                    <div class="layui-inline">
+                        <label class="layui-form-label">显示图片：</label>
+                        <div class="layui-input-inline">
+                            @if (string.IsNullOrEmpty(Model.FAttURL))
+                            {
+                                <a href="#" >
+                                    <img width="50" height="50" src=""  />
+                                </a>
+                            }
+                            else
+                            {
+                                <a href="#" onclick="upload('@Model.FAttURL')">
+                                    <img width="50" height="50" src="@Url.Content(Model.FAttURL)" alt="images" />
+                                </a>
+                            }
+                        </div>
+
+                        <div class="layui-inline">
+                            <label class="layui-form-label">备注：</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="fatttext" id="fatttext" value="@Model.FAttText" autocomplete="off" class="layui-input"/>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!--按钮-->
+                <div class="inquiry-input infor-b">
+                    <button class="layui-btn layui-btn-primary" onclick="return SaveForm()">提交</button>
+                </div>
+            }
+        </div>
+
+    </div>
+</div>
+
+<script src="~/Scripts/NAjs/NQ_SupplierAttachment.js"></script>
+
+<script type="text/javascript">
+    
+    Date.prototype.Format = function (fmt) { //author: meizz   
+        var o = {  
+            "M+": this.getMonth() + 1, //月份   
+            "d+": this.getDate(), //日   
+            "H+": this.getHours(), //小时   
+            "m+": this.getMinutes(), //分   
+            "s+": this.getSeconds(), //秒   
+            "q+": Math.floor((this.getMonth() + 3) / 3), //季度   
+            "S": this.getMilliseconds() //毫秒   
+        };  
+        if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));  
+        for (var k in o)  
+            if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));  
+        return fmt;  
+    }        
+
+
+    $(document).ready(function(){
+        var sutype = @ViewBag.SupplierType;
+        var atttype =@Model.FAttType;
+        switch (sutype)
+        {
+            case 0:
+                $('#fsuppliertype').val("厂家");
+                break;
+            case 1:
+                $('#fsuppliertype').val("供应商");
+                break;
+        }
+
+        switch(atttype)
+        {
+            case 0:
+                $('#fatttypename').val("营业执照");
+                break;
+            case 1:
+                $('#fatttypename').val("税务登记证");
+                break;
+            case 2:
+                $('#fatttypename').val("ISO9001");
+                break;
+            case 3:
+                $('#fatttypename').val("ISO14000");
+                break;
+            case 4:
+                $('#fatttypename').val("专利证书");
+                break;
+            case 5:
+                $('#fatttypename').val("其他证书");
+                break;
+            case 6:
+                $('#fatttypename').val("供应商调查表");
+                break;
+            case 7:
+                $('#fatttypename').val("代理证");
+                break;
+            case 8:
+                $('#fatttypename').val("样品评估");
+                break;
+            case 9:
+                $('#fatttypename').val("小批量试产");
+   
+                break;
+            case 10:
+                $('#fatttypename').val("质量协议");
+                break;
+            case 11:
+                $('#fatttypename').val("供应商评估表");
+                break;
+        }
+    });
+
+    function getFormatDate( fdate ){    
+        var nowDate = new Date();     
+        nowDate = fdate;
+        var year = nowDate.getFullYear();    
+        var month = nowDate.getMonth() + 1 < 10 ? "0" + (nowDate.getMonth() + 1) : nowDate.getMonth() + 1;    
+        var date = nowDate.getDate() < 10 ? "0" + nowDate.getDate() : nowDate.getDate();    
+        // var hour = nowDate.getHours()< 10 ? "0" + nowDate.getHours() : nowDate.getHours();    
+        // var minute = nowDate.getMinutes()< 10 ? "0" + nowDate.getMinutes() : nowDate.getMinutes();    
+        // var second = nowDate.getSeconds()< 10 ? "0" + nowDate.getSeconds() : nowDate.getSeconds();    
+        return year + "-" + month + "-" + date;    
+    }    
+
+    function isSelected()
+    {
+        //var fdate = new Date(  $("#txtAttdeadline").val());
+        
+        //var cdate = getFormatDate(fdate) ;
+
+        var odate = new Date(  $("#FAttDeadline").val());
+
+        var oridate = getFormatDate(odate);
+
+        //alert(oridate);
+
+        if ($('#isNeverExpired').attr('checked')) {
+            $("#txtAttdeadline").val("永不过期");
+            $("#txtAttdeadline").removeAttr("onclick");
+        }
+        else
+        {
+            $("#txtAttdeadline").val(oridate);
+            $("#txtAttdeadline").attr("onclick","WdatePicker();");
+        }
+
+    }
+
+</script>

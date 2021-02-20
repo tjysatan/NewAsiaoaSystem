@@ -1,0 +1,311 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>重磅！亲，不收安装费哦!新亚电控箱，一分钟全面解析冷库异常，再也不用担心通宵修冷库。在线订购，专业人员上门安装。</title>
+     <link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+    <script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+
+    <style>
+	 .bg{background:url(../Content/wx/Image/w_header.jpg) no-repeat center fixed;background-size:contain;background-size:100% 100%;}
+	 .banner{
+	/*background:url(../Content/wx/Image/w_header.jpg)no-repeat center top;*/
+	background-size:cover;
+	-webkit-background-size:cover;
+	-moz-background-size:cover;
+	-o-background-size:cover;
+	/*min-height:650px;*/
+     }
+	 
+	 .span_1_of_1 {
+         padding: 56em 0em 0em 0em;
+      }
+ 
+	  .banner2{
+	  background:url(../Content/wx/Image/w_hdfs.jpg)no-repeat center top;
+	background-size:cover;
+	-webkit-background-size:cover;
+	-moz-background-size:cover;
+	-o-background-size:cover;
+	min-height:450px;
+	  }
+	  
+	  	  .banner3{
+	  background:url(../Content/wx/Image/w_gmfa.jpg)no-repeat center top;
+	background-size:cover;
+	-webkit-background-size:cover;
+	-moz-background-size:cover;
+	-o-background-size:cover;
+	min-height:400px;
+	  }
+
+   	  .banner4{
+	  background:url(../Content/wx/Image/w_gmfa2.jpg)no-repeat center top;
+	background-size:cover;
+	-webkit-background-size:cover;
+	-moz-background-size:cover;
+	-o-background-size:cover;
+	min-height:820px;
+	  }
+
+	  .banner_sy{
+	  background: #fff;
+	  	background-size:cover;
+	-webkit-background-size:cover;
+	-moz-background-size:cover;
+	-o-background-size:cover;
+	  min-height:100px;
+	  }
+ 
+ 
+	</style>
+</head>
+<body style="">
+   
+    
+    
+     <div class="banner">
+	      <img src="../Content/wx/Image/w_header.jpg" class="img-responsive">
+	 </div>
+ 
+	  <div class="banner3">
+	 
+	 </div>
+	  <div class="banner4">
+        <div class="container">
+	       <div class="span_1_of_1">
+		   <tbody>
+                    <tr>  
+      <td><button type="button" class="btn btn-success" onclick="Dgorder()" >下单订购</button></td>  
+   
+	  <td>  <a href="tel:400-8856-882" class="btn btn-success" >电话咨询</a></td> 
+    </tr> 
+                    </tbody>  
+	        </div>
+
+               
+        </div>
+	 </div>
+
+	 
+	 <div class="banner2">
+	 
+	 </div>
+
+
+	  <div class="banner_sy">
+	 <div class="container">
+	 <table class="table table-bordered">  
+  <caption class="text-left"> <h4>我的收益</h4></caption>  
+  <thead>  
+    <tr>  
+      <th>直接收益</th>  
+      <th>间接收益</th>
+	  <th>间接收益</th> 
+      <th>账户余额</th>
+      <th>提现金额</th>
+    </tr>  
+  </thead>  
+  <tbody>  
+    <tr>  
+      <td id="zjcjl"></td>  
+      <td id="jjcjl"></td>  
+	  <td id="jjcjl2"></td>
+      <td id="ye">0</td>
+      <td id="txje">0</td>
+    </tr>  
+  </tbody>  
+</table>
+      <button type="button" class="btn btn-success" onclick="TxSum()">提现申请</button>  
+	 </div>
+	 </div>
+	 
+	 <div class="banner_sy">
+	 <div class="container">
+	  <table class="table table-bordered">  
+  <caption class="text-left"> <h4>好友订单</h4></caption>  
+  <thead>  
+    <tr>  
+      <th>头像</th>  
+      <th>昵称</th>
+	  <th>成交金额</th> 
+    </tr>  
+  </thead>  
+  <tbody id="JCcon">  
+    
+  </tbody>  
+</table> 
+ 
+	 </div>
+	 </div>
+</body>
+</html>
+<script>
+    $(function () {
+        if ('@ViewData["APOpenid"]' == "null") {//第二级访问的地址
+            window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx44f57e0f1268190b&redirect_uri=http://wx.chinanewasia.com/activity/activityView?AID=" + '@ViewData["Openid"]' + "&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect";
+        }
+        if ('@ViewData["APOpenid"]' != "null" && '@ViewData["APOpenid"]' != '@ViewData["Openid"]' && '@ViewData["BPOpenid"]' != "true")//第三级访问的地址
+        {
+            window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx44f57e0f1268190b&redirect_uri=http://wx.chinanewasia.com/activity/activityView?AID=" + '@ViewData["Openid"]' + "&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect";
+        }
+        if ('@ViewData["BPOpenid"]' == "true") {
+            window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx44f57e0f1268190b&redirect_uri=http://wx.chinanewasia.com/activity/activityView?AID=" + '@ViewData["APOpenid"]' + "&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect";
+        }
+        var zjcjl = ajaxGetdjcount("0", '@ViewData["Openid"]');
+        zjcjl = parseFloat(zjcjl) * 60;
+        $("#zjcjl").html(zjcjl+"￥");//直接收益
+        var jjcjlone = ajaxGetdjcount("1", '@ViewData["Openid"]');
+        jjcjlone = parseFloat(jjcjlone) * 30;
+        $("#jjcjl").html(jjcjlone+"￥");//间接收益（1）
+        var jjcjltwe = ajaxGetdjcount("2", '@ViewData["Openid"]');
+        jjcjltwe = parseFloat(jjcjltwe) * 10;
+        $("#jjcjl2").html(jjcjltwe + "￥");//间接收益（2）
+        Grijson('@ViewData["Openid"]');
+        var txjinedate = AjaxTxjiebyopenid('@ViewData["Openid"]');
+        var txjine;
+        if (txjinedate != null) {
+            for (var i = 0, j = txjinedate.length; i < j; i++) {
+                txjine = txjine + parseFloat(txjinedate[i].Jine);
+            }
+        } else {
+            txjine = 0;
+        }
+        var YE = parseFloat(zjcjl) + parseFloat(jjcjlone) + parseFloat(jjcjltwe) - parseFloat(txjine);
+        $("#ye").html(YE + "￥");
+        $("#txje").html(txjine + "￥");//提现金额
+    });
+
+    function Dgorder() {
+        window.location = "../activity/OrderView?openid=" + '@ViewData["Openid"]';
+    }
+    //收益
+    function ajaxGetdjcount(val,val1) {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "/activity/ajaxchengjiaoshul",
+            data: { Type: val, openId: val1 },
+            dataType: "html",
+            async: false,
+            success: function (reslut) {
+                json = reslut;
+            },
+            error: function (e) {
+                alert("请求失败");
+            }
+        })
+        return json;
+    }
+
+    function Grijson(val) {
+        var jsonStr = ajaxcjjl(val);
+        if (typeof (jsonStr) != "undefined") {
+            var html = "";
+            for (var i = 0, j = jsonStr.length; i < j; i++) {
+                html += '<tr>';
+                html += '<td><img src="' + AJAXwxinfobyopenid(jsonStr[i].OpenId).headimgurl + '" width="40px" height="40px" style="text-align:center;vertical-align:middle; padding:5px 0px 5px 0px" /></td>';
+                html += '<td>' + AJAXwxinfobyopenid(jsonStr[i].OpenId).nickname + '</td>';
+                html += '<td>' + jsonStr[i].Jiage + '</td>';
+                html += '</tr>';
+            }
+            $("#JCcon").html(html);
+        }
+
+    }
+
+
+    //好友成交记录
+    function ajaxcjjl(val) {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "/activity/ajaxcjjl",
+            data: { OpenID: val },
+            dataType: "json",
+            async: false,
+            success: function (reslut) {
+                json =eval(reslut);
+            },
+            error: function (e) {
+                alert("请求失败");
+            }
+        })
+        return json;
+    }
+
+    //微信信息
+    function AJAXwxinfobyopenid(val)
+    {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "/activity/ajaxwxinfobyopenid",
+            data: { openid: val },
+            dataType: "json",
+            async: false,
+            success: function (reslut) {
+                json = eval(reslut);
+            },
+            error: function (e) {
+                alert("请求失败");
+            }
+        })
+        return json;
+    }
+
+    //已提现金额
+    function AjaxTxjiebyopenid(val)
+    {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "/activity/ajawtxinfoopenid",
+            data: { openid: val },
+            dataType: "json",
+            async: false,
+            success: function (reslut) {
+                json = eval(reslut);
+            },
+            error: function (e) {
+                alert("请求失败");
+            }
+        })
+        return json;
+    }
+
+    //提现
+    function TxSum() {
+        var ye = $("#ye").html();
+        if (ye == "0￥") {
+            alert("您好，您的账户余额为0，不能提现！");
+            return;
+        } else {
+            $.ajax({
+                type: "POST",
+                url: "/activity/InsertTxsq",
+                data: { Jine: ye, openid:'@ViewData["Openid"]' },
+                dataType: "html",
+                async: false,
+                success: function (reslut) {
+                    if (reslut == "0") {
+                        alert("您已经有提现申请,我们回尽快帮您处理，请耐心等待！");
+                        return;
+                    } else if (reslut == "1") {
+                        alert("您的提现申请，我们已经收到,会再24小时内完成提现，请您关注自己的微信钱吧！");
+                    }
+                },
+                error: function (e) {
+                    alert("请求失败");
+                }
+            })
+        }
+    }
+
+</script>

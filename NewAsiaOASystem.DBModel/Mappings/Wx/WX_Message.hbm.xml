@@ -1,0 +1,34 @@
+﻿<?xml version="1.0"  encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="NewAsiaOASystem.DBModel" assembly="NewAsiaOASystem.DBModel">
+  <class name="WX_Message" table="WX_Message">
+    <id name="A_id" column="A_id" type="string" unsaved-value="0">
+      <generator class="uuid.hex"/>
+    </id>
+    <property name="A_KeyWord" column="A_KeyWord" type="string"  />
+    <property name="MsgType" column="MsgType" type="string"  />
+    <property name="A_Content" column="A_Content" type="string"  />
+    <property name="MediaId" column="MediaId" type="string"  />
+    <property name="Title" column="Title" type="string" />
+    <property name="Description" column="Description" type="string"/>
+    <property name="MusicURL" column="MusicURL" type="string"  />
+    <property name="HQMusicUrl" column="HQMusicUrl" type="string"  />
+    <property name="ThumbMediaId" column="ThumbMediaId" type="string" />
+    <property name="A_CreateTime" column="A_CreateTime" type="DateTime" />
+    <property name="A_CreateUser" column="A_CreateUser" type="string"  />
+    <property name="A_IsValid" column="A_IsValid" type="string"  />
+    <property name="ArticleCount" column="ArticleCount" type="string"  />
+    <property name="IsDefaultMessage" column="IsDefaultMessage" type="string"  />
+    
+    <!--<bag name="wx_Message_News" cascade="all"    lazy="true" >
+      <key column="A_id"  />
+      <one-to-many class="WX_Message_News"  />
+    </bag>-->
+
+    <!--角色多对多-->
+    <bag name="wx_Message_News" table="WX_M_new"  inverse="false" lazy="false" cascade="none">
+      <key column="MId"></key>
+      <many-to-many class="WX_Message_News" column="NewId"  not-found="ignore" order-by="sort ASC"></many-to-many>
+    </bag>
+    
+  </class>
+</hibernate-mapping>

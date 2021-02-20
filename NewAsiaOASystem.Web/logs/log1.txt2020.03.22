@@ -1,0 +1,5 @@
+2020-03-22 20:40:55,710 [5] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2020-03-22 20:40:55,711 [5] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2020-03-22 20:40:55,711 [5] ERROR ApplicationInfoLog [(null)] <(null)< - 未将对象引用设置到对象的实例。
+2020-03-22 20:40:55,711 [5] ERROR ApplicationInfoLog [(null)] <(null)< - System.Object ConvertETE(System.Object, System.Object)
+2020-03-22 20:40:55,711 [5] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================

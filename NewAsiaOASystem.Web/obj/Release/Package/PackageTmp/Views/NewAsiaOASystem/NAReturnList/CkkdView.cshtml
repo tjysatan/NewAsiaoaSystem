@@ -1,0 +1,206 @@
+﻿@{
+    ViewBag.Title = "仓库编辑退货明细页面";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@section HeadContent{
+    <script type="text/javascript">
+        $(function () {
+            var Returnmodel = ajaxReturnjson('@ViewData["R_Id"]');
+            $("#R_Id").val(Returnmodel.Id);
+            var Cust = AjaxCust_Name(Returnmodel.C_Id);//客户信息
+            $("#Cname").html(Cust.Name);
+            $("#Clxr").html(Cust.Adress);
+            $("#Ctel").html(Cust.Tel);
+            dataGrid();
+        })
+
+        function dataGrid() {
+            var jsonStr;
+            jsonStr = eval(ajaxthdetailjson('@ViewData["R_Id"]'));
+            $("#content").html("");
+            var zsl = 0;//退货总数量
+            if (jsonStr != null) {
+                if (typeof (jsonStr) != "undefined") {
+                    var html = "";
+                    html = '<table cellpadding="0" cellspacing="0" style="width:100%;">';
+                    for (var i = 0, j = jsonStr.length; i < j; i++) {
+                        var Perinfo = GetPerinfobyId(jsonStr[i].P_Id);
+                        if (i % 2 == 0)
+                            html += '<tr class="h-table-content-r1">';
+                        else
+                            html += '<tr class="h-table-content-r">';
+                        html += '<td width="20%"><a title="' + Perinfo.Pname + '">' + (Perinfo.Pname).substring(0, 25) + '</a></td>';
+                        if (Perinfo.P_xh != null && Perinfo.P_xh != "")
+                            html += '<td width="20%">' + Perinfo.P_xh + '</td>';
+                        else
+                            html += '<td width="20%">-</td>';
+                        html += '<td width="10%">' + jsonStr[i].SL + '</td>';
+                        if (Perinfo.dw != null && Perinfo.dw != "")
+                            html += '<td width="10%">' + Perinfo.dw + '</td>';
+                        else
+                            html += '<td width="10%">套</td>';
+                        if (jsonStr[i].Beizhu != null && jsonStr[i].Beizhu)
+                            html += '<td width="20%">' + jsonStr[i].Beizhu + '</td>';
+                        else
+                            html += '<td width="20%">-</td>';
+                        html += '<td width="20%" align="center">' + czshow(jsonStr[i].Id) + '</td>';
+                        html += '</tr>';
+                        zsl = Number(zsl) + Number(jsonStr[i].SL);
+                    }
+                    html += '</table>';
+                    $("#zsl").val(zsl);
+                    $("#content").html(html);
+                }
+            }
+        }
+
+        //操作
+        function czshow(val) {
+            var Id = "'" + val + "'";
+            var s = '<a href="#" onclick="DeletethinfonbyId(' + Id + ')" class="layui-btn layui-btn-danger"><i class="layui-icon" style="font-size: 14px;">&#xe640;</i>删除</a>&nbsp;&nbsp;';
+            return s;
+        }
+        //增加退货产品明细
+        function fkdz() {
+            var id = $("#R_Id").val();
+            //if (id != "") {
+            //    $('#windowDia').html("<iframe src=../NQ_CHdetailinfo/list?id=" + id + "&&type=0 style='border:0px;' width='650px' height='600px'></iframe>");
+            //    $("#windowDia").window({
+            //        title: '返退产品',
+            //        modal: true,
+            //        closed: false,
+            //        width: 700,
+            //        height: 600,
+            //        top: 0,
+            //    });
+            //}
+            layer.open({
+                type: 2,
+                title: ['返退产品', 'font-size:14px;'],
+                area: ['85vw', '95vh'],
+                offset: '10px',
+                fixed: false, //不固定
+                maxmin: true,
+                content: '../NQ_CHdetailinfo/list?id=' + id +"&&type=0",
+                end: function () {
+                    location.reload();
+                }
+            })
+
+        }
+
+        //ajax提交保存
+        //function TJbaocun()
+        //{
+        //    var zsl = $("#zsl").val();//总数量
+        //    var R_Id = $("#R_Id").val();//返退货Id
+
+        //}
+        function ckSavaFrom(RetUrl) {
+            //表单验证
+            var options = {
+                beforeSubmit: function () {
+                    return true;
+                },
+                dataType: "json",//这里是指控制器处理后返回的类型，这里返回json格式。  
+                async: true,
+                beforeSend: function () {
+                    ddchen();
+                },
+                success: function (context) {
+                    if ("error" == context.result) {
+                        disLoading();
+                        $.messager.alert("操作提示", '提交失败！', 'error', function () {
+                            disLoading();
+                        });
+                    }
+                    if ("success" == context.result) {
+                        disLoading();
+                        $.messager.alert("操作提示", '提交成功！', 'info', function () {
+                            location.href = RetUrl;
+                        });
+                    }
+
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    disLoading();
+                    $.messager.alert("操作提示", '网络异常，请重试！', 'error');
+                }
+            }
+            $('#form1').ajaxSubmit(options);
+            return false; //为了不刷新页面,返回false 
+        }
+            
+            var loadi;
+            function ddchen() {
+                loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+            }
+            //关闭等待效果
+            function disLoading() {
+                layer.close(loadi);
+            }
+    </script>
+}
+
+@using (Html.BeginForm("Edit", "NAReturnList", FormMethod.Post, new { id = "form1" }))
+{
+    <input type="hidden" id="R_Id" name="R_Id" />
+    <input type="hidden" id="zsl" name="zsl" />
+    <div style="width:100vw;">
+        <div class="infor-content" style="width:99%">
+            <div class="add-infor-title-bg">
+                <div style="width: 100px; height: 35px; margin: auto; font-size: 16px;">
+                    退货单
+                </div>
+            </div>
+            <ul class="infor-c">
+                <li class="infor-c-in"><span class="infor-c-width">退货单位：</span><span class="infor-c-q"><label id="Cname"></label></span></li>
+                <li class="infor-c-in"><span class="infor-c-width">地址：</span><span class="infor-c-q"><label id="Clxr"></label></span></li>
+                <li class="infor-c-in"><span class="infor-c-width">电话：</span><span class="infor-c-q"><label id="Ctel"></label></span></li>
+            </ul>
+
+            <div class="h-table" style="margin: 0; padding: 0;">
+                <div class="h-table-content">
+                    <table cellpadding="0" cellspacing="0" class="h-right-table-title1" style="border: none;">
+                        <tr>
+                            <td style="width: 20%">货品名称
+                            </td>
+                            <td style="width: 20%">型号
+                            </td>
+                            <td style="width: 10%">数量
+                            </td>
+                            <td style="width: 10%">单位
+                            </td>
+                            <td style="width: 20%">备注
+                            </td>
+                            <td style="width: 20%" align="center">
+                                @* <a onclick="fkdz()" style="cursor: pointer;">
+        <img src="~/Content/images/add.gif" /></a>*@
+                                @*<a onclick="fkdz()" class="btna2">新　　增</a>*@
+                                <button type="button" onclick="fkdz()" class="layui-btn layui-btn-normal" style="padding:0 20px 0 20px">
+                                    <i class="layui-icon layui-icon-addition" style="font-size: 12px;"></i>
+                                    新增
+                                </button>
+                            </td>
+                        </tr>
+                    </table>
+                    <div id="content"></div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="inquiry-input infor-b">
+            <span>
+                <button onclick="return ckSavaFrom('/NAReturnList/List')">保存</button></span>
+            <span>
+                <button onclick="return RedirectUrl('/NAReturnList/list')">返回</button></span>
+        </div>
+    </div>
+}
+
+
+
+<script src="~/Scripts/NAjs/NAReturnList.js"></script>
+<div id="windowDia" class="easyui-window" closed="true" style="width: 680px; height: 600px;"></div>

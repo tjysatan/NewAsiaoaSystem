@@ -1,0 +1,20 @@
+﻿<?xml version="1.0"  encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="NewAsiaOASystem.DBModel" assembly="NewAsiaOASystem.DBModel">
+  <class name="DKX_RKZLDataInfo" table="DKX_RKZLDataInfo">
+    <id name="Id" column="Id" type="string" unsaved-value="0">
+      <generator class="uuid.hex"/>
+    </id>
+    <property name="dd_Id" column="dd_Id" />
+    <property name="cpId" column="cpId" />
+    <property name="wjName" column="wjName" />
+    <property name="wjurl" column="wjurl" />
+    <property name="Zl_type" column="Zl_type" />
+    <property name="Isgl" column="Isgl" />
+    <property name="Bjno" column="Bjno" />
+    <property name="BomNo" column="BomNo" />
+    <property name="C_time" column="C_time" />
+    <property name="D_name" column="D_name" />
+    <property name="D_datetime" column="D_datetime" />
+    <property name="Start" column="Start" />
+  </class>
+</hibernate-mapping>

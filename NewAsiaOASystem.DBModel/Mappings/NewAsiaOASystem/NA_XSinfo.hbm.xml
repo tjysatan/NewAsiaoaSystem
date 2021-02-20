@@ -1,0 +1,28 @@
+﻿<?xml version="1.0"  encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="NewAsiaOASystem.DBModel" assembly="NewAsiaOASystem.DBModel">
+  <class name="NA_XSinfo" table="NA_XSinfo">
+    <id name="Id" column="Id" type="string" unsaved-value="0">
+      <generator class="uuid.hex"/>
+    </id>
+    <property name="Xs_type" column="Xs_type" />
+    <property name="Sc_Id" column="Sc_Id" />
+    <property name="Xs_datetime" column="Xs_datetime" />
+    <property name="KhId" column="KhId" />
+    <property name="Khname" column="Khname" />
+    <property name="AddresseeId" column="AddresseeId" />
+    <property name="Xs_je" column="Xs_je" />
+    <property name="Ddzt" column="Ddzt" />
+    <property name="Fk_type" column="Fk_type" />
+    <property name="C_datetime" column="C_datetime" />
+    <property name="C_Name" column="C_Name" />
+    <property name="States" column="States" />
+    <property name="Sort" column="Sort" />
+    <property name="Beizhu" column="Beizhu" />
+    <property name="ShippingStatus" column="ShippingStatus" />
+    <property name="PaymentStatus" column="PaymentStatus" />
+    <property name="Issm" column="Issm" />
+    <property name="SM_ZT" column="SM_ZT" />
+    <property name="S_Number" column="S_Number" />
+    <property name="CP_Number" column="CP_Number" />
+  </class>
+</hibernate-mapping>

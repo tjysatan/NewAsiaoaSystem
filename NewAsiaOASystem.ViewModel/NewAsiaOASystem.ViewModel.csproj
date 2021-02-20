@@ -1,0 +1,198 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{DC94F3E3-B933-44FD-B517-B24F0CD0DC55}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>NewAsiaOASystem.ViewModel</RootNamespace>
+    <AssemblyName>NewAsiaOASystem.ViewModel</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="IQC\IQC_JyconstrinfoView.cs" />
+    <Compile Include="IQC\IQC_JYDDinfoView.cs" />
+    <Compile Include="IQC\IQC_JYDjyconinfoView.cs" />
+    <Compile Include="IQC\IQC_JyffinfoView.cs" />
+    <Compile Include="IQC\IQC_llNoticeMXordinfoView.cs" />
+    <Compile Include="IQC\IQC_llNoticeordinfoView.cs" />
+    <Compile Include="IQC\IQC_SopInfoView.cs" />
+    <Compile Include="NACG\CG_aqkcView.cs" />
+    <Compile Include="NAFlow\Flow_AjaxtxdateView.cs" />
+    <Compile Include="NAFlow\Flow_DKXPlanPPrintinfoView.cs" />
+    <Compile Include="NAFlow\Flow_NonSProductinfoView.cs" />
+    <Compile Include="NAFlow\Flow_PlanPPrintinfoView.cs" />
+    <Compile Include="NAFlow\Flow_PlanProductioninfoView.cs" />
+    <Compile Include="NAFlow\Flow_PleasepurchaseinfoView.cs" />
+    <Compile Include="NAFlow\Flow_ProductionNoticeinfoView.cs" />
+    <Compile Include="NAFlow\Flow_RoutineStockinfoView.cs" />
+    <Compile Include="NewAsiaOASystem\20150509WL_JxqnumberView.cs" />
+    <Compile Include="NewAsiaOASystem\20150510WL_ReturnVisitView.cs" />
+    <Compile Include="NewAsiaOASystem\Act_SignNamelistinfoView.cs" />
+    <Compile Include="NewAsiaOASystem\CG_infoView.cs" />
+    <Compile Include="NewAsiaOASystem\CG_DetailinfoView.cs" />
+    <Compile Include="NewAsiaOASystem\DisImmuneCenterView.cs" />
+    <Compile Include="NewAsiaOASystem\DKXDDCXTJView.cs" />
+    <Compile Include="NewAsiaOASystem\DKX\DKX_CONTROL_LISTView.cs" />
+    <Compile Include="NewAsiaOASystem\DKX\DKX_CONTROL_LIST_DETAILView.cs" />
+    <Compile Include="NewAsiaOASystem\DKX\DKX_CPInfoView.cs" />
+    <Compile Include="NewAsiaOASystem\DKX\DKX_DDCLyqNoteInfoView.cs" />
+    <Compile Include="NewAsiaOASystem\DKX\DKX_DDinfoView.cs" />
+    <Compile Include="NewAsiaOASystem\DKX\DKX_DDtypeinfoView.cs" />
+    <Compile Include="NewAsiaOASystem\DKX\DKX_DKXtypeandgcsView.cs" />
+    <Compile Include="NewAsiaOASystem\DKX\DKX_GCSinfoView.cs" />
+    <Compile Include="NewAsiaOASystem\DKX\DKX_k3BominfoView.cs" />
+    <Compile Include="NewAsiaOASystem\DKX\DKX_LCCZJLinfoView.cs" />
+    <Compile Include="NewAsiaOASystem\DKX\DKX_PAY_CONTROL_INFOView.cs" />
+    <Compile Include="NewAsiaOASystem\DKX\DKX_pjgdbinfoView.cs" />
+    <Compile Include="NewAsiaOASystem\DKX\DKX_PleasepurchaseinfoView.cs" />
+    <Compile Include="NewAsiaOASystem\DKX\DKX_RKZLDataInfoView.cs" />
+    <Compile Include="NewAsiaOASystem\DKX\DKX_ZLDataInfoView.cs" />
+    <Compile Include="NewAsiaOASystem\DKX\NewChargebackReasonView.cs" />
+    <Compile Include="NewAsiaOASystem\EP_jlinfoView.cs" />
+    <Compile Include="NewAsiaOASystem\FTHCHTJView.cs" />
+    <Compile Include="NewAsiaOASystem\k3\K3_wuliaoinfoView.cs" />
+    <Compile Include="NewAsiaOASystem\KSGZ\KS_CLPersonnelInfoView.cs" />
+    <Compile Include="NewAsiaOASystem\KSGZ\KS_ProblemTyleView.cs" />
+    <Compile Include="NewAsiaOASystem\KSGZ\KS_TrackinglistinfoView.cs" />
+    <Compile Include="NewAsiaOASystem\NACustomerinfoView.cs" />
+    <Compile Include="NewAsiaOASystem\NAReturnListView.cs" />
+    <Compile Include="NewAsiaOASystem\NA_AddresseeInfoView.cs" />
+    <Compile Include="NewAsiaOASystem\NA_QyinfoView.cs" />
+    <Compile Include="NewAsiaOASystem\NA_SharealikeView.cs" />
+    <Compile Include="NewAsiaOASystem\NA_XSdetailsinfoView.cs" />
+    <Compile Include="NewAsiaOASystem\NA_XSinfoView.cs" />
+    <Compile Include="NewAsiaOASystem\NQCosttypeView.cs" />
+    <Compile Include="NewAsiaOASystem\NQR_ProductView.cs" />
+    <Compile Include="NewAsiaOASystem\NQR_ReasonView.cs" />
+    <Compile Include="NewAsiaOASystem\NQ_BaseitemAttachmentView.cs" />
+    <Compile Include="NewAsiaOASystem\NQ_BlinfoView.cs" />
+    <Compile Include="NewAsiaOASystem\NQ_BlxxinfoView.cs" />
+    <Compile Include="NewAsiaOASystem\NQ_CHdetailinfoView.cs" />
+    <Compile Include="NewAsiaOASystem\NQ_chuhuoinfonView.cs" />
+    <Compile Include="NewAsiaOASystem\NQ_GysInfoView.cs" />
+    <Compile Include="NewAsiaOASystem\NQ_productinfoView.cs" />
+    <Compile Include="NewAsiaOASystem\NQ_SupplierAndBaseitemView.cs" />
+    <Compile Include="NewAsiaOASystem\NQ_SupplierAttachmentView.cs" />
+    <Compile Include="NewAsiaOASystem\NQ_OASupplierView.cs" />
+    <Compile Include="NewAsiaOASystem\NQ_SupplierView.cs" />
+    <Compile Include="NewAsiaOASystem\NQ_ThdetailinfoView.cs" />
+    <Compile Include="NewAsiaOASystem\NQ_THinfoFXView.cs" />
+    <Compile Include="NewAsiaOASystem\NQ_TjFtwxCPTypeSuminfoView.cs" />
+    <Compile Include="NewAsiaOASystem\NQ_YJinfoView.cs" />
+    <Compile Include="NewAsiaOASystem\Record\NA_CustomerRecordView.cs" />
+    <Compile Include="NewAsiaOASystem\SessionSearch.cs" />
+    <Compile Include="Iot\Bb_UpdateView.cs" />
+    <Compile Include="Iot\Point_infoView.cs" />
+    <Compile Include="NewAsiaOASystem\WLWDKX\NACuscxView.cs" />
+    <Compile Include="NewAsiaOASystem\WLWDKX\WL_CPInfoView.cs" />
+    <Compile Include="NewAsiaOASystem\WLWDKX\WL_DealerSalestargetView.cs" />
+    <Compile Include="NewAsiaOASystem\WLWDKX\WL_DkxInfoView.cs" />
+    <Compile Include="NewAsiaOASystem\WLWDKX\WL_dkxthjlinfoView.cs" />
+    <Compile Include="NewAsiaOASystem\WLWDKX\WL_GcsinfoView.cs" />
+    <Compile Include="NewAsiaOASystem\WLWDKX\WL_NewgscinfoView.cs" />
+    <Compile Include="NewAsiaOASystem\WLWDKX\WL_SalesONlineratioinfoView.cs" />
+    <Compile Include="NewAsiaOASystem\WLWDKX\WL_SalestargetView.cs" />
+    <Compile Include="NewAsiaOASystem\WLWDKX\WL_XFOrderinfoView.cs" />
+    <Compile Include="NewAsiaOASystem\Wx_FTUserbdopenIdinfoView.cs" />
+    <Compile Include="NewAsiaOASystem\XSFXdqinfoView.cs" />
+    <Compile Include="NewAsiaOASystem\XSFXkhinfoView.cs" />
+    <Compile Include="NewAsiaOASystem\XSFXqxinfoView.cs" />
+    <Compile Include="NewAsiawxfx\WXFX_cp.cs" />
+    <Compile Include="PagerHelper\PagerInfo.cs" />
+    <Compile Include="Perprofit\PP_ProfitpointinfoView.cs" />
+    <Compile Include="Perprofit\PP_ProfitSummaryinfoView.cs" />
+    <Compile Include="Perprofit\PP_ProfuttoStaffInfoView.cs" />
+    <Compile Include="Perprofit\PP_ProfuttoStaffTDInfoView.cs" />
+    <Compile Include="Perprofit\PP_ShouruandzhichuDetailsinfoView.cs" />
+    <Compile Include="Perprofit\PP_StaffinfoView.cs" />
+    <Compile Include="Perprofit\PP_TeaminfoView.cs" />
+    <Compile Include="Perprofit\PP_TTShouruandzhichuDetailsinfoView.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="sbycjk\YCACCandSIDInfoView.cs" />
+    <Compile Include="sbycjk\YCAccountbindingInfoView.cs" />
+    <Compile Include="sbycjk\YCnoticeinfoView.cs" />
+    <Compile Include="Sys\GetControllerInfo.cs" />
+    <Compile Include="Sys\RoleAuthParaView.cs" />
+    <Compile Include="Sys\SessionUser.cs" />
+    <Compile Include="Sys\SysAuthorizeView.cs" />
+    <Compile Include="Sys\SysButtonPara.cs" />
+    <Compile Include="Sys\SysButtonView.cs" />
+    <Compile Include="Sys\SysDepartmentRoleView.cs" />
+    <Compile Include="Sys\SysDepartmentView.cs" />
+    <Compile Include="Sys\SysFunctionView.cs" />
+    <Compile Include="Sys\SysLog_historyView.cs" />
+    <Compile Include="Sys\SysMenuView.cs" />
+    <Compile Include="Sys\SysPersonView.cs" />
+    <Compile Include="Sys\SysRoleView.cs" />
+    <Compile Include="Sys\SysFieldPara.cs" />
+    <Compile Include="Sys\SysRoleTypeView.cs" />
+    <Compile Include="testmode.cs" />
+    <Compile Include="Vote\Vote_ConfigView.cs" />
+    <Compile Include="Vote\Vote_ipView.cs" />
+    <Compile Include="Vote\Vote_QuestionView.cs" />
+    <Compile Include="Vote\Vote_SubjectView.cs" />
+    <Compile Include="Vote\Vote_TitleView.cs" />
+    <Compile Include="Wx\WeChat_AnnualmeetingBarrageView.cs" />
+    <Compile Include="Wx\WeChat_AnnualmeetingSignView.cs" />
+    <Compile Include="Wx\WeChat_forwardInfoView.cs" />
+    <Compile Include="Wx\WeChat_OrderInfoView.cs" />
+    <Compile Include="Wx\WeChat_signuppersonInfoView.cs" />
+    <Compile Include="Wx\WeChat_SlyderpersonInfoView.cs" />
+    <Compile Include="Wx\Wechat_TXinfoView.cs" />
+    <Compile Include="Wx\Wx_configinfoView.cs" />
+    <Compile Include="Wx\WX_MenusView.cs" />
+    <Compile Include="Wx\WX_MessageView.cs" />
+    <Compile Include="Wx\WX_Message_NewsView.cs" />
+    <Compile Include="Wx\WX_M_newView.cs" />
+    <Compile Include="Wx\Wx_openIdinfoView.cs" />
+    <Compile Include="Wx\WX_OpenIDView.cs" />
+    <Compile Include="Wx\WX_ReceiveMessageView.cs" />
+    <Compile Include="Wx\WX_SendCView.cs" />
+    <Compile Include="Wx\WX_SendMessageView.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NewAsiaOASystem.DBModel\NewAsiaOASystem.DBModel.csproj">
+      <Project>{f20c75b3-412e-4673-9af0-f65cf90590cc}</Project>
+      <Name>NewAsiaOASystem.DBModel</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

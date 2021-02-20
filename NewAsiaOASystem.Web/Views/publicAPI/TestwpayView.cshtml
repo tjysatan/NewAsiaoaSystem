@@ -1,0 +1,35 @@
+﻿@{
+    ViewBag.Title = "TestwpayView";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+
+<script type="text/javascript">
+    //获取当天的退货扫码数据
+    function AjaxGetsmthjson() {
+        $.ajax({
+            type: "POST",
+            url: "/publicAPI/GetSessionpayconfig",
+            dataType: "html",
+            async: false,
+            success: function (reslut) {
+                if (reslut == "1") {
+                    window.location.href = "/publicAPI/PayView";
+                } else {
+                    alert("延误");
+                }
+            },
+            error: function (e) {
+
+                alert("请求失败11!");
+            }
+        })
+    }
+</script>
+<div style="width: 70%; margin: auto; margin-top: 40px;">
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="formDemo" onclick="return AjaxGetsmthjson()">立即提交</button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,45 @@
+﻿@model NewAsiaOASystem.ViewModel.WX_Message_NewsView
+@{
+    ViewBag.Title = "绩效推送页面";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+
+
+
+     <div class="infor">
+       @* <div class="h-right-title">您当前的位置：绩效推送</div>*@
+        <p id="Ptitle"> <span class="inquiry-input" style="margin-left:10px;">
+                <button onclick="S_jxMass('/Mass/S_bd')">绩效推送</button></span></p>
+          
+ @using (Html.BeginForm("JsFS", "Mass", FormMethod.Post, new { id = "form1", enctype = "multipart/form-data" }))
+ {
+       @Html.HiddenFor(m => m.N_Id)
+       @Html.HiddenFor(m=>m.MType)
+     @Html.HiddenFor(m=>m.Url)
+        <div class="system-menu-set">
+            <ul class="infor-c">
+                <li><span class="infor-c-width">标题：</span><span class="infor-c-input">
+                    @Html.TextBoxFor(m => m.Title)</span></li>
+            </ul>
+            <ul class="infor-c ">
+                <li><span class="infor-c-width">简介：</span>
+                    <span class="infor-c-input">
+                        @Html.TextAreaFor(m => m.Description, new { })
+                    </span>
+                </li>
+            </ul>
+        @*  <ul class="infor-c ">
+                <li>
+                    <span class="infor-c-width">URL地址：</span>
+                    <span class="infor-c-input">
+                        @Html.TextBoxFor(m => m.Url, new { })
+                    </span>
+                </li>
+            </ul>       *@
+        </div>
+        <div class="inquiry-input infor-b"><span><button onclick="return submitForm('/Mass/JXPage')">保存</button></span></div>
+         }
+    </div>
+ 
+ 

@@ -1,0 +1,103 @@
+﻿@model NewAsiaOASystem.ViewModel.Vote_TitleView
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@section HeadContent{
+    <script type="text/javascript">
+        $(function () {
+            if ("" == $("#Id").val())
+                $("#Ptitle").text("添加标题");
+            else
+                $("#Ptitle").text("修改标题");
+            showEdit($("#Id").val())
+            
+        })
+    </script>
+    
+    }
+
+@using (Html.BeginForm("Edit", "Vote_Title", FormMethod.Post, new { id = "form1" }))
+{
+    @Html.HiddenFor(m=>m.Id)
+    @Html.HiddenFor(m=>m.T_Acount)
+    @Html.HiddenFor(m=>m.T_Person)
+    @Html.HiddenFor(m=>m.T_time)
+   
+     <div class="infor">
+        <p id="Ptitle"></p>
+        <div class="system-menu-set">
+            <ul class="infor-c">
+                <li><span class="infor-c-width">所属主题：</span>
+                     <span class="infor-c-input">
+                     @Html.DropDownList("S_ListData", ViewData["SList"] as SelectList, new { @class="add-function"})
+                     </span>
+                    
+                </li>
+            </ul>
+            <ul class="infor-c ">
+                <li><span class="infor-c-width">标题名称：</span>
+                    <span class="infor-c-input" style="width:400px">
+                       @Html.TextBoxFor(m => m.T_Name, new {@style="width:400px" })
+                    </span>
+                      <span style="color:red;font-size:24px;vertical-align: middle;margin-left: 8px;">*</span><span class="desc w-register">标题名称不为空！</span>
+                </li>
+            </ul>
+            <ul class="infor-c">
+                <li><span class="infor-c-width">投票类型：</span>
+                    <span class="infor-c-input">
+                            <select class="add-function" name="T_type">
+                            @{
+    if ("1".Equals(Convert.ToString(@Model.T_type)) && null != @Model.Id)
+    {
+                                @:<option value="0">单选</option>
+                                @:<option value="1" selected="selected">多选</option>
+                              }
+    else
+    {
+                                @:<option value="0"  selected="selected">单选</option>
+                                @:<option value="1">多选</option>
+                                      }
+                                                
+                            }
+                      
+
+                        </select>  
+                    </span>
+
+                </li>
+            </ul>
+                
+            <ul class="infor-c ">
+                <li><span class="infor-c-width">选项名称：</span>
+                    <span class="infor-c-input">
+                      <span style="display:none; ">@Html.TextArea("Q_id");</span>
+                      <span style="display:none; ">@Html.TextArea("Q_Name");</span>
+      
+                        <table style="margin-left:130px;">
+                             <tr><td align="right">1.</td><td>@Html.TextBox("Q_Name0","", new {style=" width:300px;"}) </td></tr>
+                             <tr><td align="right">2.</td><td>@Html.TextBox("Q_Name1","", new {style=" width:300px;"}) </td></tr>
+                             <tr><td align="right">3.</td><td>@Html.TextBox("Q_Name2","", new {style=" width:300px;"}) </td></tr>
+                             <tr><td align="right">4.</td><td>@Html.TextBox("Q_Name3","", new {style=" width:300px;"}) </td></tr>
+                             <tr><td align="right">5.</td><td>@Html.TextBox("Q_Name4","", new {style=" width:300px;"}) </td></tr>
+                             <tr><td align="right">6.</td><td>@Html.TextBox("Q_Name5","", new {style=" width:300px;"}) </td></tr>
+                             <tr><td align="right">7.</td><td>@Html.TextBox("Q_Name6","", new {style=" width:300px;"}) </td></tr>
+                             <tr><td align="right">8.</td><td>@Html.TextBox("Q_Name7","", new {style=" width:300px;"}) </td></tr>
+                             <tr><td align="right">9.</td><td>@Html.TextBox("Q_Name8","", new {style=" width:300px;"}) </td></tr>
+                             <tr><td align="right">10.</td><td>@Html.TextBox("Q_Name9" ,"", new {style=" width:300px;"}) </td></tr>
+                        </table>
+                    </span> 
+                   
+                   
+                  
+                </li>
+            </ul>       
+        </div>
+        <div class="inquiry-input infor-b"><span><button onclick="return SavaForm('/Vote_Title/Index')">保存</button></span><span><button onclick="return RedirectUrl('/Vote_Title/Index')">返回</button></span></div>
+    </div>
+}
+
+ <script src="~/Scripts/Vote/Vote_Title.js"></script> 
+
+

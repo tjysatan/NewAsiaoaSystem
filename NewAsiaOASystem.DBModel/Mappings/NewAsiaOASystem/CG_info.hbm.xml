@@ -1,0 +1,16 @@
+﻿<?xml version="1.0"  encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="NewAsiaOASystem.DBModel" assembly="NewAsiaOASystem.DBModel">
+  <class name="CG_info" table="CG_info">
+    <id name="Id" column="Id" type="string" unsaved-value="0">
+      <generator class="uuid.hex"/>
+    </id>
+    <property name="GysId" column="GysId"  />
+    <property name="GysDm" column="GysDm"  />
+    <property name="Cg_xdtime" column="Cg_xdtime"  />
+    <property name="Cg_sgjqtime" column="Cg_sgjqtime"  />
+    <property name="Cg_jqqrtime" column="Cg_jqqrtime"  />
+    <property name="Cg_Isdh" column="Cg_Isdh"  />
+    <property name="Cg_dhtime" column="Cg_dhtime" />
+    <property name="Cg_xdname" column="Cg_xdname" />
+  </class>
+</hibernate-mapping>

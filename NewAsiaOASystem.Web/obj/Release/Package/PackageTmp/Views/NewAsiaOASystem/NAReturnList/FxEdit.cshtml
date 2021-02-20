@@ -1,0 +1,386 @@
+﻿@model NewAsiaOASystem.ViewModel.NQ_THinfoFXView
+@{
+    ViewBag.Title = "客退产品分析编辑页面";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+<script type="text/javascript">
+    $(function () {
+        YQJXZ();//元器件选择
+        Fzyqjtext();//元器件赋值
+        $('#SelectedxxxData').combo({ editable: false, height: 25, panelHeight: 170 });
+        $('#Div_SelectedxxxData').appendTo($('#SelectedxxxData').combo('panel'));
+        $('#SelectedxxxData').combo('setValue', '').combo('setText', '===请选择==');
+        GetFXblxxxlist();
+        $('#SelectedxxData').combo({ editable: false, height: 25, panelHeight: 170 });
+        $('#Div_SelectedxxData').appendTo($('#SelectedxxData').combo('panel'));
+        $('#SelectedxxData').combo('setValue', '').combo('setText', '===请选择==');
+        GetFXxxList();
+        $('#SelectedyyData').combo({ editable: false, height: 25, panelHeight: 150 });
+        $('#Div_SelectedyyData').appendTo($('#SelectedyyData').combo('panel'));
+
+        var TH_BLXX = $("#TH_BLXX").val();//不良原因1
+        if (TH_BLXX != null) {
+            SelectItemfx();
+        }
+
+        var TH_BLYY = $("#TH_BLYY").val();//不良原因2
+        if (TH_BLYY != null) {
+            GetFXyyList(TH_BLXX, "1");
+            SelectItemfx();
+        }
+
+        var TH_BLXXX = $("#TH_BLXXX").val();//不良现象
+        if (TH_BLXXX != null) {
+            SelectItemfx();
+        }
+        //处理方式赋值
+        if('@Model.TH_bz'!=null&&'@Model.TH_bz'!="")
+        {
+            $("#TH_bz").val('@Model.TH_bz')
+        }
+
+    })
+
+    //赋值元器件文本框
+    function Fzyqjtext() {
+        if ('@Model.TH_YQJname' != null && '@Model.TH_YQJname' != "") {
+            var yjmodel = ajaxyjmodelbyidjson('@Model.TH_YQJname');//元器件
+            var yqjxh = yjmodel.Y_Name + "," + yjmodel.Y_Ggxh;
+            $("#tt").val(yqjxh);
+            $("#yjid").val(yjmodel.Id);
+        }
+    }
+
+    //查询元器件信息根据名称
+    function ajaxYQJjson(r_id) {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "/NQ_YJinfo/Getyjinfobyname",
+            data: { name: r_id },
+            dataType: "json",
+            async: false,
+            success: function (reslut) {
+                json = reslut;
+            },
+            //error: function (e) {
+            //    alert("请求失败!");
+            //}
+        })
+        return json;
+    }
+
+    //根据元器件ID 查找元器件信息
+    function ajaxyjmodelbyidjson(Id) {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "/NQ_YJinfo/Getyjinfomodelbyid",
+            data: { Id: Id },
+            async: false,
+            success: function (reslut) {
+                json = eval('(' + reslut + ')');
+            },
+            error: function (e) {
+                alert("请求失败！");
+            }
+        })
+        return json;
+    }
+
+    function ajaxallyjinfo() {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "/NQ_YJinfo/Getyjinfo",
+            dataType: "json",
+            async: false,
+            success: function (reslut) {
+                json = reslut;
+            },
+            error: function (e) {
+                alert("请求失败!");
+            }
+        })
+        return json;
+    }
+
+    //元器件查找
+    function YQJXZ() {
+        var jsondate = ajaxYQJjson($("#tt").val());
+        var datajson = "";
+        if (jsondate != null) {
+            var j = 110;
+            if (jsondate.length < 110) {
+                j = jsondate.length
+            }
+            for (var i = 0; i < j; i++) {
+                datajson += '{title:"' + jsondate[i].Y_Name + ',' + jsondate[i].Y_Ggxh + '" ,Id:"' + jsondate[i].Id + '"},';
+            }
+
+        } else {
+            datajson += '{title:"没有记录"}';
+        }
+        datajson = eval('[' + datajson + ']');
+        $("#tt").bigAutocomplete({
+            width: 156,
+            scrollHeight: 300,
+            data: datajson,
+            callback: function (data) {
+                $("#yjid").val(data.Id);
+            }
+        });
+    }
+
+    //检测是否再保
+    function dbJCZB() {
+        //生产时间
+        var scdate = $("#TH_SCdate").val();
+        var res;
+        if (scdate == "") {
+            alert("填写生产时间！");
+            return;
+        }
+        res = Ajaxjcsj(scdate, '@Model.R_Id');
+        $("#bxqk").val(res);
+    }
+
+    function Ajaxjcsj(scdatetime, r_Id) {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "/NAReturnList/JcMonecount",
+            data: { scdatetime: scdatetime, r_Id: r_Id },
+            dataType: "html",
+            async: false,
+            success: function (reslut) {
+                json = reslut;
+            },
+            error: function (e) {
+                alert("网络异常!");
+            }
+        })
+        return json;
+    }
+</script>
+
+<style>
+    .table_con {
+        border-collapse: collapse;
+        border: none;
+    }
+
+        .table_con td {
+            border: solid #eae5e5 1px;
+            height: 35px;
+            padding: 0 0 0 5px;
+        }
+
+    .btnspan button {
+        width: 120px;
+        height: 30px;
+        background: #337CA8
+    }
+</style>
+
+<blockquote class="layui-elem-quote" style="color:red">提示：受损图片可以上传资料，查看方式是点击查询或下载</blockquote>
+@using (Html.BeginForm("FxEdit", "NAReturnList", FormMethod.Post, new { id = "form1", enctype = "multipart/form-data" }))
+{
+    @Html.HiddenFor(m => m.Id);
+    @Html.HiddenFor(m => m.P_Id);
+    @Html.HiddenFor(m => m.R_Id);
+    @Html.HiddenFor(m => m.TH_BLXX);
+    @Html.HiddenFor(m => m.TH_BLYY);
+    @Html.HiddenFor(m => m.TH_YQJname);
+    @Html.HiddenFor(m => m.TH_BLXXX);
+    @Html.HiddenFor(m => m.TH_imgurl1);
+    @Html.HiddenFor(m => m.TH_imgurl2);
+    @Html.HiddenFor(m => m.Cpwlno);
+    @Html.HiddenFor(m => m.Cpname);
+    @Html.HiddenFor(m => m.Cpmode);
+    @Html.HiddenFor(m => m.C_time);
+
+    <input type="hidden" id="yjid" name="yjid" />
+    <div style="">
+        <table class="table_con" style="width: 100%; color: #000; font-size: 13px;">
+            <tr>
+                <td>
+                    <table style="width: 100%; border: none;">
+                        <tr style="border: none">
+                            <td style="border: none">生产批号：<span class="infor-c-input">@Html.TextBoxFor(m => m.TH_SCdate, new { onclick = "WdatePicker()" })-@Html.TextBoxFor(m => m.TH_Ph)</span></td>
+                            <td style="border: none">保修：<span class="infor-c-input"><input id="bxqk" name="bxqk" ondblclick="dbJCZB()" /></span></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table style="width: 100%; border: none">
+                        <tr>
+                            <td style="border: none">
+                                客户描述不良现象：
+                                @if (!string.IsNullOrEmpty(Model.Cust_Baddescribe))
+                                {<span>
+                                        @Model.Cust_Baddescribe
+                                    </span>}
+                                else
+                                {
+                                    <span>未填写客户描述不良现象</span>
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border: none">不良现象：<span class="infor-c-input"><input id="SelectedxxxData" name="SelectedxxxData"></span></td>
+                        </tr>
+
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table style="width: 100%; border: none">
+                        <tr>
+                            <td style="border: none">
+                                不良原因：  <span class="infor-c-input">
+                                    <input id="SelectedxxData" name="SelectedxxData">
+                                </span>
+                                <span class="infor-c-input">
+                                    <input id="SelectedyyData" name="SelectedyyData">
+                                </span>
+                            </td>
+                            <td style="border: none">
+                                分析人：<span class="infor-c-input">
+                                @Html.TextBoxFor(m=>m.Analyst)
+                                </span>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table style="width: 100%">
+                        <tr>
+                            <td style="border: none">
+                                处理方式：<span class="infor-c-input">
+                                    <select id="TH_bz" name="TH_bz" style="width: 150px; height: 28px; border: 1px solid #808080">
+                                        <option value="报废">报废</option>
+                                        <option value="补新">补新</option>
+                                        <option value="正常">正常</option>
+                                        <option value="折价补新">折价补新</option>
+                                        <option value="修复">修复</option>
+                                        <option value="翻新">翻新</option>
+                                    </select>
+                                </span>
+                            </td>
+                            <td style="border: none">备&nbsp;&nbsp;注：<span class="infor-c-input">@Html.TextBoxFor(m => m.TH_bz2)</span></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table style="width: 100%">
+                        <tr>
+                            <td style="border: none">
+                                受损图片： <span class="infor-c-input">
+                                    <input type="file" name="Image" />
+                                    @if (string.IsNullOrEmpty(Model.TH_imgurl1))
+                                    {
+
+                                    }
+                                    else
+                                    {
+                                        <a href="@Url.Content(Model.TH_imgurl1)" target="_blank">图片/资料</a>
+                                    }
+                                </span>
+                            </td>
+                            <td style="border: none">
+                                受损图片：
+                                <span class="infor-c-input">
+                                    <input type="file" name="Image2" />
+                                    @if (string.IsNullOrEmpty(Model.TH_imgurl2))
+                                    {
+                                    }
+                                    else
+                                    {
+                                        @*<img width="50" height="50" src="@Url.Content(Model.TH_imgurl2)" alt="images" />*@
+                                        <a href="@Url.Content(Model.TH_imgurl2)" target="_blank">图片/资料</a>
+                                    }
+                                </span>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table style="width: 100%;">
+                        <tr>
+                            <td style="border: none">
+                                元器件费：<span class="infor-c-input">@Html.TextBoxFor(m => m.TH_yqjjg) </span>
+                            </td>
+                            <td style="border: none">
+                                人工费用：<span class="infor-c-input">@Html.TextBoxFor(m => m.TH_RGF)</span>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table style="width: 100%">
+                        <tr>
+                            <td style="border: none">
+                                包材费用：<span class="infor-c-input">@Html.TextBoxFor(m => m.TH_BCF)</span>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table style="width: 100%">
+                        <tr>
+                            <td style="border: none">
+                                元  器  件： <span class="infor-c-input">
+                                    <input type="text" id="tt" name="tt" value="" class="text" onkeyup="YQJXZ()" />
+                                </span>
+                            </td>
+
+                            <td style="border: none">
+                                <span class="btnspan">
+                                    <button onclick="return fxSavaForm()">提交</button>
+                                </span>
+
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+}
+
+<!--不良现象-->
+<div id="Div_SelectedxxxData">
+    <div style="padding: 10px; font-size: 14px;" id="DivContent_SelectedxxxData"></div>
+</div>
+<!--不良原因-->
+<div id="Div_SelectedxxData">
+    <div style="padding: 10px; font-size: 14px;" id="DivContent_SelectedxxData"></div>
+</div>
+<div id="Div_SelectedyyData">
+    <div style="padding: 10px; font-size: 14px;" id="DivContent_SelectedyyData"></div>
+</div>
+
+<script src="~/Scripts/NAjs/NQ_THinfoFX.js"></script>
+<script src="~/Scripts/NAjs/bigAutocomplete.js"></script>
+<style>
+    .bigautocomplete-layout {
+        width: 156px;
+        border: 1px solid #808080;
+        margin-left: 70px;
+    }
+</style>

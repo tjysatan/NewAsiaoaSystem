@@ -1,0 +1,118 @@
+﻿@model NewAsiaOASystem.ViewModel.WX_Message_NewsView
+@{
+    ViewBag.Title = "图文添加";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+@section HeadContent{
+    <script type="text/javascript">
+        $(function () {
+            if ("" == $("#Id").val())
+                $("#Ptitle").text("图文添加");
+            else
+                $("#Ptitle").text("图文编辑");
+        })
+    </script>
+    <script src="~/Content/kindeditor-4.0/kindeditor-min.js"></script>
+    <script src="~/Content/kindeditor-4.0/ckeditor/ckeditor.js"></script>
+    <script language="javascript" type="text/javascript">
+        KindEditor.ready(function (K) {
+            var editor1 = K.create('textarea[name="MnContent"]', {
+                cssPath: '/Content/kindeditor-4.0/plugins/code/prettify.css',
+                uploadJson: '/Content/kindeditor-4.0/asp.net/UploadImage',
+                width: 720,
+                height: 250,
+                uploadJson: '@Url.Content("/Content/kindeditor-4.0/asp.net/upload_json.ashx")',
+                  fileManagerJson: '@Url.Content("/Content/kindeditor-4.0/asp.net/file_manager_json.ashx")',
+                  allowFileManager: true,
+                  afterCreate: function () {
+                      var self = this;
+                      K.ctrl(document, 13, function () {
+                          self.sync();
+                          K('form[name="MnContent"]')[0].submit();
+                      });
+                      K.ctrl(self.edit.doc, 13, function () {
+                          self.sync();
+                          K('form[name="MnContent"]')[0].submit();
+                      });
+                  },
+                  afterBlur: function () { this.sync(); }
+              });
+          });
+    </script>
+}
+
+@using (Html.BeginForm("Edit", "Mass", FormMethod.Post, new { id = "form1", enctype = "multipart/form-data" }))
+{         
+    
+    @Html.HiddenFor(m => m.N_Id)
+    @Html.HiddenFor(m => m.PicUrl)
+    
+    <div class="infor">
+        @* <div class="h-right-title">您当前的位置：图文管理</div>*@
+        <p id="Ptitle"></p>
+        <div class="system-menu-set">
+            <ul class="infor-c">
+                <li><span class="infor-c-width">标题：</span><span class="infor-c-input">
+                    @Html.TextBoxFor(m => m.Title)</span></li>
+            </ul>
+            <ul class="infor-c ">
+                <li><span class="infor-c-width">简介：</span>
+                    <span class="infor-c-input">
+                        @Html.TextAreaFor(m => m.Description, new { })
+                    </span>
+                </li>
+            </ul>
+            <ul class="infor-c ">
+                <li><span class="infor-c-width">图片：</span>
+                    <span class="infor-c-input">
+                        @*@Html.TextAreaFor(m => m.A_Content, new { })*@
+
+                        <input type="file" name="Image" />
+
+                        @if (string.IsNullOrEmpty(Model.PicUrl))
+                        {
+
+                        }
+                        else
+                        {
+                            <img width="150" height="150" src="@Url.Content(Model.PicUrl)" alt="images" />
+                        }
+
+                    </span>
+                    @* <span style="color:red">绩效信息可以不添加图片</span>*@
+                </li>
+            </ul>
+            <ul class="infor-c ">
+                <li>
+                    <span class="infor-c-width">图文详细内容：</span>
+
+                </li>
+                <li>
+                   
+                        @Html.TextAreaFor(m => m.MnContent,new {})
+                  @*  @Html.TextBoxFor(m => m.MnContent)*@
+                   
+                </li>
+            </ul>
+            <ul class="infor-c ">
+                <li><span class="infor-c-width">URL地址：</span>
+                    <span class="infor-c-input">
+                        @Html.TextBoxFor(m => m.Url, new { })
+                    </span>
+                    <span>外部页面可以填写跳转链接！
+                    </span>
+                </li>
+            </ul>
+               <ul class="infor-c">
+                <li><span class="infor-c-width">排序：</span><span class="infor-c-input">
+                    @Html.TextBoxFor(m => m.sort, new {value="0"})</span>
+                     <span style="color:red;font-size:24px;vertical-align: middle;margin-left: 8px;">*</span><span class="desc w-register">排序默认为0，越小越靠前！</span>
+                </li>
+            </ul>
+        </div>
+        <div class="inquiry-input infor-b"><span>
+            <button onclick="return submitForm('/Mass/Index')">保存</button></span><span>
+                <button onclick="return RedirectUrl('/Mass/Index')">返回</button></span></div>
+    </div>
+}
+

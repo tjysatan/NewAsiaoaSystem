@@ -1,0 +1,171 @@
+﻿@model NewAsiaOASystem.ViewModel.PagerInfo<NewAsiaOASystem.ViewModel.IQC_SopInfoView>
+@{
+    ViewBag.Title = "检验列表审核数据";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@section HeadContent{
+    <script type="text/javascript">
+        $(function () {
+            BindGrid();
+        })
+        function BindGrid() {
+            @{
+                if (null != Model && null != Model.GetPagingDataJson)
+                {
+                    string json = Model.GetPagingDataJson;//获取json数据
+                    @: var jsonStr = @Html.Raw(json);
+                }
+             }
+            dataGrid(jsonStr);
+        }
+
+        function dataGrid(jsonStr){
+            if (typeof (jsonStr) != "undefined") {
+                var html = "";
+                html = '<table class="layui-table">';
+                html += '<thead>';
+                html+='<tr>';
+                html+='<td width="5%"><input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" /></td>';
+                html+='<td width="15%">名称</td>';
+                html+='<td width="10%">型号</td>';
+                html+='<td width="10%">代码</td>';
+                html+='<td width="10%">编号</td>';
+                html+='<td width="10%">版本</td>';
+                html+='<td width="10%">发行</td>';
+                html+='<td width="5%">分类</td>';
+                html+='<td width="10%">状态</td>';
+                html+='<td width="20%">操作</td>';
+                html+='</tr>';
+                html+='</thead>'
+                for (var i = 0, j = jsonStr.length; i < j; i++) {
+                    html+='<tr>';
+                    html += '<td width="5%"><input type="checkbox" name="ContentChecked" value="' + jsonStr[i].Id + '"/></td>';
+                    html += '<td width="15%">' + jsonStr[i].Yqjname + '</td>';
+                    html+='<td width="10%">'+jsonStr[i].Yqjxh+'</td>';
+                    html += '<td width="10%">' +jsonStr[i].Yqjdm + '</td>';
+                    html += '<td width="10%">' +jsonStr[i].Sopbianhao + '</td>';
+                    html += '<td width="10%">' +jsonStr[i].Sopbanben + '</td>';
+                    html += '<td width="10%">' +showDate(jsonStr[i].Sopfaxing) + '</td>';
+                    html += '<td width="5%">' +jsonStr[i].Sopwztype + '</td>';
+                    html += '<td width="5%">' +zydztshow(jsonStr[i].Issh) + '</td>';
+                    html+='<td width="20%"><div class="layui-btn-group">'+listshbtnshow(jsonStr[i].Id)+'</div></td>';
+                    html+='</tr>';
+                }
+                html += '</table>';
+                $("#content").html(html);
+            }
+        }
+
+        function SerchList(pageIndex)
+        {
+            $("input[name='pageIndex']").val(pageIndex);
+            var options = {
+                beforeSubmit: function () {
+                    return true;
+                },
+                dataType: "json",
+                success: function (context) {
+                    var data=eval(context.result);
+                    dataGrid(data);
+                    $(".pagin").html(context.PageN);//输出分页按钮
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $.messager.alert("操作提示", '查询失败请重试！', 'error');
+                }
+            }
+            $('#form1').ajaxSubmit(options);
+            return false;
+        }
+
+
+    </script>
+}
+
+<div class="h-right">
+    <div class="h-right-c">
+        <!--查询条件-->
+
+        <div class="inquiry1">
+            <fieldset>
+                <legend>查询条件：</legend>
+                @using (Html.BeginForm("SearchList", "IQC_Sop", FormMethod.Post, new { id = "form1" }))
+                {
+                    @Html.Hidden("pageIndex");
+                    <ul>
+                        <li>
+                            <span>元器件名称：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="yqjname" id="yqjname" />
+                            </span>
+                        </li>
+                        <li>
+                            <span>元器件型号：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="yqjxh" id="yqjxh" />
+                            </span>
+                        </li>
+                        <li><span>物料代码：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="yqjdm" id="yqjdm" />
+                            </span>
+                        </li>
+                        <li style="display:none">
+                            <span>审核状态：</span>
+                            <span class="inquiry-input">
+                                <select id="Issh" name="Issh">
+                                    <option value="2">未通过</option>
+                                </select>
+                            </span>
+                        </li>
+                        <li>
+                            <span>发行时间：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="fxdatetime" id="fxdatetime" onclick="WdatePicker()" />
+                            </span>
+                        </li>
+                        @*<li>
+                            <span>是否作废：</span>
+                            <span class="inquiry-input">
+                                
+                            </span>
+                        </li>*@
+                        <li style="*width: 100%; *margin: -10px 0 5px 90px;"><span class="inquiry-input">
+                            <button name="btnSerch" class="layui-btn" onclick="return SerchList(1)">查询</button>
+                        </span>
+                        </li>
+                    </ul>
+                }
+                <ul>
+
+                    <li>
+                        <span class="inquiry-input">
+                          <button class="layui-btn" onclick="iframeopen()" id="parentIframe"><i class="layui-icon">&#xe608;</i> 新建</button>
+                         </span>
+                        <span class="inquiry-input">
+                            <button class="layui-btn" onclick="return update('/PP_Staffinfo/EditPage')">报废</button></span>
+                        <span class="inquiry-input">
+                            <button class="layui-btn" onclick="return addClick('/IQC_Sop/List')">刷新</button></span>
+                    </li>
+                </ul>
+            </fieldset>
+        </div>
+
+      
+        <div class="h-table">
+            <div class="h-table-content">
+
+                <div id="content"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--==========================输出分页按钮=========================-->
+<div class="pagin">
+    @if (ViewBag.PageNavigate == null)
+    {
+        @Html.ShowPageNavigate(Model.CurrentPageIndex, Model.PageSize, Model.RecordCount);
+    }
+</div>
+<script src="~/Scripts/NAjs/IQCpulice.js"></script>

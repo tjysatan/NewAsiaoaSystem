@@ -1,0 +1,60 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE" />
+   
+    <title>网站建设中！</title>
+<STYLE type=text/css>BODY {
+	BACKGROUND: #fff; MARGIN: 80px auto; FONT: 14px/150% Verdana, Georgia, Sans-Serif; COLOR: #000; TEXT-ALIGN: center
+}
+A:link {
+	COLOR: #2c4c78; TEXT-DECORATION: none
+}
+A:visited {
+	COLOR: #2c4c78; TEXT-DECORATION: none
+}
+A:hover {
+	COLOR: #2c4c78; TEXT-DECORATION: none
+}
+A:active {
+	COLOR: #2c4c78; TEXT-DECORATION: none
+}
+H1 {
+	PADDING-RIGHT: 4px; PADDING-LEFT: 4px; FONT-SIZE: 14px; BACKGROUND: #eee; PADDING-BOTTOM: 4px; MARGIN: 0px; PADDING-TOP: 4px; BORDER-BOTTOM: #84b0c7 1px solid
+}
+DIV {
+	BORDER-RIGHT: #84b0c7 1px solid; BORDER-TOP: #84b0c7 1px solid; BACKGROUND: #e5eef5; MARGIN: 0px auto; BORDER-LEFT: #84b0c7 1px solid; WIDTH: 500px; BORDER-BOTTOM: #84b0c7 1px solid
+}
+P {
+	PADDING-RIGHT: 15px; PADDING-LEFT: 15px; PADDING-BOTTOM: 15px; MARGIN: 0px; PADDING-TOP: 15px
+}
+</STYLE>
+  <script type="text/javascript">
+      function countDown(secs, surl) {
+          //alert(surl);        
+          var jumpTo = document.getElementById('jumpTo');
+          jumpTo.innerHTML = secs;
+          if (--secs > 0) {
+              setTimeout("countDown(" + secs + ",'" + surl + "')", 1000);
+          }
+          else {
+              location.href = surl;
+          }
+      }
+</script> 
+</head>
+
+ 
+<BODY>
+<DIV>
+<H1>提示：网站建设中 :)</H1>
+<P>请点击<A href="http://www.chinanewasia.com/">苏州新亚科技有限公司</A>或者<span id="jumpTo">10</span> 秒后自动跳转 </P>
+    <script type="text/javascript">countDown(10, 'http://www.chinanewasia.com/');</script>
+<P><A href="http://www.chinanewasia.com/"><FONT 
+color=blue>http://www.chinanewasia.com/</FONT></A></P></DIV></BODY></HTML>
+
+ 

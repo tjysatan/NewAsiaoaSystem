@@ -1,0 +1,341 @@
+﻿@{
+    ViewBag.Title = "电商订单盛辉快递打印";
+}
+<link type="text/css" rel="stylesheet" href="../Content/css/StylePrint.css" />
+<object id="WebBrowser" classid="ClSID:8856F961-340A-11D0-A96B-00C04Fd705A2" width="0"
+    height="0">
+</object>
+ <script src="~/Scripts/jquery-1.11.2.min.js"></script>
+<script type="text/javascript">
+
+    $(function () {
+        var userinfo = AjaxPerson_Name('@ViewData["UID"]');//当前登录的用户信息
+        $("#fname").html(userinfo.UserName);//发货人
+        $("#ftel").html(userinfo.Tel);//发货人电话
+        $("#jname").html(userinfo.UserName);//寄件人
+        var myDate = new Date();
+        $("#jdata").html(myDate.toLocaleDateString());//寄件日
+    
+        var Cus_info = AjaxAddresseeinfobyCustId('@ViewData["Id"]');//客户信息
+        $("#sname").html(Cus_info.Aname);//收货人
+        $("#sAdress").html(Cus_info.Address);//收货地址
+        $("#sdw").html(Cus_info.ACompany);//收货单位
+        $("#stel").html(Cus_info.Tel);//收货人联系电话
+    })
+    function pagesetup_null() {
+        try {
+            var RegWsh = new ActiveXObject("WScript.Shell");
+            hkey_key = "header";
+            RegWsh.RegWrite(hkey_root + hkey_path + hkey_key, "");
+            hkey_key = "footer";
+            RegWsh.RegWrite(hkey_root + hkey_path + hkey_key, "");
+
+        } catch (e) {
+
+        }
+    }
+    function printpr(a, b) {
+        $("#jl").css("height", "113px");
+        $("#noprint").css("display", "none")
+        //pagesetup_null();
+        //document.all.WebBrowser.Execwb(a, b);
+        window.print();
+    }
+    /*运输类型*/
+    function ystypeS(a) {
+        if (a == "pj") {
+            $("#pj").html("&radic;");
+            $("#kj").html("");
+        }
+        if (a == "kj") {
+            $("#pj").html("");
+            $("#kj").html("&radic;");
+        }
+    }
+
+    /*交货方式*/
+    function jhfs(a) {
+        if (a == "zt") {
+            $("#zt").html("&radic;")
+            $("#sh").html("");
+            $("#zs").html("");
+        }
+        if (a == "sh") {
+            $("#zt").html("")
+            $("#sh").html("&radic;");
+            $("#zs").html("");
+        }
+        if (a == "zs") {
+            $("#zt").html("")
+            $("#sh").html("");
+            $("#zs").html("&radic;");
+        }
+    }
+    /*付款方式*/
+    function fkstyeS(a) {
+        if (a == "xf") {
+            $("#xf").html("&radic;")
+            $("#df").html("");
+            $("#qd").html("");
+        }
+        if (a == "df") {
+            $("#xf").html("")
+            $("#df").html("&radic;");
+            $("#qd").html("");
+        }
+        if (a == "qd") {
+            $("#xf").html("")
+            $("#df").html("");
+            $("#qd").html("&radic;");
+        }
+    }
+
+
+    //根据客户ID 查找收件人信息
+    function AjaxAddresseeinfobyCustId(Id) {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "/NA_XSinfo/GetaddresseeInfobyCustId",
+            data: { Id: Id },
+            dataType: "json",
+            async: false,
+            success: function (reslut) {
+                json = eval(reslut);
+            },
+            error: function (e) {
+                alert("请求失败");
+            }
+        })
+        return json;
+    }
+
+</script>
+<script src="~/Scripts/NAjs/Printjs.js"></script>
+<body>
+         <table style="">
+            <tr>
+          <td  height="15px">
+
+          </td>
+      </tr>
+        </table>
+    <table width="683" height="397" border="0" align="center" cellpadding="0" cellspacing="0" style="background-image: url(../Content/kdimg/shc.jpg)">
+        <tr>
+            <td style="width: 50%;" valign="top">
+                <table style="width: 100%; height: 100px;">
+                    <tr>
+                        <td height="15px"></td>
+                    </tr>
+                    <tr>
+                        <td height="25px">
+                            <table>
+                                <tr>
+                                    <td style="width: 55px;"></td>
+                                    <td style="width: 190px; font-size: 14px;">
+                                        <label id="fname"></label>
+                                        <!----发货人------>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td height="25px">
+                            <table>
+                                <tr>
+                                    <td style="width: 60px;"></td>
+                                    <td style="width: 135px; font-size: 14px;">
+                                          <label id="ftel"></label>
+                                        <!-----发货人联系方式------->
+                                    </td>
+                                    <td >
+                                      
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td height="25px" valign="top">
+                            <table>
+                                <tr>
+                                    <td style="width: 55px;"></td>
+                                    <td style="width: 260px; font-size: 14px;">太仓市花墙工业区新亚路二号
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td ></td>
+                    </tr>
+
+                </table>
+
+                <table style="width: 100%; height: 118px;">
+                    <tr>
+                        <td height="15px"></td>
+                    </tr>
+                    <tr>
+                        <td height="25px">
+                            <table>
+                                <tr>
+                                    <td style="width: 55px;"></td>
+                                    <td style="width: 190px; font-size: 14px;">
+                                      <label id="sname"></label>
+                                        <!----收货人-------->
+                                    </td>
+                                    <td></td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td height="25px">
+                            <table>
+                                <tr>
+                                    <td style="width: 60px;"></td>
+                                    <td style="width: 135px; font-size: 14px;">
+                                     <label id="stel"></label>
+                                        <!-----收货人联系方式-------> 
+                                    </td>
+                                    <td >
+                                        
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td height="40px" valign="top">
+                            <table>
+                                <tr>
+                                    <td style="width: 55px;"></td>
+                                    <td style="width: 260px; font-size: 14px;">
+                                        <label id="sAdress"></label>
+                                        <!---收货地址---->
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                    </tr>
+                </table>
+
+                <table style="width: 100%; height:73px;" id="jl">
+                    <tr>
+                        <td></td>
+                    </tr>
+                </table>
+
+                <table style="width:100%; height:75px">
+                    <tr>
+                        <td style="height:20px;">
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td height="20px">
+                            <table>
+                                <tr>
+                                    <td style=" width:70px;"></td>
+                                    <td style=" width:40px; cursor: pointer;"  onclick="ystypeS('pj')" id="pj">&radic;</td>
+                                    <td style=" width:40px; cursor: pointer;" onclick="ystypeS('kj')" id="kj"></td>
+                                    <td style="width:75px"></td>
+                                    <td style="width:36px; cursor: pointer;" id="zt" onclick="jhfs('zt')">&radic;</td>
+                                     <td style="width:36px; cursor: pointer;" id="sh" onclick="jhfs('sh')"></td>
+                                     <td style="width:36px; cursor: pointer;" id="zs" onclick="jhfs('zs')"></td>
+                                    <td></td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td height="25px">
+                            <table>
+                                <tr>
+                                    <td style="width:70px;"></td>
+                                    <td style="width:40px; cursor: pointer;" id="xf" onclick="fkstyeS('xf')">&radic;</td>
+                                    <td style="width:40px; cursor: pointer;" id="df" onclick="fkstyeS('df')"></td>
+                                    <td style="width:40px; cursor: pointer;" id="qd" onclick="fkstyeS('qd')"></td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                    </tr>
+                </table>
+            </td>
+            <td style="width: 50%;" valign="top">
+                <table style="width: 100%; height: 272px;">
+                    <tr>
+                        <td ></td>
+                    </tr>
+                </table>
+
+
+                <table style="width: 100%; height:98px;">
+
+                    <tr>
+                        <td height="20px" align="right">
+                            <table>
+                                <tr>
+                                    <td style="width: 60px;" align="left">
+                                        <label id="jname"></label>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td height="17px" align="right">
+                            <table>
+                                <tr>
+
+                                    <td style="width:140px;" align="left">
+                                        <label id="jdata"></label>
+                                    </td>
+                                   
+                                    <td></td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td height="2px"></td>
+                    </tr>
+                  
+                </table>
+                <table>
+                    <tr>
+                        <td></td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+    <!--endprint-->
+    <table width="671" height="26" border="0" align="center" cellpadding="0" cellspacing="0" id="noprint">
+        <tr>
+            <td width="671" style="height: 27px">
+                <div align="center">
+                   @* <a onclick="printpr(7,1)" style="cursor: pointer;">打印预览</a>*@
+                    <a href="#" onclick=" printpr(6, 1) ">打印</a>
+                  @*  <a onclick="printpr(6, 6) ">直接打印</a>
+                    <a href="#" onclick="printpr(8, 1) ">页面设置</a>*@
+
+                </div>
+            </td>
+        </tr>
+    </table>
+</body>
+
+ 

@@ -1,0 +1,270 @@
+﻿@model NewAsiaOASystem.ViewModel.PagerInfo<NewAsiaOASystem.ViewModel.NQ_SupplierAttachmentView>
+@{
+    ViewBag.Title = "上传附近列表";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+@section HeadContent{
+
+    <style>
+        .commonStatus {
+            color: green;
+        }
+
+        .imOutDate {
+            color: red;
+        }
+        
+        .hadOutDate {
+            color: red;
+        }
+    </style>
+
+    <script type="text/javascript">
+
+        $(function () {
+            BindGrid();
+        })
+        function BindGrid() {
+            @{
+                if (null != Model && null != Model.GetPagingDataJson)
+                {
+                    string json = Model.GetPagingDataJson;//获取json数据
+                    @: var jsonStr = @Html.Raw(json);
+                                                                             }
+             }
+            dataGrid(jsonStr);
+        }
+
+        function dataGrid(jsonStr)
+        {
+            if (typeof (jsonStr) != "undefined") {
+                var html = "";
+                html = '<table cellpadding="0" cellspacing="0" style="width:100%;">';
+                for (var i = 0, j = jsonStr.length; i < j; i++) {
+                    if (i % 2 == 0)
+                        html += '<tr class="h-table-content-r1">';
+                    else
+                        html += '<tr class="h-table-content-r">';
+                    html += '<td width="5%"><input type="checkbox" name="ContentChecked" value="' + jsonStr[i].Id + '"/></td>';
+                    //html += '<td width="5%">' + jsonStr[i].FNumber + '</td>';
+
+                    html += '<td width="25%">' +jsonStr[i].FSuName + '</td>';
+
+                    if(jsonStr[i].FAttType!=null)
+                    {
+                        switch (jsonStr[i].FAttType )
+                        {
+                            case 0:
+                                html += '<td width="10%">营业执照</td>';
+                                //$('#fatttypename').val("营业执照");
+                                break;
+                            case 1:
+                                html += '<td width="10%">税务登记证</td>';
+                                //$('#fatttypename').val("税务登记证");
+                                break;
+                            case 2:
+                                html += '<td width="10%">ISO9001</td>';
+                                //$('#fatttypename').val("ISO9001");
+                                break;
+                            case 3:
+                                html += '<td width="10%">ISO14000</td>';
+                                //$('#fatttypename').val("ISO14000");
+                                break;
+                            case 4:
+                                html += '<td width="10%">ISO9001</td>';
+                                //$('#fatttypename').val("专利证书");
+                                break;
+                            case 5:
+                                html += '<td width="10%">其他证书</td>';
+                                //$('#fatttypename').val("其他证书");
+                                break;
+                            case 6:
+                                html += '<td width="10%">供应商调查表</td>';
+                                //$('#fatttypename').val("供应商调查表");
+                                break;
+                            case 7:
+                                html += '<td width="10%">代理证</td>';
+                                //$('#fatttypename').val("代理证");
+                                break;
+                            case 8:
+                                html += '<td width="10%">样品评估</td>';
+                                //$('#fatttypename').val("样品评估");
+                                break;
+                            case 9:
+                                html += '<td width="10%">小批量试产</td>';
+                                //$('#fatttypename').val("小批量试产");
+                                break;
+                            case 10:
+                                html += '<td width="10%">质量协议</td>';
+                                //$('#fatttypename').val("质量协议");
+                                break;
+                            case 11:
+                                html += '<td width="10%">供应商评估表</td>';
+                                //$('#fatttypename').val("供应商评估表");
+                                break;
+                        }
+                        
+                    }
+                    else
+                    {
+                        html+='<td width="10%">暂无</td>';
+                    }
+                    if(jsonStr[i].FAttURL!=null)
+                        html += '<td width="20%"> <a href="#" class="infor-c-width" onclick="upload(&apos;'+ (jsonStr[i].FAttURL) +'&apos;)">查看</a></td>';
+                    else
+                        html+='<td width="20%">暂无</td>';
+
+                    if(jsonStr[i].FShowdate!=null)
+                        html += '<td width="20%" >' + jsonStr[i].FShowdate + '</td>';
+                    else
+                        html += '<td width="20%" >暂无</td>';
+
+                    if(jsonStr[i].FAttText!=null)
+                        html += '<td width="10%">' + jsonStr[i].FAttText + '</td>';
+                    else
+                        html += '<td width="10%"></td>';
+
+                    html += '<td width="10%"><div class="layui-btn-group">';
+                    html+= '<a class="layui-btn layui-btn-primary layui-btn-small" onclick="baseitem_iframeopenCheck('+jsonStr[i].FSupplierid+')" >元器件<i class="layui-icon">&#xe642;</i></a>';
+                    html+='</div></td>';
+                    html+='</tr>';
+                }
+                html += '</table>';
+                $("#content").html(html);
+            }
+        }
+
+        //pageIndex当前页
+        function SerchList(pageIndex)
+        {
+            $("input[name='pageIndex']").val(pageIndex);
+            var options = {
+                beforeSubmit: function () {
+                    return true;
+                },
+                dataType: "json",
+                success: function (context) {
+                    var data=eval(context.result);
+                    dataGrid(data);
+                    $(".pagin").html(context.PageN);//输出分页按钮
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $.messager.alert("操作提示", '查询失败请重试！', 'error');
+                }
+            }
+            $('#form1').ajaxSubmit(options);
+            return false;
+        }
+
+        ////layer
+        ////明细分页页面
+        //function baseitem_iframeopen(val)
+        //{
+        //    layer.open({
+        //        type: 2,
+        //        title: ['供应商元器件明细', 'font-size:14px;'],
+        //        area: ['1100px', '650px'],
+        //        offset: '10px',
+        //        fixed: false, //不固定
+        //        maxmin: true,
+        //        content: '../NQ_YJinfo/supplierAndItemList?supplierId='+val,
+        //        end: function () {
+        //            location.reload();
+        //        }
+        //    });
+        //}
+
+        //layer
+        //明细分页页面
+        function baseitem_iframeopenCheck(val)
+        {
+            layer.open({
+                type: 2,
+                title: ['供应商元器件明细', 'font-size:14px;'],
+                area: ['1100px', '650px'],
+                offset: '10px',
+                fixed: false, //不固定
+                maxmin: true,
+                content: '../NQ_YJinfo/supplierAndItemListCheck?supplierId='+val,
+                end: function () {
+                    //location.reload();
+                    SerchList(1);
+
+                }
+            });
+        }
+
+        function attachViewType(supplierid,atttype) {
+
+            layer.open({
+                type: 2,
+                title: ['供应商附件上传', 'font-size:14px;'],
+                area: ['800px', '450px'],
+                offset: '10px',
+                fixed: false, //不固定
+                maxmin: true,
+                content: '../NQ_SupplierAttachment/SupplierAttachEdit?supplierid=' + supplierid + '&atttype=' + atttype,
+                end: function () {           //关闭弹出层触发
+                    location.reload();       //刷新父界面，可改为其他
+                }
+            });
+        }
+    </script>
+}
+<script src="~/Scripts/NAjs/NQ_OASupplier.js"></script>
+<!--==================================数据列表=============================-->
+<div class="h-right">
+    <div class="h-right-c">
+        <!--查询条件-->
+        @using (Html.BeginForm("SearchList", "NQ_SupplierAttachment", FormMethod.Post, new { id = "form1" }))
+        {
+            @Html.Hidden("pageIndex");
+            <div class="inquiry1">
+                <fieldset>
+                    <legend>查询条件：</legend>
+                    <ul class="infor-c">
+                        <li>
+                            <span>供应商名称：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txtSearch_Name" />
+                            </span>
+                        </li>
+                        <li>
+                            <span class="inquiry-input">
+                                <button name="btnSerch" onclick="return SerchList(1)">查询</button>
+                            </span>
+                        </li>
+                        
+                    </ul>
+                </fieldset>
+            </div>
+        }
+        <div class="h-table">
+            <div class="h-table-content">
+                <table cellpadding="0" cellspacing="0" class="h-right-table-title1" style="border: none;width:100%;">
+                    <tr>
+                        <td width="5%">
+                            <input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" />
+                        </td>
+                        <td width="25%">供应商</td>
+                        <td width="10%">附件类型</td>
+                        <td width="20%">附件</td>
+                        <td width="20%">时间</td>
+                        <td width="10%">备注</td>
+                        <td width="10%">元器件</td>
+                    </tr>
+                </table>
+                <div id="content"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--==========================输出分页按钮=========================-->
+<div class="pagin">
+    @if (ViewBag.PageNavigate == null)
+    {
+        @Html.ShowPageNavigate(Model.CurrentPageIndex, Model.PageSize, Model.RecordCount);
+    }
+</div>
+

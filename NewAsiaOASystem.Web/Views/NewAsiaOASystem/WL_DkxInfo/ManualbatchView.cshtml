@@ -1,0 +1,62 @@
+﻿@{
+    ViewBag.Title = "手动批量录入";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@using (Html.BeginForm("ManualbatchEdit", "WL_DkxInfo", FormMethod.Post, new { id = "form1" }))
+{
+    <div class="infor">
+         <div class="system-menu-set">
+            <ul class="infor-c">
+                <li>
+                    <span class="infor-c-width">起始SID：</span>
+                    <span class="infor-c-input"><input type="text" id="w_sid" name="w_sid" /></span>
+                </li>
+            </ul>
+            <ul class="infor-c">
+                <li>
+                    <span class="infor-c-width">数量：</span>
+                    <span class="infor-c-input"><input type="text" id="sl" name="sl" /></span>
+                </li>
+            </ul>
+         </div>
+
+        <div class="inquiry-input infor-b">
+            <span>
+               <button onclick="return DkxjSavaForm('/WL_DkxInfo/ManualbatchView')">保存</button></span><span>
+               <button onclick="return RedirectUrl('/WL_DkxInfo/list')">返回</button></span>
+        </div>
+    </div>
+}
+<script type="text/javascript">
+    //电控初步信息录入 信息表单提交
+    function DkxjSavaForm(RetUrl) {
+        //表单验证
+        var options = {
+            beforeSubmit: function () {
+                return true;
+            },
+            dataType: "json",//这里是指控制器处理后返回的类型，这里返回json格式。 
+            success: function (context) {
+                if ("success" == context.result) {
+                    $.messager.alert("操作提示", '操作成功！', 'info', function () {
+                        location.href = RetUrl;
+                    });
+                }
+                if ("error2" == context.result) {
+                    $.messager.alert("操作提示", '请勿重复扫描！', 'error', function () {
+                    location.href = RetUrl;
+                    });
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $.messager.alert("操作提示", '操作失败！', 'error');
+            }
+        }
+        $('#form1').ajaxSubmit(options);
+        return false; //为了不刷新页面,返回false 
+        //return submitForm('/WL_DkxInfo/List');
+    }
+
+
+</script>

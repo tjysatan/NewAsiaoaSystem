@@ -1,0 +1,326 @@
+﻿@{
+    ViewBag.Title = "返退产品数量统计分析";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<style>
+    table {
+        border-collapse: collapse;
+        border: none;
+    }
+
+        table td {
+            border: solid #e8e5e5 1px;
+            height: 35px;
+            padding: 0 0 0 5px;
+        }
+
+    .btnclass {
+        width: 100px;
+        height: 35px;
+        background: #e8e5e5;
+        border: 1px #808080 solid;
+        margin-left: 20px;
+    }
+
+    .btnmonclass {
+        width: 80px;
+        height: 25px;
+        background: #e8e5e5;
+        border: 1px #808080 solid;
+        margin-left: 20px;
+    }
+
+    .spfontclas {
+        font-size: 14px;
+        font-family: '微软雅黑';
+    }
+
+    .btn1 {
+        padding: 0 10px 0 10px
+    }
+</style>
+<script src="~/Scripts/layer/layer.js"></script>
+<script src="~/Scripts/highcharts.js"></script>
+<script src="~/Scripts/exporting.js"></script>
+<script type="text/javascript">
+
+
+    //返退产品的类型表更新
+    function GxFTcptype() {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "/NAReturnList/InsertOrupdateTJFTCPtypeinfo",
+            dataType: "html",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (reslut) {
+                if (reslut == "1") {
+                    disLoading();
+                    layer.alert("更新成功！", { icon: 1 })
+                }
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("网络异常，请重试！", { icon: 2 })
+            }
+        })
+    }
+
+    //返退产品的数量
+    function UpdateFTcpsum() {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "/NAReturnList/UpdateFTsumbytime",
+            dataType: "html",
+            data: { starttime: '', endtime: '' },
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (reslut) {
+                if (reslut == "1") {
+                    disLoading();
+                    layer.alert("更新成功！", { icon: 1 })
+                }
+
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("网络异常，请重试！", { icon: 2 })
+            }
+        })
+    }
+
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+
+    //获取产品数据统计数据
+    function TJFTSUM(val) {
+        if (val == "reset") {
+            $("#txtSearch_starttime").val("");
+            $("#txtSearch_enedtime").val("");
+        }
+        var starttime = $("#txtSearch_starttime").val();
+        var enedtime = $("#txtSearch_enedtime").val();
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "/NAReturnList/GetStatisticsCpsum",
+            dataType: "json",
+            data: { starttime: starttime, enedtime: enedtime },
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (reslut) {
+                disLoading();
+                json = eval(reslut);
+                HtmlPJ(json);
+                pingtuhtml(json);
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("网络异常，请重试！", { icon: 2 })
+            }
+        })
+    }
+
+    //单独按照正序查询返退数据
+    function TJftsumzx() {
+        var type = $("#px").val();
+        var Year = $("#YYYY").val();
+        var MM = $("#MM").val();
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "/NAReturnList/GetFTcpsuminfobyYmandtype",
+            dataType: "json",
+            data: { Year: Year, Mon: MM, pxType: type },
+            async: false,
+
+            success: function (reslut) {
+
+                json = eval(reslut);
+            },
+            error: function (e) {
+
+                layer.alert("网络异常，请重试！", { icon: 2 })
+            }
+        })
+        return json;
+    }
+
+    //html拼接
+    function HtmlPJ(str) {
+        var jsonStr;
+        jsonStr = str;
+        var html = "";
+        $("#content").html("");
+        html = '<table class="layui-table">';
+        html += '<thead>';
+        html += '<tr>';
+        html += '<th>产品名称</th>';
+        html += '<th>物料代码</th>';
+        html += '<th>退货数量</th>';
+        html += '<th>售后费用</th>';
+        html += '</tr>';
+        html += '</thead>';
+        html += '<tbody>';
+        if (jsonStr != null) {
+            for (var i = 0, j = jsonStr.length; i < j; i++) {
+                if (jsonStr[i][0] != "null") {
+                html += '<tr>';
+                html += '<td >' + jsonStr[i][1] + '</td>';
+                html += '<td >' + jsonStr[i][2] + '</td>';
+                html += '<td>' + jsonStr[i][3] + '</td>';
+                if (jsonStr[i][4] == null) { html += '<td>￥0</td>'; }
+                else { html += '<td>￥' + jsonStr[i][4] + '</td>'; }
+
+                    html += '</tr>';
+                }
+            }
+        }
+        else {
+            html += '<tr>';
+            html += '<td colspan="3">~当前没有数据！</td>';
+            html += '</tr>';
+        }
+        html += '</tbody>';
+        html += '</table>';
+        $("#content").html(html);
+    }
+
+    $(function () {
+        TJFTSUM();
+        //pingtuhtml();
+    });
+
+    //饼图数据
+    function pingtuhtml(strjson) {
+        console.log("strjson", strjson)
+        var arr = new Array();
+        for (var i = 0, j = strjson.length; i < j; i++) {
+            var tmp = new Array();
+            tmp[0] = strjson[i][1];
+            tmp[1] = strjson[i][3];
+            arr[i] = tmp;
+        }
+        console.log("strjson", arr)
+        $('#container').highcharts({
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false
+            },
+            title: {
+                text: '返退产品数量的占比'
+            },
+            tooltip: {
+                headerFormat: '{series.name}<br>',
+                pointFormat: '{point.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        format: '<b>{point.name}</b>: {point.percentage:.1f}%',
+                        style: {
+                            color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                        }
+                    }
+                }
+            },
+            series: [{
+                type: 'pie',
+                name: '返退货数量占比',
+                data: arr,
+            }]
+        });
+    }
+
+    //导出数据询问层
+    function exportexcel() {
+        var text = "";
+        var starttime = $("#txtSearch_starttime").val();
+        var enedtime = $("#txtSearch_enedtime").val();
+        if (starttime != "" && enedtime != "") {
+            text = "是否确定导出" + starttime + "到" + enedtime + "时间段内维修分析的返退货产品数量统计！"
+        } else {
+            text ="是否确定导出当月维修分析的返退货产品数量统计！"
+        }
+        var type;
+        layer.open({
+            type: 1,
+            offset: type //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
+            , id: 'layerDemo' + type //防止重复弹出
+            , content: '<div style="padding: 20px 100px;">' + text+'</div>'
+            , btn: ['数据导出', '关闭']
+            , btnAlign: 'c' //按钮居中
+            , shade: 0 //不显示遮罩
+            , yes: function () {
+                console.log('111111')
+                window.location.href = "/NAReturnList/ExcelExportStatisticsCpsum?starttime=" + starttime + "&enedtime=" + enedtime;
+                layer.closeAll();
+            }
+        });
+    }
+
+</script>
+
+
+
+<div style="padding:5px">
+    <blockquote class="layui-elem-quote">
+        <div class="layui-inline">
+            <span>
+                维修时间：
+            </span>
+
+            <span class="inquiry-input">
+                <input type="text" name="txtSearch_starttime" id="txtSearch_starttime" onclick="WdatePicker()" />
+            </span>
+            -
+            <span class="inquiry-input">
+                <input type="text" name="txtSearch_enedtime" id="txtSearch_enedtime" onclick="WdatePicker()" />
+            </span>
+        </div>
+        <button type="submit" class="layui-btn btn1" style="padding:0 10px 0 10px" onclick="TJFTSUM('submit')">
+            <i class="layui-icon">&#xe615;</i>
+            查询
+        </button>
+
+        <button type="reset" class="layui-btn layui-btn-primary btn1"  onclick="TJFTSUM('reset')">
+            <i class="layui-icon">&#xe669;</i>
+            刷新
+        </button>
+
+        <button type="submit" class="layui-btn layui-btn-primary btn1" onclick="exportexcel()"><i class="layui-icon">&#xe67d;</i>导出excel</button>
+        <span style="color:#FF5722">注：</span>
+        <span style="font-size:12px">默认当月维修的数据</span>
+    </blockquote>
+ 
+</div>
+
+
+<div id="content" style="padding:5px">
+
+</div>
+
+<div id="container" style="min-width: 400px; height: 400px"></div>
+
+
+

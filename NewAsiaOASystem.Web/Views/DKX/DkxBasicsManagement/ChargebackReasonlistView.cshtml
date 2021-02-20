@@ -1,0 +1,206 @@
+﻿@model NewAsiaOASystem.ViewModel.PagerInfo<NewAsiaOASystem.ViewModel.NewChargebackReasonView>
+@{
+    ViewBag.Title = "订单退单原因管理";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@section HeadContent{
+    <script type="text/javascript">
+        $(function () {
+            BindGrid();
+
+        })
+
+        function BindGrid() {
+            @{
+                if (null != Model && null != Model.GetPagingDataJson)
+                {
+                    string json = Model.GetPagingDataJson;//获取json数据
+                    @: var jsonStr = @Html.Raw(json);
+                }
+             }
+            dataGrid(jsonStr)
+        }
+         function dataGrid(jsonStr){
+            if (typeof (jsonStr) != "undefined") {
+                var html = "";
+                html = '<table class="layui-table">';
+                html += '<thead>';
+                html+='<tr style="font-weight:bold;color:#000000">';
+                //html+='<td width="5%"><input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" /></td>';
+                html+='<td width="40%">退单原因</td>';
+                html+='<td width="10%">是否备注</td>';
+                html+= '<td width="10%">订单环节</td>';
+                html += '<td width="10%">是否禁用</td>';
+                html+='<td>操作</td>';
+                html+='</tr>';
+                html+='</thead>';
+                for (var i = 0, j = jsonStr.length; i < j; i++)
+                {
+                    html+='<tr>';
+                    //html += '<td width="5%"><input type="checkbox" name="ContentChecked" value="' + jsonStr[i].Id + '"/></td>';
+                    html+='<td width="20%">'+jsonStr[i].Reason_name+'</td>';
+                    html+='<td width="10%">'+IsRemarksShow(jsonStr[i].IsRemarks)+'</td>';
+                    html+= '<td width="10%">'+TypeShow(jsonStr[i].Type) + '</td>';
+                    html+= '<td width="10%">' + IsDisShow(jsonStr[i].IsDis) + '</td>';
+                    html+= '<td>' + listbtnshow(jsonStr[i].Id) + '</td>';
+                    html+='</tr>';
+                }
+                html += '</table>';
+                $("#content").html(html);
+            }
+        }
+
+                function SerchList(pageIndex)
+        {
+            $("input[name='pageIndex']").val(pageIndex);
+            var options = {
+                beforeSubmit: function () {
+                    return true;
+                },
+                dataType: "json",
+                success: function (context) {
+                    var data=eval(context.result);
+                    dataGrid(data);
+                    $(".pagin").html(context.PageN);//输出分页按钮
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $.messager.alert("操作提示", '查询失败请重试！', 'error');
+                }
+            }
+            $('#form1').ajaxSubmit(options);
+            return false;
+        }
+
+        //
+        function addEideView(val) {
+            if (val == null || val=="") {
+                layer.open({
+                    type: 2,
+                    title: ['新增退单原因', 'font-size:14px;'],
+                    area: ['450px', '400px'],
+                    offset: '10px',
+                    fixed: false, //不固定
+                    maxmin: true,
+                    content: '../DkxBasicsManagement/CBRaddPage',
+                    end: function () {
+                        location.reload();
+                    }
+                })
+            } else {
+                 layer.open({
+                    type: 2,
+                    title: ['编辑退单原因', 'font-size:14px;'],
+                    area: ['450px', '400px'],
+                    offset: '10px',
+                    fixed: false, //不固定
+                     maxmin: true,
+                     content: '../DkxBasicsManagement/CBREditPage?id=' + val,
+                    end: function () {
+                        location.reload();
+                    }
+                })
+            }
+        }
+
+        //列表中操作的列表
+        function listbtnshow(val) {
+            var id = "'" + val + "'";
+            var x = '<a class="layui-btn layui-btn-primary layui-btn-small" onclick="addEideView(' + id + ')">编辑</a>';
+            return x;
+        }
+        //IsRemarksshow
+        function IsRemarksShow(val) {
+            if (val == "0") {
+                return "不需要";
+            }
+            if (val == "1") {
+                return "需要";
+            }
+        }
+        //Typeshow
+        function TypeShow(val) {
+            if (val == "0") {
+                return "生产退单";
+            }
+        }
+        //IsDisShow
+        function IsDisShow(val) {
+            if (val == "0") {
+                return "启用"
+            }
+            if (val == "1") {
+                return "禁用"
+            }
+        }
+
+
+    </script>
+}
+
+<div class="h-right">
+    <div class="h-right-c">
+        <!--查询条件-->
+
+        <div class="inquiry1">
+            <fieldset>
+                <legend>查询条件：</legend>
+                @using (Html.BeginForm("ChargebackReasonSearchList", "DkxBasicsManagement", FormMethod.Post, new { id = "form1" }))
+                {
+                    @Html.Hidden("pageIndex");
+                    <ul>
+                        <li>
+                            <span>退单原因：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txtSearch_Name" id="txtSearch_Name" />
+                            </span>
+                        </li>
+                        <li>
+                            <span>是否备注：</span>
+                            <span class="inquiry-input">
+                                @Html.DropDownList("txt_IsRemarks", ViewData["IsRemarks"] as SelectList)
+                            </span>
+                        </li>
+                        <li>
+                            <span>是否启用：</span>
+                            <span class="inquiry-input">
+                                @Html.DropDownList("txt_IsDis", ViewData["IsDis"] as SelectList)
+                            </span>
+                        </li>
+
+                        <li style="*width: 100%; *margin: -10px 0 5px 90px;">
+                            <span class="inquiry-input">
+                                <button name="btnSerch" class="layui-btn" onclick="return SerchList(1)"><i class="layui-icon">&#xe615;</i>查询</button>
+                            </span>
+                        </li>
+                        <li>
+                            <span class="inquiry-input">
+                                <button class="layui-btn" onclick="addEideView(''); return false; "><i class="layui-icon">&#xe608;</i> 新建</button>
+                            </span>
+                            <span class="inquiry-input">
+                                <button class="layui-btn" onclick="return addClick('/DkxBasicsManagement/ChargebackReasonlistView')"><i class="layui-icon">&#x1002;</i>刷新</button>
+                            </span>
+                        </li>
+                    </ul>
+                }
+            </fieldset>
+        </div>
+
+
+        <div class="h-table">
+            <div class="h-table-content" style="color: #9d9999;">
+                <div id="content"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--==========================输出分页按钮=========================-->
+<div class="pagin">
+    @if (ViewBag.PageNavigate == null)
+    {
+        @Html.ShowPageNavigate(Model.CurrentPageIndex, Model.PageSize, Model.RecordCount);
+    }
+</div>
+
+

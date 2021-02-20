@@ -1,0 +1,52 @@
+E:\公司项目\NetSystem\NetSystem.Dao\obj\Debug\NetSystem.Dao.csprojResolveAssemblyReference.cache
+E:\公司项目\NetSystem\NetSystem.Dao\bin\Debug\NetSystem.Dao.dll
+E:\公司项目\NetSystem\NetSystem.Dao\bin\Debug\NetSystem.Dao.pdb
+E:\公司项目\NetSystem\NetSystem.Dao\bin\Debug\Common.Logging.dll
+E:\公司项目\NetSystem\NetSystem.Dao\bin\Debug\Iesi.Collections.dll
+E:\公司项目\NetSystem\NetSystem.Dao\bin\Debug\NetSystem.DBModel.dll
+E:\公司项目\NetSystem\NetSystem.Dao\bin\Debug\NetSystem.IDao.dll
+E:\公司项目\NetSystem\NetSystem.Dao\bin\Debug\NHibernate.dll
+E:\公司项目\NetSystem\NetSystem.Dao\bin\Debug\Spring.Aop.dll
+E:\公司项目\NetSystem\NetSystem.Dao\bin\Debug\Spring.Core.dll
+E:\公司项目\NetSystem\NetSystem.Dao\bin\Debug\Spring.Data.dll
+E:\公司项目\NetSystem\NetSystem.Dao\bin\Debug\Spring.Data.NHibernate32.dll
+E:\公司项目\NetSystem\NetSystem.Dao\bin\Debug\Spring.Services.dll
+E:\公司项目\NetSystem\NetSystem.Dao\bin\Debug\Spring.Web.dll
+E:\公司项目\NetSystem\NetSystem.Dao\bin\Debug\NetSystem.DBModel.pdb
+E:\公司项目\NetSystem\NetSystem.Dao\bin\Debug\NetSystem.IDao.pdb
+E:\公司项目\NetSystem\NetSystem.Dao\obj\Debug\NetSystem.Dao.dll
+E:\公司项目\NetSystem\NetSystem.Dao\obj\Debug\NetSystem.Dao.pdb
+F:\新疆侨瑞欣源电子 工作\NET框架 开发\Code2\trunk\NetSystem.Dao\bin\Debug\NetSystem.Dao.dll
+F:\新疆侨瑞欣源电子 工作\NET框架 开发\Code2\trunk\NetSystem.Dao\bin\Debug\NetSystem.Dao.pdb
+F:\新疆侨瑞欣源电子 工作\NET框架 开发\Code2\trunk\NetSystem.Dao\bin\Debug\Common.Logging.dll
+F:\新疆侨瑞欣源电子 工作\NET框架 开发\Code2\trunk\NetSystem.Dao\bin\Debug\Iesi.Collections.dll
+F:\新疆侨瑞欣源电子 工作\NET框架 开发\Code2\trunk\NetSystem.Dao\bin\Debug\NetSystem.DBModel.dll
+F:\新疆侨瑞欣源电子 工作\NET框架 开发\Code2\trunk\NetSystem.Dao\bin\Debug\NetSystem.IDao.dll
+F:\新疆侨瑞欣源电子 工作\NET框架 开发\Code2\trunk\NetSystem.Dao\bin\Debug\NetSystem.ViewModel.dll
+F:\新疆侨瑞欣源电子 工作\NET框架 开发\Code2\trunk\NetSystem.Dao\bin\Debug\Newtonsoft.Json.dll
+F:\新疆侨瑞欣源电子 工作\NET框架 开发\Code2\trunk\NetSystem.Dao\bin\Debug\NHibernate.dll
+F:\新疆侨瑞欣源电子 工作\NET框架 开发\Code2\trunk\NetSystem.Dao\bin\Debug\Spring.Aop.dll
+F:\新疆侨瑞欣源电子 工作\NET框架 开发\Code2\trunk\NetSystem.Dao\bin\Debug\Spring.Core.dll
+F:\新疆侨瑞欣源电子 工作\NET框架 开发\Code2\trunk\NetSystem.Dao\bin\Debug\Spring.Data.dll
+F:\新疆侨瑞欣源电子 工作\NET框架 开发\Code2\trunk\NetSystem.Dao\bin\Debug\Spring.Data.NHibernate32.dll
+F:\新疆侨瑞欣源电子 工作\NET框架 开发\Code2\trunk\NetSystem.Dao\bin\Debug\Spring.Services.dll
+F:\新疆侨瑞欣源电子 工作\NET框架 开发\Code2\trunk\NetSystem.Dao\bin\Debug\Spring.Web.dll
+F:\新疆侨瑞欣源电子 工作\NET框架 开发\Code2\trunk\NetSystem.Dao\bin\Debug\Microsoft.QualityTools.Testing.Fakes.dll
+F:\新疆侨瑞欣源电子 工作\NET框架 开发\Code2\trunk\NetSystem.Dao\bin\Debug\NetSystem.DBModel.pdb
+F:\新疆侨瑞欣源电子 工作\NET框架 开发\Code2\trunk\NetSystem.Dao\bin\Debug\NetSystem.IDao.pdb
+F:\新疆侨瑞欣源电子 工作\NET框架 开发\Code2\trunk\NetSystem.Dao\bin\Debug\NetSystem.ViewModel.pdb
+F:\新疆侨瑞欣源电子 工作\NET框架 开发\Code2\trunk\NetSystem.Dao\obj\Debug\NetSystem.Dao.csprojResolveAssemblyReference.cache
+F:\新疆侨瑞欣源电子 工作\NET框架 开发\Code2\trunk\NetSystem.Dao\obj\Debug\NetSystem.Dao.dll
+F:\新疆侨瑞欣源电子 工作\NET框架 开发\Code2\trunk\NetSystem.Dao\obj\Debug\NetSystem.Dao.pdb
+F:\新疆侨瑞欣源电子 工作\维稳信息化平台_政府通令\Code\NetSystem.Dao\bin\Debug\NetSystem.Dao.dll
+F:\新疆侨瑞欣源电子 工作\维稳信息化平台_政府通令\Code\NetSystem.Dao\bin\Debug\NetSystem.Dao.pdb
+F:\新疆侨瑞欣源电子 工作\维稳信息化平台_政府通令\Code\NetSystem.Dao\bin\Debug\NetSystem.DBModel.dll
+F:\新疆侨瑞欣源电子 工作\维稳信息化平台_政府通令\Code\NetSystem.Dao\bin\Debug\NetSystem.IDao.dll
+F:\新疆侨瑞欣源电子 工作\维稳信息化平台_政府通令\Code\NetSystem.Dao\bin\Debug\NetSystem.ViewModel.dll
+F:\新疆侨瑞欣源电子 工作\维稳信息化平台_政府通令\Code\NetSystem.Dao\bin\Debug\Microsoft.QualityTools.Testing.Fakes.dll
+F:\新疆侨瑞欣源电子 工作\维稳信息化平台_政府通令\Code\NetSystem.Dao\bin\Debug\NetSystem.DBModel.pdb
+F:\新疆侨瑞欣源电子 工作\维稳信息化平台_政府通令\Code\NetSystem.Dao\bin\Debug\NetSystem.IDao.pdb
+F:\新疆侨瑞欣源电子 工作\维稳信息化平台_政府通令\Code\NetSystem.Dao\bin\Debug\NetSystem.ViewModel.pdb
+F:\新疆侨瑞欣源电子 工作\维稳信息化平台_政府通令\Code\NetSystem.Dao\obj\Debug\NetSystem.Dao.csprojResolveAssemblyReference.cache
+F:\新疆侨瑞欣源电子 工作\维稳信息化平台_政府通令\Code\NetSystem.Dao\obj\Debug\NetSystem.Dao.dll
+F:\新疆侨瑞欣源电子 工作\维稳信息化平台_政府通令\Code\NetSystem.Dao\obj\Debug\NetSystem.Dao.pdb

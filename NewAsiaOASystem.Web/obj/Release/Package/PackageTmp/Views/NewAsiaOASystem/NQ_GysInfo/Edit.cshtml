@@ -1,0 +1,88 @@
+﻿@model NewAsiaOASystem.ViewModel.NQ_GysInfoView
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@using (Html.BeginForm("Edit", "NQ_GysInfo", FormMethod.Post, new { id = "form1" }))
+{
+    @Html.HiddenFor(m => m.CreateTime);
+    @Html.HiddenFor(m => m.CreatePerson)
+    @Html.HiddenFor(m => m.UpdateTime)
+    @Html.HiddenFor(m => m.UpdatePerson)
+    @Html.HiddenFor(m => m.Id)
+    <div class="infor">
+        <p id="Ptitle"></p>
+        <div class="system-menu-set">
+            <ul class="infor-c">
+                <li>
+                    <span class="infor-c-width">供应商代码：</span>
+                    <span class="infor-c-input">@Html.TextBoxFor(m => m.G_Dm)</span>
+                    <span style="color: red; font-size: 24px; vertical-align: middle; margin-left: 8px;">*</span>
+                    <span class="desc w-register">供应商代码</span>
+                </li>
+            </ul>
+            <ul class="infor-c ">
+                <li>
+                    <span class="infor-c-width">供应商名称：</span>
+                    <span class="infor-c-input">
+                        @Html.TextBoxFor(m => m.G_Name)
+                    </span>
+                    <span class="desc w-register">供应商名称</span>
+                </li>
+            </ul>
+            <ul class="infor-c ">
+                <li><span class="infor-c-width">联系人：</span>
+                    <span class="infor-c-input">
+                        @Html.TextBoxFor(m => m.G_Lxr)
+                    </span><span class="desc w-register"></span></li>
+            </ul>
+            <ul class="infor-c ">
+                <li><span class="infor-c-width">联系方式：</span>
+                    <span class="infor-c-input">
+                        @Html.TextBoxFor(m => m.G_Tel)
+                    </span><span class="desc w-register"></span></li>
+            </ul>
+            <ul class="infor-c ">
+                <li><span class="infor-c-width">地址：</span>
+                    <span class="infor-c-input">
+                        @Html.TextBoxFor(m => m.G_Dz)
+                    </span><span class="desc w-register"></span></li>
+            </ul>
+
+            <ul class="infor-c">
+                <li>
+                    <span class="infor-c-width">显示次序：</span>
+                    <span class="infor-c-input">@Html.TextBoxFor(m => m.Sort)</span>
+                    <span class="desc w-register"></span>
+                </li>
+            </ul>
+
+            <ul class="infor-c ">
+                <li><span class="infor-c-width">状态：</span>
+                    <span>
+                        <select class="add-function" name="Status">
+                            @{
+                                      if ("0".Equals(Convert.ToString(@Model.Status)) && null != @Model.Id)
+                                      {
+                                @:<option value="1">启用</option>
+                                @:<option value="0" selected="selected">禁用</option>
+                              }
+                                      else
+                                      {
+                                @:<option value="1"  selected="selected">启用</option>
+                                @:<option value="0">禁用</option>
+                                                }
+                                                
+                            }
+                        </select></span><span class="desc w-register"> 是否启</span></li>
+            </ul>
+        </div>
+        <div class="inquiry-input infor-b">
+            <span>
+                <button onclick="return SavaForm()">保存</button></span><span>
+                    <button onclick="return RedirectUrl('/NQ_GysInfo/List')">返回</button></span>
+        </div>
+    </div>  
+}
+<script src="~/Scripts/NAjs/NQ_Gysinfo.js"></script>

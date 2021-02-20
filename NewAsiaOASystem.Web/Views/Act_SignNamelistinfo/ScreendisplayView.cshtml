@@ -1,0 +1,121 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>新亚洲合作伙伴交流会！</title>
+    <script src="../Content/wx/AN/PC/js/jquery.js" type="text/javascript"></script>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+    <script type="text/javascript" src="../Content/wx/AN/PC/js/jquery.min.js"></script>
+    <script type="text/javascript">
+
+        window.setInterval(function () { pinjietoubushuju() }, 20000);
+ 
+        $(document).ready(function () {
+            htmlshangqiang();
+            setInterval("htmlshangqiang()", 25000);
+        });
+        //拼接头部数据
+        function pinjietoubushuju()
+        {
+            var str = AJaxzaitouxianshidata();
+            var HTML = " 欢迎各位合作伙伴！";
+            if (str != null && str != "")
+            {
+                var company = str.Company;
+                var Name = str.Name;
+                HTML = "欢迎" + company + "-" + Name +"&nbsp;总经理";
+            }
+            $("#titircon").html(HTML);
+        }
+
+        //在头部飘过的数据
+        function AJaxzaitouxianshidata()
+        {
+            var json;
+            $.ajax({
+                type: "POST",
+                url: "/Act_SignNamelistinfo/GetzaitoubuxianshiData",
+                dataType: "json",
+                async: false,
+                success: function (reslut) {
+                   json = eval(reslut);
+                },
+                error: function (e) {
+                    alert("网络异常,请重试！");
+                }
+            })
+            return json;
+        }
+
+        //拼接上墙数据
+        function htmlshangqiang()
+        {
+            var str = AJaxshangqiangshuju();
+            var html = "";
+            if (str != null && str != "")
+            {
+                for (var i = 0,j=str.length; i < j; i++) {
+                    html += '<li>' + str[i].Company + "&nbsp;&nbsp;"+str[i].Name+"&nbsp;&nbsp;总经理</li>";
+                }
+            }
+            $("#shangqiangcon").html(html);
+        }
+
+        //查询上墙的数据
+        function AJaxshangqiangshuju()
+        {
+            var json;
+            $.ajax({
+                type: "POST",
+                url: "/Act_SignNamelistinfo/GetqiandaoguopiaoguodeData",
+                dataType: "json",
+                async: false,
+                success: function (reslut) {
+                    json = eval(reslut);
+                },
+                error: function (e) {
+                    alert("网络异常,请重试！");
+                }
+            })
+            return json;
+        }
+    </script>
+    <style type="text/css">
+        ul
+        {
+            padding: 0px;
+            margin: 0px;
+        }
+
+        li
+        {
+            list-style: none;
+            padding-right:1%;
+            padding-top:0.5%;
+            margin: 0px;
+            width: 30%;
+            text-align:right;
+            float: left;
+         
+        }
+    </style>
+</head>
+    <body style="padding: 0px; margin: 0px; background-image: url(../Content/wx/AN/PC/images/actbg.jpg); background-size: 100% 100%;" onload="scrollBy(0, document.body.scrollHeight)">
+    <div style="margin: auto; margin-top: 130px; width: 90%; min-height: 600px;">
+        <div style="margin: auto; font-size: 40px; color: #ff0000; text-align: center; font-weight:bold;" id="titircon">
+             欢迎各位合作伙伴！
+        </div>
+
+        <div style="margin: auto;margin-top:15px;">
+            <ul id="shangqiangcon">
+                
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

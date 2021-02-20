@@ -1,0 +1,218 @@
+﻿@model NewAsiaOASystem.ViewModel.PagerInfo<NewAsiaOASystem.ViewModel.NQ_productinfoView>
+
+@{
+    ViewBag.Title = "返退产品信息管理列表";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@section HeadContent{
+    <script type="text/javascript">
+        $(function () {
+            BindGrid();
+        })
+        function BindGrid() {
+            @{
+                if (null != Model && null != Model.GetPagingDataJson)
+                {
+                    string json = Model.GetPagingDataJson;//获取json数据
+                    @: var jsonStr = @Html.Raw(json);
+                   
+                }
+             }
+            dataGrid(jsonStr);
+        }
+
+        function dataGrid(jsonStr)
+        {
+            if (typeof (jsonStr) != "undefined") {
+                var html = "";
+                html = '<table cellpadding="0" cellspacing="0" style="width:100%;">';
+                for (var i = 0, j = jsonStr.length; i < j; i++) {
+                    if (i % 2 == 0)
+                        html += '<tr class="h-table-content-r1">';
+                    else
+                        html += '<tr class="h-table-content-r">';
+                    html += '<td width="5%"><input type="checkbox" name="ContentChecked" value="' + jsonStr[i].Id + '"/></td>';
+                    html += '<td width="30%">' + jsonStr[i].Pname + '</td>';
+                    html += '<td width="15%">' + jsonStr[i].P_bianhao + '</td>';
+                    if(jsonStr[i].p_type!=null)
+                        html += '<td width="10%">' + Showtl(jsonStr[i].p_type)+ '</td>';
+                    else
+                        html += '<td width="10%"></td>';
+                    if(jsonStr[i].SMFH==null||jsonStr[i].SMFH=="0")
+                        html += '<td width="10%">不需要</td>';
+                    else
+                        html+='<td width="10%">需要</td>';
+                    if(jsonStr[i].CreateTime!=null)
+                        html += '<td width="15%">' + showDate(jsonStr[i].CreateTime) + '</td>';
+                    else
+                        html += '<td width="15%"></td>';
+
+                    html+='</tr>';
+                }
+                html += '</table>';
+                $("#content").html(html);
+            }
+        }
+        //pageIndex当前页
+        function SerchList(pageIndex)
+        {
+            $("input[name='pageIndex']").val(pageIndex);
+            var options = {
+                beforeSubmit: function () {
+                    return true;
+                },
+                dataType: "json",
+                success: function (context) {
+                    var data=eval(context.result);
+                    dataGrid(data);
+                    $(".pagin").html(context.PageN);//输出分页按钮
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $.messager.alert("操作提示", '查询失败请重试！', 'error');
+                }
+            }
+            $('#form1').ajaxSubmit(options);
+            return false;
+        }
+
+        //新增同步
+        function Updatek3date() {
+            $.ajax({
+                url: "../NQ_productinfo/Updatek3date",
+                type: "POST",
+                dataType: "html",
+                async: true,
+                beforeSend: function () {
+                    ddchen();
+                },
+                success: function (response) {
+                    disLoading();
+                    layer.alert("本次新增：" + response + "条数据", { icon: 1 });
+                },
+                error: function (e) {
+                    disLoading();
+                    layer.alert("操作失败！", { icon: 2 });
+                }
+            })
+        }
+
+        //新增同步
+        function Updatek4date() {
+            $.ajax({
+                url: "../NQ_productinfo/Updatecpdata",
+                type: "POST",
+                dataType: "html",
+                async: true,
+                beforeSend: function () {
+                    ddchen();
+                },
+                success: function (response) {
+                    disLoading();
+                    layer.alert("本次更新：" + response + "条数据", { icon: 1 });
+                },
+                error: function (e) {
+                    disLoading();
+                    layer.alert("操作失败！", { icon: 2 });
+                }
+            })
+        }
+
+        //基础数据更新
+        var loadi;
+        function ddchen() {
+            loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+        }
+        //关闭等待效果
+        function disLoading() {
+            layer.close(loadi);
+        }
+    </script>
+}
+
+
+
+
+<!--==================================数据列表=============================-->
+<div class="h-right">
+    <div class="h-right-c">
+        <!--查询条件-->
+        @using (Html.BeginForm("SearchList", "NQ_productinfo", FormMethod.Post, new { id = "form1" }))
+        {
+            @Html.Hidden("pageIndex");
+            <div class="inquiry1">
+                <fieldset>
+                    <legend>查询条件：</legend>
+                    <ul>
+                        <li><span>产品名称：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txtSearch_Name" /></span></li>
+                        <li>
+                            <span>产品型号：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txtSearch_P_xh" />
+                            </span>
+                        </li>
+                        <li>
+                            <span>物料代码：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txtSearch_bianhao" />
+                            </span>
+                        </li>
+                        <li style="*width: 100%; *margin: -10px 0 5px 90px;"><span class="inquiry-input">
+                            <button name="btnSerch" onclick="return SerchList(1)">查询</button>
+                        </span></li>
+                        <li>@*<span class="inquiry-input">
+                            <button onclick="return addClick('/NQ_productinfo/addPage')">添加</button></span>*@
+                            @* <span class="inquiry-input">
+                                <button onclick="return del('/NQ_productinfo/Delete')">删除</button></span>
+                            <span class="inquiry-input">
+                                <button onclick="return update('/NQ_productinfo/EditPage')">编辑</button></span>*@
+                            <span class="inquiry-input">
+                                <button onclick="return addClick('/NQ_productinfo/List')">刷新</button></span>
+                            <span class="inquiry-input">
+                                <button onclick="Updatek3date(); return false;">新增数据</button></span>
+                            <span class="inquiry-input">
+                                <button onclick="Updatek4date(); return false;">更新数据</button></span>
+                            
+                        </li>
+                    </ul>
+                </fieldset>
+            </div>
+        }
+        <div class="h-table">
+            <div class="h-table-content">
+                <table cellpadding="0" cellspacing="0" class="h-right-table-title1" style="border: none; width: 100%;">
+                    <tr>
+                        <td width="5%">
+                            <input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" /></td>
+                        <td width="30%">产品名称</td>
+                        <td width="15%">产品代码</td>
+                        <td width="10%">所属类型</td>
+                        <td width="10%">扫描</td>
+                        <td width="15%">创建时间</td>
+                    </tr>
+                </table>
+                <div id="content"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!--==========================输出分页按钮=========================-->
+<div class="pagin">
+    @if (ViewBag.PageNavigate == null)
+    {
+        @Html.ShowPageNavigate(Model.CurrentPageIndex, Model.PageSize, Model.RecordCount);
+    }
+</div>
+
+<script src="~/Scripts/NAjs/NQR_Product.js"></script>
+
+
+
+
+
+

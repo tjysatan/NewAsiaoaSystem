@@ -1,0 +1,246 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>新亚洲现场抽奖,大奖送不停！</title>
+    <script src="~/Content/wx/Signup/js/jquery.min.js"></script>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+ 
+    <script src="~/Scripts/jquery-1.11.2.min.js"></script>
+    <script src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
+    <script src="~/Scripts/jquery.form.js"></script>
+    <script src="~/Scripts/jquery-easyui-1.4.1/jquery.easyui.min.js"></script>
+    <script src="~/Scripts/layer/layer.js"></script>
+
+    <style type="text/css">
+        *
+        {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+
+        body
+        {
+            background: #fe5f4a;
+            font-family: "微软雅黑";
+            position: relative;
+        }
+
+        .banner2
+        {
+            display: block;
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+        }
+
+        .w1
+        {
+            width: 75%;
+            height: auto;
+            overflow: hidden;
+            margin: 7% auto;
+            font-size: 16px;
+            color: #FFFFFF;
+            line-height: 24px;
+        }
+
+        .code
+        {
+            position: relative;
+            width: 80%;
+            padding: 20px 8px 20px 8px;
+            margin: 7% auto;
+            color: #983700;
+            background: #ffdd67;
+            border: 5px solid #ffa430;
+            border-radius: 5px;
+            font-size: 16px;
+            line-height: 26px;
+        }
+
+        .kk
+        {
+            display: inline-block;
+            padding: 3px 15px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: #FFFFFF;
+            color: #474747;
+            font-size: 14px;
+            border-radius: 5px 0 5px 0;
+        }
+
+        .btns
+        {
+            width: 50%;
+            height: auto;
+             margin: 7% auto;
+            overflow: hidden;
+          
+        }
+
+        .btn
+        {
+            display: inline-block;
+            font-size: 16px;
+            width: 80%;
+            height: 35px;
+            line-height: 35px;
+            text-align: center;
+            background: #ffdd67;
+            color: #983700;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: auto;
+        }
+
+        .left
+        {
+            float: left;
+        }
+
+        .right
+        {
+            float: right;
+        }
+
+        a
+        {
+            text-decoration: none;
+            color: #983700;
+        }
+
+        .share
+        {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            left: 0;
+            top: 0;
+            background: rgba(0,0,0,0.7);
+            display: none;
+        }
+
+        .s1
+        {
+            display: block;
+            width: 55.8%;
+            height: auto;
+            float: right;
+            padding: 8% 10% 0% 0;
+        }
+
+        .s2
+        {
+            display: block;
+            width: 73.8%;
+            height: auto;
+            margin: 0 auto;
+        }
+
+        .s3
+        {
+            display: block;
+            width: 26.2%;
+            height: auto;
+            margin: 20% auto;
+        }
+
+        .test
+        {
+            display: block;
+            border: none;
+            width: 100%;
+            height: auto;
+        }
+
+        .search
+        {
+            width: 100%;
+            height: 30px;
+            border-radius: 5px;
+        }
+
+    </style>
+
+</head>
+<body>
+    <img src="../Content/wx/Signup/img/banner2.jpg" class="banner2" />
+    <div class="w1" id="conwz">
+        亲！完善自己的资料,现场大屏抽奖时被抽到的机会更多哦~~ 
+    </div>
+    <div class="code" id="setext">
+        <table style="width: 100%; margin: auto">
+            <tr>
+                <td align="center">
+                    <input type="text" id="name" name="name" class="search" placeholder="公司名称或姓名" />
+                </td>
+            </tr>
+            <tr>
+                <td align="center">
+                    <input type="text" id="tel" name="tel" class="search" placeholder="联系方式" />
+                </td>
+            </tr>
+        </table>
+
+    </div>
+    <div class="btns">
+        <span class="btn" id="btnsign" onclick="return btnsignup()">我要参加</span>
+    </div>
+    <div class="share">
+        <img src="../Content/wx/Signup/img/share1.png" class="s1">
+        <img src="../Content/wx/Signup/img/share2.png" class="s2">
+        <img src="../Content/wx/Signup/img/share3.png" class="s3">
+    </div>
+    <script>
+        $(function () {
+         
+                if ('@ViewData["czzt"]' == "1") {
+                    $("#setext").hide();
+                    $("#conwz").html("亲！您已经参加新亚洲现场抽奖活动！");
+	                $("#btnsign").html("您已参加");
+	            }
+	     
+	    })
+
+        function btnsignup() {
+	            var openid = '@ViewData["Openid"]';
+	            var name = $("#name").val();
+	            var tel = $("#tel").val();
+	            if ('@ViewData["czzt"]' != "1") {
+	                $.ajax({
+	                    type: "POST",
+	                    url: "/activity/Insertsignup",
+	                    data: { openid: openid, name: name, tel: tel },
+	                    dataType: "html",
+	                    async: false,
+	                    success: function (reslut) {
+	                        if (reslut == "1") {
+	                            layer.alert("亲,您已经提交成功！", { icon: 1 }, function () { WeixinJSBridge.call('closeWindow') });
+	                        } else if (reslut == "0") {
+	                            layer.alert("网络异常,请重试！", { icon: 2 });
+	                        } else if (reslut == "2") {
+	                            layer.alert("您已经提交成功！", { icon: 1 }, function () { WeixinJSBridge.call('closeWindow') });
+	                        }
+	                    },
+	                    error: function (e) {
+	                        layer.alert("网络异常,请重试！", { icon: 2 });
+	                    }
+	                })
+	            } else {
+	                layer.alert("您好,您已经参加！", { icon: 2 });
+	            }
+	       
+        }
+    </script>
+</body>
+</html>

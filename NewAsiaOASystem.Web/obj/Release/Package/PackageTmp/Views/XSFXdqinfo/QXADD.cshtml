@@ -1,0 +1,58 @@
+﻿@{
+    ViewBag.Title = "QXADD";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+<script type="text/javascript">
+    function chkdSavaForm(type) {
+        var qxname = $("#qxname").val();
+        var xsl = $("#xsl").val();
+        if (qxname == "") {
+            alert("请填写区（县）名称！");
+            return false;
+        }
+        if (xsl == "") {
+            alert("请填写销售目标！");
+            return false;
+        }
+        $.ajax({
+            type: "POST",
+            url: "/XSFXdqinfo/qxEdit",
+            ContentType: "application/json;charset=utf-8;",
+            data: { "dqId": '@ViewData["QYId"]', "qxname": qxname, "xsl": xsl },
+            success: function (context) {
+                if ("success" == context.result) {
+                    $.messager.alert("操作提示", '添加成功！', 'info', function () {
+                        var ParentObj = window.parent;//获取父窗口
+                        window.parent.$('#windowDia').window('close');
+                        window.parent.location = "../XSFXdqinfo/ckview?Id=" + '@ViewData["QYId"]';
+                    });
+                }
+            }
+        })
+    }
+</script>
+
+     <div class="infor">
+          <div class="system-menu-set">
+               <ul class="infor-c">
+                <li>
+                    <span class="infor-c-width">区域名称：</span>
+                    <span class="infor-c-input"> <input type="text"  name="qxname" id="qxname"   /> </span>
+                    <span style="color:red;font-size:24px;vertical-align: middle;margin-left: 8px;">*</span>
+                    <span class="desc w-register"></span>
+                </li>
+                   </ul>
+               <ul class="infor-c">
+                   <li>
+                    <span class="infor-c-width">销售目标：</span>
+                    <span class="infor-c-input">  <input type="text"  name="xsl" id="xsl" value="0" /></span>
+                    <span style="color:red;font-size:24px;vertical-align: middle;margin-left: 8px;">*</span>
+                    <span class="desc w-register"> </span>
+                </li>
+             </ul>
+          </div>
+           <div class="inquiry-input infor-b">
+            <span>
+                <button onclick="return chkdSavaForm()">确认</button></span> 
+           </div>
+      </div>

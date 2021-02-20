@@ -1,0 +1,158 @@
+﻿@model NewAsiaOASystem.ViewModel.PagerInfo<NewAsiaOASystem.ViewModel.WL_dkxthjlinfoView>
+@{
+    ViewBag.Title = "SID退货列表";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@section HeadContent{
+    <script type="text/javascript">
+        $(function () {
+            BindGrid();
+        })
+
+        function BindGrid() {
+            @{
+                if (null != Model && null != Model.GetPagingDataJson)
+                {
+                    string json = Model.GetPagingDataJson;//获取json数据
+                    @: var jsonStr = @Html.Raw(json);
+                }
+             }
+            dataGrid(jsonStr);
+        }
+
+        function dataGrid(jsonStr)
+        {
+            if (typeof (jsonStr) != "undefined") {
+                var html = "";
+                html = '<table class="layui-table">';
+                html += '<thead>';
+                html+='<tr>';
+                html+='<td width="5%"><input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" /></td>';
+                html+='<td width="10%">SID</td>';
+                html+='<td width="20%">经销商</td>';
+                html+='<td width="10%">销售时间</td>';
+                html+='<td width="10%">退回时间</td>';
+                html+='<td width="35%">操作</td>';
+                html+='</tr>';
+                html+='</thead>';
+                for (var i = 0, j = jsonStr.length; i < j; i++) {
+                    html+='<tr>';
+                    html += '<td width="5%"><input type="checkbox" name="ContentChecked" value="' + jsonStr[i].Id + '"/></td>';
+                    html += '<td width="10%">'+ jsonStr[i].SID + '</td>';
+                    html += '<td width="20%">'+ AjaxGetCusbyorderId(jsonStr[i].XsordId) + '</td>';
+                    html += '<td width="10%">'+ showDate(jsonStr[i].scxsdtetime) + '</td>';
+                    html += '<td width="10%">'+ showDate(jsonStr[i].THdatetime) + '</td>';
+                    html+='<td width="35%">-</td>';
+                    html+='</tr>';
+                }
+                html += '</table>';
+                $("#content").html(html);
+            }
+        }
+
+        //pageIndex当前页
+        function SerchList(pageIndex)
+        {
+            $("input[name='pageIndex']").val(pageIndex);
+            var options = {
+                beforeSubmit: function () {
+                    return true;
+                },
+                dataType: "json",
+                success: function (context) {
+                    var data=eval(context.result);
+                    dataGrid(data);
+                    $(".pagin").html(context.PageN);//输出分页按钮
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $.messager.alert("操作提示", '查询失败请重试！', 'error');
+                }
+            }
+            $('#form1').ajaxSubmit(options);
+            return false;
+        }
+        //根据订单Id 查找经销商名称
+        function AjaxGetCusbyorderId(Id)
+        {
+            var json;
+            $.ajax({
+                type: "POST",
+                url: "/WL_DkxInfo/GetCusinfobyorderId",
+                data: {orderId: Id },
+                dataType: "html",
+                async: false,
+                success: function (reslut) {
+                    json = reslut;
+                },
+                error: function (e) {
+                    alert("请求失败");
+                }
+            })
+            return json;
+        }
+    </script>
+}
+
+
+<!--==================================数据列表=============================-->
+<div class="h-right">
+    <div class="h-right-c">
+        <!--查询条件-->
+        <div class="inquiry1">
+            <fieldset>
+                <legend>查询条件：</legend>
+                <ul>
+                    @using (Html.BeginForm("THSearchList", "WL_DkxInfo", FormMethod.Post, new { id = "form1" }))
+                    {
+                        @Html.Hidden("pageIndex");
+                        <li>
+                            <span>SID:</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txt_sid" />
+                            </span>
+                        </li>
+                        <li>
+                            <span>经销商:</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txt_jxsname" />
+                            </span>
+                        </li>
+                        <li>
+                            <span>退货时间：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txt_thdatetime" onclick="WdatePicker()" />
+                            </span>
+                            到    <span class="inquiry-input">
+                                <input type="text" name="txt_endthdatetime" onclick="WdatePicker()" /></span>
+                        </li>
+                        
+                        <li style="*width: 100%; *margin: -10px 0 5px 90px;"><span class="inquiry-input">
+                            <button class="layui-btn" onclick="return SerchList(1)"><i class="layui-icon">&#xe615;</i> 查询</button>
+                        </span>
+                        </li>
+                    }
+                    <li>
+                        <span class="inquiry-input">
+                            <button class="layui-btn" onclick="return addClick('/WL_DkxInfo/THlist')"><i class="layui-icon">&#x1002;</i> 刷新</button>
+                        </span>
+                    </li>
+                </ul>
+            </fieldset>
+        </div>
+
+        <div class="h-table">
+            <div class="h-table-content">
+                <div id="content"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--==========================输出分页按钮=========================-->
+<div class="pagin">
+    @if (ViewBag.PageNavigate == null)
+    {
+        @Html.ShowPageNavigate(Model.CurrentPageIndex, Model.PageSize, Model.RecordCount);
+    }
+</div>

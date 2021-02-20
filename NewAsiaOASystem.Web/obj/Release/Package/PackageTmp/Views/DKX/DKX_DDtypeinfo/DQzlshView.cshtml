@@ -1,0 +1,405 @@
+﻿@{
+    ViewBag.Title = "电气资料审核";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+<script src="~/Scripts/NAjs/layui.js"></script>
+
+<style>
+    .hrstyle {
+        background: #e6e3e3;
+    }
+
+    .txtstyle {
+        color: #999;
+    }
+</style>
+<script type="text/javascript">
+    $(function () {
+        var ddstr = AjaxGetddinfoyId();
+        var xqzlstr = AJaxziliaojson(ddstr.Id, "0");//需求
+        var htmlxq;
+        htmlxq = "";
+        htmlxq = "";
+        if (ddstr.dqshres == "0")
+            $("#shzt").html("待审核");
+        else if (ddstr.dqshres == "1")
+            $("#shzt").html("已通过");
+        else if (ddstr.dqshres == "2")
+            $("#shzt").html("未通过");
+        else if (ddstr.dqshres == "3")
+            $("#shzt").html("未提交");
+
+        if (ddstr.dqshmsg != "" && ddstr.dqshmsg != null)
+            $("#clsm").html(ddstr.dqshmsg);
+        else
+            $("#clsm").html("暂无");
+        if (ddstr.dqtjshtime != "" && ddstr.dqtjshtime != null)
+            $("#tjshtime").html(ddstr.dqtjshtime);
+        else
+            $("#tjshtime").html("暂无");
+        if (ddstr.dqshtime != "" && ddstr.dqshtime != null)
+            $("#shtime").html(ddstr.dqtjshtime);
+        else
+            $("#shtime").html("暂无");
+
+        if (xqzlstr != "" && xqzlstr != null) {
+            for (var i = 0, j = xqzlstr.length; i < j; i++) {
+                if (xqzlstr[i].Isgl == "0") {//附件资料
+                    var id = "'" + xqzlstr[i].Id + "'";
+                    htmlxq += '<a  target="_blank" href="' + xqzlstr[i].url + '">' + xqzlstr[i].wjName + '</a>&nbsp;&nbsp;';
+                } else {//关联的资料
+                    var xuqiustr = AJaxxuqiujson(xqzlstr[i].Bjno);
+                    if (xuqiustr.COMPRESSOR_TYPE == '0') {
+                        htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/BLDetail.aspx?CONTROL_NO=' + xuqiustr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                    }
+                    else if (xuqiustr.COMPRESSOR_TYPE == '1') {
+                        htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/LGDetail.aspx?CONTROL_NO=' + xuqiustr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                    }
+                    else if (xuqiustr.COMPRESSOR_TYPE == '2') {
+                        htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/LSDetail.aspx?CONTROL_NO=' + xuqiustr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                    }
+                    else if (xuqiustr.COMPRESSOR_TYPE == '3') {
+                        htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/MDDetail2.aspx?CONTROL_NO=' + xuqiustr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                    }
+                    else if (xuqiustr.COMPRESSOR_TYPE == '12') {
+                        htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/PTLDetail.aspx?CONTROL_NO=' + xuqiustr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                    } else {
+                        htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/XXTDetail.aspx?CONTROL_NO=' + xuqiustr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                    }
+                }
+            }
+        }
+        else {
+            htmlxq += '<span style="color:red">暂无需求</span>';
+        }
+        $("#xuqiucon").html(htmlxq);
+
+        var liaodanstr = AJaxziliaojson(ddstr.Id, "1");//料单
+        var htmlliaodan = "";
+        if (liaodanstr != "" && liaodanstr != null) {
+            for (var z = 0, s = liaodanstr.length; z < s; z++) {
+                if (liaodanstr[z].Isgl == "0") {//附件资料
+                    var id = "'" + liaodanstr[z].Id + "'";
+                    htmlliaodan += '<a  target="_blank" href="' + liaodanstr[z].url + '">' + liaodanstr[z].wjName + '</a>&nbsp;&nbsp;';
+                }
+                if (liaodanstr[z].Isgl == "1") {
+                    var xuqiustr = AJaxxuqiujson(liaodanstr[z].Bjno);
+                    htmlliaodan += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/ToExcel2.aspx?NO=' + xuqiustr.CONTROL_INFO_NO + '&TYPE=' + xuqiustr.CONTROL_TYPE + '">料单</a>';
+                }
+                if (liaodanstr[z].Isgl == "2") {//k3数据
+                    htmlliaodan += '<a  target="_blank" href="../DKX_DDtypeinfo/NewliaodanView?oId=' + ddstr.Id + '">K料单</a>';
+                }
+            }
+        }
+        else {
+            htmlliaodan += '<span style="color:red">暂无料单</span>';
+        }
+        $("#liaodancon").html(htmlliaodan);
+
+        //图纸
+        var tuzhistr = AJaxziliaojson(ddstr.Id, "2");//图纸（箱体图）
+        var htmltuzhi = "";
+        if (tuzhistr != "" && tuzhistr != null) {
+            for (var i = 0, j = tuzhistr.length; i < j; i++) {
+                var id = "'" + tuzhistr[i].Id + "'";
+                htmltuzhi += '<a  target="_blank" href="' + tuzhistr[i].url + '">' + tuzhistr[i].wjName + '</a>&nbsp;&nbsp;';
+            }
+        }
+        else {
+            htmltuzhi += '<span style="color:red">暂无图纸(箱体图)</span>';
+        }
+        $("#tuzhicon").html(htmltuzhi);
+
+        //电器排布图
+        var dqpbtuzhistr = AJaxziliaojson(ddstr.Id, "6");//图纸（电器排布图）
+        var htmldqpbtuzhi = "";
+        if (dqpbtuzhistr != "" && dqpbtuzhistr != null) {
+            for (var i = 0, j = dqpbtuzhistr.length; i < j; i++) {
+                var id = "'" + dqpbtuzhistr[i].Id + "'";
+                htmldqpbtuzhi += '<a  target="_blank" href="' + dqpbtuzhistr[i].url + '">' + dqpbtuzhistr[i].wjName + '</a>&nbsp;&nbsp; ';
+            }
+        }
+        else {
+            htmldqpbtuzhi += '<span style="color:red">暂无图纸(电器排布图)</span>';
+        }
+        $("#dqpbtuzhi").html(htmldqpbtuzhi);
+
+
+        var QTtuzhistr = AJaxziliaojson(ddstr.Id, "5");//图纸(其他图)
+        var htmlqttuzhi = "";
+        if (QTtuzhistr != "" && QTtuzhistr != null) {
+            for (var i = 0, j = QTtuzhistr.length; i < j; i++) {
+                htmlqttuzhi += '<a  target="_blank" href="' + QTtuzhistr[i].url + '">' + QTtuzhistr[i].wjName + '</a>&nbsp;&nbsp;';
+            }
+        }
+        else {
+            htmlqttuzhi += '<span style="color:red">暂无图纸(电器原理图)</span>';
+        }
+        $("#QTtuzhicon").html(htmlqttuzhi);
+
+        //系统简图
+
+        //系统简图
+        var XTJTtuzhistr = AJaxziliaojson(ddstr.Id, "7");//图纸（系统简图）
+        var htmlxtjttuzhi = "";
+        if (XTJTtuzhistr != "" && XTJTtuzhistr != null) {
+            for (var i = 0, j = XTJTtuzhistr.length; i < j; i++) {
+                var id = "'" + XTJTtuzhistr[i].Id + "'";
+                htmlxtjttuzhi += '<a  target="_blank" href="' + XTJTtuzhistr[i].url + '">' + XTJTtuzhistr[i].wjName + '</a>&nbsp;&nbsp;';
+            }
+        }
+        else {
+            htmlxtjttuzhi += '<span style="color:red">暂无图纸(系统简图)</span>';
+        }
+        $("#xtjtcon").html(htmlxtjttuzhi);
+
+        //软件程序
+        var rjcxTtuzhistr = AJaxziliaojson(ddstr.Id, "8");//软件程序
+        var htmlrjcxtuzhi = "";
+        if (rjcxTtuzhistr != "" && rjcxTtuzhistr != null) {
+            for (var i = 0, j = rjcxTtuzhistr.length; i < j; i++) {
+                var id = "'" + rjcxTtuzhistr[i].Id + "'";
+                htmlrjcxtuzhi += '<a  target="_blank" href="' + rjcxTtuzhistr[i].url + '">' + rjcxTtuzhistr[i].wjName + '</a>&nbsp;&nbsp;';
+            }
+        }
+        else {
+            htmlrjcxtuzhi += '<span style="color:red">暂无软件程序</span>';
+        }
+        $("#rjxctcon").html(htmlrjcxtuzhi);
+    })
+
+    //获取订单信息
+    function AjaxGetddinfoyId() {
+        var json;
+        $.ajax({
+            url: "../DKX_DDtypeinfo/AjaxorderbyId",
+            type: "POST",
+            data: { Id: '@ViewData["Id"]' },
+            dataType: "JSON",
+            async: false,
+            success: function (response) {
+                json = eval(response);
+            },
+            error: function (e) {
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+        return json;
+    }
+
+    //获取需求数据
+    function AJaxxuqiujson(val) {
+        var json;
+        $.ajax({
+            url: "../DKX_DDtypeinfo/AjaxxuqiubyorderNo",
+            type: "POST",
+            data: { Bjno: val },
+            dataType: "JSON",
+            async: false,
+            success: function (response) {
+                json = eval(response);
+            },
+            error: function (e) {
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+        return json;
+    }
+
+    //获取资料数据
+    function AJaxziliaojson(Id, type) {
+        var json;
+        $.ajax({
+            url: "../DKX_DDtypeinfo/GetziliaojsonbyddIdandtype",
+            type: "POST",
+            data: { ddId: Id, type: type },
+            dataType: "JSON",
+            async: false,
+            success: function (response) {
+                json = eval(response);
+            },
+            error: function (e) {
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+        return json;
+    }
+
+
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+
+  
+
+    function guanbi() {
+        var index = parent.layer.getFrameIndex(window.name);
+        //关闭弹出层
+        parent.layer.close(index);
+    }
+
+    //电气审核提交
+
+    function DQshEide(val) {
+
+        var shtype = $("#shtype").val();
+        var FTyy = $("#FTyy").val();
+        if (shtype == "")
+        {
+            layer.alert("请选择审核结果！", { icon: 2 });
+            return false;
+        }
+        if (shtype == "1") {
+            if (FTyy == "") {
+                layer.alert("不通过原因不为空！", { icon: 2 });
+                return false;
+            }
+        }
+        $.ajax({
+            url: "../DKX_DDtypeinfo/DQzlshtjEide",
+            type: "POST",
+            data: { Id: val, type: shtype, con: FTyy },
+            dataType: "html",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response == "0") {
+                    layer.alert("提交失败,请重新提交！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "1") {
+                    layer.alert("订单不存在！", { icon: 2 }, function () { location.reload(); });
+                }
+
+                if (response == "3") {
+                    layer.alert("提交成功！", { icon: 1 }, function () { location.reload(); });
+                }
+                if (response == "4") {
+                    layer.alert("提交失败,请重新提交！", { icon: 2 }, function () { location.reload(); });
+                }
+                
+                if (response == "6") {
+                    layer.alert("已经审核通过无需再次提交！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "7") {
+                    layer.alert("该状态下无法进行审核提交！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "8") {
+                    layer.alert("电气工程师尚未提交资料审核！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "9") {
+                    layer.alert("请选择审核结果！", { icon: 2 }, function () { location.reload(); });
+                }
+
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+    }
+
+</script>
+
+<div style="width: 90%; padding: 20px 20px 0 20px">
+    <table style="width: 100%">
+        <tr>
+            <td width="100px">需求：</td>
+            <td id="xuqiucon"></td>
+        </tr>
+    </table>
+    <hr class="layui-bg-blue hrstyle" />
+
+    <table style="width: 100%">
+        <tr>
+            <td width="100px">料单：</td>
+            <td id="liaodancon"></td>
+        </tr>
+    </table>
+    <hr class="layui-bg-blue hrstyle">
+    <table style="width: 100%">
+        <tr>
+            <td width="100px">箱体图：</td>
+
+            <td id="tuzhicon"></td>
+
+        </tr>
+    </table>
+    <hr class="layui-bg-blue hrstyle" />
+    <table style="width: 100%">
+        <tr>
+            <td width="100px">电器排布图：</td>
+            <td id="dqpbtuzhi"></td>
+
+        </tr>
+    </table>
+    <hr class="layui-bg-blue hrstyle">
+    <table style="width: 100%">
+        <tr>
+            <td width="100px">电器原理图：</td>
+            <td id="QTtuzhicon"></td>
+
+        </tr>
+    </table>
+    <hr class="layui-bg-blue hrstyle">
+    <table style="width: 100%">
+        <tr>
+            <td width="100px">系统简图：</td>
+            <td id="xtjtcon"></td>
+
+        </tr>
+    </table>
+
+    <hr class="layui-bg-blue hrstyle">
+    <table style="width: 100%">
+        <tr>
+            <td width="100px">软件程序：</td>
+            <td id="rjxctcon"></td>
+        </tr>
+    </table>
+    <hr class="layui-bg-blue">
+    <table style="width: 100%">
+        <tr>
+            <td width="100px">审核状态：</td>
+            <td id="shzt" class="txtstyle"></td>
+            <td width="100px">处理说明：</td>
+            <td id="clsm" class="txtstyle"></td>
+            <td width="100px">提交时间：</td>
+            <td id="tjshtime" class="txtstyle"></td>
+            <td width="100px">审核时间：</td>
+            <td id="shtime" class="txtstyle"></td>
+        </tr>
+    </table>
+    <hr class="layui-bg-blue hrstyle">
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">审核：</label>
+        <div class="layui-input-block" style="width: 300px">
+            @*  <input class="layui-input" id="beizhu" name="beizhu" placeholder="备注" type="text" />*@
+            <select class="layui-input" id="shtype" name="shtype">
+                <option value="">请选择</option>
+                <option value="0">通过</option>
+                <option value="1">不通过</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">异常原因：</label>
+        <div class="layui-input-block" style="width: 300px">
+            <input class="layui-input" id="FTyy" name="FTyy" placeholder="异常原因" type="text" />
+        </div>
+    </div>
+    <div class="layui-form-item" style="margin: auto">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit="" lay-filter="demo1" onclick="DQshEide('@ViewData["Id"]')">提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary" onclick="guanbi()">取消</button>
+        </div>
+    </div>
+</div>
+

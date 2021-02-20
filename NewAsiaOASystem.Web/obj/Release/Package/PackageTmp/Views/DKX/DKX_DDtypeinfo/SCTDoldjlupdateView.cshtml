@@ -1,0 +1,117 @@
+﻿
+@{
+    ViewBag.Title = "生产退单旧数据修改";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+<style>
+    .inputwidth {
+        width: 200px;
+    }
+</style>
+<script>
+        $(function () {
+        var json =@Html.Raw(ViewBag.MyJson);
+        if (json == null) {layer.alert("生产退单数据为空,请先编辑数据！", { icon: 2 });}
+        else {
+            //首次加载
+            if (json[0].IsRemarks == "1") { $('#bz').css('display', 'block'); $('#isbz').val(true) } else { $('#bz').css('display', 'none'); $('#isbz').val(false) }
+            $("#CBRName").val(json[0].Reason_name)
+        }
+
+    })
+    function yychange() {
+        var ii = $("#CBRId").val();
+        var json =@Html.Raw(ViewBag.MyJson);
+        for (var i = 0; i < json.length; i++) {
+            if (json[i].Id == ii) {
+                $("#CBRName").val(json[i].Reason_name)
+                if (json[i].IsRemarks == "1") {
+                    $('#bz').css('display', 'block'); $('#isbz').val(true)
+                } else {
+                    $('#bz').css('display', 'none'); $('#isbz').val(false);
+                    $("#CBRBZ").val(null)
+                }
+            }
+
+        }
+    }
+     var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+       //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+
+    function guanbi() {
+        var index = parent.layer.getFrameIndex(window.name);
+        //关闭弹出层
+        parent.layer.close(index);
+    }
+    //提交生产退单
+    function scTF() {
+        var ii = $("#CBRId").val();
+        var bz = $("#CBRBZ").val();
+        var Isbz = $("#isbz").val();
+
+        var CBRName = $("#CBRName").val();
+        if (ii == null || ii == "") {
+            layer.alert("返退原因不为空！", { icon: 2 });
+            return false;
+        }
+        if (Isbz == "true") {
+            if (bz == null || bz == "") {
+                layer.alert("此原因需要填写备注！", { icon: 2 });
+                return false;
+            }
+        }
+        $.ajax({
+            url: "../DKX_DDtypeinfo/SCTDEide",
+            type: "POST",
+            data: { Id: '@ViewData["OID"]', con: CBRName, CbrId: ii, bz: bz },
+            dataType: "html",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response == "1") {
+                    layer.alert("提交成功！", { icon: 1 }, function () { guanbi(); });
+                }
+                if (response == "0") {
+                    layer.alert("提交失败！", { icon: 2 }, function () { reload(); });
+                }
+
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+            }
+</script>
+
+<div style="width: 80%; padding: 20px 20px 0 20px">
+    <input type="hidden" id="CBRName" name="CBRName" />
+    <input type="hidden" id="isbz" name="isbz" />
+    <div class="layui-form-item">
+        <label class="layui-form-label">退单原因：</label>
+        <div class="layui-input-block">
+            @Html.DropDownList("CBRId", ViewData["SCCBRTlist"] as SelectList, new { @class = "layui-input inputwidth", @onchange = "yychange()" })
+        </div>
+    </div>
+    <div class="layui-form-item" style="display:none" id="bz">
+        <label class="layui-form-label">退单备注：</label>
+        <div class="layui-input-block">
+            <input type="text" name="CBRBZ" id="CBRBZ" required lay-verify="required" placeholder="请输入备注" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="formDemo" onclick="return scTF()">确定提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary" onclick="guanbi()">取消</button>
+        </div>
+    </div>
+</div>

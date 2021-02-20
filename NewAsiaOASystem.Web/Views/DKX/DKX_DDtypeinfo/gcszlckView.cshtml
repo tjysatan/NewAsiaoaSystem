@@ -1,0 +1,393 @@
+﻿@{
+    ViewBag.Title = "电控箱资料查看";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<script src="~/Scripts/NAjs/layui.js"></script>
+<script type="text/javascript">
+    //
+    $(function () {
+        var ddstr = AjaxGetddinfoyId();
+         if (ddstr.DD_Type <=3) {//不是plc 不需要上传软件和操作手册
+            $("#rjcon").attr("style", "display:none;");//隐藏div
+            $("#czsccon").attr("style", "display:none;");//隐藏div
+        }
+        //获取生产订单的生产资料
+        var ziliaostr = AJaxziliaojson(ddstr.Id);
+        console.log('ziliaostr',ziliaostr)
+        pjziliaohtml(ziliaostr, ddstr);
+        
+    })
+
+    // 拼接资料html
+    function pjziliaohtml(strjson, ddstr) {
+        if (strjson != null && strjson != "") {
+            //需求
+            var xqzlstr = [];
+            //料单
+            var liaodanstr = [];
+            //箱体图
+            var tuzhistr = [];
+            //电器排布图
+            var dqpbtuzhistr = [];
+            //电器原理图
+            var QTtuzhistr = [];
+            //线号表
+            var xhbtuzhistr = [];
+             //软件程序
+            var rjcxTtuzhistr = [];
+            //软件源程序
+            var rjycxtuzhistr = [];
+            //操作手册
+            var czshoucestr = [];
+            //调试单
+            var dsdanstr = [];
+            //照片
+            var zhaopian = [];
+
+            for (var i = 0; i < strjson.length; i++) {
+                if (strjson[i].Zl_type == "0") {//需求
+                    xqzlstr.push(strjson[i])
+                }
+                if (strjson[i].Zl_type == "1") {//料单
+                    liaodanstr.push(strjson[i])
+                }
+                if (strjson[i].Zl_type == "2") {//箱体图
+                    tuzhistr.push(strjson[i])
+                }
+                if (strjson[i].Zl_type == "6") {//电器排布图
+                    dqpbtuzhistr.push(strjson[i])
+                }
+                if (strjson[i].Zl_type == "5") {//电器原理图
+                    QTtuzhistr.push(strjson[i])
+                }
+                if (strjson[i].Zl_type == "10") {//线号表
+                    xhbtuzhistr.push(strjson[i])
+                }
+                if (strjson[i].Zl_type == "8") {//软件程序（烧录软件）（仅仅plc 项目有）
+                    rjcxTtuzhistr.push(strjson[i])
+                }
+                if (strjson[i].Zl_type == "11") {//软件程序-源程序（仅仅plc 项目有）
+                    rjycxtuzhistr.push(strjson[i])
+                }
+                if (strjson[i].Zl_type == "9") {//操作手册（仅仅plc 项目有）
+                    czshoucestr.push(strjson[i])
+                }
+                if (strjson[i].Zl_type == "4") {//调式单
+                    dsdanstr.push(strjson[i])
+                }
+                if (strjson[i].Zl_type == "3") {//照片
+                    zhaopian.push(strjson[i])
+                }
+            }
+                if (xqzlstr != "" && xqzlstr != null) {
+                    var htmlxq = "";
+                    for (var i = 0, j = xqzlstr.length; i < j; i++) {
+                        if (xqzlstr[i].Isgl == "0") {//附件资料
+                            var id = "'" + xqzlstr[i].Id + "'";
+                            htmlxq += '<a  target="_blank" href="' + xqzlstr[i].url + '">' + xqzlstr[i].wjName + '</a>&nbsp;&nbsp;';
+                        } else {//关联的资料
+                            var xuqiustr = AJaxxuqiujson(xqzlstr[i].Bjno);
+                            if (xuqiustr.COMPRESSOR_TYPE == '0') {
+                                htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/BLDetail.aspx?CONTROL_NO=' + xuqiustr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                            }
+                            else if (xuqiustr.COMPRESSOR_TYPE == '1') {
+                                htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/LGDetail.aspx?CONTROL_NO=' + xuqiustr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                            }
+                            else if (xuqiustr.COMPRESSOR_TYPE == '2') {
+                                htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/LSDetail.aspx?CONTROL_NO=' + xuqiustr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                            }
+                            else if (xuqiustr.COMPRESSOR_TYPE == '3') {
+                                htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/MDDetail2.aspx?CONTROL_NO=' + xuqiustr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                            }
+                            else if (xuqiustr.COMPRESSOR_TYPE == '12') {
+                                htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/PTLDetail.aspx?CONTROL_NO=' + xuqiustr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                            } else {
+                                htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/XXTDetail.aspx?CONTROL_NO=' + xuqiustr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                            }
+                        }
+                    }
+                    $("#xuqiucon").html(htmlxq)
+                } else {
+                    $("#xuqiucon").html('<span style="color:red">暂无需求</span>');
+                }
+                if (liaodanstr != "" && liaodanstr != null) {
+                    var htmlliaodan = "";
+                    for (var z = 0, s = liaodanstr.length; z < s; z++) {
+                        if (liaodanstr[z].Isgl == "0") {//附件资料
+                            var id = "'" + liaodanstr[z].Id + "'";
+                            htmlliaodan += '<a  target="_blank" href="' + liaodanstr[z].url + '">' + liaodanstr[z].wjName + '</a>&nbsp;&nbsp;';
+                        }
+                        if (liaodanstr[z].Isgl == "1") {
+                            var xuqiustr = AJaxxuqiujson(ddstr.BJno);
+                            htmlliaodan += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/ToExcel2.aspx?NO=' + xuqiustr.CONTROL_INFO_NO + '&TYPE=' + xuqiustr.CONTROL_TYPE + '">料单</a>';
+                        }
+                        if (liaodanstr[z].Isgl == "2") {//k3数据
+                            htmlliaodan += '<a  target="_blank" href="../DKX_DDtypeinfo/NewliaodanView?oId=' + ddstr.Id + '">K料单</a>';
+                        }
+                    }
+                    $("#liaodancon").html(htmlliaodan)
+                } else {
+                    $("#liaodancon").html('<span style="color:red">暂无料单</span>');
+                }
+                if (tuzhistr != "" && tuzhistr != null) {
+                    var htmltuzhi = "";
+                    for (var i = 0, j = tuzhistr.length; i < j; i++) {
+                        var id = "'" + tuzhistr[i].Id + "'";
+                        htmltuzhi += '<a  target="_blank" href="' + tuzhistr[i].url + '">' + tuzhistr[i].wjName + '</a>&nbsp;&nbsp;';
+                    }
+                    $("#tuzhicon").html(htmltuzhi)
+                } else {
+                    $("#tuzhicon").html('<span style="color:red">暂无图纸(箱体图)</span>');
+                }
+                if (dqpbtuzhistr != "" && dqpbtuzhistr != null) {
+                    var htmldqpbtuzhi = "";
+                    for (var i = 0, j = dqpbtuzhistr.length; i < j; i++) {
+                        var id = "'" + dqpbtuzhistr[i].Id + "'";
+                        htmldqpbtuzhi += '<a  target="_blank" href="' + dqpbtuzhistr[i].url + '">' + dqpbtuzhistr[i].wjName + '</a>&nbsp;&nbsp;';
+                    }
+                    $("#dqpbtuzhi").html(htmldqpbtuzhi)
+                } else {
+                    $("#dqpbtuzhi").html('<span style="color:red">暂无图纸(电器排布图)</span>');
+                }
+                if (QTtuzhistr != "" && QTtuzhistr != null) {
+                    var htmlqttuzhi = "";
+                    for (var i = 0, j = QTtuzhistr.length; i < j; i++) {
+                        var id = "'" + QTtuzhistr[i].Id + "'";
+                        htmlqttuzhi += '<a  target="_blank" href="' + QTtuzhistr[i].url + '">' + QTtuzhistr[i].wjName + '</a>&nbsp;&nbsp;';
+                    }
+                    $("#qttuzhicon").html(htmlqttuzhi)
+                } else { $("#qttuzhicon").html('<span style="color:red">暂无图纸(电器原理图)</span>'); }
+                if (xhbtuzhistr != "" && xhbtuzhistr != null) {
+                    var htmlxtjttuzhi = "";
+                    for (var i = 0, j = xhbtuzhistr.length; i < j; i++) {
+                        var id = "'" + xhbtuzhistr[i].Id + "'";
+                        htmlxtjttuzhi += '<a  target="_blank" href="' + xhbtuzhistr[i].url + '">' + xhbtuzhistr[i].wjName + '</a>&nbsp;&nbsp;';
+                    }
+                    $("#xhbtuzhicon").html(htmlxtjttuzhi);
+                } else {
+                    $("#xhbtuzhicon").html('<span style="color:red">暂无图纸(线号表)</span>');
+                }
+                if (rjcxTtuzhistr != "" && rjcxTtuzhistr != null) {
+                    var htmlrjcxtuzhi = "";
+                    for (var i = 0, j = rjcxTtuzhistr.length; i < j; i++) {
+                        var id = "'" + rjcxTtuzhistr[i].Id + "'";
+                        htmlrjcxtuzhi += '<a>' + rjcxTtuzhistr[i].wjName + '</a>&nbsp;&nbsp;';
+                    }
+                    $("#rjcxcon").html(htmlrjcxtuzhi)
+                } else { $("#rjcxcon").html('<span style="color:red">暂无烧录程序</span>'); }
+                if (rjycxtuzhistr != "" && rjycxtuzhistr != null) {
+                    var htmlrjycxtuzhi = "";
+                    for (var i = 0, j = rjycxtuzhistr.length; i < j; i++) {
+                        var id = "'" + rjycxtuzhistr[i].Id + "'";
+                        htmlrjycxtuzhi += '<a>' + rjycxtuzhistr[i].wjName + '</a>&nbsp;&nbsp;';
+                    }
+                    $("#rjycxcon").html(htmlrjycxtuzhi)
+                } else {
+                    $("#rjycxcon").html('<span style="color:red">暂无源程序</span>');
+            }
+            if (czshoucestr != "" && czshoucestr != null) {
+                var htmlczsctuzhi = "";
+                for (var i = 0, j = czshoucestr.length; i < j; i++) {
+                    var id = "'" + czshoucestr[i].Id + "'";
+                    htmlczsctuzhi += '<a  target="_blank" href="' + czshoucestr[i].url + '">' + czshoucestr[i].wjName + '</a>&nbsp;&nbsp; ';
+                }
+                $("#czsctuzhicon").html(htmlczsctuzhi)
+            } else {
+                $("#czsctuzhicon").html('<span style="color:red">暂无操作手册</span>');
+            }
+            if (dsdanstr != "" && dsdanstr != null) {
+                var htmldsdtuzhi = "";
+                for (var i = 0, j = dsdanstr.length; i < j; i++) {
+                    var id = "'" + dsdanstr[i].Id + "'";
+                    htmldsdtuzhi += '<a  target="_blank" href="' + dsdanstr[i].url + '">' + dsdanstr[i].wjName + '</a>&nbsp;&nbsp; ';
+                }
+                $("#yanshoudancon").html(htmldsdtuzhi)
+            } else {
+                $("#yanshoudancon").html('<span style="color:red">暂无调试单</span>');
+            }
+            if (zhaopian != "" && zhaopian != null) {
+                var htmlzptuzhi = "";
+                for (var i = 0, j = zhaopian.length; i < j; i++) {
+                    var id = "'" + zhaopian[i].Id + "'";
+                    htmlzptuzhi += '<a  target="_blank" href="' + zhaopian[i].url + '">' + zhaopian[i].wjName + '</a>&nbsp;&nbsp; ';
+                }
+                $("#zhaoiancon").html(htmlzptuzhi)
+            } else {
+                $("#zhaoiancon").html('<span style="color:red">暂无照片</span>');
+            }
+           
+
+        } else {
+            $("#xuqiucon").html('<span style="color:red">暂无需求</span>');
+            $("#liaodancon").html('<span style="color:red">暂无料单</span>');
+            $("#tuzhicon").html('<span style="color:red">暂无图纸(箱体图)</span>');
+            $("#dqpbtuzhi").html('<span style="color:red">暂无图纸(电器排布图)</span>');
+            $("#qttuzhicon").html('<span style="color:red">暂无图纸(电器原理图)</span>');
+            $("#xhbtuzhicon").html('<span style="color:red">暂无图纸(线号表)</span>');
+            $("#rjcxcon").html('<span style="color:red">暂无烧录程序</span>');
+            $("#rjycxcon").html('<span style="color:red">暂无源程序</span>');
+            $("#czsctuzhicon").html('<span style="color:red">暂无操作手册</span>');
+            $("#yanshoudancon").html('<span style="color:red">暂无调试单</span>');
+            $("#zhaoiancon").html('<span style="color:red">暂无照片</span>');
+        }
+    }
+
+    //获取订单信息
+    function AjaxGetddinfoyId() {
+        var json;
+        $.ajax({
+            url: "../DKX_DDtypeinfo/AjaxorderbyId",
+            type: "POST",
+            data: { Id: '@ViewData["Id"]' },
+            dataType: "JSON",
+            async: false,
+            success: function (response) {
+                json = eval(response);
+            },
+            error: function (e) {
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+        return json;
+    }
+
+    //获取需求数据
+    function AJaxxuqiujson(val) {
+        var json;
+        $.ajax({
+            url: "../DKX_DDtypeinfo/AjaxxuqiubyorderNo",
+            type: "POST",
+            data: { Bjno: val },
+            dataType: "JSON",
+            async: false,
+            success: function (response) {
+                json = eval(response);
+            },
+            error: function (e) {
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+        return json;
+    }
+
+    //获取资料数据
+    function AJaxziliaojson(Id) {
+        var json;
+        $.ajax({
+            url: "../DKX_DDtypeinfo/Getalltypeziliaojsonbyddid",
+            type: "POST",
+            data: { ddId: Id },
+            dataType: "JSON",
+            async: false,
+            success: function (response) {
+                json = eval(response);
+            },
+            error: function (e) {
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+        return json;
+    }
+
+</script>
+
+
+
+<div style="width: 90%; padding: 20px 20px 0 20px">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-xs6">
+            <fieldset class="layui-elem-field">
+                <legend style="font-size:12px">需求</legend>
+                <div class="layui-field-box" id="xuqiucon">
+                </div>
+            </fieldset>
+        </div>
+        <div class="layui-col-xs6">
+            <fieldset class="layui-elem-field">
+                <legend style="font-size:12px">料单</legend>
+                <div class="layui-field-box" id="liaodancon">
+                </div>
+            </fieldset>
+        </div>
+    </div>
+
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-xs6">
+            <fieldset class="layui-elem-field">
+                <legend style="font-size:12px">箱体图</legend>
+                <div class="layui-field-box" id="tuzhicon">
+                </div>
+            </fieldset>
+        </div>
+        <div class="layui-col-xs6">
+            <fieldset class="layui-elem-field">
+                <legend style="font-size:12px">电器排布图</legend>
+                <div class="layui-field-box" id="dqpbtuzhi">
+                </div>
+            </fieldset>
+        </div>
+    </div>
+
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-xs6">
+            <fieldset class="layui-elem-field">
+                <legend style="font-size:12px">电器原理图</legend>
+                <div class="layui-field-box" id="qttuzhicon">
+                </div>
+            </fieldset>
+        </div>
+        <div class="layui-col-xs6">
+            <fieldset class="layui-elem-field">
+                <legend style="font-size:12px">线号表</legend>
+                <div class="layui-field-box" id="xhbtuzhicon">
+                </div>
+            </fieldset>
+        </div>
+    </div>
+
+    <div class="layui-row layui-col-space15" id="rjcon">
+        <div class="layui-col-xs6">
+            <fieldset class="layui-elem-field">
+                <legend style="font-size:12px">烧录软件</legend>
+                <div class="layui-field-box" id="rjcxcon">
+                </div>
+            </fieldset>
+        </div>
+        <div class="layui-col-xs6">
+            <fieldset class="layui-elem-field">
+                <legend style="font-size:12px">源程序</legend>
+                <div class="layui-field-box" id="rjycxcon">
+                </div>
+            </fieldset>
+        </div>
+    </div>
+    <div class="layui-row layui-col-space15" id="czsccon">
+        <div class="layui-col-xs12">
+            <fieldset class="layui-elem-field">
+                <legend style="font-size:12px">操作手册</legend>
+                <div class="layui-field-box" id="czsctuzhicon">
+                </div>
+            </fieldset>
+        </div>
+    </div>
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-xs6">
+            <fieldset class="layui-elem-field">
+                <legend style="font-size:12px">调试单</legend>
+                <div class="layui-field-box" id="yanshoudancon">
+                </div>
+            </fieldset>
+        </div>
+        <div class="layui-col-xs6">
+            <fieldset class="layui-elem-field">
+                <legend style="font-size:12px">照片</legend>
+                <div class="layui-field-box" id="zhaoiancon">
+                </div>
+            </fieldset>
+        </div>
+    </div>
+
+</div>
+
+

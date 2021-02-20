@@ -1,0 +1,576 @@
+﻿@model NewAsiaOASystem.ViewModel.NAReturnListView
+@{
+    ViewBag.Title = "新的车间处理页面（返退货）";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+
+<style>
+    .table_con
+    {
+        border-collapse: collapse;
+        border: none;
+    }
+
+        .table_con td
+        {
+            border: solid #eae5e5 1px;
+            height: 35px;
+            padding: 0 0 0 5px;
+        }
+
+    .btnspan button
+    {
+        width: 120px;
+        height: 30px;
+        background: #337CA8;
+    }
+</style>
+
+<script type="text/javascript">
+    $(function () {
+        //仓库
+        var pname = AjaxPerson_Name('@Model.CreatePerson');//仓库管理员
+        $("#Pname").html(pname.UserName);
+        dataGrid();
+        //客服流程
+        var Cust = AjaxCust_Name('@Model.C_Id');//客户信息
+        $("#Cname").html(Cust.Name);
+        $("#Clxr").html(Cust.LxrName);
+        $("#Ctel").html(Cust.Tel);
+        var Per = AjaxR_Product('@Model.R_pId');//返退产品信息
+        $("#R_Per").html(Per.Name)
+        var Resason = AjaxResasonjson('@Model.R_FTyyp');//父级返退货原因
+        $("#R_ResasonP").html(Resason.Name);
+        if ('@Model.R_FTyy' != null && '@Model.R_FTyy' != "") {
+            var ResasonS = AjaxResasonjson('@Model.R_FTyy');//
+            $("#R_Resason").html(ResasonS.Name);
+        }
+        if ('@Model.R_FTyysm' != null) {
+            $("#R_Rqtyy").html('@Model.R_FTyysm');
+        }
+        if ('@Model.R_CLjg' == "0") {
+            $("#r_cljg").html(Showcljg('@Model.R_CLjg'))
+        } else if ('@Model.R_CLjg' == "1") {
+            $("#r_cljg").html(Showcljg('@Model.R_CLjg') + '@Model.R_CLFY' + "元")
+        } else if ('@Model.R_CLjg' == "2") {
+            $("#r_cljg").html(Showcljg('@Model.R_CLjg') + '@Model.R_CLQTSM')
+        } else if ('@Model.R_CLjg' == "3") {
+            $("#r_cljg").html(Showcljg('@Model.R_CLjg'))
+        }
+        var kfzyname = AjaxPerson_Name('@Model.Kfzy');//客服专员
+        $("#kfzyname").html(kfzyname.UserName);
+        var kfzgname = AjaxPerson_Name('@Model.Kfzg');//客服主管
+        $("#kfzgname").html(kfzgname.UserName);
+
+        //当前状态
+        var ft_dqzt = Showl_zt('@Model.L_type');
+        $("#dqzt").html(ft_dqzt);
+        //车间维修
+        $('#SelectedftypeData').combo({ editable: false, height: 25, panelHeight: 150 });
+        $('#Div_SelectedftypeData').appendTo($('#SelectedftypeData').combo('panel'));
+        $('#SelectedftypeData').combo('setValue', '').combo('setText', '===请选择==');
+        Getfttype();
+        $('#SelectedsfzbData').combo({ editable: false, height: 25, panelHeight: 150 });
+        $('#Div_SelectedsfzbData').appendTo($('#SelectedsfzbData').combo('panel'));
+        $('#SelectedpzpdData').combo({ editable: false, height: 25, panelHeight: 150 });
+        $('#Div_SelectedpzpdData').appendTo($('#SelectedpzpdData').combo('panel'));
+        var FTtype = $("#FTtype").val();
+        if (FTtype != "") {
+            if (FTtype == "0") {
+                $("#sfzb").css('display', 'block');
+                $("#fxjl").css('display', 'block');
+                $("#bzpd").css('display', 'none');
+                $("#qtqk").css('display', 'none');
+                Getiszb("1");
+            }
+            if (FTtype == "1") {//翻新
+                $("#sfzb").css('display', 'none');
+                $("#fxjl").css('display', 'none');
+                $("#bzpd").css('display', 'block');
+                if ($("#R_Pzpd").val() == "3")//其他情况说明
+                {
+                    $("#qtqk").css('display', 'block');
+                }
+                Getpzpd("1");
+            }
+            SelectItemwx();
+        }
+
+        //wxfxmxdataGrid();
+    })
+
+    //退货明细html拼接
+    function dataGrid() {
+        var jsonStr;
+        jsonStr = eval(ajaxthdetailjson('@Model.Id'));
+        $("#jbcon").html("");
+        if (jsonStr != null) {
+            if (typeof (jsonStr) != "undefined") {
+                var html = "";
+                html = '<table class="table_con" style="width: 100%; color: #000; font-size: 13px;">';
+                for (var i = 0, j = jsonStr.length; i < j; i++) {
+                    var Perinfo = GetPerinfobyId(jsonStr[i].P_Id);
+                    html += '<tr>';
+                    html += '<td width="30%">' + Perinfo.Pname + '</td>';
+                    html += '<td width="20%">' + Perinfo.P_xh + '</td>';
+                    html += '<td width="10%">' + jsonStr[i].SL + '</td>';
+                    html += '<td width="10%">' + Perinfo.dw + '</td>';
+                    if (jsonStr[i].Beizhu != null && jsonStr[i].Beizhu)
+                        html += '<td width="30%">' + jsonStr[i].Beizhu + '</td>';
+                    else
+                        html += '<td width="30%">-</td>';
+                    html += '</tr>';
+                }
+                html += '</table>';
+                $("#jbcon").html(html);
+            }
+        }
+    }
+
+ 
+
+    function editfx(id, xh) {
+        var win_width = $(window).width();
+        var win_height = $(window).height();
+        var topbl = xh * 0.5;
+        topbl = topbl + "%";
+        //设置选中行
+        if (id != "") {
+            $('#windowDia').html("<iframe src=../NAReturnList/FxEditPage?Id=" + id + "&&R_Id=" + '@Model.Id' + "style='border:0px;' width='600px' height='100%'></iframe>");
+            $("#windowDia").window({
+                title: '返退品分析',
+                modal: true,
+                closed: false,
+                width: 680,
+                height: 500,
+                left: 100,
+                top: topbl,
+            });
+        }
+    }
+
+    //操作
+    //val 维修记录Id
+    //val2 返退货Id
+    //操作 编辑分析
+    function FXshow(val, xh) {
+        var Id = "'" + val + "'";
+        var s = '<a href="#" onclick="editfx(' + Id + ',' + xh + ')">编辑</a>&nbsp;&nbsp;<a href="#" onclick="DelFxmx(' + Id + ')">删除</a>';
+        return s;
+    }
+
+    //客退品明细删除
+    function DelFxmx(val) {
+        $.ajax({
+            type: "POST",
+            url: "/NAReturnList/DelFxEdit",
+            ContentType: "application/json;charset=utf-8;",
+            data: { "FxmxId": val, "R_Id": '@Model.Id' },
+            success: function (context) {
+                if ("success" == context.result) {
+                    $.messager.alert("操作提示", '删除成功！', 'info', function () {
+                        // window.location = "../NAReturnList/ThFXlist?Id=" + '@Model.Id';
+                        window.location = "../NAReturnList/NewchejianchuliView?id=" + '@Model.Id';
+                    })
+                }
+            }
+        })
+    }
+
+    //批量删除客退品明细
+    function PLDelFxmx(val) {
+        val = "'" + val + "'";
+        $.ajax({
+            type: "POST",
+            url: "/NAReturnList/PLDELFxEdit",
+            ContentType: "application/json;charset=utf-8;",
+            data: { FxmxId:val, R_Id: '@Model.Id' },
+            success: function (context) {
+                if ("success" == context.result) {
+                    $.messager.alert("操作提示", '删除成功！', 'info', function () {
+                        window.location = "../NAReturnList/NewchejianchuliView?id=" + '@Model.Id';
+                    })
+                }
+                if ("error" == context.result) {
+                    $.messager.alert("操作提示", '删除失败！', 'info', function () {
+                             window.location = "../NAReturnList/NewchejianchuliView?id=" + '@Model.Id';
+                         })
+                }
+            }
+        })
+    }
+
+    //val 返退货Id
+    //val2返退单当前的所处的状态 定完责之后可以打印
+    function WxfxPrintURL(val, val2) {
+        if (val2 == "4" || val2 == "5" || val2 == "6") {
+            var url = "/NQ_CHdetailinfo/PrintFXView?Id=" + val;
+            location.href = url;
+        } else {
+            alert("该单尚未定完责，暂不能打印维修分析表！");
+        }
+    }
+
+    //关闭当前页面
+    function closepage() {
+        var ParentObj = window.parent;//获取父窗口
+        window.parent.$('#windowDia').window('close');
+        window.parent.location = "/NAReturnList/wxlist";
+        return false;
+    }
+
+    //根据元器件ID 查找元器件信息
+    function ajaxyjmodelbyidjson(Id) {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "/NQ_YJinfo/Getyjinfomodelbyid",
+            data: { Id: Id },
+            async: false,
+            success: function (reslut) {
+                json = eval('(' + reslut + ')');
+            },
+            error: function (e) {
+                alert("请求失败！");
+            }
+        })
+        return json;
+    }
+
+    //根据供应商代码查找供应商信息
+    function ajaxgysinfobydm(dm) {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "/NQ_GysInfo/Getgysinfobydm",
+            data: { dm: dm },
+            async: false,
+            success: function (reslut) {
+                json = eval('(' + reslut + ')');
+            },
+            error: function (e) {
+                alert("请求失败！");
+            }
+        })
+        return json;
+    }
+
+    //车间批量处理编辑
+    function NewPLwxbj(val, val2) {
+        var Id = val;
+        if (Id != "") {
+            $('#windowDia').html("<iframe src=../NAReturnList/NewPLweixiuView?Id=" + Id + "&&R_Id=" + val2 + "  style='border:0px;' width='100%' height='400px'></iframe>");
+            $("#windowDia").window({
+                title: '维修批量编辑',
+                modal: true,
+                closed: false,
+                width: '90%',
+                height: 400,
+                top: 0,
+            });
+        }
+    }
+
+    //批量维修处理
+    function PLwxbj() {
+        var arr = GetGridSelete();
+        if (arr.length <= 0) {
+            $.messager.alert("操作提示", "请先最少选择一条记录后再做维修编辑！", "warning");
+        }
+        else {
+            NewPLwxbj(arr, '@Model.Id');
+        }
+    }
+
+    //客退品批量删除
+    function PLdelwxjl() {
+        var arr = GetGridSelete();
+        if (arr.length <= 0) {
+            $.messager.alert("操作提示", "请先最少选择一条记录后再做批量删除！", "warning");
+        }
+        else {
+            PLDelFxmx(arr);
+        }
+    }
+
+    //总的状态修改
+    function NewwxSavaForm() {
+        var R_Id = '@Model.Id';
+        var SelectedftypeData = $("input[name='SelectedftypeData']").val();//返退类型
+        var SelectedsfzbData = $("input[name='SelectedsfzbData']").val();//是否在保
+        var SelectedpzpdData = $("input[name='SelectedpzpdData']").val();//品质判定
+        var R_qtqksm = $("#R_qtqksm").val();//其他情况说明
+        var R_Fxjlcon = $("#R_Fxjlcon").val();//翻新记录
+        var R_YQJ = $("#R_YQJ").val();//元器件
+        var R_RGF = $("#R_RGF").val();//人工费
+        var R_BCF = $("#R_BCF").val();//包材费
+        if (SelectedftypeData == "") {
+            alert("请选择返退类型！");
+            return false;
+        }
+        if (SelectedftypeData == "0")//维修
+        {
+            if (SelectedsfzbData == "") {
+                alert("选择是否在保！");
+                return false;
+            }
+        }
+        else if (SelectedftypeData == "1")//翻新
+        {
+            if (SelectedpzpdData == "") {
+                alert("请选择品质判定！");
+                return false;
+            }
+            if (R_Fxjlcon == "") {
+                alert("请填写翻新记录");
+                return false;
+            }
+        }
+        if (R_YQJ == "") {
+            alert("请填写元器件费用！如果没有请填0！");
+            return false;
+        }
+        if (R_RGF == "") {
+            alert("请填写人工费用！如果没有请填0！");
+            return false;
+        }
+        if (R_BCF == "") {
+            alert("请填写包材费用！如果没有请填0！");
+            return false;
+        }
+        //  return submitForm('/NAReturnList/wxlist');
+
+        var options = {
+            beforeSubmit: function () {
+                return true;
+            },
+            dataType: "html",//这里是指控制器处理后返回的类型，这里返回json格式。
+            success: function (context) {
+                if ("2" == context) {
+                    $.messager.alert("操作提示", '操作成功！', 'info', function () {
+                        //var ParentObj = window.parent;//获取父窗口
+                        //window.parent.$('#windowDia').window('close');
+                        window.location = "../NAReturnList/NewchejianchuliView?id=" + R_Id;
+                    });
+                }
+                if ("1" == context) {
+                    $.messager.alert("操作提示", '操作失败！', 'info');
+                    return false;
+                }
+                if ("3" == context) {
+                    $.messager.alert("操作提示", '该单已经定责，没有权限再次修改编辑！', 'error');
+                    return false;
+                }
+                if ("11" == context) {
+                    $.messager.alert("操作提示", '存在尚未处理的退货明细！', 'error');
+                    return false;
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $.messager.alert("操作提示", '操作失败！', 'error');
+            }
+        }
+        $('#form1').ajaxSubmit(options);
+        return false; //为了不刷新页面,返回false 
+    }
+
+    //客退品分析增加
+    function fkdz() {
+        var id = '@Model.Id';
+        if (id != "") {
+            $('#windowDia').html("<iframe src=../NQ_CHdetailinfo/list?id=" + id + "&&type=2 style='border:0px;' width='600px' height='100%' ></iframe>");
+            $("#windowDia").window({
+                title: '返退产品',
+                modal: true,
+                closed: false,
+                width: 680,
+                height: 600,
+                left: '100px',
+                top: '10px',
+            });
+        }
+    }
+
+
+</script>
+
+<div id="tt" class="easyui-tabs" style="width: 98%; height: 450px; margin: auto;">
+
+@*<div title="维修明细填写" data-options="closable:false" style="padding: 20px;">
+
+        <table class="table_con" style="width: 100%; color: #000; font-size: 13px;">
+            <tr>
+                <td>
+                    <a onclick="PLwxbj()" class="btna2">批量处理</a>
+                    <a onclick="PLdelwxjl()" class="btna2">批量删除</a>
+                    <a onclick="fkdz()" class="btna2">返退品增加</a>
+                </td>
+            </tr>
+        </table>
+        <table class="table_con" style="width: 100%; color: #000; font-size: 13px; margin-top: 20px;" id="wxmxcon" name="wxmxcon">
+        </table>
+    </div>*@
+    <!--维修明细填写-->
+
+    <div title="维修记录" data-options="closable:false" style="padding: 20px;">
+
+        <table class="table_con" style="width: 100%; color: #000; font-size: 13px;">
+            <tr>
+                <td style="color: #ff0000">当前状态：<label id="dqzt"></label>
+                </td>
+                <td>
+                    <a onclick="Fthfhtype('@Model.Id','@Model.L_type','1')" class="btna1">返回上级</a>
+                    <a onclick="closepage()" class="btna1">关闭当前页</a>
+                    <a onclick="PrintNaReturn('@Model.Id','@Model.L_type')" class="btna1">流程单打印</a>
+                    <a onclick="WxfxPrintURL('@Model.Id','@Model.L_type')" class="btna1">维修分析打印</a>
+                    <a onclick="NewwxSavaForm()" class="btna1">维修完成</a>
+                </td>
+            </tr>
+        </table>
+
+        @using (Html.BeginForm("NewwxEdit", "NAReturnList", FormMethod.Post, new { id = "form1" }))
+        {
+            @Html.HiddenFor(m => m.Id)
+            <!----返退货单ID---->
+            @Html.HiddenFor(m => m.FTtype)
+            @Html.HiddenFor(m => m.R_isbxqn)
+            @Html.HiddenFor(m => m.R_Pzpd)
+            <table class="table_con" style="width: 100%; color: #000; font-size: 13px; margin-top: 10px;">
+                <tr>
+                    <td>
+                        <table>
+                            <tr>
+                                <td style="border: none">返退类型：
+                                <input id="SelectedftypeData" name="SelectedftypeData"></td>
+                            </tr>
+                            <tr id="sfzb" style="display: none">
+                                <td style="border: none">是否在保：
+                                <input id="SelectedsfzbData" name="SelectedsfzbData"></td>
+                            </tr>
+                            <tr id="bzpd" style="display: none">
+                                <td style="border: none">品质判定：
+                                <input id="SelectedpzpdData" name="SelectedpzpdData"></td>
+                            </tr>
+                            <tr id="qtqk" style="display: none">
+                                <td style="border: none">@Html.TextBoxFor(m => m.R_qtqksm, new { @class = "text_field" })</td>
+                            </tr>
+                            <tr id="fxjljs" style="display: none">
+                                <td style="border: none" valign="top">翻新记录简述:<span class="infor-c-input"> @Html.TextAreaFor(m => m.R_Fxjlcon, new { @class = "text_field" })</span></td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <table>
+                            <tr>
+                                <td style="border: none">元器件: @Html.TextBoxFor(m => m.R_YQJ, new { @class = "text_field", }) 元</td>
+                                <td style="border: none">人工费:@Html.TextBoxFor(m => m.R_RGF, new { @class = "text_field" }) 元</td>
+                                <td style="border: none">包材费: @Html.TextBoxFor(m => m.R_BCF, new { @class = "text_field" }) 元</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <table>
+                            <tr>
+                                <td style="border: none">是否修完: 
+                                <select id="isxwtype" name="isxwtype" class="text_field">
+                                    <option value="0">完成</option>
+                                    <option value="1">配件未修</option>
+                                </select>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        }
+    </div>
+    <!--维修记录-->
+
+    <div title="返退信息" data-options="closable:false" style="padding: 10px;">
+        <table class="table_con" style="width: 100%; color: #000; font-size: 13px;">
+            <tr>
+                <td style="width: 50%">仓　　库：<label id="Pname"></label></td>
+                <td style="width: 50%">提交时间:@Model.CreateTime</td>
+            </tr>
+        </table>
+        <table class="table_con" style="width: 100%; color: #000; font-size: 13px;">
+            <tr>
+                <td>退货明细</td>
+            </tr>
+        </table>
+        <table class="table_con" style="width: 100%; color: #000; font-size: 13px;">
+            <tr>
+                <td style="width: 30%">产品名称</td>
+                <td style="width: 20%">产品型号</td>
+                <td style="width: 10%">退货数量</td>
+                <td style="width: 10%">单　　位</td>
+                <td style="width: 30%">备　　注</td>
+            </tr>
+        </table>
+        <!--返退货明细-->
+        <div id="jbcon">
+        </div>
+    </div>
+    <!--基础信息-->
+
+    <div title="客服流程跟踪" style="padding: 20px;">
+        <table class="table_con" style="width: 100%; color: #000; font-size: 13px;">
+            <tr>
+                <td style="width: 40%">客户名称：<label id="Cname"></label></td>
+                <td style="width: 30%">联 系 人：<label id="Clxr"></label></td>
+                <td style="width: 30%">联系电话：<label id="Ctel"></label></td>
+            </tr>
+
+            <tr>
+                <td>返退产品:<label id="R_Per"></label></td>
+                <td>返退时间:@Model.R_FTdate</td>
+                <td>返退数量:@Model.R_Number   套/件</td>
+            </tr>
+            <tr>
+                <td>返退货原因:
+                    <label id="R_ResasonP"></label>
+                    ,<label id="R_Resason"></label><label id="R_Rqtyy"></label></td>
+                <td>要求处理结果: 
+                    <label id="r_cljg"></label>
+                    <label id="r_jzfy"></label>
+                    <label id="r_qtyy"></label>
+                </td>
+                <td>涉及费用:运费 @Model.R_Yf 元 &nbsp;&nbsp;&nbsp;&nbsp;客户索赔 @Model.R_sp  元</td>
+            </tr>
+            <tr>
+                <td colspan="3">补充要求:@Model.Remark1</td>
+            </tr>
+            <tr>
+                <td>客服专员:
+                    <label id="kfzyname"></label>
+                </td>
+                <td>客服主管:
+                    <label id="kfzgname"></label>
+                </td>
+                <td>日　　期：@Model.ClDate</td>
+            </tr>
+        </table>
+    </div>
+    <!--客服流程跟踪-->
+</div>
+
+<!---返退类型---->
+<div id="Div_SelectedftypeData">
+    <div style="padding: 5px; font-size: 14px;" id="DivContent_SelectedftypeData"></div>
+</div>
+<!-----是否在保--->
+<div id="Div_SelectedsfzbData">
+    <div style="padding: 10px; font-size: 14px;" id="DivContent_SelectedsfzbData"></div>
+</div>
+
+<!----品质判定---->
+<div id="Div_SelectedpzpdData">
+    <div style="padding: 10px; font-size: 14px;" id="DivContent_SelectedpzpdData"></div>
+</div>
+<script src="~/Scripts/NAjs/NAReturnList.js"></script>
+<div id="windowDia" class="easyui-window" closed="true" style="width: 100%; height: 400px; padding: 5px;"></div>

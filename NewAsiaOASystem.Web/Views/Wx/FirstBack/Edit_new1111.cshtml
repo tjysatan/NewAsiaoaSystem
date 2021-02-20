@@ -1,0 +1,173 @@
+﻿@model NewAsiaOASystem.DBModel.WX_Message
+@{
+    ViewBag.Title = "Edit_new";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@section HeadContent{
+    <script type="text/javascript">
+        $(function () {
+            if ("" == $("#Id").val())
+                $("#Ptitle").text("关键词添加");
+            else
+                $("#Ptitle").text("关键词编辑");
+        })
+    </script>
+}
+
+@*<script type="text/javascript">
+    function RepHtml() {
+        alert('11');
+       @if (Model.wx_Message_News == null)
+        {
+          
+            Model.wx_Message_News = new List<NewAsiaOASystem.DBModel.WX_Message_News>();
+        }
+        alert('22');
+        @if(Model.wx_Message_News.Count<=0)
+        {
+           
+            for (var i = 0; i < 1; i++)
+            {
+                Model.wx_Message_News.Add(new NewAsiaOASystem.DBModel.WX_Message_News());
+            }
+          
+        }
+        alert(Model.wx_Message_News.Count);
+           @foreach (var item in Model.wx_Message_News) 
+        {
+            @:  $("#tw").html("<tr><td><span class='infor-c-input'>"+ @Html.TextBoxFor(m =>item.Title) +" </span></td><td><span class='infor-c-input'>"+@Html.TextBoxFor(mbox=>item.Description)+"</span></td><td><span class='infor-c-input'>"+ @Html.TextBoxFor(m =>item.PicUrl)+"</span></td><td><span class='infor-c-input'>"+@Html.TextBoxFor(m => item.Url) +"</span></td></tr> ");
+                                }
+        
+
+    }
+</script>*@
+ 
+ 
+@using (Html.BeginForm("Edit_new", "FirstBack", FormMethod.Post, new { id = "form1" }))
+{         
+    @Html.HiddenFor(m => m.A_CreateTime);
+    @Html.HiddenFor(m => m.A_CreateUser)
+    @Html.HiddenFor(m => m.A_id)
+    @Html.HiddenFor(m => m.MsgType)
+    <div class="infor">
+       @* <div class="h-right-title">您当前的位置：图文信息编辑</div>*@
+        <p id="Ptitle"></p>
+        <div class="system-menu-set">
+            <ul class="infor-c">
+                <li><span class="infor-c-width">关键词：</span><span class="infor-c-input">
+                    @Html.TextBoxFor(m => m.A_KeyWord)</span></li>
+            </ul>
+
+            <ul class="infor-c " style="display: none">
+                <li><span class="infor-c-width">消息类型：</span></li>
+                <li><span>
+
+
+                    <select class="add-function" name="MsgType">
+                        @{
+                                        if ("text".Equals(Convert.ToString(@Model.MsgType)) && null != @Model.A_id)
+                                        {
+                            @:<option value="news">文本消息</option>
+@*                                @:<option value="news" selected="selected">图文消息</option>*@
+                                        }
+                                        else
+                                        {
+                            @:<option value="news"  selected="selected">文本消息</option>
+@*                                @:<option value="news">图文消息</option>*@
+                                        }
+                                                
+                        }
+
+                    </select>
+                </span>
+
+                </li>
+            </ul>
+
+            <ul class="infor-c">
+                <li><span class="infor-c-width">是否默认：</span>
+                    <span>
+                        <select class="add-function" name="IsDefaultMessage">
+                            @{
+    if ("False".Equals(Convert.ToString(@Model.IsDefaultMessage)) && null != @Model.A_id)
+                                        {
+                                @:<option value="True">是</option>
+                                @:<option value="False" selected="selected">否</option>
+                                                }
+                                        else
+                                        {
+                                @:<option value="True"  selected="selected">是</option>
+                                @:<option value="False">否</option>
+                                      }
+                                                
+                            }
+
+                        </select></span></li>
+            </ul>
+                  <div style="margin-left:80px;">
+            <table>
+                <tr><td colspan="4" style="height:30px;"></td></tr>
+                <tr>
+                    <td>标题
+                    </td>
+                    <td>描述
+                    </td>
+                    <td>图片地址
+                    </td>
+                    <td>文章链接地址
+                    </td>
+             
+                @{
+                                        if (Model.wx_Message_News == null)
+                                        {
+                                            Model.wx_Message_News = new List<NewAsiaOASystem.DBModel.WX_Message_News>();
+                                        }
+                                        if (Model.wx_Message_News.Count <= 0)
+                                        {
+                                            for (var i = 0; i < 5; i++)
+                                            {
+                                                Model.wx_Message_News.Add(new NewAsiaOASystem.DBModel.WX_Message_News());
+                                            }
+                                        }
+                }
+                @for (var i = 0; i < 5; i++)
+                {
+                    @Html.HiddenFor(m => m.wx_Message_News[i].N_Id)
+                    @Html.HiddenFor(m => m.wx_Message_News[i].A_Id)
+                    
+                    <tr>
+                        <td>
+                            <span class="infor-c-input">
+                                @Html.TextBoxFor(m => m.wx_Message_News[i].Title)
+                            </span>
+                        </td>
+                        <td>
+                            <span class="infor-c-input">
+                                @Html.TextBoxFor(m => m.wx_Message_News[i].Description)
+                            </span>
+                        </td>
+                        <td>
+                            <span class="infor-c-input">
+                                @Html.TextBoxFor(m => m.wx_Message_News[i].PicUrl)
+                            </span>
+                        </td>
+                        <td>
+                            <span class="infor-c-input">
+                                @Html.TextBoxFor(m => m.wx_Message_News[i].Url)
+                            </span>
+                        </td>
+                    </tr> 
+                }
+
+
+            </table>
+              </div>              
+        </div>
+        <div class="inquiry-input infor-b">
+            <span>
+                <button onclick="return submitForm('/FirstBack/Index')">保存</button></span><span>
+                    <button onclick="return RedirectUrl('/FirstBack/Index')">返回</button></span>
+        </div>
+    </div>
+}

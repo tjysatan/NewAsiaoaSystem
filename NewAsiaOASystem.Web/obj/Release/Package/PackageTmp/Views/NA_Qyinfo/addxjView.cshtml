@@ -1,0 +1,76 @@
+﻿@{
+    ViewBag.Title = "新增下级区域";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@section HeadContent{
+    <script type="text/javascript">
+        var loadi;
+        function ddchen() {
+            loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+        }
+        //关闭等待效果
+        function disLoading() {
+            layer.close(loadi);
+        }
+
+        //新增
+        function addqy(pid, qy_type) {
+            var name = $("#qyname").val();
+            console.log("qy_type", qy_type)
+            if (name == "") {
+                layer.alert("请填写区域名称！", { icon: 2 });
+                return false;
+            }
+            $.ajax({
+                url: "../NA_Qyinfo/Addqy",
+                type: "POST",
+                data: { Pid: pid, name: name, qy_type: qy_type},
+                dataType: "json",
+                async: false,
+                beforeSend: function () {
+                    ddchen();
+                },
+                success: function (response) {
+                    disLoading();
+                    if (response.result == "success") {
+                        layer.alert("新增成功！", { icon: 1 }, function () { guanbi(); });
+                    }
+                    if (response.result == "error") {
+                        layer.alert("提交异常！", { icon: 2 }, function () { guanbi(); });
+                    }
+                   
+                },
+                error: function (e) {
+                    disLoading();
+                    layer.alert("操作失败！", { icon: 2 });
+                }
+            })
+        }
+        function guanbi() {
+            var index = parent.layer.getFrameIndex(window.name);
+            //关闭弹出层
+            parent.layer.close(index);
+        }
+    </script>
+    }
+
+<div style="padding:10px 40px 10px 10px">
+    <div class="layui-form-item">
+        <div class="layui-form-label">
+            区域名称：
+        </div>
+        <div class="layui-input-block">
+            <input type="text" name="qyname" id="qyname" placeholder="请输入区域名称" class="layui-input" />
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" onclick="addqy('@ViewData["pid"]','@ViewData["qy_type"]')">
+                <i class="layui-icon">&#xe605;</i>
+            保存
+            </button>
+        </div>
+    </div>
+</div>
+ 

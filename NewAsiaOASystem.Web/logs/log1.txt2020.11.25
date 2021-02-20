@@ -1,0 +1,10 @@
+2020-11-25 22:30:36,342 [9] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2020-11-25 22:30:36,343 [9] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2020-11-25 22:30:36,343 [9] ERROR ApplicationInfoLog [(null)] <(null)< - 从客户端(<)中检测到有潜在危险的 Request.Path 值。
+2020-11-25 22:30:36,343 [9] ERROR ApplicationInfoLog [(null)] <(null)< - Void ValidateInputIfRequiredByConfig()
+2020-11-25 22:30:36,343 [9] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================
+2020-11-25 22:30:46,442 [16] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2020-11-25 22:30:46,444 [16] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2020-11-25 22:30:46,444 [16] ERROR ApplicationInfoLog [(null)] <(null)< - 从客户端(<)中检测到有潜在危险的 Request.Path 值。
+2020-11-25 22:30:46,444 [16] ERROR ApplicationInfoLog [(null)] <(null)< - Void ValidateInputIfRequiredByConfig()
+2020-11-25 22:30:46,444 [16] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================

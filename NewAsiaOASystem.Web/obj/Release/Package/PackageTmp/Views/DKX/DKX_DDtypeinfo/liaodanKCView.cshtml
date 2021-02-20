@@ -1,0 +1,505 @@
+﻿@{
+    ViewBag.Title = "liaodanKCView";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+<style id="style1">
+    .table_con
+    {
+        border-collapse: collapse;
+        border: none;
+    }
+
+        .table_con td
+        {
+            border: solid #000 1px;
+            height: 25px;
+            padding: 0 0 0 5px;
+        }
+
+    .Miantitle
+    {
+        width: 100%;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .hedertitle
+    {
+        width: 100%;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .fontsizetd
+    {
+        font-size: 14px;
+    }
+
+    .bhcss
+    {
+        width: 98%;
+        margin: auto;
+        height: 100px;
+    }
+
+    .xkk
+    {
+        width: 5px;
+        height: 5px;
+        border: 1px solid #000;
+    }
+
+    i
+    {
+        width: 10px;
+        height: 10px;
+        line-height: 24px;
+        vertical-align: top;
+        margin: 4px 2px 0 0;
+        overflow: hidden;
+        border: 1px solid #000;
+        display: inline-block;
+    }
+</style>
+
+<script type="text/javascript">
+
+    $(function () {
+
+        if ('@ViewData["type"]' == "0")//不是关联料单
+        {
+            HTMLpj("", "0", "")
+        }
+        if ('@ViewData["type"]' == "1") {
+            var Bliaodanstr = AJAXliaodanfkzdata()
+            HTMLpj(Bliaodanstr, "1", '@ViewData["sum"]')
+        }
+        if ('@ViewData["type"]' == "2") {
+
+            var Kliaodanstr = AJAXliaodanKdata()
+            HTMLpj(Kliaodanstr, "2", '@ViewData["sum"]')
+        }
+    })
+    //html拼接
+    function HTMLpj(str, type, sum) {
+
+        var xh;
+        var sl = sum;
+        var html = "";
+        html += '<tr>';
+        html += '<td>序号</td>';
+        html += '<td>产品名称</td>';
+        html += '<td>品牌</td>';
+        html += '<td>规格型号</td>';
+        html += '<td>数量</td>';
+        html += '<td>总用量</td>';
+        html += '<td>当前库存</td>';
+        html += '<td>缺少</td>';
+        html += '<td>操作</td>';
+        html += '</tr>';
+        if (type == "0") {
+            html += '<tr>';
+            html += '<td colspan="9">不是关联料单,无法查询库存！</td>';
+            html += '</tr>';
+        }
+
+        if (type == "1")//B料单
+        {
+            var Bliaodanmxstr = str;
+            if (Bliaodanmxstr != "" && Bliaodanmxstr != null) {
+                for (var i = 0, j = Bliaodanmxstr.length; i < j; i++) {
+                    xh = i + 1;
+                    var zyl = parseFloat(Bliaodanmxstr[i].P_COUNT * sum).toFixed(2);
+                    var dqkc = AJAXkcbyxh(Bliaodanmxstr[i].PARTS_NAME);
+                    var qssl = "";
+                    if (dqkc != "-") {
+                        qssl = dqkc - zyl;
+                    }
+                    html += '<tr>';
+                    html += '<td>' + xh + '</td>';
+                    html += '<td>' + cpnamshow(Bliaodanmxstr[i].PARTS_TYPE) + '</td>';
+                    html += '<td>' + cpppshow(Bliaodanmxstr[i].BRAND) + '</td>';
+                    html += '<td>' + Bliaodanmxstr[i].PARTS_NAME + '</td>';
+                    html += '<td>' + Bliaodanmxstr[i].P_COUNT + '</td>';
+                    html += '<td>' + zyl + '</td>';
+                    html += '<td>' + dqkc + '</td>';
+                    if (qssl != "") {
+                        if (qssl >= 0)
+                            html += '<td>-</td>';
+                        else
+                            html += '<td style="color:red">' + qssl + '</td>';
+                    }
+                    else {
+                        html += '<td>-</td>';
+                    }
+                    html += '<td>-</td>';
+                    html += '</tr>';
+                }
+            }
+            else {
+                html += '<tr>';
+                html += '<td colspan="9">没有料单数据！</td>';
+                html += '</tr>';
+            }
+        }
+
+        if (type == "2")//K料单
+        {
+            var Kliaodanmxstr = str;
+            if (Kliaodanmxstr != "" && Kliaodanmxstr != null) {
+                for (var i = 0, j = Kliaodanmxstr.length; i < j; i++) {
+                    xh = i + 1;
+                    var zyl = parseFloat(Kliaodanmxstr[i].FAuxQty * sum).toFixed(2);
+                    var dqkc = AJAXkcbywldm(Kliaodanmxstr[i].FNumber);
+                    var qssl = "0";
+                    if (dqkc != "-") {
+                        qssl = dqkc - zyl;
+                    }
+                    html += '<tr>';
+                    html += '<td>' + xh + '</td>';
+                    html += '<td>' + Kliaodanmxstr[i].FItemName + '</td>';
+                    html += '<td> </td>';
+                    html += '<td>' + Kliaodanmxstr[i].FModel + '</td>';
+                    html += '<td>' + Kliaodanmxstr[i].FAuxQty + '</td>';
+                    html += '<td>' + zyl + '</td>';
+                    html += '<td>' + dqkc + '</td>';
+                    if (qssl != "") {
+                        if (qssl >= 0)
+                            html += '<td>-</td>';
+                        else
+                            html += '<td style="color:red">' + qssl + '</td>';
+                    }
+                    else {
+                        html += '<td>-</td>';
+                    }
+                    html += '<td>' + CGYQJxd(Kliaodanmxstr[i].FNumber, Kliaodanmxstr[i].FItemName, Kliaodanmxstr[i].FModel, zyl) + '</td>';
+                    html += '</tr>';
+                }
+            }
+            else {
+                html += '<tr>';
+                html += '<td colspan="9">没有料单数据！</td>';
+                html += '</tr>';
+            }
+        }
+        $("#table_con").html(html);
+    }
+
+    //B料单的明细
+    function AJAXliaodanfkzdata() {
+        var json;
+        $.ajax({
+            url: "../DKX_DDtypeinfo/BJliaodanmx",
+            type: "POST",
+            data: { xqno: '@ViewData["BjNo"]', Id: '@ViewData["Id"]' },
+            dataType: "JSON",
+            async: false,
+            success: function (response) {
+                json = eval(response);
+            },
+            error: function (e) {
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+        return json;
+    }
+
+    //k料单的明细
+    function AJAXliaodanKdata() {
+        var json;
+        $.ajax({
+            url: "../DKX_DDtypeinfo/K3liaodanmx",
+            type: "POST",
+            data: { Fnumber: '@ViewData["BjNo"]', Id: '@ViewData["Id"]' },
+            dataType: "JSON",
+            async: false,
+            success: function (response) {
+                json = eval(response);
+
+            },
+            error: function (e) {
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+        return json;
+    }
+
+    //实时库存B
+    function AJAXkcbyxh(val) {
+        var json;
+        $.ajax({
+            url: "../DKX_DDtypeinfo/CKKCBYXH",
+            type: "POST",
+            data: { xh: val },
+            dataType: "JSON",
+            async: false,
+            success: function (response) {
+                json = eval(response);
+            },
+            error: function (e) {
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+        return json;
+    }
+
+    //实时库存K
+    function AJAXkcbywldm(val) {
+        var json;
+        $.ajax({
+            url: "../DKX_DDtypeinfo/CKkcbywldm",
+            type: "POST",
+            data: { wldm: val },
+            dataType: "JSON",
+            async: false,
+            success: function (response) {
+                json = eval(response);
+            },
+            error: function (e) {
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+        return json;
+    }
+
+    //
+
+    //产品名称显示
+    function cpnamshow(val) {
+        if (val == "0") {
+            return "箱体";
+        }
+        if (val == "1") {
+            return "接触器";
+        }
+        if (val == "2") {
+            return "断路器";
+        }
+        if (val == "3") {
+            return "电机保护器";
+        }
+        if (val == "4") {
+            return "指示灯";
+        }
+        if (val == "5") {
+            return "蜂鸣器";
+        }
+        if (val == "6") {
+            return "急停按钮";
+        }
+        if (val == "7") {
+            return "触摸屏";
+        }
+        if (val == "8") {
+            return "接线端子";
+        }
+        if (val == "9") {
+            return "接线柱零线排";
+        }
+        if (val == "10") {
+            return "中间继电器";
+        }
+        if (val == "11") {
+            return "转换开头";
+        }
+        if (val == "12") {
+            return "微动开头";
+        }
+        if (val == "13") {
+            return "辅助触头";
+        }
+        if (val == "14") {
+            return "线槽";
+        }
+        if (val == "15") {
+            return "风扇";
+        }
+        if (val == "16") {
+            return "常用控制器";
+        }
+        if (val == "17") {
+            return "专用控制器";
+        }
+        if (val == "18") {
+            return "压力传感器";
+        }
+        if (val == "19") {
+            return "保险丝座";
+        }
+        if (val == "20") {
+            return "时间继电器";
+        }
+        if (val == "21") {
+            return "相序保护器";
+        }
+        if (val == "22") {
+            return "PLC";
+        }
+        if (val == "23") {
+            return "温度传感器";
+        }
+        if (val == "24") {
+            return "开关电源";
+        }
+        if (val == "25") {
+            return "通信模块";
+        }
+        if (val == "26") {
+            return "传感器线";
+        }
+        if (val == "27") {
+            return "辅助配件";
+        }
+    }
+
+    //产品品牌显示
+    function cpppshow(val) {
+        if (val == "0") {
+            return "正泰";
+        }
+        if (val == "1") {
+            return "施耐德";
+        }
+        if (val == "2") {
+            return "LG";
+        }
+        if (val == "3") {
+            return "西门子";
+        }
+        if (val == "4") {
+            return "欣灵";
+        }
+        if (val == "5") {
+            return "艾默生";
+        }
+        if (val == "6") {
+            return "昆仑通态";
+        }
+        if (val == "7") {
+            return "其他";
+        }
+        if (val == "8") {
+            return "新亚洲";
+        }
+        if (val == "9") {
+            return "亿维";
+        }
+        if (val == "10") {
+            return "九纯健";
+        }
+        if (val == "11") {
+            return "国达";
+        }
+        if (val == "12") {
+            return "江阴长江";
+        }
+        if (val == "13") {
+            return "联捷";
+        }
+        if (val == "14") {
+            return "升亚";
+        }
+        if (val == "15") {
+            return "明伟";
+        }
+        if (val == "16") {
+            return "威纶通";
+        }
+        if (val == "17") {
+            return "捷迈";
+        }
+        if (val == "18") {
+            return "施耐德(标)";
+        }
+    }
+
+    //元器件采购按钮显示
+    function CGYQJxd(YQJBM, YQJname, YQJxh, shuliang) {
+
+        YQJBM = "'" + YQJBM + "'";
+        YQJname = "'" + YQJname + "'";
+        YQJxh = "'" + YQJxh + "'";
+        shuliang = "'" + shuliang + "'";
+        var f = '<a href="#" onclick="ajaxyqj(' + YQJBM + "," + YQJname + "," + YQJxh + "," + shuliang + ')">请购</a>&nbsp;&nbsp;'
+        return f;
+    }
+
+    //元器件采购
+    function ajaxyqj(YQJBM, YQJname, YQJxh, shuliang) {
+        var str = checkqgd(YQJBM);
+        if (str == "0") {
+            $.messager.confirm("操作提示", '已经存在请购单,需要继续请购吗？', function (data) {
+                if (data) {
+                    DJMancg(YQJBM, YQJname, YQJxh, shuliang);
+                }
+            })
+        }
+        if (str == "1") {
+            alert("订单采购中。。。");
+        }
+        if (str == "2") {
+            Mancg(YQJBM, YQJname, YQJxh, shuliang)
+        }
+    }
+
+    //采购料单
+    function Mancg(YQJBM, YQJname, YQJxh, shuliang) {
+
+        layer.open({
+            type: 2,
+            title: ['元器件采购', 'font-size:14px;'],
+            area: ['400px', '350px'],
+            offset: '10px',
+            fixed: false, //不固定
+            maxmin: true,
+            content: '../DKX_DDtypeinfo/YQJQGView?YQJBM=' + YQJBM + '&YQJname=' + YQJname + '&YQJxh=' + YQJxh + '&shuliang=' + shuliang,
+            //end: function () {
+            //    location.reload();
+            //}
+        })
+    }
+
+    //叠加采购数量
+    function DJMancg(YQJBM, YQJname, YQJxh, shuliang) {
+        layer.open({
+            type: 2,
+            title: ['元器件采购(叠加)', 'font-size:14px;'],
+            area: ['400px', '350px'],
+            offset: '10px',
+            fixed: false, //不固定
+            maxmin: true,
+            content: '../DKX_DDtypeinfo/DJYQJQGView?YQJBM=' + YQJBM + '&YQJname=' + YQJname + '&YQJxh=' + YQJxh + '&shuliang=' + shuliang,
+            //end: function () {
+            //    location.reload();
+            //}
+        })
+    }
+
+    //检测元器件请购单是否重复下单
+    function checkqgd(val) {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "../DKX_DDtypeinfo/YQJcgjc",
+            data: { YQJBM: val },
+            dataType: "html",
+            async: false,
+            success: function (reslut) {
+                json = reslut;
+
+            },
+            error: function (e) {
+                alert("请求失败");
+            }
+        })
+        return json;
+    }
+</script>
+<table class="table_con" style="width: 98%; color: #000; font-size: 13px; margin: auto;" id="table_con">
+</table>

@@ -1,0 +1,126 @@
+﻿@model NewAsiaOASystem.ViewModel.PagerInfo<NewAsiaOASystem.ViewModel.WeChat_forwardInfoView>
+@{
+    ViewBag.Title = "微信活动数据统计";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@section HeadContent{
+     <script type="text/javascript">
+         $(function () {
+             BindGrid();
+         })
+
+         function BindGrid() {
+            @{
+                if (null != Model && null != Model.GetPagingDataJson)
+                {
+                    string json = Model.GetPagingDataJson;//获取json数据
+                    @:var pageIndex=@Html.Raw(Model.CurrentPageIndex);
+                                 @: var jsonStr = @Html.Raw(json);
+                }
+             }
+             dataGrid(jsonStr,pageIndex);
+             $("#pageIndex").val(pageIndex);
+         }
+
+         function dataGrid(jsonStr)
+         {
+             if (typeof (jsonStr) != "undefined") {
+                 var html = "";
+                 html = '<table cellpadding="0" cellspacing="0" style="width:100%;">';
+                 for (var i = 0, j = jsonStr.length; i < j; i++) {
+                     if (i % 2 == 0)
+                         html += '<tr class="h-table-content-r1" id="'+jsonStr[i].Id+'">';
+                     else
+                         html += '<tr class="h-table-content-r"  id="'+jsonStr[i].Id+'">';
+                     html += '<td width="5%"><input type="checkbox" name="ContentChecked" value="' + jsonStr[i].Id + '"/></td>';
+                     html += '<td width="15%"><img src="'+jsonStr[i].headimgurl+'" width="40px" height="40px" style="text-align:center;vertical-align:middle; padding:5px 0px 5px 0px" /></td>';
+                     html += '<td width="20%">'+jsonStr[i].nickname + '</td>';
+                     html += '<td width="10%">'+jsonStr[i].sex + '</td>';
+                     html += '<td width="10%">'+jsonStr[i].city+ '</td>';
+                     html += '<td width="20%">'+ajaxGetdjcount(jsonStr[i].openid,"0")+'次</td>';
+                     html += '<td width="20%">'+ajaxGetdjcount(jsonStr[i].openid,"1")+'次</td>';
+                     html+='</tr>';
+                 }
+                 html += '</table>';
+                 $("#content").html(html);
+             }
+         }
+
+
+         //ajax 直接货间接点击量
+         function ajaxGetdjcount(OPenid,type){
+             var json;
+             $.ajax({
+                 type: "POST",
+                 url: "/activity/AjaxGetzjtjcount",
+                 data: {OPenid: OPenid,type:type },
+                 dataType: "html",
+                 async: false,
+                 success: function (reslut) {
+                     json =reslut;
+                 },
+                 error: function (e) {
+                     alert("请求失败");
+                 }
+             })
+             return json;
+         }
+     </script>
+    }
+
+
+
+<!--==================================数据列表=============================-->
+  <div class="h-right">
+    <div class="h-right-c">
+        <!--查询条件-->
+        @using (Html.BeginForm("SearchList", "Flow_PlanProductioninfo", FormMethod.Post, new { id = "form1" }))
+        {
+            @Html.Hidden("pageIndex");
+            <div class="inquiry1">
+                <fieldset>
+                    <legend>查询条件：</legend>
+                    <ul>
+                   <img src="" width="40px" height="40px" />
+                    @*    <li style="*width: 100%; *margin: -10px 0 5px 90px;"><span class="inquiry-input">
+                            <button name="btnSerch" onclick="return SerchList(1)">查询</button>
+                        </span></li>*@
+                        <li> 
+                            <span class="inquiry-input">
+                                <button onclick="return addClick('/Flow_PlanProductioninfo/List')">刷新</button>
+                            </span>
+                        </li>
+                    </ul>
+                </fieldset>
+            </div>
+        }
+        <div class="h-table">
+            <div class="h-table-content">
+                <table cellpadding="0" cellspacing="0" class="h-right-table-title1" style="border: none; width: 100%;">
+                    <tr>
+                        <td width="5%">
+                            <input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" /></td>
+                        <td width="15%">微信头像</td>
+                        <td width="20%">微信昵称</td>
+                        <td width="10%">性别</td>
+                        <td width="10%">城市</td>
+                        <td width="20%">点击量(直)</td>
+                        <td width="20%">点击量(间)</td>
+                    </tr>
+                </table>
+                <div id="content"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!--==========================输出分页按钮=========================-->
+<div class="pagin">
+    @if (ViewBag.PageNavigate == null)
+    {
+        @Html.ShowPageNavigate(Model.CurrentPageIndex, Model.PageSize, Model.RecordCount);
+    }
+</div>

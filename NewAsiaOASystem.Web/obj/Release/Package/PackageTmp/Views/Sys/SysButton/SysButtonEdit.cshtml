@@ -1,0 +1,80 @@
+﻿@model NewAsiaOASystem.DBModel.SysMenu
+
+@{
+    ViewBag.Title = "按钮";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+    <div style="width:400px;">
+         @using (Html.BeginForm("Edit", "SysButton", FormMethod.Post, new { id = "form1", enctype = "multipart/form-data" }))
+                { 
+                    <input type="hidden" name="CreateTime" value="@ViewBag.result.CreateTime"/>
+                    <input type="hidden" name="CreatePerson" value="@ViewBag.result.CreatePerson"/>
+                    <input type="hidden" name="UpdateTime" value="@ViewBag.result.UpdateTime"/>
+                    <input type="hidden" name="UpdatePerson" value="@ViewBag.result.UpdatePerson"/>
+                     <table cellpadding="5" id="TableForm" >
+                               <tr style="display:none;">
+	    			                <td>Id:</td>
+	    			                <td>
+                                        @{
+                                            if (ViewBag.action == "EditPage")
+                                            {
+                                                 <input class="easyui-textbox" type="text" name="ID" id="ID" value="@ViewBag.result.Id"/>
+                                             }
+                                            else
+                                            {
+                                                <input class="easyui-textbox" type="text" name="ID" id="ID" value=""/>
+                                            }
+                                         }
+                                       
+
+	    			                </td>
+	    		                </tr>
+	    		                <tr>
+	    			                <td>按钮名称:</td>
+	    			                <td> 
+                                        @Html.TextBoxFor(m => m.Name, new { @class = "easyui-textbox txt_box",@data_options="required:true,missingMessage:'按钮名称不为空！'" })
+	    			                </td>
+	    		                </tr>
+                                <tr>
+                                    <td>按钮次序:</td>
+	    			                <td><input class="easyui-textbox" type="text" name="Sort" value="@ViewBag.result.Sort"/></td>
+	    		                </tr>
+	    		                <tr>
+	    			                <td>图标:</td>
+	    			                <td>
+                                        <input class="easyui-filebox" name="Ico" data-options="prompt:'请选择...'" value="">
+                                        <input type="hidden" name="HIco" value="@ViewBag.result.Ico"/>
+	    			                </td>
+	    		                </tr>
+                                <tr>
+	    			                <td>状态:</td>
+	    			                <td>
+                                       <select class="easyui-combobox" name="Status">
+                                          @{
+                                                if ("0".Equals(Convert.ToString(ViewBag.result.Status)) && ViewBag.action == "EditPage")
+                                                {
+                                                    @:<option value="1">启用</option>
+                                                    @:<option value="0" selected="selected">禁用</option>
+                                                }
+                                                else
+                                                {
+                                                    @:<option value="1"  selected="selected">启用</option>
+                                                    @:<option value="0">禁用</option>
+                                                }
+                                                
+                                           } 
+                                          
+                                       </select></td>
+	    		                </tr>
+         	                    <tr>
+	    			                <td>备注:</td>
+	    			                <td><input class="easyui-textbox" name="Remark" data-options="multiline:true" style="height:100px" value="@ViewBag.result.Remark"/></td>
+	    		                </tr>
+                    </table>
+                }
+                <div style="text-align:center;padding:5px;width:300px;">
+	    	                <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm('/SysButton/Index')">保存</a>
+	    	                <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">清除</a>
+                </div>
+    </div>  

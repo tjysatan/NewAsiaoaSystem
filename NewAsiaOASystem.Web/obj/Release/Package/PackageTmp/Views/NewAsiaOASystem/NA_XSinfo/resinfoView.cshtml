@@ -1,0 +1,104 @@
+﻿@model NewAsiaOASystem.ViewModel.NA_AddresseeInfoView
+@{
+    ViewBag.Title = "销售订单中收件人区域的修改";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<div style="width: 80%; padding: 20px 20px 0 20px">
+     <input type="hidden" id="zlId" name="zlId" />
+    
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">省：</label>
+        <div class="layui-input-block">
+           @Html.TextBoxFor(m => m.qyo, new { placeholder = "省份", @class = "layui-input" })
+        </div>
+    </div>
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">市：</label>
+        <div class="layui-input-block">
+           @Html.TextBoxFor(m => m.qye, new { placeholder = "市", @class = "layui-input" })
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">区/县：</label>
+        <div class="layui-input-block">
+            @Html.TextBoxFor(m => m.qyt, new { placeholder = "区/县", @class = "layui-input" })
+        </div>
+    </div>
+
+    <div class="layui-form-item" style="margin: auto;padding-top:10px">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit="" lay-filter="demo1" onclick="return updateEide()">确认修改</button>
+        </div>
+    </div>
+    <hr class="layui-bg-black">
+     <blockquote class="layui-elem-quote layui-quote-nm">
+        说明：<br />
+        1.正确的省市区县.<br />
+    </blockquote>
+</div>
+
+<script src="~/Scripts/NAjs/layui.js"></script>
+<script type="text/javascript">
+
+ 
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+    //提交修改料单
+    function updateEide(){
+         
+        var Id='@Model.Id';
+        var qyo=$("#qyo").val();
+        var qye = $("#qye").val();
+        var qyt = $("#qyt").val();
+        if (qyo == "" || qyo == null)
+        {
+            layer.alert("省份不为空！", { icon: 2 });
+            return false;
+        }
+        if (qye == "" || qye == null) {
+            layer.alert("市不为空！", { icon: 2 });
+            return false;
+        }
+        if (qyt == "" || qyt == null) {
+            layer.alert("区县不为空！", { icon: 2 });
+            return false;
+        }
+        $.ajax({
+            url: "../NA_XSinfo/resinfoEide",
+            type: "POST",
+            data: { "Id": Id, "qyo": qyo, "qye": qye, "qyt": qyt},
+            dataType: "json",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                alert(response)
+                if (response.result == "error") {
+                    layer.alert(response.res, { icon: 2 });
+                    return false;
+                }
+                if (response.result == "success") {
+                    layer.alert(response.res , { icon: 1 });
+                    return false;
+                }
+                return false;
+
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+                return false;
+            }
+        })
+    }
+</script>

@@ -1,0 +1,60 @@
+﻿@model NewAsiaOASystem.ViewModel.Vote_ConfigView
+@{
+    ViewBag.Title = "基础信息设置";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<div class="infor">
+       @* <div class="h-right-title">您当前的位置：绩效推送</div>*@
+        <p id="Ptitle"> <span class="inquiry-input" style="margin-left:10px;">
+              
+          
+ @using (Html.BeginForm("Edit", "Vote_Config", FormMethod.Post, new { id = "form1", enctype = "multipart/form-data" }))
+ {
+       @Html.HiddenFor(m => m.C_Id)
+ 
+        <div class="system-menu-set">
+      
+
+            <ul class="infor-c ">
+                <li><span class="infor-c-width" style="width:150px;">同一个微信限制时间：</span>
+                    <span class="infor-c-input">
+                        @Html.TextBoxFor(m => m.refuseTime, new { }) 小时
+                    </span>
+                       <span style="color:red;font-size:24px;vertical-align: middle;margin-left: 8px;">*</span><span class="desc w-register">请填写数字，如果不填默认同一个微信只能提交一次！</span>
+                </li>
+            </ul>
+         
+                  <ul class="infor-c">
+                <li><span class="infor-c-width" style="width:150px;">微信限制：</span>
+                    <span class="infor-c-input">
+                     
+                    <select class="add-function" name="RestrictIP">
+                            @{
+                           if ( "1".Equals(Convert.ToString(@Model.RestrictIP))&&null != @Model.C_Id)
+                             {
+                                @:<option value="0">是</option>
+                                @:<option value="1" selected="selected">否</option>
+                              }
+                                      else
+                                      {
+                                @:<option value="0"  selected="selected">是</option>
+                                @:<option value="1">否</option>
+                                      }
+                                                
+                            }
+                      
+
+                        </select>  
+                    </span>
+
+                </li>
+            </ul>
+
+
+        </div>
+        <div class="inquiry-input infor-b"><span><button onclick="return submitForm('/Vote_Config/Index')">保存</button></span></div>
+         }
+    </div>
+
+

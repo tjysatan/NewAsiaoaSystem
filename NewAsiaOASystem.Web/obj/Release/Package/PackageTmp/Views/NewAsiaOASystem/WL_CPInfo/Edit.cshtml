@@ -1,0 +1,66 @@
+﻿@model NewAsiaOASystem.ViewModel.WL_CPInfoView
+@{
+    ViewBag.Title = "物联网电控箱编辑";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@using (Html.BeginForm("Edit", "WL_CPInfo", FormMethod.Post, new { id = "form1" }))
+{
+    @Html.HiddenFor(m => m.Id)
+    @Html.HiddenFor(m => m.C_time)
+    @Html.HiddenFor(m => m.C_name)
+  <div class="infor">
+        <p id="Ptitle"></p>
+        <div class="system-menu-set">
+            <ul class="infor-c">
+                <li>
+                    <span class="infor-c-width">产品名称：</span>
+                    <span class="infor-c-input">@Html.TextBoxFor(m => m.Name)</span>
+                    <span style="color:red;font-size:24px;vertical-align: middle;margin-left: 8px;">*</span>
+                </li>
+            </ul>
+            
+    
+
+            <ul class="infor-c">
+                <li><span class="infor-c-width">显示次序：</span><span class="infor-c-input">@Html.TextBoxFor(m => m.Sort)</span><span class="desc w-register"></span></li>
+            </ul>
+          
+            <ul class="infor-c ">
+                <li><span class="infor-c-width">状态：</span>
+                    <span>
+                        <select class="add-function" name="States">
+                            @{
+                              if ("1".Equals(Convert.ToString(@Model.States)) && null != @Model.Id)
+                              {
+                                @:<option value="0">启用</option>
+                                @:<option value="1" selected="selected">禁用</option>
+                              }
+                              else
+                              {
+                                @:<option value="0"  selected="selected">启用</option>
+                                @:<option value="1">禁用</option>
+                                                }
+                                                
+                            }
+                        </select></span><span class="desc w-register"> 是否启</span></li>
+                 </ul>
+                <ul class="infor-c">
+                    <li>
+                        <span class="infor-c-width">备注：</span>
+                        <span class="infor-c-input">
+                        @Html.TextAreaFor(m => m.Beizhu, new { @class = "easyui-textbox", @height = "60px",@data_options="multiline:true",@style="height:60px" })
+                           </span>
+                    </li>
+                </ul>
+           
+        </div>
+        <div class="inquiry-input infor-b">
+            <span>
+                <button onclick="return SavaForm()">保存</button></span><span>
+                    <button onclick="return RedirectUrl('/WL_CPInfo/List')">返回</button></span>
+        </div>
+    </div>  
+}
+<script src="~/Scripts/NAjs/WL_CPInfo.js"></script>
+

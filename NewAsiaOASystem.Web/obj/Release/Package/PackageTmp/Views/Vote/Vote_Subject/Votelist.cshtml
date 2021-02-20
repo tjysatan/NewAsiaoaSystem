@@ -1,0 +1,47 @@
+﻿@{
+    ViewBag.Title = "Votelist";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+<link rel="stylesheet" href="~/Content/css/personal.css" />
+@section HeadContent{
+    <script type="text/javascript"> 
+        $(function () {
+            BindGrid();
+        })
+        function BindGrid() {
+            var OpenId = '@Html.Raw(ViewData["OpenId"])';
+            var json;
+            json = AjaxS_alllist(OpenId);
+            if (typeof (json) != "undefined") {
+                var html = "";
+                html = '<div class="mobile-title">';
+                html += '<span class="mobile-font">问卷调查列表</span>';
+                html += ' </div>';
+                html += '<div class="questionnaire"><div class="questionnaire-c">';
+                html += '<div class="questionnaire-c-content">';
+                if (json.length != 0) {
+                    for (var i = 0, j=json.length,M=1; i < j; i++,M++) {
+                        if (json[i].S_Type != "0") {
+                            html += '  <ol><a href="' + Showurl(json[i].S_Id,OpenId) + '">' + M + '、' + json[i].S_title + '(内部问卷)</a></ol>';
+                        }
+                        else {
+                            html += '  <ol><a href="' + Showurl(json[i].S_Id,OpenId) + '">' + M + '、' + json[i].S_title + '</a></ol>';
+                        }
+                    }
+                }
+                else {
+                    html += ' <ol><a href="#">暂时没有问卷调查！</a></ol>  ';
+                }
+                html += '</div>';
+                html += '</div>';
+                html += '</div>';
+                $(".mobile-wapper").append(html);
+            }
+        }
+    </script>
+    }
+
+<div class="mobile-wapper">
+
+</div>
+  <script src="~/Scripts/Vote/Vote_Subject.js"></script>

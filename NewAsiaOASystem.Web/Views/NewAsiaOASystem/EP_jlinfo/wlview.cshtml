@@ -1,0 +1,300 @@
+﻿@model NewAsiaOASystem.ViewModel.EP_jlinfoView
+@{
+    ViewBag.Title = "物流跟踪页面";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<script type="text/javascript">
+
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+
+    $(function () {
+        $("#pageindex").val('@ViewData["pageindex"]');
+        @*   ajaxwljson('@ViewData["typeCom"]','@ViewData["nu"]')*@
+        var kdgs = kdgsname('@Model.Kdgs');
+        kdgshtml(kdgs,'@Model.Kd_no');
+        ajaxnewwlckjson('@ViewData["typeCom"]', '@ViewData["nu"]','@ViewData["tel"]');
+
+    })
+    //查询物流
+    function ajaxwljson(typeCom, nu) {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "/EP_jlinfo/trackwl",
+            data: { typeCom: typeCom, nu: nu },
+            success: function (reslut) {
+                json = reslut;
+                var html = ' <IFRAME src="' + json + '" frameBorder=0 marginwidth=0 marginheight=0 scrolling=no style="width:600px;height:400px;" width=600  height=400 scrolling=no ALLOWTRANSPARENCY="true"></IFRAME>';
+                $("#man").html(html)
+            }, error: function (e) {
+                alert("网络异常，请稍候再试！");
+            }
+        })
+
+    }
+
+    //新的查询物流信息
+    function ajaxnewwlckjson(typeCon, nu, tel4) {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "/EP_jlinfo/aliEpckwl",
+            data: { kdno: nu, kdgs: typeCon, tel: tel4 },
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (reslut) {
+                disLoading();
+                json = eval('[' + reslut + ']');
+                wlinfohtmlpj(json);
+
+            }, error: function (e) {
+                disLoading();
+                alert("网络异常，请稍候再试！");
+            }
+        })
+    }
+
+    //快递信息HTML拼接
+    function wlinfohtmlpj(str) {
+        var jsonstr = str;
+        var html = "";
+        html = '<table class="layui-table">';
+        if (typeof (jsonstr) != "undefined") {
+            //判断是否查询成功
+            var status = jsonstr[0].status
+            if (status == "0") {
+                for (var i = 0, j = jsonstr[0].result.list.length; i < j; i++) {
+                    if (i == 0)
+                        html += '<tr style="color:red;">';
+                    else
+                        html += '<tr>';
+                    html += '<td width="25%">' + jsonstr[0].result.list[i].time + '</td>';
+                    html += '<td>' + jsonstr[0].result.list[i].status + '</td>'
+                    html += '<tr>';
+                }
+            }
+            else {
+                html += '<tr>';
+                html += '<td>(' + status + ')查询有误！(注：201 快递单号为空,202 快递公司为空,203 快递公司不存在 ,204 快递公司识别失败 ,205 没有信息)</td>';
+                html += '</tr>';
+            }
+        }
+        else {//查询数据为空
+            html += '<tr>';
+            html += '<td>网络查询异常~，请稍后再试！</td>';
+            html += '</tr>';
+        }
+        html += '</table>';
+        $("#man").html(html)
+    }
+    //快递公司html
+    function kdgshtml(str, str2)
+    {
+        var html = "";
+        html = '<table class="layui-table">';
+        html += '<tr>';
+        html += '<td width="25%">快递公司：</td>';
+        html += '<td>'+str+'</td>';
+         
+        html += '</tr>';
+        html += '<tr>';
+        html += '<td width="25%">单号：</td>';
+        html += '<td>' + str2 + '</td>';
+        html += '</tr>';
+        html += '</table>';
+        $("#kdgshtml").html(html)
+    }
+
+    //快递公司名称
+    function kdgsname(val) {
+        var kdnam;
+        if (val != "") {
+            if (val == "sh") {
+                kdnam = "盛辉物流";
+            } else if (val == "sf") {
+                kdnam = "顺丰快递";
+            } else if (val == "db") {
+                kdnam = "德邦快递";
+            } else if (val == "zt") {
+                kdnam = "中通快递";
+            } else if (val == "tdhy") {
+                kdnam = "天地华宇";
+            } else if (val == "JJ") {
+                kdnam = "佳吉物流";
+            } else if (val == "ycky") {
+                kdnam = "远成快运";
+            } else if (val == "ztky") {
+                kdnam = "中通快运";
+            }
+            else if (val == "dbwl") {
+                kdnam = "德邦物流";
+            } else if (val == "an") {
+                kdnam="安能物流"
+            }
+        }
+        return kdnam;
+    }
+</script>
+
+<style>
+    .round
+    {
+        width: 530px;
+        height: 100px;
+        border: 1px solid #dedede;
+        -moz-border-radius: 10px; /* Gecko browsers */
+        -webkit-border-radius: 10px; /* Webkit browsers */
+        border-radius: 10px; /* W3C syntax */
+        margin-left: 35px;
+        padding-top:10px;
+    }
+</style>
+
+<script type="text/javascript">
+    $(function () {
+        if ('@Model.DHsjdatetime' == "" || '@Model.DHsjdatetime' == null) {
+            $("#DHsjdatetime").val(Getdatetimejson())
+        }
+        if ('@Model.QRsjName' == '' || '@Model.QRsjName' == null) {
+            if ('@Model.Source' == "0") {
+                $("#QRsjName").val(ShowCustlxrName('@Model.SjId'));
+            } else if ('@Model.Source' == "1") {
+                $("#QRsjName").val(AjaxAddresseeinfo('@Model.SjId').Aname);
+            }
+    }
+    })
+//获取当天服务的时间
+function Getdatetimejson() {
+    var sl;
+    $.ajax({
+        type: "POST",
+        url: "../EP_jlinfo/GetNewdatetimejson",
+        dataType: "html",
+        async: false,
+        success: function (reslut) {
+            sl = reslut;
+        },
+        error: function (e) {
+            alert(e.error);
+            alert("失败！");
+        }
+    })
+    return sl;
+}
+
+function dySavaForm() {
+
+    var pageindex = $("#pageindex").val();
+    //表单验证
+    var options = {
+        beforeSubmit: function () {
+            return true;
+        },
+        dataType: "json",//这里是指控制器处理后返回的类型，这里返回json格式。  
+        success: function (context) {
+            if ("success" == context.result) {
+                $.messager.alert("操作提示", '操作成功！', 'info', function () {
+                    var ParentObj = window.parent;//获取父窗口
+                    window.parent.$('#windowDia').window('close');
+                    window.parent.location = "/EP_jlinfo/List?pageIndex=" + pageindex;
+                    return false;
+                });
+            }
+            if ("error" == context.result) {
+                $.messager.alert("操作提示", '操作失败！', 'error');
+            }
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            $.messager.alert("操作提示", '操作失败！', 'error');
+        }
+    }
+    $('#form1').ajaxSubmit(options);
+    return false; //为了不刷新页面,返回false 
+}
+
+//关闭
+function closeUI() {
+    var ParentObj = window.parent;//获取父窗口
+    window.parent.$('#windowDia').window('close');
+    return false;
+}
+//获取联系人信息（电商的快递单记录）
+function AjaxAddresseeinfo(val) {
+    var str;
+    $.ajax({
+        type: "POST",
+        url: "../NACustomerinfo/GetaddressssInfobycusId",
+        data: { "cusId": val },
+        dataType: "json",
+        async: false,
+        success: function (reslut) {
+            str = eval(reslut);
+        },
+        error: function (e) {
+            alert(e.error);
+            alert("失败！");
+        }
+    })
+    return str;
+}
+</script>
+
+@using (Html.BeginForm("EditQs", "EP_jlinfo", FormMethod.Post, new { id = "form1" }))
+{
+<div style="padding-top:10px">
+    @Html.HiddenFor(m => m.Id)
+    <input type="hidden" id="pageindex" name="pageindex" />
+    <div align="center" class="round">
+
+        <table style="width: 95%; padding-top: 5px;">
+            <tr>
+                <td class="infor-c-input" style="font-size: 12px;" align="left">签收时间：  @Html.TextBoxFor(m => m.DHsjdatetime, new { onclick = "WdatePicker()" })</td>
+                <td class="infor-c-input" style="font-size: 12px;">收件人：  @Html.TextBoxFor(m => m.QRsjName)</td>
+            </tr>
+        </table>
+
+        <div class="inquiry-input infor-b">
+            <span>
+                <button onclick="return dySavaForm()">确定</button>
+            </span>
+            <span>
+                <button onclick="return  closeUI()">返回</button>
+            </span>
+        </div>
+    </div>
+</div>
+    }
+    <div align="center" id="kdgshtml" name="kdgshtml">
+        <table class="layui-table">
+            <tr>
+                <td width="25%">快递公司：</td>
+                <td>@Model.Kdgs</td>
+            </tr>
+            <tr>
+                <td width="25%">单号：</td>
+                <td>@Model.Kd_no</td>
+            </tr>
+        </table>
+    </div>
+    <div align="center" id="man" name="man">
+    </div>
+
+<script src="~/Scripts/NAjs/NAReturnList.js"></script>
+
+
+
+
+
+
+
+

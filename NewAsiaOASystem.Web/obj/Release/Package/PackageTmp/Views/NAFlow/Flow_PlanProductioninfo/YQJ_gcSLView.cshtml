@@ -1,0 +1,99 @@
+﻿@{
+    ViewBag.Title = "采购元器件";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<script type="text/javascript">
+    $(function () {
+        $("#Pname").val('@ViewData["YQJ_name"]');//产品名称
+        $("#jyscsl").val('@ViewData["sl"]');//建议采购数量
+        $("#scsl").val('@ViewData["sl"]');//实际次采购数量
+        $("#wl_haoma").val('@ViewData["YQJ_BM"]');//产品的物料代码
+        //$("#Id").val(jsondata.Id);//产品Id
+    })
+
+    function Insertyqj() {
+        var yqj_bm = $("#wl_haoma").val();//元器件编号
+        var YQJ_name = $("#Pname").val();//元器件名称
+        var sl = $("#scsl").val();
+        var cgy = $("#cgy").val();
+        $.ajax({
+            type: "POST",
+            url: "../Flow_PlanProductioninfo/Yqj_REQ",
+            data: { P_Id: '@ViewData["P_Id"]', YQJ_BM: yqj_bm, YQJ_name: YQJ_name, sl: sl, cgy: cgy },
+                dataType: "html",
+                async: false,
+                success: function (reslut) {
+                    json = reslut;
+                    if (json == "0") {
+                        $.messager.alert("操作提示", '提交成功！', 'info', function () {
+                            var ParentObj = window.parent;//获取父窗口
+                            window.parent.$('#windowDia').window('close');
+                        });
+                    }
+                },
+                error: function (e) {
+                    alert("请求失败");
+                }
+         })
+    }
+
+
+    function closeUI() {
+        var ParentObj = window.parent;//获取父窗口
+        window.parent.$('#windowDia').window('close');
+    }
+</script>
+
+<input type="hidden" id="wl_haoma" name="wl_haoma" /><!--物料编码-->
+<input type="hidden" id="Id" name="Id" /><!--产品Id-->
+
+<div class="infor" style="width:500px; height:200px;">
+        <p id="Ptitle"></p>
+        <div class="system-menu-set">
+ 
+                <ul class="infor-c">
+                <li>
+                    <span class="infor-c-width">元器件：</span>
+                    <span class="infor-c-input">
+                         <input type="text" readOnly="readOnly" id="Pname" name="Pname" />
+                    </span>
+                </li>
+            </ul>
+            <ul class="infor-c">
+                <li>
+                    <span class="infor-c-width">建议采购：</span>
+                    <span class="infor-c-input">
+                         <input type="text" readOnly="readOnly" id="jyscsl" name="jyscsl" />
+                    </span>
+                    /套
+                </li>
+            </ul>
+            <ul class="infor-c">
+                <li>
+                    <span class="infor-c-width">实际采购：</span>
+                    <span class="infor-c-input">
+                         <input type="text"  id="scsl" name="scsl" />
+                    </span>
+                    /套
+                </li>
+            </ul>
+            <ul class="infor-c">
+                <li>
+                    <span class="infor-c-width">采购员：</span>
+                    <span class="infor-c-input">
+                        <select id="cgy" name="cgy">
+                             <option value="0">严春芳</option>
+                             <option value="1">季英</option>
+                        </select>
+                    </span>
+                   
+                </li>
+            </ul>
+        </div>
+         <div class="inquiry-input infor-b" style="width:450px;">
+            <span style="margin-left:100px;">
+                <button onclick="return Insertyqj()">提交</button></span><span>
+                <button onclick="return closeUI()">关闭</button></span>
+        </div>
+    </div>

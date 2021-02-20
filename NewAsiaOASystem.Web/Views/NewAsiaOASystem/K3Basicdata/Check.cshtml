@@ -1,0 +1,551 @@
+﻿@model NewAsiaOASystem.ViewModel.K3_wuliaoinfoView
+@{
+    ViewBag.Title = "Check";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+<style>
+    .commonStatus {
+        color: green;
+    }
+
+    .imOutDate {
+        color: red;
+    }
+
+    .hadOutDate {
+        color: red;
+    }
+</style>
+
+@using (Html.BeginForm("checkBaseitem", "K3Basicdata", FormMethod.Post, new { id = "form1" }))
+{
+    @Html.HiddenFor(m => m.Id)
+    @Html.Hidden("CCCStatusHidden")
+    @Html.Hidden("CQCStatusHidden")
+    @Html.Hidden("SpecStatusHidden")
+    @Html.Hidden("StdStatusHidden")
+    @Html.Hidden("SampleStatusHidden")
+    @Html.Hidden("QualityStatusHidden")
+    @Html.Hidden("AppraisalsStatusHidden")
+
+    <div class="infor">
+        <p id="Ptitle"></p>
+        <div class="system-menu-set">
+            <ul class="infor-c">
+                <li>
+                    <span class="infor-c-width">元器件代码：</span>
+                    <span class="infor-c-input">@Html.TextBox("FNumber", Model.fnumber, new { disabled = "disabled" })</span>
+                </li>
+                <li>
+                    <span class="infor-c-width">元器件名称：</span>
+                    <span class="infor-c-input">
+                        @Html.TextBoxFor(m => m.fname, new { disabled = "disabled" })
+                    </span>
+                </li>
+                <li>
+                    <span class="infor-c-width">型号：</span>
+                    <span class="infor-c-input">@Html.TextBoxFor(m => m.fmodel, new { disabled = "disabled" })</span>
+                </li>
+            </ul>
+            <ul class="infor-c">
+                <li>
+                    <span class="infor-c-width">单价：</span>
+                    <span class="infor-c-input">@Html.TextBoxFor(m => m.forderprice, new { disabled = "disabled" })</span>
+                </li>
+
+            </ul>
+            <ul class="infor-c ">
+                <li>
+
+                </li>
+                <li>
+                    <span class="infor-c-width">审核：</span>
+                    <span class="infor-c-input">
+                        @Html.DropDownList("checkList", new SelectList(ViewBag.nameList, "Value", "Text"), new { @class = "add-function" })
+                    </span>
+                </li>
+                <li>
+                    <span class="infor-c-width">供应商列表：</span>
+                </li>
+                <li>
+                    <span class="infor-c-input">
+                        @Html.DropDownList("hadList", new SelectList(ViewBag.hadList, "Value", "Text"), new { @class = "add-function", @onSelect = "" })
+                    </span>
+                </li>
+            </ul>
+            <ul class="infor-c ">
+                <li>
+                    <span class="infor-c-width"><span style="color: red; font-size: 24px;vertical-align: middle; margin-left: 8px;width: 4px;">*</span>CCC证书：</span>
+                </li>
+                <li>
+                    <span class="infor-c-width">有效期至：</span>
+                    <span class="infor-c-input">
+                        <input type="text" id="CCCDDeadline" name="CCCDDeadline" value="@(ViewBag.CCCDeadline == null ? " ":ViewBag.CCCDeadline.ToString(" D") )" disabled="disabled" />
+                    </span>
+                </li>
+                <li>
+                    <span class="infor-c-width">状态：</span>
+                    <span class="infor-c-input">
+                        <input type="text" id="CCCStatus" name="CCCStatus" value="" disabled="disabled" readonly="readonly" />
+                    </span>
+                </li>
+                <li>
+                    <span id="CCCPic" class="infor-c-width">
+
+                    </span>
+                </li>
+            </ul>
+
+            <ul class="infor-c ">
+                <li>
+                    <span class="infor-c-width"><span style="color: red; font-size: 24px;vertical-align: middle; margin-left: 8px;width: 4px;">*</span>CQC证书：</span>
+                </li>
+                <li>
+                    <span class="infor-c-width">有效期至：</span>
+                    <span class="infor-c-input">
+                        <input type="text" id="CQCDeadLine" name="CQCDeadLine" value="@(ViewBag.CQCDeadLine == null ? " ":ViewBag.CQCDeadLine.ToString(" D") )" disabled="disabled" />
+                    </span>
+                </li>
+                <li>
+                    <span class="infor-c-width">状态：</span>
+                    <span class="infor-c-input">
+                        <input type="text" id="CQCStatus" name="CQCStatus" value="" disabled="disabled" />
+                    </span>
+                </li>
+                <li>
+                    <span id="CQCPic" class="infor-c-width">
+
+                    </span>
+                </li>
+            </ul>
+
+            <ul class="infor-c ">
+                <li>
+                    <span class="infor-c-width"><span style="color: red; font-size: 24px;vertical-align: middle; margin-left: 8px;width: 4px;">*</span>规格书：</span>
+                </li>
+                <li>
+                    <span class="infor-c-width">有效期至：</span>
+                    <span class="infor-c-input">
+                        <input type="text" id="SpecDeadLine" name="SpecDeadLine" value="@(ViewBag.SpecDeadLine == null ? " ":ViewBag.SpecDeadLine.ToString(" D") )" disabled="disabled" />
+                    </span>
+                </li>
+                <li>
+                    <span class="infor-c-width">状态：</span>
+                    <span class="infor-c-input">
+                        <input type="text" id="SpecStatus" name="SpecStatus" value="" disabled="disabled" />
+                    </span>
+                </li>
+                <li>
+                    <span id="SpecPic" class="infor-c-width">
+
+                    </span>
+                </li>
+            </ul>
+
+            <ul class="infor-c ">
+                <li>
+                    <span class="infor-c-width"><span style="color: red; font-size: 24px;vertical-align: middle; margin-left: 8px;width: 4px;">*</span>技术确认标准：</span>
+                </li>
+                <li>
+                    <span class="infor-c-width">有效期至：</span>
+                    <span class="infor-c-input">
+                        <input type="text" id="StdDeadLine" name="StdDeadLine" value="" disabled="disabled" />
+                    </span>
+                </li>
+                <li>
+                    <span class="infor-c-width">状态：</span>
+                    <span class="infor-c-input">
+                        <input type="text" id="StdStatus" name="StdStatus" value="" disabled="disabled" />
+                    </span>
+                </li>
+                <li>
+                    <span id="StdPic" class="infor-c-width">
+
+                    </span>
+                </li>
+            </ul>
+            <ul class="infor-c ">
+                <li>
+                    <span class="infor-c-width">样品确认单：</span>
+                </li>
+                <li>
+                    <span class="infor-c-width">有效期至：</span>
+                    <span class="infor-c-input">
+                        <input type="text" id="SampleDeadLine" name="SampleDeadLine" value="" disabled="disabled" />
+                    </span>
+                </li>
+                <li>
+                    <span class="infor-c-width">状态：</span>
+                    <span class="infor-c-input">
+                        <input type="text" id="SampleStatus" name="SampleStatus" value="" disabled="disabled" />
+                    </span>
+                </li>
+                <li>
+                    <span id="SamplePic" class="infor-c-width">
+
+                    </span>
+                </li>
+            </ul>
+            <ul class="infor-c ">
+                <li>
+                    <span class="infor-c-width">质量协议：</span>
+                </li>
+
+                <li>
+                    <span class="infor-c-width">有效期至：</span>
+                    <span class="infor-c-input">
+                        <input type="text" id="QualityDeadLine" name="QualityDeadLine" value="" disabled="disabled" />
+                    </span>
+                </li>
+                <li>
+                    <span class="infor-c-width">状态：</span>
+                    <span class="infor-c-input">
+                        <input type="text" id="QualityStatus" name="QualityStatus" value="" disabled="disabled" />
+                    </span>
+                </li>
+                <li>
+                    <span id="QualityPic" class="infor-c-width">
+
+                    </span>
+                </li>
+            </ul>
+            <ul class="infor-c ">
+                <li>
+                    <span class="infor-c-width">供方季度/年度考核：</span>
+                </li>
+
+                <li>
+                    <span class="infor-c-width">有效期至：</span>
+                    <span class="infor-c-input">
+                        <input type="text" id="AppraisalsDeadLine" name="AppraisalsDeadLine" value="" disabled="disabled" />
+                    </span>
+                </li>
+                <li>
+                    <span class="infor-c-width">状态：</span>
+                    <span class="infor-c-input">
+                        <input type="text" id="AppraisalsStatus" name="AppraisalsStatus" value="" disabled="disabled" />
+                    </span>
+
+                </li>
+                <li>
+                    <span id="AppraisalsPic" class="infor-c-width">
+
+                    </span>
+                </li>
+            </ul>
+
+        </div>
+        <div class="inquiry-input infor-b">
+            <span>
+                <button onclick="return CheckForm()">保存</button>
+            </span><span>
+                <button onclick="return RedirectUrl('/K3Basicdata/CheckList')">返回</button>
+            </span>
+        </div>
+    </div>
+}
+<style>
+    .btn_att {
+        margin-left: 30px;
+    }
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+    });
+
+    function inputClassSet(obj, status) {
+        if (status == 3) {
+            obj.addClass("commonStatus");
+        } else if (status == "4") {
+            obj.addClass("imOutDate");
+        } else if (status == "5") {
+            obj.addClass("hadOutDate");
+        }
+    }
+
+    //点击审核按钮
+    function CheckForm() {
+        var hadsupplierid = $("#hadList option:selected").val();
+
+        if (hadsupplierid < 0) {
+            $.messager.alert("操作提示", "选择一个供应商", "warning");
+            return false;
+        }
+
+        var CCCDDeadline = $('#CCCDDeadline').val();
+        var CQCDeadLine = $('#CQCDeadLine').val();
+        var SpecDeadLine = $('#SpecDeadLine').val();
+        var StdDeadLine = $('#StdDeadLine').val();
+        var SampleDeadLine = $('#SampleDeadLine').val();
+        var QualityDeadLine = $('#QualityDeadLine').val();
+        var AppraisalsDeadLine = $('#AppraisalsDeadLine').val();
+
+        var CCCHidden = $('#CCCStatusHidden').val();
+        var CQCHidden = $('#CQCStatusHidden').val();
+        var SpecHidden = $('#SpecStatusHidden').val();
+        var StdHidden = $('#StdStatusHidden').val();
+        var SampleHidden = $('#SampleStatusHidden').val();
+        var QualityHidden = $('#QualityStatusHidden').val();
+        var AppraisalsHidden = $('#AppraisalsStatusHidden').val();
+
+
+        var checkresult = $("#checkList").val();
+        var hadsupplierid = $("#hadList option:selected").val();
+
+        if (checkresult == 1) {
+            if (CCCDDeadline == "") {
+                $.messager.alert("操作提示", "CCC证书未上传", "warning");
+                return false;
+            }
+            if (CQCDeadLine == "") {
+                $.messager.alert("操作提示", "CQC证书未上传", "warning");
+                return false;
+            }
+            if (SpecDeadLine == "") {
+                $.messager.alert("操作提示", "规格书未上传", "warning");
+                return false;
+            }
+            if (StdDeadLine == "") {
+                $.messager.alert("操作提示", "技术确认标准未上传", "warning");
+                return false;
+            }
+
+
+            if (CCCHidden == "5") {
+                $.messager.alert("操作提示", "CCC证书已经过期", "warning");
+                return false;
+            }
+            if (CQCHidden == "5") {
+                $.messager.alert("操作提示", "CQC证书已经过期", "warning");
+                return false;
+            }
+            if (SpecHidden == "5") {
+                $.messager.alert("操作提示", "规格书已经过期", "warning");
+                return false;
+            }
+            if (StdHidden == "5") {
+                $.messager.alert("操作提示", "技术确认已经过期", "warning");
+                return false;
+            }
+            if (SampleHidden == "5") {
+                $.messager.alert("操作提示", "样品确认单已经过期", "warning");
+                return false;
+            }
+            if (QualityHidden == "5") {
+                $.messager.alert("操作提示", "质量协议已经过期", "warning");
+                return false;
+            }
+            if (AppraisalsHidden == "5") {
+                $.messager.alert("操作提示", "供方考核已经过期", "warning");
+                return false;
+            }
+        }
+
+        var RetUrl = "/K3Basicdata/CheckList";
+
+        var checkresult = $("#checkList").val();
+
+        var options = {
+            beforeSubmit: function () {
+                return true;
+            },
+            dataType: "json",//这里是指控制器处理后返回的类型，这里返回json格式。
+            success: function (context) {
+                if ("success" == context.result) {
+                    $.messager.alert("操作提示", '操作成功！', 'info', function () {
+                        //location.href = (RetUrl + context.id);
+                        location.href = RetUrl;
+                    });
+                }
+                if ("error" == context.result) {
+                    $.messager.alert("操作提示", '操作失败！', 'error');
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $.messager.alert("操作提示", '操作失败！', 'error');
+            }
+        }
+        $('#form1').ajaxSubmit(options);
+        return false; //为了不刷新页面,返回false
+    }
+
+    $(document).on("change", 'select#hadList', function () {
+        setDeadline();
+    });
+
+    function setDeadline() {
+        var itemid = $('#Id').val();
+        var a = $('#AppraisalsDeadLine').val();
+        var hadsupplierid = $("#hadList option:selected").val();
+
+        var selectsupplier = "";
+
+        if (hadsupplierid > 0) {
+            selectsupplier = hadsupplierid;
+        }
+
+        clearDeadline();
+        clearStatus();
+        clearPic();
+        if (hadsupplierid < 0) {
+            return false;
+        }
+
+        $.ajax({
+            //url: "../K3Basicdata/selectChanged?itemid=" + itemid + "&supplierid=" + selectsupplier,
+            url: "../K3Basicdata/selectChanged",
+            data: { itemid: itemid, supplierid: selectsupplier },
+            type: "post",
+            dataType: "json",
+            success: function (context) {
+                var data = eval(context.result);
+                var sbi = eval(context.status);
+
+                if (typeof (sbi) != "undefined") {
+
+                    $('#checkList').val(sbi[0].ischecked.toString());
+                }
+
+                if (typeof (data) != "undefined") {
+                    for (var i = 0, j = data.length; i < j; i++) {
+                        switch (data[i].FAttType) {
+                            case 0:
+
+                                $('#CCCDDeadline').val(showDate(data[i].FAttDeadline));
+                                $('#CCCStatus').val(data[i].supplierAndBaseitemStatus.strStatusName);
+                                $('#CCCStatusHidden').val(data[i].supplierAndBaseitemStatus.iStatus);
+                                inputClassSet($("#CCCStatus"), data[i].supplierAndBaseitemStatus.iStatus)
+                                if (data[i].FAttURL != undefined) {
+                                    var ccc = "<a href='#' class='infor-c-width' onclick=upload('" + data[i].FAttURL + "')>CCC证书查看</a>";
+                                    $('#CCCPic').html(ccc);
+                                }
+
+                                break;
+                            case 1:
+                                $('#CQCDeadLine').val(showDate(data[i].FAttDeadline));
+                                $('#CQCStatus').val(data[i].supplierAndBaseitemStatus.strStatusName);
+                                $('#CQCStatusHidden').val(data[i].supplierAndBaseitemStatus.iStatus);
+                                inputClassSet($("#CQCStatus"), data[i].supplierAndBaseitemStatus.iStatus)
+                                if (data[i].FAttURL != undefined) {
+                                    var cqc = "<a href='#' class='infor-c-width' onclick=upload('" + data[i].FAttURL + "')>CQC证书查看</a>";
+                                    $('#CQCPic').html(cqc);
+                                }
+                                break;
+                            case 2:
+                                $('#SpecDeadLine').val(showDate(data[i].FAttDeadline));
+                                $('#SpecStatus').val(data[i].supplierAndBaseitemStatus.strStatusName);
+                                $('#SpecStatusHidden').val(data[i].supplierAndBaseitemStatus.iStatus);
+                                inputClassSet($("#SpecStatus"), data[i].supplierAndBaseitemStatus.iStatus)
+
+                                if (data[i].FAttURL != undefined) {
+                                    var spec = "<a href='#' class='infor-c-width' onclick=upload('" + data[i].FAttURL + "')>规格书查看</a>";
+                                    $('#SpecPic').html(spec);
+                                }
+                                break;
+                            case 3:
+                                $('#StdDeadLine').val(showDate(data[i].FAttDeadline));
+                                $('#StdStatus').val(data[i].supplierAndBaseitemStatus.strStatusName);
+                                $('#StdStatusHidden').val(data[i].supplierAndBaseitemStatus.iStatus);
+                                inputClassSet($("#StdStatus"), data[i].supplierAndBaseitemStatus.iStatus)
+
+                                if (data[i].FAttURL != undefined) {
+                                    var std = "<a href='#' class='infor-c-width' onclick=upload('" + data[i].FAttURL + "')>技术确认标准查看</a>";
+                                    $('#StdPic').html(std);
+                                }
+                                break;
+                            case 4:
+                                $('#SampleDeadLine').val(showDate(data[i].FAttDeadline));
+                                $('#SampleStatus').val(data[i].supplierAndBaseitemStatus.strStatusName);
+                                $('#SampleStatusHidden').val(data[i].supplierAndBaseitemStatus.iStatus);
+                                inputClassSet($("#SampleStatus"), data[i].supplierAndBaseitemStatus.iStatus)
+                                if (data[i].FAttURL != undefined) {
+                                    var sample = "<a href='#' class='infor-c-width' onclick=upload('" + data[i].FAttURL + "')>样品确认单查看</a>";
+                                    $('#SamplePic').html(sample);
+                                }
+                                break;
+                            case 5:
+                                $('#QualityDeadLine').val(showDate(data[i].FAttDeadline));
+                                $('#QualityStatus').val(data[i].supplierAndBaseitemStatus.strStatusName);
+                                $('#QualityStatusHidden').val(data[i].supplierAndBaseitemStatus.iStatus);
+                                inputClassSet($("#QualityStatus"), data[i].supplierAndBaseitemStatus.iStatus)
+                                if (data[i].FAttURL != undefined) {
+                                    var quality = "<a href='#' class='infor-c-width' onclick=upload('" + data[i].FAttURL + "')>质量协议查看</a>";
+                                    $('#QualityPic').html(quality);
+                                }
+                                break;
+                            case 6:
+                                $('#AppraisalsDeadLine').val(showDate(data[i].FAttDeadline));
+                                $('#AppraisalsStatus').val(data[i].supplierAndBaseitemStatus.strStatusName);
+                                $('#AppraisalsStatusHidden').val(data[i].supplierAndBaseitemStatus.iStatus);
+                                inputClassSet($("#AppraisalsStatus"), data[i].supplierAndBaseitemStatus.iStatus)
+                                if (data[i].FAttURL != undefined) {
+                                    var appraisals = "<a href='#' class='infor-c-width' onclick=upload('" + data[i].FAttURL + "')>季度/年度考核</a>";
+                                    $('#AppraisalsPic').html(appraisals);
+                                }
+                                break;
+                        }
+                    }
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert("error");
+            }
+        });
+    }
+
+    function clearDeadline() {
+        $('#CCCDDeadline').val("");
+        $('#CQCDeadLine').val("");
+        $('#SpecDeadLine').val("");
+        $('#StdDeadLine').val("");
+        $('#SampleDeadLine').val("");
+        $('#QualityDeadLine').val("");
+        $('#AppraisalsDeadLine').val("");
+    }
+    function clearStatus() {
+        $('#CCCStatus').val("");
+        $('#CQCStatus').val("");
+        $('#SpecStatus').val("");
+        $('#StdStatus').val("");
+        $('#SampleStatus').val("");
+        $('#QualityStatus').val("");
+        $('#AppraisalsStatus').val("");
+    }
+
+    function clearPic() {
+        $('#CCCPic').html("");
+        $('#CQCPic').html("");
+        $('#SpecPic').html("");
+        $('#StdPic').html("");
+        $('#SamplePic').html("");
+        $('#QualityPic').html("");
+        $('#AppraisalsPic').html("");
+    }
+
+
+
+    function inputClassSet(obj, status) {
+        if (status == 3) {
+            obj.removeClass("imOutDate");
+            obj.removeClass("hadOutDate");
+            obj.addClass("commonStatus");
+        } else if (status == "4") {
+            obj.removeClass("commonStatus");
+            obj.removeClass("hadOutDate");
+            obj.addClass("imOutDate");
+        } else if (status == "5") {
+            obj.removeClass("imOutDate");
+            obj.removeClass("commonStatus");
+            obj.addClass("hadOutDate");
+        }
+    }
+
+    function upload(val) {
+
+        var newwin = window.open()
+
+        newwin.location.href = val;
+    }
+</script>

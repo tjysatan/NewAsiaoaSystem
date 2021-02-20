@@ -1,0 +1,69 @@
+﻿@{
+    ViewBag.Title = "天地华宇打印";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+<script src="~/Scripts/Printjs/LodopFuncs.js" type="text/javascript"></script>
+<script src="~/Scripts/NAjs/Printjs.js"></script>
+ 
+
+<script type="text/javascript">
+
+    var LODOP; //声明为全局变量 
+    function myPreview() {
+        CreateFullBill();
+        LODOP.ADD_PRINT_SETUP_BKIMG("<img border='0' width='819px' src='http://wx.chinanewasia.com/Content/kdimg/L_HY.jpg'>");
+        LODOP.SET_SHOW_MODE("BKIMG_IN_PREVIEW", 1); //注："BKIMG_IN_PREVIEW"-预览包含背景图 "BKIMG_IN_FIRSTPAGE"- 仅首页包含背景图
+        LODOP.PREVIEW(); //打印预览
+        Closetk();
+    };
+    function Design1() {
+        CreateFullBill();
+        LODOP.ADD_PRINT_SETUP_BKIMG("<img border='0' width='819px' src='http://wx.chinanewasia.com/Content/kdimg/L_HY.jpg'>");
+        LODOP.PRINT_DESIGN();
+    };
+
+    function CreateFullBill() {
+        LODOP = getLodop();
+        LODOP.PRINT_INIT("套打天地华宇的模板");
+        LODOP.PRINT_INITA(-10, -20, 750, 500, "套打天地华宇的模板");
+        LODOP.SET_PRINT_STYLE("FontSize", 16);
+        var userinfo = AjaxPerson_Name('@ViewData["UID"]');//当前登录的用户信息
+               var fname = userinfo.UserName;//发货人
+               var ftel = userinfo.Tel;//发货人电话
+               LODOP.ADD_PRINT_TEXT(85, 107, 75, 25, fname);
+               LODOP.ADD_PRINT_TEXT(85, 208, 226, 25, "苏州新亚科技有限公司");
+               LODOP.ADD_PRINT_TEXT(108, 105, 293, 45, "太仓市花墙工业区新亚路二号");
+            
+               LODOP.ADD_PRINT_TEXT(155, 205, 158, 25, ftel);
+               var Cus_info = AjaxCust_Name('@ViewData["Id"]');//客户信息
+               var sname = Cus_info.LxrName;//收货人
+               var sAdress = Cus_info.Adress;//收货地址
+               var sdw = Cus_info.Name;//收货单位
+               var stel = Cus_info.Tel;//收货电话
+               LODOP.ADD_PRINT_TEXT(196, 105, 75, 25, sname);
+               LODOP.ADD_PRINT_TEXT(196, 212, 248, 25, sdw);
+               LODOP.ADD_PRINT_TEXT(217, 108, 449, 45, sAdress);
+               LODOP.ADD_PRINT_TEXT(260, 205, 243, 50, stel);
+               
+               var jdata = GetNewdatetimejson();//寄件日期
+               LODOP.ADD_PRINT_TEXT(476, 419, 100, 25, fname);
+               //LODOP.ADD_PRINT_TEXT(476, 576, 145,25, jdata);
+           };
+
+           function Closetk() {
+               var ParentObj = window.parent;//获取父窗口
+               window.parent.$('#windowDia').window('close');
+               window.parent.location = "/ExpressPrinting/printlist";
+           };
+
+
+</script>
+ 
+<div style="width: 200px; height:80px; overflow: hidden">
+    <div class="inquiry-input infor-b">
+        <span>
+            <button onclick="return myPreview()">打印</button></span>
+        <span>
+            <button onclick="return Closetk()">关闭</button></span>
+    </div>
+</div>

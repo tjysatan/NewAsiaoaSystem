@@ -1,0 +1,132 @@
+﻿@{
+    ViewBag.Title = "VoteView";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<link rel="stylesheet" href="~/Content/css/personal.css" />
+@section HeadContent{
+     <script type="text/javascript">
+        $(function () {
+            BindGrid();
+        })
+      function BindGrid() {
+          var Id = '@Html.Raw(ViewData["Id"] )';
+          var OPenid='@Html.Raw(ViewData["openId"])'
+          var json;
+          var VQarry;
+          json = AjaxS_Name(Id);
+          if (typeof (json) != "undefined") {
+          var html = "";
+          var b = "/Vote_Subject/VoteEdit?sid=" + json.S_Id + "&&openid=" + OPenid;
+          html = '<form action="' + b + '"  method="post"   name=formResearch id="form1">';
+          html += '<div class="mobile-title">';
+          html += '<span class="mobile-font">' + json.S_title + '</span>';
+      
+          html += ' </div>';
+          html += '   <div class="questionnaire"><div class="questionnaire-c">';
+          for(var i = 0,j=json.voteTitle.length,M=1; i<j;i++,M++)
+          {
+         html += '<div class="questionnaire-c-content">';
+         if(json.voteTitle[i].T_type == "0"){
+             html+='<table  cellpadding="0" cellspacing="0" width="100%" class="questionnaire-c-table1">';
+             html+='<tr><td><span>'+ M + '、' + json.voteTitle[i].T_Name +'</span><span>（单选题）</span></td></tr>';
+             html+=' </table>';
+             html += '  <table cellpadding="0" cellspacing="0" width="100%" class="questionnaire-c-table">';
+             if (json.voteTitle[i].VoteQ.length != 0) {
+                 VQarry = AjaxS_Tid(json.voteTitle[i].Id);
+                 for (var z = 0, k = VQarry.length; z < k; z++) {
+                     html += '<tr><td><span><input type=radio runat=server name="' + json.voteTitle[i].Id + '"  value="' + VQarry[z].Id + '" />' + VQarry[z].Q_Question + '</td></tr>';
+                 }
+                 
+             }
+             else
+             {
+                 html+=' <tr><td><span>没有选项</span></td></tr>';
+             }
+             html+=' </table>';
+         }
+         else
+         {
+             html+='<table  cellpadding="0" cellspacing="0" width="100%" class="questionnaire-c-table1">';
+             html+='<tr><td><span>'+ M + '、' + json.voteTitle[i].T_Name +'</span><span>（多选）</span></td></tr>';
+             html+=' </table>';
+             html+='  <table cellpadding="0" cellspacing="0" width="100%" class="questionnaire-c-table">';
+             if (json.voteTitle[i].VoteQ.length != 0) {
+                 VQarry = AjaxS_Tid(json.voteTitle[i].Id);
+                 for (var z = 0, k = VQarry.length; z < k; z++) {
+                     html += '<tr><td><span><input type=checkbox runat=server name="' + json.voteTitle[i].Id + '"  value="' + VQarry[z].Id + '" />' + VQarry[z].Q_Question + '</td></tr>';
+                 }
+             }
+             else
+             {
+                 html+=' <tr><td><span>没有选项</span></td></tr>';
+             }
+             html+=' </table>';
+         }
+          html += '</div>';
+          }
+          html += '<div class="questionnaire-c-content">';
+          html += '<button type="button" class="questionnaire-table-button" onclick="return submittest()">提交</button>';
+          html += '</div>';
+          html += '</div></div>'; 
+          html += '</form>'
+         $(".mobile-wapper").append(html);
+          }
+      }
+  
+    </script>
+    }
+
+  
+<div class="mobile-wapper"> 
+  
+</div>
+
+<script src="~/Scripts/Vote/Vote_Subject.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script>
+    function submittest() {
+        //表单验证
+        var options = {
+            beforeSubmit: function () {
+                return true;
+            },
+            //type: 'POST',
+            //async:false,
+            dataType: "json",//这里是指控制器处理后返回的类型，这里返回json格式。  
+            success: function (context) {
+                if ("error1" == context.result) {
+                    $.messager.alert("操作提示", '提交失败！', 'info', function () {
+                        WeixinJSBridge.call('closeWindow');
+                    });
+                }
+                if ("error2" == context.result) {
+                    $.messager.alert("操作提示", '您已经参与过了！', 'info', function () {
+                        WeixinJSBridge.call('closeWindow');
+                    });
+                }
+                if ("error3" == context.result) {
+                    $.messager.alert("操作提示", '提交成功！', 'info', function () {
+                        WeixinJSBridge.call('closeWindow');
+                    });
+                }
+                if ("error4" == context.result) {
+                    $.messager.alert("操作提示", '提交失败！', 'info', function () {
+                        WeixinJSBridge.call('closeWindow');
+                    });
+                }
+                if ("error5" == context.result) {
+                    $.messager.alert("操作提示", '调查问卷已经过期！', 'info', function () {
+                        WeixinJSBridge.call('closeWindow');
+                    });
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $.messager.alert("操作提示", '提交失败！', 'error');
+                WeixinJSBridge.call('closeWindow');
+            }
+        }
+        $('#form1').ajaxSubmit(options);
+        return false; //为了不刷新页面,返回false 
+    }
+</script>

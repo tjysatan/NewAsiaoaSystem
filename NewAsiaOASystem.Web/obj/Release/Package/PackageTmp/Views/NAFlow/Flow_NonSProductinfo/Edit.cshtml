@@ -1,0 +1,156 @@
+﻿@model NewAsiaOASystem.ViewModel.Flow_NonSProductinfoView
+@{
+    ViewBag.Title = "非标产品添加";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+
+@using (Html.BeginForm("Edit", "Flow_NonSProductinfo", FormMethod.Post, new { id = "form1" }))
+{
+    @Html.HiddenFor(m => m.A_Sum);
+    @Html.HiddenFor(m => m.Id);
+    @Html.HiddenFor(m => m.C_time)
+    
+    <div style="width: 80%; padding: 20px 20px 0 20px">
+        <div class="layui-form-item">
+            <label class="layui-form-label">物料代码：</label>
+            <div class="layui-input-block">
+                @Html.TextBoxFor(m => m.Pbianma, new { placeholder = "物料代码", @class = "layui-input", @oninput = "oninputajax()" })
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block" style="color: red;" id="tscon">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">产品名称：</label>
+            <div class="layui-input-block">
+                @Html.TextBoxFor(m => m.Pname, new { placeholder = "产品名称", @class = "layui-input", @readonly = "readonly" })
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">产品型号：</label>
+            <div class="layui-input-block">
+                @Html.TextBoxFor(m => m.Pmodel, new { placeholder = "产品型号", @class = "layui-input", @readonly = "readonly" })
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">类型：</label>
+            <div class="layui-input-block">
+                <select class="add-function" name="Category" class="layui-input">
+                    @{
+                              if ("0".Equals(Convert.ToString(@Model.Category)) && null != @Model.Id)
+                              {
+                        @:<option value="1" selected="selected">工程产品</option>
+                        @:<option value="0" >销售产品</option>
+                              }
+                              else
+                              {
+                        @:<option value="1" >工程产品</option>
+                        @:<option value="0"  selected="selected">销售产品</option>
+                              }
+                                                
+                    }
+                </select>
+            </div>
+        </div>
+        @* <p id="Ptitle"></p>
+        <div class="system-menu-set">
+            <ul class="infor-c">
+                <li>
+                    <span class="infor-c-width">物料代码：</span>
+                    <span class="infor-c-input">@Html.TextBoxFor(m => m.Pbianma)</span>
+                    <span style="color: red; font-size: 24px; vertical-align: middle; margin-left: 8px;">*</span>
+                    <span class="desc w-register">物料代码</span>
+                </li>
+            </ul>
+            <ul class="infor-c ">
+                <li>
+                    <span class="infor-c-width">产品名称：</span>
+                    <span class="infor-c-input">
+                        @Html.TextBoxFor(m => m.Pname)
+                    </span>
+                    <span class="desc w-register">产品名称</span>
+                </li>
+            </ul>
+            <ul class="infor-c ">
+                <li>
+                    <span class="infor-c-width">产品型号：</span>
+                    <span class="infor-c-input">
+                        @Html.TextBoxFor(m => m.Pmodel)
+                    </span>
+                    <span class="desc w-register">型号</span>
+                </li>
+            </ul>
+
+
+            <ul class="infor-c ">
+                <li><span class="infor-c-width">类型：</span>
+                    <span>
+                        <select class="add-function" name="Category">
+                            @{
+                            if ("0".Equals(Convert.ToString(@Model.Category)) && null != @Model.Id)
+                            {
+                                @:<option value="1" selected="selected">工程产品</option>
+                                @:<option value="0" >销售产品</option>
+                              }
+                            else
+                            {
+                                @:<option value="1" >工程产品</option>
+                                @:<option value="0"  selected="selected">销售产品</option>
+                                                }
+                                                
+                            }
+                        </select></span> </li>
+            </ul>
+        </div>*@
+        <div class="inquiry-input infor-b">
+            <span>
+                <button onclick="return SavaForm()">保存</button></span><span>
+                    <button onclick="return RedirectUrl('/Flow_NonSProductinfo/List')">返回</button></span>
+        </div>
+    </div>
+}
+
+<script type="text/javascript">
+    //
+    function oninputajax() {
+        var P_Bianhao = $("#Pbianma").val();
+        var json = AjaxGetk3infobybianma(P_Bianhao);
+        if (json == "" || json == null) {
+            $("#tscon").html("不存在该物料代码！");
+            $("#Pname").val("");
+            $("#Pmodel").val("")
+        }
+        else {
+            $("#tscon").html("");
+            $("#Pbianma").val(json.fnumber);
+            $("#Pname").val(json.fname);
+            $("#Pmodel").val(json.fmodel)
+        }
+    }
+
+
+    //获取产品的基础数据
+    function AjaxGetk3infobybianma(val) {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "/Flow_RoutineStockinfo/GetK3infobybianma",
+            data: { bianma: val },
+            dataType: "json",
+            async: false,
+            success: function (reslut) {
+                json = reslut;
+            },
+            error: function (e) {
+                alert("请求失败");
+            }
+        })
+        return json;
+    }
+</script>
+<script src="~/Scripts/Flow/Flow_NonSProductinfo.js"></script>

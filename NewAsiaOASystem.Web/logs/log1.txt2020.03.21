@@ -1,0 +1,5 @@
+2020-03-21 20:43:40,443 [31] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2020-03-21 20:43:40,443 [31] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2020-03-21 20:43:40,443 [31] ERROR ApplicationInfoLog [(null)] <(null)< - 未找到路径“/DKX_DDtypein/ProductionreturnRecordlist”的控制器或该控制器未实现 IController。
+2020-03-21 20:43:40,443 [31] ERROR ApplicationInfoLog [(null)] <(null)< - System.Web.Mvc.IController GetControllerInstance(System.Web.Routing.RequestContext, System.Type)
+2020-03-21 20:43:40,443 [31] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================

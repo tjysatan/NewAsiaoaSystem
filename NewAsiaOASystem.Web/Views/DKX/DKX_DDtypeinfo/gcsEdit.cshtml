@@ -1,0 +1,249 @@
+﻿@model NewAsiaOASystem.ViewModel.DKX_GCSinfoView
+@{
+    ViewBag.Title = "电气工程师编辑页面";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@section HeadContent{
+    <link href="~/Scripts/zTree_v3/css/demo.css" rel="stylesheet" />
+    <link href="~/Scripts/zTree_v3/css/zTreeStyle/zTreeStyle.css" rel="stylesheet" />
+    <script src="~/Scripts/zTree_v3/js/jquery.ztree.core-3.5.min.js"></script>
+    <script src="~/Scripts/zTree_v3/js/jquery.ztree.excheck-3.5.min.js"></script>
+
+}
+
+<div style="width: 80%; padding: 20px 20px 0 20px">
+
+    @using (Html.BeginForm("gcsEdit", "DKX_DDtypeinfo", FormMethod.Post, new { id = "form1" }))
+    {
+        @Html.HiddenFor(m => m.Id);
+        @Html.HiddenFor(m => m.C_time);
+        @Html.HiddenFor(m => m.C_name);
+        @Html.HiddenFor(m => m.Up_time);
+        @Html.HiddenFor(m => m.Up_name);
+        @Html.Hidden("SelectComm");//用于保存选中的电控箱种类的Id
+        
+        <div class="layui-form-item">
+            <label class="layui-form-label">工程师：</label>
+            <div class="layui-input-block">
+                @Html.TextBoxFor(m => m.Name, new { placeholder = "工程师", @class = "layui-input" })
+            </div>
+        </div>
+        
+        <div class="layui-form-item">
+            <label class="layui-form-label">电话：</label>
+            <div class="layui-input-block">
+                @Html.TextBoxFor(m => m.Tel, new { placeholder = "电话", @class = "layui-input" })
+            </div>
+        </div>
+        
+  
+        
+        <div class="layui-form-item">
+            <label class="layui-form-label">排序：</label>
+            <div class="layui-input-block">
+                @Html.TextBoxFor(m => m.Sort, new { placeholder = "排序 越小越空前", @class = "layui-input" })
+            </div>
+        </div>
+        
+        
+        
+        <div class="layui-form-item">
+            <label class="layui-form-label">帐号：</label>
+            <div class="layui-input-block">
+                @Html.DropDownList("zhListData", ViewData["getADList"] as SelectList, new { @class = "layui-input" })
+            </div>
+        </div>
+        
+        <div class="layui-form-item">
+            <label class="layui-form-label">类型：</label>
+            <div class="layui-input-block">
+                <input id="sel_Comm" class="layui-input" type="text" readonly="readonly" onclick="showMenu();" />
+            </div>
+        </div>
+        
+        
+        <div class="layui-form-item">
+            <label class="layui-form-label">是否启用：</label>
+            <div class="layui-input-block">
+                <select class="layui-input" name="Start">
+                    @{
+                                  if ("0".Equals(Convert.ToString(@Model.Start)) && null != @Model.Id)
+                                  {
+                        @:<option value="1">禁用</option>
+                        @:<option value="0" selected="selected">启用</option>
+                                                }
+                                  else
+                                  {
+                        @:<option value="0"  selected="selected">启用</option>
+                        @:<option value="1">禁用</option>
+                                                }
+                                                
+                    }
+                </select>
+            </div>
+        </div>
+ 
+        
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="formDemo" onclick="return weixinAjaxform()">确定</button>
+
+            </div>
+        </div>
+    }
+</div>
+
+<div id="dkxtypeContent" class="menuContent" style="display: none; position: absolute;">
+    <ul id="CommList" class="ztree" style="margin-top: 0; width: 700px; height: 300px;"></ul>
+</div>
+
+@*<div id="menuContent" class="menuContent" style="display: none; position: absolute;">
+    <ul id="CommList" class="ztree" style="margin-top: 0; width: 180px; height: 300px;"></ul>
+</div>*@
+
+
+<script type="text/javascript">
+
+    var setting = {
+        check: {
+            enable: true,
+            chkboxType: { "Y": "", "N": "" }
+        },
+        view: {
+            dblClickExpand: false
+        },
+        data: {
+            simpleData: {
+                enable: true
+            }
+        },
+        callback: {
+            beforeClick: beforeClick,
+            onCheck: onCheck
+        }
+    };
+
+    function beforeClick(treeId, treeNode) {
+        var zTree = $.fn.zTree.getZTreeObj("CommList");
+        zTree.checkNode(treeNode, !treeNode.checked, null, true);
+        return false;
+    }
+
+    function onCheck(e, treeId, treeNode) {
+        BindNode();
+    }
+
+    function showMenu(id) {
+        var cityObj = $("#sel_Comm");
+        var cityOffset = $("#sel_Comm").offset();
+        $("#dkxtypeContent").css({ left: cityOffset.left + "px", top: cityOffset.top + cityObj.outerHeight() + "px" }).slideDown("fast");
+        $("body").bind("mousedown", onBodyDown);
+    }
+
+    function hideMenu() {
+        $("#dkxtypeContent").fadeOut("fast");
+        $("body").unbind("mousedown", onBodyDown);
+    }
+    function onBodyDown(event) {
+        if (!(event.target.id == "menuBtn" || event.target.id == "sel_Comm" || event.target.id == "dkxtypeContent" || $(event.target).parents("#dkxtypeContent").length > 0)) {
+            hideMenu();
+        }
+    }
+
+
+
+    //首次赋值
+    var zNodes = [];
+    $(document).ready(function () {
+        var gcsId = $("#Id").val();
+        AjaxCombo(gcsId);
+        $.fn.zTree.init($("#CommList"), setting, zNodes);
+        BindNode();
+    });
+
+    //获取电控箱类型的数据
+    function AjaxCombo(val) {
+        $.ajax({
+            type: "POST",
+            url: "../DKX_DDtypeinfo/DKXAlbumDropdown",
+            data: { gcsId: val },
+            dataType: "json",
+            async: false,
+            success: function (context) {
+                zNodes = eval(context.result);
+            },
+            error: function (e) {
+                alert("请求失败");
+            }
+        })
+    }
+
+    //绑定选中的值
+    function BindNode() {
+        var zTree = $.fn.zTree.getZTreeObj("CommList"),
+        nodes = zTree.getCheckedNodes(true),
+        text = "", id = "";
+        for (var i = 0, l = nodes.length; i < l; i++) {
+            id = id + "'" + nodes[i].id + "',";
+            text += nodes[i].name + ",";
+        }
+        if (id.length > 0) {
+            id = id.substring(0, id.length - 1);
+            text = text.substring(0, text.length - 1);
+        }
+        var textObj = $("#sel_Comm");
+        var SelectComm = $("#SelectComm");
+        SelectComm.attr("value", id);
+        textObj.attr("value", text);
+    }
+
+
+    //表单提交
+    function weixinAjaxform() {
+        var Name = $("#Name").val();
+        var Tel = $("#Tel").val();
+        var Sort = $("#Sort").val();
+        var zhListData = $("#zhListData").val();
+        var SelectComm = $("#SelectComm").val();
+        if (Name == "") {
+            layer.alert("工程师的姓名不为空！", { icon: 2 });
+            return false;
+        }
+        if (Tel == "") {
+            layer.alert("工程师的电话不为空！", { icon: 2 });
+            return false;
+        }
+        if (zhListData == "" || zhListData == null)
+        {
+            layer.alert("请选择关联的帐号！", { icon: 2 });
+            return false;
+        }
+        if (SelectComm == "" || SelectComm == null)
+        {
+            layer.alert("请选择工程师负责的电控箱的类型！", { icon: 2 });
+            return false;
+        }
+        //表单验证
+        var options = {
+            beforeSubmit: function () {
+                return true;
+            },
+            dataType: "json",//这里是指控制器处理后返回的类型，这里返回json格式。  
+            success: function (context) {
+                if (context.result == "success") {
+                    layer.alert("提交成功！", { icon: 1 }, function () { window.location.href = "/DKX_DDtypeinfo/gcsList"; });
+                }
+
+                if (context.result == "error") {
+                    layer.alert("提交失败！", { icon: 2 }, function () { location.reload(); });
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $.messager.alert("操作提示", '操作失败！', 'error');
+            }
+        }
+        $('#form1').ajaxSubmit(options);
+        return false; //为了不刷新页面,返回false 
+    }
+</script>

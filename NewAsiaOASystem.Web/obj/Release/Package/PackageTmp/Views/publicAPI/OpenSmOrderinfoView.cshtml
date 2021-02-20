@@ -1,0 +1,346 @@
+﻿@{
+    ViewBag.Title = "OPenSmOrderinfoView";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@section HeadContent{
+    <script type="text/javascript">
+
+        $(function () {
+            $(SID).focus();
+            var XSinfomodel = ajaxXSinfojson('@ViewData["SMOrderId"]');
+            if (XSinfomodel == null) {
+
+                window.location = "/publicAPI/OPenSmSelectOrder";
+                return false;
+            }
+            if (XSinfomodel.SM_ZT == "1") {
+
+                window.location = "/publicAPI/OPenSmSelectOrder";
+                return false;
+            } else {
+                $("#khid").val(XSinfomodel.KhId)
+                //var fhsl = GetsmcountbyordermxId();
+                var fhsl = XSinfomodel.CP_Number;//出货数量
+                var smts = XSinfomodel.S_Number;//需要扫描条数
+                var yjsm = GetsmcountbyordermxId();//已经扫描的条数
+                $("#orderId").val('@ViewData["SMOrderId"]');
+                $("#fhsl").html(fhsl);
+                $("#xsm").html(smts);
+                $("#smsl").html(yjsm);
+                //dataGrid();
+                $("#zsl").val(smts);
+                if ($("#smsl").text() == $("#xsm").text())
+                {
+                    var flay = UpdateordersmztbyorderId();
+                    if (flay == "true") {
+                        window.location = "/publicAPI/OpenSmSelectOrder";
+                        return false;
+                    } else {
+                        alert("未出货完成！");
+                        return false;
+                    }
+                }
+            }
+        })
+
+
+        function dataGrid() {
+            var jsonStr;
+            jsonStr = eval(ajaxXSdetailjson('@ViewData["SMOrderId"]'));
+            var FHSL = 0;
+
+        }
+
+        //查询销售订单信息
+        function ajaxXSinfojson(r_id) {
+            var json;
+            $.ajax({
+                type: "POST",
+                url: "/publicAPI/GetXsinfojson",
+                data: { Id: r_id },
+                dataType: "json",
+                async: false,
+                success: function (reslut) {
+                    if (reslut.status == "true") {
+                        json = null;
+                    } else {
+                        json = reslut;
+                    }
+                },
+                error: function (e) {
+                    alert(e);
+                    alert("请求失败11!");
+                }
+            })
+            return json;
+        }
+
+        //查询客户信息
+        function AjaxCust_Name(Id) {
+            var json;
+            $.ajax({
+                type: "POST",
+                url: "/Api/NAWebApi/GetNACusjs",
+                data: { "": Id },
+                dataType: "json",
+                async: false,
+                success: function (reslut) {
+                    json = eval('(' + reslut + ')');
+                },
+                error: function (e) {
+                    alert("请求失败");
+                }
+            })
+            return json;
+        }
+
+        //根据客户ID 查找收件人信息
+        function AjaxAddresseeinfobyCustId(Id) {
+            var json;
+            $.ajax({
+                type: "POST",
+                url: "/NA_XSinfo/GetaddresseeInfobyCustId",
+                data: { Id: Id },
+                dataType: "json",
+                async: false,
+                success: function (reslut) {
+                    json = eval(reslut);
+                },
+                error: function (e) {
+                    alert("请求失败");
+                }
+            })
+            return json;
+        }
+
+
+        //根据销售订单Id 查找销售明细
+        function ajaxXSdetailjson(XS_Id) {
+            var json;
+            $.ajax({
+                type: "POST",
+                url: "/publicAPI/GetXsdetailjson",
+                data: { Id: XS_Id },
+                dataType: "json",
+                async: false,
+                success: function (reslut) {
+                    json = reslut;
+                },
+                error: function (e) {
+                    alert("请求失败");
+                }
+            })
+            return json;
+        }
+
+
+        /*根据产品Id 查找产品信息*/
+        function GetPerinfobyId(Id) {
+            var json;
+            $.ajax({
+                type: "POST",
+                url: "/NQ_CHdetailinfo/GetPreinfobyId",
+                data: { ID: Id },
+                dataType: "json",
+                async: false,
+                success: function (reslut) {
+                    json = reslut;
+                },
+                error: function (e) {
+                    alert("请求失败！");
+                }
+            })
+            return json;
+        }
+
+        function smshow(val,val2,val3,val4) {
+            var Id = "'" + val + "'";
+            var khid = "'" + val2 + "'";
+            var mxid="'"+val3+"'";
+            var s = '<a href="#" onclick="smch(' + Id + ','+ khid+','+mxid +','+val4+')">扫码出货</a>&nbsp;&nbsp;';
+            return s;
+        }
+
+        //扫码出货
+        function smch(val1,val2,val3,val4) {
+            var id = val1;
+            var khid = val2;
+            var mxId = val3;
+            if (val4 == "1") {
+                if (id != "") {
+                    $('#windowDia').html("<iframe src=../NA_XSinfo/ChSmSID?Id=" + id + "&&khId=" + khid + "&&mxId=" + mxId + "&&NG= style='border:0px;' width='400px' height='300px'></iframe>");
+                    $("#windowDia").window({
+                        title: '出货扫描（SID）',
+                        modal: true,
+                        closed: false,
+                        width: 455,
+                        height: 300,
+                    });
+                }
+            } else {
+                alert("不是物联网电控箱无需扫码发货！");
+            }
+        }
+
+        function GetsmcountbyordermxId() {
+            var json;
+            $.ajax({
+                type: "POST",
+                url: "../publicAPI/GetsmCount",
+                data: { ordermxId: '@ViewData["SMOrderId"]' },
+                 dataType: "json",
+                 async: false,
+                 success: function (reslut) {
+                     json = reslut.status;
+                 },
+                 error: function (e) {
+                     alert("请求失败！");
+                 }
+             })
+             return json;
+         }
+    </script>
+}
+
+
+<div style="width:800px; margin: auto;">
+
+    <div style="width:99%; height:auto; margin-top:10px; border:1px solid #808080; padding-left:2px; padding-right:2px;">
+        <blockquote class="layui-elem-quote">
+            <span style="font-size:20px;"> 
+            <button type="button" class="layui-btn" onclick="Updatesmsum()"><i class="layui-icon"></i>修改扫码数量</button> 
+            需要扫</span>
+            <label id="xsm" style="font-size:30px" value="11"></label>
+            <span style="font-size:20px;"> 条,已经扫</span>
+            <label id="smsl" style="font-size:30px; color:red"></label> <span style="font-size:20px;"> 条,共出货</span>
+            <label id="fhsl" style="font-size:30px" value="11"></label> <span style="font-size:20px;"> 件<br /></span>
+           
+        </blockquote>
+        <div style="width:450px; height:400px; margin:auto; margin-top:30px; text-align:center">
+
+            @using (Html.BeginForm("SmEditch", "publicAPI", FormMethod.Post, new { id = "form1" }))
+            {
+
+                <input type="hidden" id="khid" name="khid" />
+                <input type="hidden" id="zsl" name="zsl" />
+                <input type="hidden" id="orderId" name="orderId" />
+                <span>
+                    SID: <input type="text" name="SID" id="SID" style="width:350px; height:200px; border:1px solid #000000;" />
+                </span>
+                <div class="inquiry-input infor-b">
+                    <span>
+                        <button onclick="return smfhSavaForm()">保存</button>
+                    </span>
+                </div>
+                @*<div class="layui-form-item">
+                <label class="layui-form-label">SID：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="SID" id="SID" style="width:350px; height:200px; border:1px solid #000000;" />
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <button type="button" class="layui-btn layui-btn-fluid infor-b" style="width: 200px;" onclick="return smfhSavaForm()">确认提交</button>
+                <div class="inquiry-input infor-b">
+                    <span>
+                        <button onclick="return smfhSavaForm()">保存</button>
+                    </span>
+                </div>
+            </div>*@
+
+            }
+        </div>
+
+            </div>
+</div>
+
+<script type="text/javascript">
+     function smfhSavaForm() {
+         var sid = $("#SID").val();
+         if (sid == "") {
+             alert("SID码不为空！");
+             $(SID).focus();
+             return false;
+         }
+         if (sid == "wancheng") {
+             var flay = UpdateordersmztbyorderId();
+             if (flay == "true") {
+                 window.location = "/publicAPI/OpenSmSelectOrder";
+                 return false;
+             } else {
+                 alert("未出货完成！");
+                 return false;
+             }
+         }
+
+         if (sid == "guanbi") {
+             window.location = "/publicAPI/OpenSmSelectOrder";
+             return false;
+         }
+
+         //表单验证
+         var options = {
+             beforeSubmit: function () {
+                 return true;
+             },
+             dataType: "json",//这里是指控制器处理后返回的类型，这里返回json格式。
+             success: function (context) {
+                 if("success" == context.result) {
+                     location.href = "../publicAPI/OpenSmOrderinfoView?Id=" + $("#orderId").val();
+                 } else if ("bcz" == context.result) {//不存在该电控箱！
+                     location.href = "../publicAPI/OpenSmOrderinfoView?Id=" + $("#orderId").val();
+                 } else if ("yxs" == context.result) {//此电控箱已经销售！
+                     location.href = "../publicAPI/OpenSmOrderinfoView?Id=" + $("#orderId").val();
+                 } else if ("fhwc" == context.result) {
+                     $.messager.alert("操作提示", '发货完成！', 'error', function () {
+                         location.href = "../publicAPI/OpenSmOrderinfoView?Id=" + $("#orderId").val();
+                     });
+                 } else if ("error1" == context.reslut)
+                 {
+                     $.messager.alert("操作提示", 'SID扫码有误！', 'error');
+                 }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $.messager.alert("操作提示", '操作失败！', 'error');
+            }
+        }
+        $('#form1').ajaxSubmit(options);
+        return false; //为了不刷新页面,返回false
+     }
+
+
+     function UpdateordersmztbyorderId() {
+         var json;
+         $.ajax({
+             type: "POST",
+             url: "../publicAPI/Updateordersmzt",
+             data: { orderId: '@ViewData["SMOrderId"]' },
+            dataType: "json",
+            async: false,
+            success: function (reslut) {
+                json = reslut.status;
+            },
+            error: function (e) {
+                alert("请求失败！");
+            }
+        })
+        return json;
+    }
+
+          /*需要扫码数量为*/
+        function Updatesmsum() {
+            layer.open({
+                type: 2,
+                title: ['扫码条数修改', 'font-size:14px;'],
+                area: ['700px', '350px'],
+                offset: '40px',
+                fixed: false, //不固定
+                maxmin: true,
+                content: '../publicAPI/UpdateordersmsumView?Id=' + '@ViewData["SMOrderId"]',
+                end: function () {
+                    location.reload();
+                }
+            })
+        }
+</script>
+

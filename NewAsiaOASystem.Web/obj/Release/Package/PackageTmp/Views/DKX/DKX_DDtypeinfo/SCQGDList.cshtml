@@ -1,0 +1,201 @@
+﻿@model NewAsiaOASystem.ViewModel.PagerInfo<NewAsiaOASystem.ViewModel.DKX_PleasepurchaseinfoView>
+@{
+    ViewBag.Title = "元器件采购单（生产）";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+
+@section HeadContent{
+    <script type="text/javascript">
+        $(function () {
+            BindGrid();
+        })
+
+        function BindGrid() {
+            @{
+                if (null != Model && null != Model.GetPagingDataJson)
+                {
+                    string json = Model.GetPagingDataJson;//获取json数据
+                    @: var jsonStr = @Html.Raw(json);
+                }
+             }
+            dataGrid(jsonStr);
+        }
+
+        function dataGrid(jsonStr){
+            if (typeof (jsonStr) != "undefined") {
+                var html = "";
+                html = '<table class="layui-table">';
+                html += '<thead>';
+                html+='<tr style="font-weight:bold;color:#000000">';
+                html+='<td width="5%"><input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" /></td>';
+                html+='<td width="10%">物料代码</td>';
+                html+='<td width="10%">名称</td>';
+                html+='<td width="10%">型号</td>';
+                html+='<td width="8%">采购数量</td>';
+                html+='<td width="8%">到货量</td>'
+                html+='<td width="12%">预计时间</td>';
+                html+='<td width="12%">实际时间</td>';
+                html+='<td width="12%">下单时间</td>';
+                html+='<td width="9%">状态</td>';
+                html+='</tr>';
+                html+='</thead>';
+                for (var i = 0, j = jsonStr.length; i < j; i++)
+                {
+                    html+='<tr style="color:#000000">';
+                    html += '<td width="5%"><input type="checkbox" name="ContentChecked" value="' + jsonStr[i].Id + '"/></td>';
+                    html+='<td width="10%">'+jsonStr[i].Yqj_bianhao+'</td>';
+                    html+='<td width="10%">'+jsonStr[i].Yqj_Name+'</td>';
+                    html+='<td width="10%">'+jsonStr[i].Yqj_Namexh+'</td>';
+                    html+='<td width="8%">'+jsonStr[i].Cg_shuliang+'</td>';
+                    if(jsonStr[i].Sjcgsl==""||jsonStr[i].Sjcgsl==null)
+                    {
+                        html+='<td width="8%">-</td>';
+                    }
+                    else
+                    {
+                        html+='<td width="8%">'+jsonStr[i].Sjcgsl+'</td>';
+                    }
+                    if(jsonStr[i].Jqtime==""||jsonStr[i].Jqtime==null)
+                    {
+                        html+='<td width="12%">-</td>';
+                    }
+                    else
+                    {
+                        html+='<td width="12%">'+jsonStr[i].Jqtime+'</td>';
+                    }
+                    if(jsonStr[i].Wc_datetime==""||jsonStr[i].Wc_datetime==null)
+                    {
+                        html+='<td width="12%">-</td>';
+                    }
+                    else
+                    {
+                        html+='<td width="12%">'+jsonStr[i].Wc_datetime+'</td>';
+                    }
+                    html+='<td width="12%">'+jsonStr[i].C_time+'</td>';
+                    html+='<td width="9%">'+showzt(jsonStr[i].Type)+'</td>';
+                    html+='</tr>';
+                }
+                html += '</table>';
+                $("#content").html(html);
+            }
+        }
+
+        function SerchList(pageIndex)
+        {
+            $("input[name='pageIndex']").val(pageIndex);
+            var options = {
+                beforeSubmit: function () {
+                    return true;
+                },
+                dataType: "json",
+                success: function (context) {
+                    var data=eval(context.result);
+                    dataGrid(data);
+                    $(".pagin").html(context.PageN);//输出分页按钮
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $.messager.alert("操作提示", '查询失败请重试！', 'error');
+                }
+            }
+            $('#form1').ajaxSubmit(options);
+            return false;
+        }
+
+        //状态显示
+        function showzt(val)
+        {
+            if(val=="0")
+            {
+                return "未采购";
+            }
+            if(val=="1")
+            {
+                return "采购中";
+            }
+            if(val=="2")
+            {
+                return "完成";
+            }
+        }
+    </script>
+}
+
+<div class="h-right">
+    <div class="h-right-c">
+        <!--查询条件-->
+        <div class="inquiry1">
+            <fieldset>
+                <legend>查询条件：</legend>
+                @using (Html.BeginForm("CGDSearchList", "DKX_DDtypeinfo", FormMethod.Post, new { id = "form1" }))
+                {
+                    @Html.Hidden("pageIndex");
+                    <ul>
+                        <li>
+                            <span>物料代码：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txtyqjbm" id="txtyqjbm" />
+                            </span>
+                        </li>
+                        <li>
+                            <span>元器件名称：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txtyqjname" id="txtyqjname" />
+                            </span>
+                        </li>
+
+                        <li>
+                            <span>元器件型号：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txtyqjxh" id="txtyqjxh" />
+                            </span>
+                        </li>
+                        <li>
+                            <span>状态：</span>
+                            <span class="inquiry-input">
+                                <select id="txttype" name="txttype">
+                                    <option value="">全部</option>
+                                    <option value="0">未采购</option>
+                                    <option value="1">采购中</option>
+                                    <option value="2">完成</option>
+                                </select>
+                            </span>
+                        </li>
+
+                        <li><span>下单时间：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txtstarttime" id="txtstarttime" onclick="WdatePicker()" />
+                                -
+                                <input type="text" name="txtendtime" id="txtendtime" onclick="WdatePicker()" />
+                            </span>
+                        </li>
+
+                        <li style="*width: 100%; *margin: -10px 0 5px 90px;">
+                            <span class="inquiry-input">
+                                <button name="btnSerch" class="layui-btn" onclick="return SerchList(1)"><i class="layui-icon">&#xe615;</i>查询</button>
+                            </span>
+                        </li>
+                        <li>
+ 
+                            <span class="inquiry-input">
+                                <button class="layui-btn" onclick="return addClick('/DKX_DDtypeinfo/SCQGDList')"><i class="layui-icon">&#x1002;</i>刷新</button></span>
+                        </li>
+                    </ul>
+                }
+            </fieldset>
+        </div>
+        <div class="h-table">
+            <div class="h-table-content" style="color: #9d9999;">
+                <div id="content"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--==========================输出分页按钮=========================-->
+<div class="pagin">
+    @if (ViewBag.PageNavigate == null)
+    {
+        @Html.ShowPageNavigate(Model.CurrentPageIndex, Model.PageSize, Model.RecordCount);
+    }
+</div>

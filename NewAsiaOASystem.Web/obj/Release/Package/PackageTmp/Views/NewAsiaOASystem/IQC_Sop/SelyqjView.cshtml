@@ -1,0 +1,22 @@
+﻿@{
+    ViewBag.Title = "SelyqjView";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+
+
+<div style="width: 95%; margin: auto; padding: 10px 0 0 0;">
+    <div class="layui-form-item">
+        <label class="layui-form-label">查询条件：</label>
+        <div class="layui-input-inline" style="width:50%">
+            <input type="text" name="paladat" id="paladat" lay-verify="required" placeholder="请输入名称或者型号或者物料代码" autocomplete="off" class="layui-input">
+        </div>
+        <button class="layui-btn layui-btn-primary" onclick="AJAXyqjjson()">查询</button>
+        <button class="layui-btn layui-btn-primary" onclick="BtSaveyqj()">保存</button>
+    </div>
+    <div id="yqjcon">
+         
+    </div>
+</div>
+
+<script src="~/Scripts/NAjs/IQCpulice.js"></script>

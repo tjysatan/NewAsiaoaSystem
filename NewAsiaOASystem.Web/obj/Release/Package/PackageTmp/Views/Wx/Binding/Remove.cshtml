@@ -1,0 +1,118 @@
+﻿@{
+    ViewBag.Title = "解除绑定";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+ <meta charset="utf-8" />
+
+<meta content="width=device-width, initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport" />
+
+<meta content="yes" name="apple-mobile-web-app-capable" />
+
+<meta content="black" name="apple-mobile-web-app-status-bar-style" />
+
+<meta content="telephone=yes" name="format-detection" />
+
+<meta content="email=no" name="format-detection" />
+
+<meta name="keywords" content=""  />
+
+<meta name="description" content="" />
+<link rel="stylesheet" href="~/Content/wx/css/login.css" />
+<link rel="stylesheet" href="~/Content/wx/css/public.css" /> 
+ 
+
+<div class="fullscreen per_login">
+
+
+
+<div class="alert"></div>
+
+ 
+
+<div class="operate_Bar1 clearfix">
+
+	<div class="text">帐号解除绑定</div>
+
+</div>
+
+
+
+<section class="inner_content">
+
+    @using (Html.BeginForm("Remove", "Binding", FormMethod.Post, new { id = "form1" } ))
+  { 
+
+        <li style="display:none"> 
+             
+              <input type="hidden" value="@ViewData["message"]" name="OpenId"/>
+          </li>  
+
+	<li class="submit_btn"><button onclick="return submittest()" id="login_btn">解除绑定</button></li>
+
+	<li class="reg_findPwd">
+	</li>
+
+     }
+
+</section>
+
+
+
+	
+
+<div id="tFooter" class="footer">
+
+	<footer >
+		<div class="footer_l">
+		</div>
+
+		<p class="copyRight">
+
+		</p>
+
+	</footer>
+
+</div>
+
+
+
+</div>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script>
+    function submittest() {
+        //表单验证
+        var options = {
+            beforeSubmit: function () {
+            return true;
+            },
+            //type: 'POST',
+            //async:false,
+            dataType: "json",//这里是指控制器处理后返回的类型，这里返回json格式。  
+            success: function (context) {
+                if ("success" == context.result) {
+                    $.messager.alert("操作提示", '成功解除绑定！', 'info', function () {
+                    
+                        WeixinJSBridge.call('closeWindow');
+                    });
+                }
+                if ("error" == context.result)
+                {
+                    $.messager.alert("操作提示", '对不起，解除失败！', 'error');
+                }
+                if ("error2" == context.result) {
+                    $.messager.alert("操作提示", '此微信号，尚未绑定！', 'error1');
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $.messager.alert("操作提示", '操作失败！', 'error');
+                WeixinJSBridge.call('closeWindow');
+            }
+        }
+        $('#form1').ajaxSubmit(options);
+        return false; //为了不刷新页面,返回false 
+    }
+
+ 
+</script>
+

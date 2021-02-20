@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="NewAsiaOASystem.DBModel" assembly="NewAsiaOASystem.DBModel">
+  <class name="KS_Trackinglistinfo" table="KS_Trackinglistinfo">
+    <id name="Id" column="Id" type="string" unsaved-value="0">
+      <generator class="uuid.hex"/>
+    </id>
+    <property name="KSbianma" column="KSbianma"  />
+    <property name="khname" column="khname"  />
+    <property name="Tsname" column="Tsname"  />
+    <property name="Lxtel" column="Lxtel"  />
+    <property name="Xcname" column="Xcname"  />
+    <property name="Xctel" column="Xctel"  />
+    <property name="SYD" column="SYD"  />
+    <property name="CpnameId" column="CpnameId"  />
+    <property name="CPSCPH" column="CPSCPH"  />
+    <property name="Jsname" column="Jsname"  />
+    <property name="Jstime" column="Jstime"  />
+    <property name="SBqk" column="SBqk"  />
+    <property name="SBsysc" column="SBsysc"  />
+    <property name="gzxxstrcon" column="gzxxstrcon"  />
+    <property name="Kzqwt" column="Kzqwt"  />
+    <property name="Kzqqksm" column="Kzqqksm"  />
+    <property name="Isth" column="Isth"  />
+    <property name="Jxwtsm" column="Jxwtsm"  />
+    <property name="Tzsjwtsm" column="Tzsjwtsm"  />
+    <property name="Qqgtwtsm" column="Qqgtwtsm"  />
+    <property name="Ycwtsm" column="Ycwtsm"  />
+    <property name="WLwtsm" column="WLwtsm"  />
+    <property name="KHazsywt" column="KHazsywt"  />
+    <property name="KHazsywtsm" column="KHazsywtsm"  />
+    <property name="Dqwt" column="Dqwt" />
+    <property name="CLname" column="CLname"  />
+    <property name="JDTIME" column="JDTIME"  />
+    <property name="Cltime" column="Cltime"  />
+    <property name="Isdz" column="Isdz"  />
+    <property name="Zrbm" column="Zrbm"  />
+    <property name="Dzname" column="Dzname"  />
+    <property name="Dztime" column="Dztime"  />
+    <property name="KSDtype" column="KSDtype"  />
+    <property name="Wctime" column="Wctime"  />
+    <property name="Static" column="Static"  />
+  </class>
+</hibernate-mapping>

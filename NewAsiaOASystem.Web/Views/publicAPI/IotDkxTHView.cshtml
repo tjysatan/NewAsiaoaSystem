@@ -1,0 +1,141 @@
+﻿@{
+    ViewBag.Title = "物联网电控箱退货扫码页面";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<script type="text/javascript">
+    $(function () {
+        $("#sid").focus();
+        AjaxGetsmthjson();
+    })
+
+    //获取当天的退货扫码数据
+    function AjaxGetsmthjson() {
+        $.ajax({
+            type: "POST",
+            url: "/publicAPI/GetTodayTHsmdata",
+            dataType: "json",
+            async: false,
+            success: function (reslut) {
+                json = reslut;
+                HtmlGrit(json);
+            },
+            error: function (e) {
+
+                alert("请求失败11!");
+            }
+        })
+    }
+    //退货扫码数据拼接HTML
+    function HtmlGrit(str) {
+        var jsonStr = str;
+        $("#content").html("");
+        var html = "";
+        html = '<table class="layui-table" lay-skin="line">';
+        html += '<colgroup>';
+        html += '<col width="150">';
+        html += '<col width="200">';
+        html += '</colgroup>';
+        html += '<thead>';
+        html += '<tr>';
+        html += '<th>SID</th>';
+        html += '<th>退货扫码时间</th>';
+        html += '</tr>';
+        html += '</thead>';
+        html += '<tbody>';
+        if (jsonStr != null) {
+            for (var i = 0, j = jsonStr.length; i < j; i++) {
+                html += '<tr>';
+                html += '<td>' + jsonStr[i].SID + '</td>';
+                html += '<td>' + jsonStr[i].THdatetime + '</td>';
+                html += '<tr>';
+            }
+        }
+        else {
+            html += '<tr>';
+            html += '<td></td>';
+            html += '<td>今天尚未录入物联网退货产品！</td>';
+            html += '<tr>';
+        }
+        html += '</tbody>';
+        html += '</table>';
+        $("#content").html(html);
+    }
+</script>
+
+
+<div style="width: 70%; margin: auto; margin-top: 40px;">
+    <blockquote class="layui-elem-quote layui-quote-nm" style="font-size: 24px;">物联网产品退货扫码页面</blockquote>
+    @using (Html.BeginForm("THsmEide", "publicAPI", FormMethod.Post, new { id = "form1" }))
+    {
+        <div class="layui-form-item">
+            <label class="layui-form-label">输入SID:</label>
+            <div class="layui-input-block">
+                <input type="text" name="sid" id="sid" required lay-verify="required" placeholder="扫描二维码输入SID" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="formDemo" onclick="return SmThSavaForm()">立即提交</button>
+            </div>
+        </div>
+    }
+    当天退货扫码
+    <hr>
+    <div id="content">
+    </div>
+    <fieldset class="layui-elem-field">
+        <legend>物联网产品退货扫描说明</legend>
+        <div class="layui-field-box" style="color: red">
+            1.在此页面打开的状态下,用扫描枪扫描退货产品上面的二维码<br />
+            2.只正对系统中已经扫码出货的SID<br />
+            3.扫描之后系统会自动改变当前SID状态<br />
+            4.扫入的二维码系统不存在或者尚未扫码出货平台会有弹框提示
+        </div>
+    </fieldset>
+
+</div>
+
+<script type="text/javascript">
+    //提交
+    function SmThSavaForm() {
+        var sid = $("#sid").val();
+        if (sid == "") {
+            alert("SID码不为空！");
+            $(SID).focus();
+            return false;
+        }
+        //表单验证
+        var options = {
+            beforeSubmit: function () {
+                return true;
+            },
+            dataType: "json",//这里是指控制器处理后返回的类型，这里返回json格式。 
+            success: function (context) {
+                if ("true" == context.result) {
+                    //$.messager.alert("操作提示", '提交成功！', 'info', function () {
+                    location.href = "../publicAPI/IotDkxTHView";
+                    //});
+                } else if ("wxs" == context.result) {//尚未扫码出货！
+                    $.messager.alert("操作提示", '尚未扫码出货！', 'error', function () {
+                        location.href = "../publicAPI/IotDkxTHView";
+                    });
+                } else if ("bcz" == context.result) {//不存在该物联网产品！
+                    $.messager.alert("操作提示", '不存在该物联网产品！', 'error', function () {
+                        location.href = "../publicAPI/IotDkxTHView";
+                    });
+                } else if ("false" == context.result) {
+                    $.messager.alert("操作提示", '发货完成！', 'error', function () {
+                        location.href = "../publicAPI/IotDkxTHView";
+                    });
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $.messager.alert("操作提示", '操作失败！', 'error');
+            }
+        }
+        $('#form1').ajaxSubmit(options);
+        return false; //为了不刷新页面,返回false 
+    }
+</script>
+

@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="NewAsiaOASystem.DBModel" assembly="NewAsiaOASystem.DBModel">
+  <class name="PP_Profitpointinfo" table="PP_Profitpointinfo">
+    <id name="Id" column="Id" type="string" unsaved-value="0">
+      <generator class="uuid.hex"/>
+    </id>
+    <property name="Rwname" column="Rwname" />
+    <property name="Rwms" column="Rwms" />
+    <property name="Rwbz" column="Rwbz" />
+    <property name="Rwfz" column="Rwfz" />
+    <property name="Rwdw" column="Rwdw" />
+    <property name="Rw_teamId" column="Rw_teamId" />
+    <property name="C_time" column="C_time" />
+    <property name="C_name" column="C_name" />
+    <property name="Up_time" column="Up_time" />
+    <property name="Up_name" column="Up_name" />
+    <property name="state" column="state" />
+    <property name="Sort" column="Sort" />
+    <property name="type" column="type" />
+    <property name="ProType" column="ProType" />
+  </class>
+</hibernate-mapping>

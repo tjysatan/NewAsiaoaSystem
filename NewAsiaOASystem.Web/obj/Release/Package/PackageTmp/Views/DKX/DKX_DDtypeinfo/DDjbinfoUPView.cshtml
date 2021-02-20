@@ -1,0 +1,255 @@
+﻿@model NewAsiaOASystem.ViewModel.DKX_DDinfoView
+@{
+    ViewBag.Title = "订单的基本信息修改";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<div style="width: 80%; padding: 20px 20px 0 20px">
+    <input type="hidden" id="Id" name="Id" value='@Model.Id' />
+    <div class="layui-form-item">
+        <label class="layui-form-label">产品型号：</label>
+        <div class="layui-input-inline">
+            <input class="layui-input" id="ddxh" name="ddxh" placeholder="产品型号" value='@Model.DD_DHType' type="text" style="width: 200px" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">功率：</label>
+        <div class="layui-input-block">
+            <input class="layui-input" id="gl" name="gl" placeholder="功率,请选择单位" type="text" value='@Model.POWER' style="width: 200px;" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">功率单位：</label>
+        <div class="layui-input-block" style="width: 200px;">
+            <select id="dw" name="dw" class="layui-input">
+                @if (Model.dw == "P")
+                {
+                    <option value="P" disabled>P</option>
+                    <option value="KW">KW</option>
+                }
+                else
+                {
+                    <option value="KW">KW</option>
+                    <option value="P" disabled>P</option>
+                }
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">合同售价：</label>
+        <div class="layui-input-inline">
+            <input class="layui-input" id="price" name="price" value='@Model.price' placeholder="请填写合同的单位售价" type="text" style="width: 200px;" />
+
+        </div>
+        <div class="layui-input-inline">
+            <div class="layui-form-mid layui-word-aux">元/台   填写一台的售价</div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">工程师：</label>
+        <div class="layui-input-block">
+            @Html.DropDownList("gcsId", ViewData["GCSDATA"] as SelectList, new { @class = "layui-input" })
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">订单类型：</label>
+        <div class="layui-input-block">
+            @Html.DropDownList("dkxtype", ViewData["dkxtypeList"] as SelectList, new { @class = "layui-input", @onchange = "ddtypechange()" })
+        </div>
+    </div>
+    <div class="layui-form-item" id="wlwtyep" style="display: none">
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">数量：</label>
+        <div class="layui-input-block">
+            <input class="layui-input" id="sl" name="sl" placeholder="填写下单数量" value='@Model.NUM' type="text" style="width: 200px;" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">客户名称：</label>
+        <div class="layui-input-block">
+            <input class="layui-input" id="khname" name="khname" placeholder="客户名称" value='@Model.KHname' type="text" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">承若交期：</label>
+        <div class="layui-input-block">
+            <input type="text" name="txt_startctime" id="txt_startctime" onclick="WdatePicker()" value='@Model.YJJQtime' class="layui-input" />
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">备注：</label>
+        <div class="layui-input-block">
+            <textarea placeholder="请输入内容" id="beizhu" name="beizhu" value='@Model.REMARK' class="layui-textarea"></textarea>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="formDemo" onclick="return weixinAjaxform()">确定</button>
+            <button type="reset" class="layui-btn layui-btn-primary" onclick="guanbi()">取消</button>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+
+    function guanbi() {
+        var index = parent.layer.getFrameIndex(window.name);
+        //关闭弹出层
+        parent.layer.close(index);
+    }
+
+    $(function () {
+        zdfz();
+    })
+
+    ///赋值
+    function zdfz() {
+        if ('@Model.DD_Type' == "2") {
+            $("#wlwtyep").css('display', 'block');
+            var html;
+            html = '<label class="layui-form-label">物联类型：</label>';
+            html += '<div class="layui-input-block">';
+            html += '<select id="DD_WLWtype" name="DD_WLWtype" class="layui-input">';
+            html += '<option value="0">一体</option>';
+            html += '<option value="1">分体</option>';
+            html += '</section>';
+            html += '</div>';
+            $("#wlwtyep").html(html);
+            $("#DD_WLWtype").val('@Model.DD_WLWtype');
+            }
+            else {
+                $("#wlwtyep").css('display', 'none');
+            }
+    }
+
+    //订单类型选择
+    function ddtypechange() {
+        var dkxtype = $("#dkxtype").val();
+        if (dkxtype == "2") {
+            $("#wlwtyep").css('display', 'block');
+            var html;
+            html = '<label class="layui-form-label">物联类型：</label>';
+            html += '<div class="layui-input-block">';
+            html += '<select id="DD_WLWtype" name="DD_WLWtype" class="layui-input">';
+            html += '<option value="0">一体</option>';
+            html += '<option value="1">分体</option>';
+            html += '</section>';
+            html += '</div>';
+            $("#wlwtyep").html(html);
+        }
+        else {
+            $("#wlwtyep").css('display', 'none');
+        }
+    }
+
+    function weixinAjaxform() {
+        var Id = $("#Id").val();
+        var ddxh = $("#ddxh").val();
+        var gl = $("#gl").val();
+        var dw = $("#dw").val();
+        var dkxtype = $("#dkxtype").val();
+        var sl = $("#sl").val();
+        var khname = $("#khname").val();
+        var beizhu = $("#beizhu").val();
+        var gcsId = $("#gcsId").val();
+        var crjq = $("#txt_startctime").val();
+        var DD_WLWtype = $("#DD_WLWtype").val();
+        var price = $("#price").val();
+        if (khname == "") {
+            layer.alert("客户名称不为空！", { icon: 2 });
+            return false;
+        }
+        if (dkxtype == "") {
+            layer.alert("请选择订单类型！", { icon: 2 });
+            return false;
+        }
+        if (ddxh == "") {
+            layer.alert("请填写订单型号！", { icon: 2 });
+            return false;
+        }
+        if (gl == "") {
+            layer.alert("请填写功率！", { icon: 2 });
+            return false;
+        }
+        if (price == "") {
+            price = 0;
+        } else {
+            if (isNaN(price)) {
+            layer.alert("合同单位售价请填写数字！", { icon: 2 });
+            return false;
+        }
+        }
+        //if (isNaN(gl)) {
+        //    layer.alert("功率为纯数字！", { icon: 2 });
+        //    return false;
+        //}
+        if (sl == "") {
+            layer.alert("请填写数量！", { icon: 2 });
+            return false;
+        }
+        if (isNaN(sl)) {
+            layer.alert("数量为纯数字！", { icon: 2 });
+            return false;
+        }
+        if (gcsId == "") {
+            layer.alert("请选择工程师！", { icon: 2 });
+            return false;
+        }
+        $.ajax({
+            url: "../DKX_DDtypeinfo/DDJBINFOUPEide",
+            type: "POST",
+            data: { Id: Id, ddxh: ddxh, gl: gl, dw: dw, dkxtype: dkxtype, DD_WLWtype: DD_WLWtype, sl: sl, khname: khname, beizhu: beizhu, gcsId: gcsId, crjytime: crjq, price: price },
+            dataType: "html",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (context) {
+                disLoading();
+                if (context == "0") {
+                    layer.alert("修改成功！", { icon: 1 }, function () { guanbi(); });
+                }
+                if (context == "1") {
+                    layer.alert("提交失败！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (context == "2") {
+                    layer.alert("提交失败！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (context == "3") {
+                    layer.alert("修改失败！", { icon: 2 }, function () { location.reload(); });
+                }
+
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+    }
+</script>
+
+<style>
+    .display {
+        display: none;
+    }
+</style>
+

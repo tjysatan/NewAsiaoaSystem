@@ -1,0 +1,10 @@
+﻿<?xml version="1.0"  encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="NewAsiaOASystem.DBModel" assembly="NewAsiaOASystem.DBModel">
+	<class name="SysRoleSysPerson" table="SysRoleSysPerson">
+		<id name="SysPersonId" column="SysPersonId" type="string" unsaved-value="0">
+      			      			
+    </id>      		
+		<property name="SysRoleId" column="SysRoleId" type="string"  />
+				
+	</class>
+</hibernate-mapping>

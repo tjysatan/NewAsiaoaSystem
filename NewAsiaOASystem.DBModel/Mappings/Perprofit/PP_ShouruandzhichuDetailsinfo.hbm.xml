@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="NewAsiaOASystem.DBModel" assembly="NewAsiaOASystem.DBModel">
+  <class name="PP_ShouruandzhichuDetailsinfo" table="PP_ShouruandzhichuDetailsinfo">
+    <id name="Id" column="Id" type="string" unsaved-value="0">
+      <generator class="uuid.hex"/>
+    </id>
+    <property name="StafitId" column="StafitId" />
+    <property name="ProfutId" column="ProfutId" />
+    <property name="type" column="type" />
+    <property name="Sum" column="Sum" />
+    <property name="Total" column="Total" />
+    <property name="jl_time" column="jl_time"/>
+    <property name="C_time" column="C_time" />
+    <property name="C_Name" column="C_Name" />
+    <property name="Up_time" column="Up_time" />
+    <property name="Up_Name" column="Up_Name" />
+    <property name="Lytype" column="Lytype" />
+    <property name="TTmxId" column="TTmxId" />
+  </class>
+</hibernate-mapping>

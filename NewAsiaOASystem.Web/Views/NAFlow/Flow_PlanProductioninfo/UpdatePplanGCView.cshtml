@@ -1,0 +1,189 @@
+﻿@model NewAsiaOASystem.ViewModel.Flow_PlanPPrintinfoView
+@{
+    ViewBag.Title = "生产计划单变更（工程和客服）";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+<style>
+    table
+    {
+        border-collapse: collapse;
+        border: none;
+    }
+
+        table td
+        {
+            border: solid #e8e5e5 1px;
+            height: 35px;
+            padding: 0 0 0 5px;
+        }
+</style>
+
+<script type="text/javascript">
+    $(function () {
+        //防止表单被实际提交
+        $("form").submit(function (e) {
+            e.preventDefault();
+            PlanPprintSavaForm(this)
+        });
+    })
+
+    function PlanPprintSavaForm(obj) {
+ 
+        var yhsl = $("#yhsl").val();//要货数量
+        var Cusname = $("#Cusname").val();//客户名称
+        var yhdatetime = $("#yhdatetime").val();//要货时间
+        var cpname = $("#cpname").val();//产品名称
+        var DYdy = $("#DYdy").val();//电源电压
+        var yhxz = $("#Yhxz").val();//要货性质
+        var kfbeizhu = $("#kfbeizhu").val();//客服备注
+        if (yhsl == "") {
+            layer.alert("要货数量不为空！", { icon: 2 });
+            $("#scph1").focus();
+            return;
+        }
+        if (cpname == "") {
+            layer.alert("产品名称不为空！", { icon: 2 });
+            $("#cpname").focus();
+            return;
+        }
+        if (yhdatetime == "") {
+            layer.alert("要货时间不为空！", { icon: 2 });
+            $("#yhdatetime").focus();
+            return;
+        }
+        $.ajax({
+            url: $(obj).attr("action"),
+            type: "POST",
+            data: { yhsl: yhsl, khname: Cusname, yhdate: yhdatetime, dydy: DYdy, yhxz: yhxz, bz: kfbeizhu, Id: '@Model.Id',ppid:'@Model.Plan_Id' },
+            dataType: "html",
+            async: false,
+            success: function (response) {
+                if ("0" == response) {
+                    layer.alert("状态已经改变，没有修改权限。请联系管理员", { icon: 2 });
+                }
+                if ("1" == response) {
+                    $.messager.alert("操作提示", '提交成功！', 'info', function () {
+                        var ParentObj = window.parent;//获取父窗口
+                        window.parent.$('#windowDia').window('close');
+                        //window.parent.location = "/Flow_PlanProductioninfo/kfflistView";
+                        return false;
+                    });
+                }
+                if ("2" == response) {
+                    $.messager.alert("操作提示", '提交失败！！', 'info')
+                }
+                if ("3" == response) {
+                    $.messager.alert("操作提示", '要货时间小于当前时间，无法提交！！', 'info')
+                }
+
+            },
+            error: function (e) {
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+    }
+
+    function Close()
+    {
+        var ParentObj = window.parent;//获取父窗口
+        window.parent.$('#windowDia').window('close');
+    }
+</script>
+
+<div class="infor">
+    <p id="Ptitle">生产通知单变更</p>
+    <div class="system-menu-set">
+
+      @using (Html.BeginForm("UpdatePplanEide", "Flow_PlanProductioninfo", FormMethod.Post, new { id = "form1", onsubmit = "return false" }))
+      {
+        <input type="hidden" id="PId" name="PId" value='@Model.Plan_Id' />
+        <input type="hidden" id="PNId" name="PNId" value='@Model.Id' />
+        <table style="width: 100%; color: #000; font-size: 13px;">
+            <tr>
+                <td>生产批号：
+                         <span class="infor-c-input">
+                             <input type="text" id="scph1" name="scph1" value='@Model.Scph' readonly="readonly" />
+                         </span>
+                </td>
+                <td>要货数量：
+                            <span class="infor-c-input">
+                                <input type="text" id="yhsl" name="yhsl" value='@Model.Scsl' />
+                            </span>
+                </td>
+            </tr>
+            <tr>
+                <td>客户名称：
+                         <span class="infor-c-input">
+                             <input type="text" id="Cusname" name="Cusname" value='@Model.Cusname' />
+                         </span>
+                </td>
+                <td>要货日期：
+                            <span class="infor-c-input">
+                                <input type="text" id="yhdatetime" name="yhdatetime" value='@Model.Yhdate'  onclick="WdatePicker()" />
+                            </span>
+                </td>
+            </tr>
+            <tr>
+                <td>产品名称：
+                      <span class="infor-c-input">
+                          <input type="text" id="cpname" name="cpname" value='@Model.CPname' readonly="readonly" />
+                      </span>
+                </td>
+                <td>电源电压： 
+                    <span class="inquiry-input">
+                        <input type="text" value='@Model.DYDY' id="DYdy" name="DYdy" />
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td>要货性质：
+                    <span class="inquiry-input">
+                        @*         @if (Model.Yhxz == 0)
+                        { 
+                            <input type="text" value="库存备货" />
+                        }
+                        else if (Model.Yhxz == 1)
+                        { 
+                            <input type="text" value="订单生产" />
+                        }*@
+                        <select class="add-function" name="Yhxz" id="Yhxz">
+                            @{
+          if ("0".Equals(Convert.ToString(@Model.Yhxz)))
+          {
+                                @:<option value="1">订单生产</option>
+                                @:<option value="0" selected="selected">库存备货</option>
+                                                }
+          else
+          {
+                                @:<option value="1"  selected="selected">订单生产</option>
+                                @:<option value="0">库存备货</option>
+                                                }
+                                                
+                            }
+                        </select>
+
+
+                    </span>
+                </td>
+
+                <td></td>
+            </tr>
+            <tr>
+                <td>备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注：
+                        <span class="inquiry-input">
+                            <input type="text" value='@Model.kfBeizhu' />
+                        </span>
+                </td>
+            </tr>
+        </table>
+
+        <div class="inquiry-input infor-b">
+            <span style="padding-left: 150px;">
+                <button>提交</button></span>
+            <span>
+                <button onclick="return Close()">返回</button>
+            </span>
+        </div>
+      }
+    </div>
+</div>

@@ -1,0 +1,269 @@
+﻿@model NewAsiaOASystem.ViewModel.NAReturnListView
+@{
+    ViewBag.Title = "客退产品分析列表页面查看";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+@section HeadContent{
+<script type="text/javascript">
+    $(function () {
+        dataGrid();
+    })
+
+    //退货明细查看
+    function dataGrid() {
+        var jsonStr;
+        jsonStr = eval(ajaxthFXjson('@Model.Id'));
+        $("#content").html("");
+        if (jsonStr != null) {
+            if (typeof (jsonStr) != "undefined") {
+                var html = "";
+                var xh;
+                html = '<table cellpadding="0" cellspacing="0" style="width:100%;">';
+                for (var i = 0, j = jsonStr.length; i < j; i++) {
+                    xh = i + 1;
+                    var Perinfo = GetPerinfobyId(jsonStr[i].P_Id);
+                    if (jsonStr[i].TH_YQJname != null && jsonStr[i].TH_YQJname != "") {
+                        var yjmodel = ajaxyjmodelbyidjson(jsonStr[i].TH_YQJname);//元器件
+                        var gysinfo = ajaxgysinfobydm(yjmodel.G_Dm);
+                    }
+                    if (jsonStr[i].TH_BLXXX != null && jsonStr[i].TH_BLXXX != "") {
+                        var blxxxmodel = ajaxblxxmodeljson(jsonStr[i].TH_BLXXX);//不良现象
+                    }
+                    if (jsonStr[i].TH_BLXX != null && jsonStr[i].TH_BLXX != "") {
+                        var blxxmmodel = ajaxblyymodelbyidjson(jsonStr[i].TH_BLXX);//不良原因1
+                    }
+                    if (jsonStr[i].TH_BLYY != null && jsonStr[i].TH_BLYY != "") {
+                        var blyymmodel = ajaxblyymodelbyidjson(jsonStr[i].TH_BLYY);//不良原因2
+                    }
+                    if (i % 2 == 0)
+                        html += '<tr class="h-table-content-r1">';
+                    else
+                        html += '<tr class="h-table-content-r">';
+                    html += '<td width="5%">'+xh+'</td>';
+                    html += '<td width="15%">' + Perinfo.Pname + '</td>';
+                    if (jsonStr[i].TH_SCdate != null) {
+                        html += '<td width="10%">' + showDate(jsonStr[i].TH_SCdate) + '-' + jsonStr[i].TH_Ph + '</td>';
+                    } else {
+                        html += '<td width="10%">暂无</td>';
+                    }
+                    if (jsonStr[i].TH_BLXXX != null && jsonStr[i].TH_BLXXX != "") {
+                        html += '<td width="10%">' + blxxxmodel.Name + '</td>';
+                    } else {
+                        html += '<td width="10%">暂无</td>';
+                    }
+                    if (jsonStr[i].TH_BLYY != null && jsonStr[i].TH_BLYY != "") {
+                        html += '<td width="10%">' + blyymmodel.Name + '</td>';
+                    } else if (jsonStr[i].TH_BLXX != null && jsonStr[i].TH_BLXX != "") {
+                        html += '<td width="10%">' + blxxmmodel.Name + '</td>';
+                    } else {
+                        html += '<td width="10%">暂无</td>';
+                    }
+                    if (jsonStr[i].TH_YQJname != null && jsonStr[i].TH_YQJname != "") {
+                        html += '<td width="10%">' + yjmodel.Y_Name + '</td>';
+                    } else {
+                        html += '<td width="10%">暂无</td>';
+                    }
+                    if (jsonStr[i].TH_YQJname != null && jsonStr[i].TH_YQJname != "") {
+                        html += '<td width="10%">' + yjmodel.Y_Ggxh + '</td>';
+                    } else {
+                        html += '<td width="10%">暂无</td>';
+                    }
+                    if (jsonStr[i].TH_zbshj != null) {
+                        html += '<td width="10%">' + showISZB(jsonStr[i].TH_zbshj) + '</td>';
+                    } else {
+                        html += '<td width="10%">暂无</td>';
+                    }
+                    if (jsonStr[i].TH_YQJname != null && jsonStr[i].TH_YQJname != "") {
+                        html += '<td width="10%">' + gysinfo.G_Name + '</td>';
+                    } else {
+                        html += '<td width="10%">暂无</td>';
+                    }
+                    if (jsonStr[i].TH_bz != null && jsonStr[i].TH_bz != "") {
+                        html += '<td width="10%">' + jsonStr[i].TH_bz + '</td>';
+                    } else {
+                        html += '<td width="10%">暂无</td>';
+                    }
+                    html += '</tr>';
+                }
+                html += '</table>';
+                $("#content").html(html);
+            }
+        }
+    }
+
+
+
+    //根据返退货流程ID 查找退货明细
+    function ajaxthFXjson(R_Id) {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "/NAReturnList/GetAJxaTHfxcpbyr_id",
+            data: { R_Id: R_Id },
+            dataType: "json",
+            async: false,
+            success: function (reslut) {
+                json = reslut;
+
+            },
+            error: function (e) {
+                alert("请求失败");
+            }
+        })
+        return json;
+    }
+
+    //根据不良现象ID 查找不良现象信息
+    function ajaxblxxmodeljson(Id) {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "/NQ_Blxxinfo/GetblXXmodelbyId",
+            data: { Id: Id },
+            async: false,
+            success: function (reslut) {
+                json = eval('(' + reslut + ')');
+            },
+            error: function (e) {
+                alert("请求失败！");
+            }
+        })
+        return json;
+    }
+
+    //根据元器件ID 查找元器件信息
+    function ajaxyjmodelbyidjson(Id) {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "/NQ_YJinfo/Getyjinfomodelbyid",
+            data: { Id: Id },
+            async: false,
+            success: function (reslut) {
+                json = eval('(' + reslut + ')');
+            },
+            error: function (e) {
+                alert("请求失败！");
+            }
+        })
+        return json;
+    }
+
+
+    //根据供应商代码查找供应商信息
+    function ajaxgysinfobydm(dm) {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "/NQ_GysInfo/Getgysinfobydm",
+            data: { dm: dm },
+            async: false,
+            success: function (reslut) {
+                json = eval('(' + reslut + ')');
+            },
+            error: function (e) {
+                alert("请求失败！");
+            }
+        })
+        return json;
+    }
+
+    //根据不良原因ID 查找不良原因信息
+    function ajaxblyymodelbyidjson(Id) {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "/NQ_Blinfo/GetblyymodelbyId",
+            data: { Id: Id },
+            async: false,
+            success: function (reslut) {
+                json = eval('(' + reslut + ')');
+            },
+            error: function (e) {
+                alert("请求失败！");
+            }
+        })
+        return json;
+    }
+
+
+    function editfx(id) {
+        //设置选中行
+        if (id != "") {
+            $('#windowDia').html("<iframe src=../NAReturnList/FxEditPage?Id=" + id + "&&R_Id=" + '@Model.Id' + "style='border:0px;' width='600px' height='500px'></iframe>");
+            $("#windowDia").window({
+                title: '返退品分析',
+                modal: true,
+                closed: false,
+                width: 680,
+                height: 500,
+            });
+        }
+    }
+
+    //操作
+    function FXshow(val) {
+        var Id = "'" + val + "'";
+        var s = '<a href="#" onclick="editfx(' + Id + ')">编辑</a>&nbsp;&nbsp;';
+        return s;
+    }
+
+    function showISZB(val) {
+        var str;
+        if (Number(val) <= 18) {
+            str = "18个月内";
+            return str;
+        }
+        if (18 < Number(val) && Number(val) <= 36) {
+            str = "18个月至3年";
+            return str;
+        }
+        if (Number(val) > 36) {
+            str = "3年外";
+            return str;
+        }
+        return;
+    }
+
+    function fxdz(Id) {
+        location.href = "/NAReturnList/wxEditPage?id=" + Id;
+    }
+
+</script>
+}
+            <!----退货产品明细---->
+           <div class="h-table-content"   style="width:100%; margin:0; padding:0;">
+              <div class="h-table-content">
+                   <table cellpadding="0" cellspacing="0" class="add-infor-title-bg" style="border: none; width: 100%;">
+                <tr>
+                    <td style="width:5%">
+                        序号
+                    </td>
+                    <td style="width:15%">货品名称
+                    </td>
+                    <td style="width:10%">生产批号
+                    </td>
+                    <td style="width:10%">不良现象
+                    </td>
+                    <td style="width:10%">不良原因
+                    </td>
+                    <td style="width:10%">元器件
+                    </td>
+                    <td style="width:10%">型号
+                    </td>
+                    <td style="width:10%">时间
+                    </td>
+                    <td style="width:10%">品牌
+                    </td>
+                    <td style="width:10%">
+                        处理方式
+                    </td>
+ 
+                </tr>
+            </table>
+                   <div id="content"></div>
+              </div>
+          </div>
+ 
+<script src="~/Scripts/NAjs/NAReturnList.js"></script>
+<div id="windowDia" class="easyui-window" closed="true" style="width:680px; height: 600px; padding: 10px;"></div>

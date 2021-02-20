@@ -1,0 +1,85 @@
+﻿@{
+    ViewBag.Title = "电控箱产品整该提交";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<script src="~/Scripts/NAjs/layui.js"></script>
+<script type="text/javascript">
+   //提交整改
+    function ZGajaxeide(val)
+    {
+        var zgyy = $("#beizhu").val();
+        if (zgyy == "")
+        {
+            layer.alert("填写整改原因！", { icon: 1 });
+            return false;
+        }
+        $.ajax({
+            url: "../DKX_DDtypeinfo/PBZGEide",
+            type: "POST",
+            data: { Id: val, zgyy: zgyy },
+            dataType: "html",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                
+                if (response == "0") {
+                    layer.alert("提交成功！", { icon: 1 }, function () { guanbi(); });
+                }
+                if (response == "3") {
+                    layer.alert("产品当前状态不可以提交整改！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "4") {
+                    layer.alert("提交异常,请重新提交！", { icon: 2 }, function () { location.reload(); });
+                }
+                
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+    }
+
+    //关闭
+    function guanbi() {
+        var index = parent.layer.getFrameIndex(window.name);
+        //关闭弹出层
+        parent.layer.close(index);
+    }
+
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+</script>
+
+<div style="width: 90%; padding: 20px 20px 0 20px">
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">整改原因：</label>
+        <div class="layui-input-block">
+            <input class="layui-input" id="beizhu" name="beizhu" placeholder="整改原因" maxlength="200" type="text" />
+        </div>
+    </div>
+
+    <div class="layui-form-item" style="margin: auto">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit="" lay-filter="demo1" onclick="ZGajaxeide('@ViewData["Id"]')">提交整改</button>
+        </div>
+    </div>
+    <hr class="layui-bg-black">
+    <blockquote class="layui-elem-quote layui-quote-nm">
+        说明：<br />
+        1.提交整改，必须简述整改原因.<br />
+        2.整改原因字数200以内 
+    </blockquote>
+</div>
+
+

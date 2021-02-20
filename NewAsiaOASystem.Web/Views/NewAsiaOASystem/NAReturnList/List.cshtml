@@ -1,0 +1,208 @@
+﻿@model NewAsiaOASystem.ViewModel.PagerInfo<NewAsiaOASystem.ViewModel.NAReturnListView>
+@{
+    ViewBag.Title = "仓库返退货跟踪列表";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@section HeadContent{
+    <script type="text/javascript">
+        $(function () {
+            BindGrid();
+        })
+        function BindGrid() {
+            @{
+                if (null != Model && null != Model.GetPagingDataJson)
+                {
+                    string json = Model.GetPagingDataJson;//获取json数据
+                    @: var jsonStr = @Html.Raw(json);
+                   
+                }
+             }
+            dataGrid(jsonStr);
+        }
+
+        function dataGrid(jsonStr)
+        {
+            if (typeof (jsonStr) != "undefined") {
+                var html = "";
+                var url="'"+"/NAReturnList/CkkdView"+"'";
+                var Id="";
+                html = '<table cellpadding="0" cellspacing="0" style="width:100%;">';
+                for (var i = 0, j = jsonStr.length; i < j; i++) {
+                    Id="'"+jsonStr[i].Id+"'";
+                    if (i % 2 == 0)
+                        html += '<tr class="h-table-content-r1">';
+                    else
+                        html += '<tr class="h-table-content-r">';
+                    html += '<td width="5%"><input type="checkbox" name="ContentChecked" value="' + jsonStr[i].Id + '"/></td>';
+                    html += '<td width="10%">' +jsonStr[i].fthbianhao + '</td>';
+                    html += '<td width="20%">' +ShowCustName(jsonStr[i].C_Id) + '</td>';
+                    html += '<td width="10%">' +Showl_zt(jsonStr[i].L_type)+ '</td>';
+                    if(jsonStr[i].CreateTime!=null)
+                        html += '<td width="10%">' + showDate(jsonStr[i].CreateTime) + '</td>';
+                    else
+                        html += '<td width="10%"></td>';
+                    html += '<td width="25%"><a onclick="ckupdate(' + url + ',' + Id + ',' + jsonStr[i].L_type +')"  class="btna1">编辑</a>&nbsp;';
+                    html += '<a onclick="lcgz(' + Id + ',' + jsonStr[i].L_type + ')" style="cursor: pointer;" class="btna1"> 流程跟踪</a>&nbsp;';
+                    html += '<a onclick="ftmxiframeopen(' + Id + ')" style="cursor: pointer;" class="btna1">返退明细</a></td > ';
+                    html +='</tr>';
+                }
+                html += '</table>';
+                $("#content").html(html);
+            }
+        }
+
+        //pageIndex当前页
+        function SerchList(pageIndex)
+        {
+            $("input[name='pageIndex']").val(pageIndex);
+            var options = {
+                beforeSubmit: function () {
+                    return true;
+                },
+                dataType: "json",
+                success: function (context) {
+                    var data=eval(context.result);
+                    dataGrid(data);
+                    $(".pagin").html(context.PageN);//输出分页按钮
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $.messager.alert("操作提示", '查询失败请重试！', 'error');
+                }
+            }
+            $('#form1').ajaxSubmit(options);
+            return false;
+        }
+
+        //删除反退货
+        function DeleteFTH(url)
+        {
+            var arr = GetGridSelete();
+            if (arr.length <= 0) {
+                $.messager.alert("操作提示", "请先选择一条记录后再删除！", "warning");
+            }
+            else {
+                $.messager.confirm('提示框', '你确定要确认吗?', function (data) {
+                    if (data) {
+                        var id = '';
+                        for (var i = 0, j = arr.length; i < j; i++) {
+                            id = id + "'" + arr[i] + "',"
+                        }
+              
+                        id = id.substring(0, id.length - 1);
+                        location.href = url + "?id=" + id+"&dz=list"; 
+                    }
+                })
+            }
+            return false;
+        }
+
+        //返退货明细查看页面
+        function ftmxiframeopen(val) {
+            layer.open({
+                type: 2,
+                title: ['返退货明细', 'font-size:14px;'],
+                area: ['95vw', '95vh'],
+                offset: '10px',
+                fixed: false, //不固定
+                maxmin: true,
+                content: '../NAReturnList/Lookwxmxlist?Id=' + val,
+                end: function () {
+                    //location.reload();
+                }
+            });
+        }
+
+    </script>
+}
+
+<!--==================================数据列表=============================-->
+<div class="h-right">
+    <div class="h-right-c">
+
+        <!--查询条件-->
+        @using (Html.BeginForm("SearchList", "NAReturnList", FormMethod.Post, new { id = "form1" }))
+        {
+            @Html.Hidden("pageIndex");
+            <div class="inquiry1">
+                <fieldset>
+                    <legend>查询条件：</legend>
+                    <ul>
+                        <li><span>客户：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txtSearch_Name" /></span></li>
+                        <li><span>状态：</span>
+                            <span class="inquiry-input">
+                                <select id="ztstr" name="ztstr">
+                                    <option value="qt">全部</option>
+                                    <option value="0">未处理</option>
+                                    <option value="1">待确定</option>
+                                    <option value="2">待维修</option>
+                                    <option value="3">待定责</option>
+                                    <option value="4">待处理</option>
+                                    <option value="5">待审核</option>
+                                    <option value="6">已完成</option>
+                                </select>
+                            </span>
+                        </li>
+                        <li>
+                            <span>编号：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txt_Fthbianhao" />
+                            </span>
+                        </li>
+                        <li>
+                            <span>产品名称：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txt_CPname" />
+                            </span>
+                        </li>
+                        <li style="*width: 100%; *margin: -10px 0 5px 90px;"><span class="inquiry-input">
+                            <button name="btnSerch" onclick="return SerchList(1)">查询</button>
+                        </span></li>
+                        <li style="*width: 100%; *margin: -10px 0 5px 90px;"><span class="inquiry-input">
+                            <button name="btnSerch" onclick="return DeleteFTH('/NAReturnList/DeleteFTH')">删除</button>
+                        </span></li>
+
+                        <li><span class="inquiry-input">
+                            <button onclick="return addClick('/NAReturnList/ckkdlist')">添加</button></span>
+                            <span class="inquiry-input">
+                                <button onclick="return addClick('/NAReturnList/List')">刷新</button></span>
+
+                        </li>
+                    </ul>
+                </fieldset>
+            </div>
+        }
+        <div class="h-table">
+            <div class="h-table-content">
+                <table cellpadding="0" cellspacing="0" class="h-right-table-title1" style="border: none; width: 100%;">
+                    <tr>
+                        <td width="5%">
+                            <input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" /></td>
+                        <td width="10%">编号</td>
+                        <td width="20%">客户</td>
+                        <td width="10%">返退单状态</td>
+                        <td width="10%">创建时间</td>
+                        <td width="25%">操作</td>
+                    </tr>
+                </table>
+                <div id="content"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!--==========================输出分页按钮=========================-->
+<div class="pagin">
+    @if (ViewBag.PageNavigate == null)
+    {
+        @Html.ShowPageNavigate(Model.CurrentPageIndex, Model.PageSize, Model.RecordCount);
+    }
+</div>
+
+<script src="~/Scripts/NAjs/NAReturnList.js"></script>
+
+

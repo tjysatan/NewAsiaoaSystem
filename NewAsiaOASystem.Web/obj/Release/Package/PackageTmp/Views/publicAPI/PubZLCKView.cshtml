@@ -1,0 +1,229 @@
+﻿@{
+    ViewBag.Title = "公众的资料查看";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<script src="~/Scripts/NAjs/layui.js"></script>
+<script type="text/javascript">
+    //
+    $(function () {
+        var ddstr = AjaxGetddinfoyId();
+        var xqzlstr = AJaxziliaojson(ddstr.Id, "0");//需求
+        var htmlxq;
+        htmlxq = "";
+        if (xqzlstr != "" && xqzlstr != null) {
+            for (var i = 0, j = xqzlstr.length; i < j; i++) {
+                if (xqzlstr[i].Isgl == "0") {//附件资料
+                    var id = "'" + xqzlstr[i].Id + "'";
+                    htmlxq += '<a  target="_blank" href="' + xqzlstr[i].url + '">' + xqzlstr[i].wjName + '</a>&nbsp;&nbsp;';
+                } else {//关联的资料
+                    var xuqiustr = AJaxxuqiujson(ddstr.BJno);
+                    htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/MDDetail.aspx?CONTROL_NO=' + xuqiustr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                }
+            }
+        }
+        else {
+            htmlxq += '<span style="color:red">暂无需求</span>';
+        }
+        $("#xuqiucon").html(htmlxq);
+
+        var liaodanstr = AJaxziliaojson(ddstr.Id, "1");//料单
+        var htmlliaodan = "";
+        if (liaodanstr != "" && liaodanstr != null) {
+            for (var z = 0, s = liaodanstr.length; z < s; z++) {
+                if (liaodanstr[z].Isgl == "0") {//附件资料
+                    var id = "'" + liaodanstr[z].Id + "'";
+                    htmlliaodan += '<a  target="_blank" href="' + liaodanstr[z].url + '">' + liaodanstr[z].wjName + '</a>&nbsp;&nbsp;';
+                }
+                if (liaodanstr[z].Isgl == "1") {
+                    var xuqiustr = AJaxxuqiujson(ddstr.BJno);
+                    htmlliaodan += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/ToExcel2.aspx?NO=' + xuqiustr.CONTROL_INFO_NO + '&TYPE=' + xuqiustr.CONTROL_TYPE + '">料单</a>';
+                }
+                if (liaodanstr[z].Isgl == "2") {//k3数据
+                    htmlliaodan += '<a  target="_blank" href="../DKX_DDtypeinfo/NewliaodanView?oId=' + ddstr.Id + '">K料单</a>';
+                }
+            }
+        }
+        else {
+            htmlliaodan += '<span style="color:red">暂无料单</span>';
+        }
+        $("#liaodancon").html(htmlliaodan);
+        var tuzhistr = AJaxziliaojson(ddstr.Id, "2");//图纸
+        var htmltuzhi = "";
+        if (tuzhistr != "" && tuzhistr != null) {
+            for (var i = 0, j = tuzhistr.length; i < j; i++) {
+                var id = "'" + tuzhistr[i].Id + "'";
+                htmltuzhi += '<a  target="_blank" href="' + tuzhistr[i].url + '">' + tuzhistr[i].wjName + '</a>&nbsp;&nbsp;';
+            }
+        }
+        else {
+            htmltuzhi += '<span style="color:red">暂无图纸</span>';
+        }
+        $("#tuzhicon").html(htmltuzhi);
+
+        var QTtuzhistr = AJaxziliaojson(ddstr.Id, "5");//图纸(其他图)
+        var htmlqttuzhi = "";
+        if (QTtuzhistr != "" && QTtuzhistr != null) {
+            for (var i = 0, j = QTtuzhistr.length; i < j; i++) {
+                htmlqttuzhi += '<a  target="_blank" href="' + QTtuzhistr[i].url + '">' + QTtuzhistr[i].wjName + '</a>&nbsp;&nbsp;';
+            }
+        }
+        else {
+            htmlqttuzhi += '<span style="color:red">暂无图纸(其他图)</span>';
+        }
+        $("#QTtuzhicon").html(htmlqttuzhi);
+
+        //照片
+        var zhaopianstr = AJaxziliaojson(ddstr.Id, "3");//照片
+        var htmlzhaopian = "";
+        if (zhaopianstr != "" && zhaopianstr != null) {
+            for (var c = 0, d = zhaopianstr.length; c < d; c++) {
+                var id = "'" + zhaopianstr[c].Id + "'";
+                htmlzhaopian += '<a  target="_blank" href="' + zhaopianstr[c].url + '">' + zhaopianstr[c].wjName + '</a>';
+            }
+        }
+        else {
+            htmlzhaopian += '<span style="color:red">暂无照片</span>';
+        }
+        $("#zhaoiancon").html(htmlzhaopian);
+        //验收单
+        var yanshoudanstr = AJaxziliaojson(ddstr.Id, "4");//验收单
+        var htmlysd = "";
+        if (yanshoudanstr != "" && yanshoudanstr != null) {
+            for (var e = 0, f = yanshoudanstr.length; e < f; e++) {
+                var id = "'" + yanshoudanstr[e].Id + "'";
+                htmlysd += '<a  target="_blank" href="' + yanshoudanstr[e].url + '">' + yanshoudanstr[e].wjName + '</a>';
+            }
+        }
+        else {
+            htmlysd += '<span style="color:red">暂无验收单</span>';
+        }
+        $("#yanshoudancon").html(htmlysd);
+    })
+
+    //获取订单信息
+    function AjaxGetddinfoyId() {
+        var json;
+        $.ajax({
+            url: "../publicAPI/AjaxorderbyId",
+            type: "POST",
+            data: { Id: '@ViewData["Id"]' },
+            dataType: "JSON",
+            async: false,
+            success: function (response) {
+                json = eval(response);
+            },
+            error: function (e) {
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+        return json;
+    }
+
+    //获取需求数据
+    function AJaxxuqiujson(val) {
+        var json;
+        $.ajax({
+            url: "../publicAPI/AjaxxuqiubyorderNo",
+            type: "POST",
+            data: { Bjno: val },
+            dataType: "JSON",
+            async: false,
+            success: function (response) {
+                json = eval(response);
+            },
+            error: function (e) {
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+        return json;
+    }
+
+    //获取资料数据
+    function AJaxziliaojson(Id, type) {
+        var json;
+        $.ajax({
+            url: "../publicAPI/GetziliaojsonbyddIdandtype",
+            type: "POST",
+            data: { ddId: Id, type: type },
+            dataType: "JSON",
+            async: false,
+            success: function (response) {
+                json = eval(response);
+            },
+            error: function (e) {
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+        return json;
+    }
+
+
+
+
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+
+
+
+
+</script>
+
+
+
+<div style="width: 90%; padding: 20px 20px 0 20px">
+    <table style="width: 100%">
+        <tr>
+            <td width="45px">需求：</td>
+            <td id="xuqiucon"></td>
+        </tr>
+    </table>
+
+    <hr class="layui-bg-blue">
+
+    <table>
+        <tr>
+            <td width="45px">料单：</td>
+
+            <td id="liaodancon"></td>
+        </tr>
+    </table>
+
+    <hr class="layui-bg-blue">
+
+    <table>
+        <tr>
+            <td width="45px">图纸：</td>
+            <td id="tuzhicon"></td>
+        </tr>
+    </table>
+    <hr class="layui-bg-blue">
+   
+    <table>
+        <tr>
+            <td width="60px">电器原理图：</td>
+            <!--原其他图名称修改成电器原理图-->
+            <td id="QTtuzhicon"></td>
+        </tr>
+    </table>
+     <hr class="layui-bg-blue">
+    <table>
+        <tr>
+            <td width="45px">照片：</td>
+            <td id="zhaoiancon"></td>
+        </tr>
+    </table>
+    <hr class="layui-bg-blue">
+    <table>
+        <tr>
+            <td width="60px">验收单：</td>
+            <td id="yanshoudancon"></td>
+        </tr>
+    </table>
+</div>

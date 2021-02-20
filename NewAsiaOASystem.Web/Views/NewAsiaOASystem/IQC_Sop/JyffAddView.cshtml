@@ -1,0 +1,160 @@
+﻿@model NewAsiaOASystem.ViewModel.IQC_JyffinfoView
+@{
+    ViewBag.Title = "检验方法添加";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<style>
+    .sopbtnsave
+    {
+        position: absolute;
+        width: 90%;
+        bottom: 5px;
+        text-align: center;
+    }
+
+    .soptopbtn
+    {
+        position: absolute;
+        width: 90%;
+        top: 1px;
+        text-align: center;
+    }
+</style>
+
+
+@using (Html.BeginForm("jyffaddEide", "IQC_Sop", FormMethod.Post, new { id = "form1", enctype = "multipart/form-data" }))
+{  
+     @Html.HiddenFor(m => m.Id)
+    <input type="hidden" id="sopId" name="sopId" value='@ViewData["sopId"]' />
+    <input type="hidden" id="type" name="type" value='@ViewData["type"]' />
+    <div style="width: 100%; margin: auto; text-align: center">
+        <div >
+           @Html.TextAreaFor(m => m.Jyffcont, new { @class="layui-textarea"})
+        </div>
+
+        <!--按钮-->
+        <div class="sopbtnsave">
+            <button class="layui-btn layui-btn-primary" onclick='return AjaxjyffEide()'>保存</button>
+            <button class="layui-btn layui-btn-primary" onclick="guanbi();return  false;">关闭</button>
+        </div>
+
+    </div>
+}
+<script src="~/Scripts/NAjs/layui.js"></script>
+<script src="@Url.Content("/Content/kindeditor-4.0/kindeditor-min.js")" type="text/javascript"></script>
+<script type="text/javascript" src="@Url.Content("/Content/kindeditor-4.0/ckeditor/ckeditor.js")"></script>
+<script>
+
+    $(function () {
+        var dqxnjyff;
+        dqxnjyff = Ajaxjyffjson('@ViewData["type"]', '@ViewData["sopId"]');
+        $("#LAY_demo2").val(dqxnjyff.Jyffcont);
+    })
+
+    KindEditor.ready(function (K) {
+
+        var editor1 = K.create('#Jyffcont', {
+            cssPath: '/Content/kindeditor-4.0/plugins/code/prettify.css',
+            uploadJson: '/Content/kindeditor-4.0/asp.net/UploadImage',
+            width: 720,
+            height: 250,
+            uploadJson: '@Url.Content("/Content/kindeditor-4.0/asp.net/upload_json.ashx")',
+            fileManagerJson: '@Url.Content("/Content/kindeditor-4.0/asp.net/file_manager_json.ashx")',
+            allowFileManager: true,
+            afterCreate: function () {
+                var self = this;
+                K.ctrl(document, 13, function () {
+                    self.sync();
+                    K('form[name="Jyffcont"]')[0].submit();
+                });
+                K.ctrl(self.edit.doc, 13, function () {
+                    self.sync();
+                    K('form[name="Jyffcont"]')[0].submit();
+                });
+            }, afterBlur: function () { this.sync(); }
+
+        });
+        // prettyPrint();
+    });
+
+    //var layedit;
+    //var index;
+    //var active;
+    //layui.use('layedit', function () {
+    //    layedit = layui.layedit
+    //   , $ = layui.jquery;
+
+    //    //构建一个默认的编辑器
+    //    //index = layedit.build('LAY_demo2');
+    //    //自定义工具栏
+    //    layedit.set({
+    //        uploadImage: {
+    //            url: '' //接口url
+    //          , type: '' //默认post
+    //        }
+    //    });
+    //    index = layedit.build('LAY_demo2', {
+    //        tool: ['', '', '', 'unlink', '|', 'left', 'center', 'right', 'image']
+    //        , height: 100
+    //    })
+    //    //编辑器外部操作
+    //    active = {
+    //        content: function () {
+    //            alert(layedit.getContent(index)); //获取编辑器内容
+    //        }
+    //     , text: function () {
+    //         alert(layedit.getText(index)); //获取编辑器纯文本内容
+    //     }
+    //     , selection: function () {
+    //         alert(layedit.getSelection(index));
+    //     }
+    //    };
+
+    //    $('.site-demo-layedit').on('click', function () {
+    //        var type = $(this).data('type');
+    //        active[type] ? active[type].call(this) : '';
+    //    });
+
+
+    //});
+    //var index = layedit.build("LAY_demo2");
+
+    //检验方法提交
+    function AjaxjyffEide() {
+
+        var sopId = $("#sopId").val();//作业单Id
+        var type = $("#type").val();//检验项目
+        var jyff = $("#Jyffcont").val();
+        if (jyff == "") {
+            layer.alert("检验方法不为空！", { icon: 2 });
+            return false;
+        }
+        //表单验证
+        var options = {
+            beforeSubmit: function () {
+                return true;
+            },
+            dataType: "json",//这里是指控制器处理后返回的类型，这里返回json格式。  
+            success: function (context) {
+                if (context.result == "0") {
+                    layer.alert("检验方法更新成功！", { icon: 1 }, function () { guanbi(); });
+                }
+                if (context.result == "1") {
+                    layer.alert("检验方法提交成功！", { icon: 1 }, function () { guanbi(); });
+                }
+                if (context.result == "2") {
+                    layer.alert("提交失败！", { icon: 2 }, function () { location.reload(); });
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $.messager.alert("操作提示", '操作失败！', 'error');
+            }
+        }
+        $('#form1').ajaxSubmit(options);
+        return false; //为了不刷新页面,返回false 
+    }
+</script>
+
+
+<script src="~/Scripts/NAjs/IQCpulice.js"></script>

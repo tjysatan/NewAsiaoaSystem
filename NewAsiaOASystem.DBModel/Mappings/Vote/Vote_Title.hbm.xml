@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="NewAsiaOASystem.DBModel" assembly="NewAsiaOASystem.DBModel">
+  <class name="Vote_Title" table="Vote_Title">
+    <id name="Id" column="Id" type="string" unsaved-value="0">
+      <generator class="uuid.hex"/>
+    </id>
+
+    <property name="T_Name">
+      <column name="T_Name"/>
+    </property>
+
+    <property name="S_Id">
+      <column name="S_Id"/>
+    </property>
+
+    <property name="T_type">
+      <column name="T_type"/>
+    </property>
+
+    <property name="T_Acount">
+      <column name="T_Acount"/>
+    </property>
+    
+    <property name="T_time">
+      <column name="T_time"/>
+    </property>
+
+    <property name="T_Person">
+      <column name="T_Person"/>
+    </property>
+
+    <bag name="VoteQ"   cascade="all"  generic="true" inverse="true"    lazy="true" >
+      <key column="T_Id"  />
+      <one-to-many class="Vote_Question"  />
+    </bag>
+  </class>
+</hibernate-mapping>

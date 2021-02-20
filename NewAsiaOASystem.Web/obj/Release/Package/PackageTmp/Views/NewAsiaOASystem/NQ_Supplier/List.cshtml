@@ -1,0 +1,266 @@
+﻿@model NewAsiaOASystem.ViewModel.PagerInfo<NewAsiaOASystem.ViewModel.NQ_SupplierView>
+@{
+    ViewBag.Title = "供应商信息列表";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+@section HeadContent{
+    <script type="text/javascript">
+        $(function () {
+            BindGrid();
+        })
+        function BindGrid() {
+            @{
+                if (null != Model && null != Model.GetPagingDataJson)
+                {
+                    string json = Model.GetPagingDataJson;//获取json数据
+                    @: var jsonStr = @Html.Raw(json);
+                                        }
+             }
+            dataGrid(jsonStr);
+        }
+
+        function dataGrid(jsonStr)
+        {
+            if (typeof (jsonStr) != "undefined") {
+                var html = "";
+                html = '<table cellpadding="0" cellspacing="0" style="width:100%;">';
+                for (var i = 0, j = jsonStr.length; i < j; i++) {
+                    if (i % 2 == 0)
+                        html += '<tr class="h-table-content-r1">';
+                    else
+                        html += '<tr class="h-table-content-r">';
+                    html += '<td width="5%"><input type="checkbox" name="ContentChecked" value="' + jsonStr[i].FItemID + '"/></td>';
+                    html += '<td width="10%">' + jsonStr[i].FNumber + '</td>';
+
+                    html += '<td width="20%">' +jsonStr[i].FName + '</td>';
+                    if(jsonStr[i].FContact!=null)
+                    {
+                        html += '<td width="10%">' +jsonStr[i].FContact + '</td>';
+                    }
+                    else
+                    {
+                        html+='<td width="10%">暂无</td>';
+                    }
+                    if(jsonStr[i].FPhone!=null)
+                        html += '<td width="10%">' +jsonStr[i].FPhone + '</td>';
+                    else
+                        html+='<td width="10%">暂无</td>';
+                    if(jsonStr[i].FMobilePhone!=null)
+                        html += '<td width="20%">' + jsonStr[i].FMobilePhone + '</td>';
+                    else
+                        html += '<td width="20%"></td>';
+                    if(jsonStr[i].FAddress!=null)
+                        html += '<td width="10%">' + jsonStr[i].FAddress + '</td>';
+                    else
+                        html += '<td width="10%"></td>';
+                    if(jsonStr[i].FAddress!=null)
+                    {
+                        html += '<td width="10%">' + "" + '</td>';
+                    }
+                    else
+                    {
+                        html+='<td width="10%">暂无</td>';
+                    }
+                    if(jsonStr[i].FIsChecked!=null)
+                        html += '<td width="10%">' +jsonStr[i].FIsChecked + '</td>';
+                    else
+                        html+='<td width="10%">暂无</td>';
+
+
+                    html+='</tr>';
+                }
+                html += '</table>';
+                $("#content").html(html);
+            }
+        }
+
+        //pageIndex当前页
+        function SerchList(pageIndex)
+        {
+            $("input[name='pageIndex']").val(pageIndex);
+            var options = {
+                beforeSubmit: function () {
+                    return true;
+                },
+                dataType: "json",
+                success: function (context) {
+                    var data=eval(context.result);
+                    dataGrid(data);
+                    $(".pagin").html(context.PageN);//输出分页按钮
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $.messager.alert("操作提示", '查询失败请重试！', 'error');
+                }
+            }
+            $('#form1').ajaxSubmit(options);
+            return false;
+        }
+
+    </script>
+}
+
+<!--==================================数据列表=============================-->
+<div class="h-right">
+    <div class="h-right-c">
+        @*   <div class="h-right-title">您当前的位置：免疫点管理</div>*@
+        <!--查询条件-->
+        @using (Html.BeginForm("SearchList", "NQ_Supplier", FormMethod.Post, new { id = "form1" }))
+        {
+            @Html.Hidden("pageIndex");
+            <div class="inquiry1">
+                <fieldset>
+                    <legend>查询条件：</legend>
+                    <ul class="infor-c">
+                        <li>
+                            <span >供应商名称：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txtSearch_Name" />
+                            </span>
+                            </li>
+                        <li>
+                            <span>联系人名称：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txtSearch_Con" />
+                            </span>
+                        </li>
+                        <li>
+                            <span>电话号码：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txtSearch_Tel" />
+                            </span>
+                        </li>
+                    </ul>
+                    <ul class="infor-c" style="margin-left:50px">
+                        <li>
+                            <span class="inquiry-input" >
+                                <button name="btnSerch" onclick="return SerchList(1)">查询</button>
+                            </span>
+                        </li>
+                        <li>
+                            <span class="inquiry-input">
+                                <button onclick="return edidPage('/NQ_Supplier/EditPage')">编辑</button>
+                            </span>
+                        </li>
+                        <li>
+                            <span class="inquiry-input">
+                                <button onclick="return addClick('/NQ_Supplier/List')">刷新</button>
+                            </span>
+                        </li>
+                        <li>
+                            <span class="inquiry-input">
+                                <button onclick="return updateSupplierData('/NQ_Supplier/getAndUpdateSupplier')">更新数据</button>
+                            </span>
+                        </li>
+                        <li>
+                            <span class="inquiry-input">
+                                <button onclick="return checkPage('/NQ_Supplier/CheckPage')">查看审核</button>
+                            </span>
+                        </li></ul>
+                </fieldset>
+            </div>
+        }
+        <div class="h-table">
+            <div class="h-table-content">
+                <table cellpadding="0" cellspacing="0" class="h-right-table-title1" style="border: none;width:100%;">
+                    <tr>
+                        <td width="5%">
+                            <input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" />
+                        </td>
+                        <td width="10%">代码</td>
+                        <td width="20%">供应商</td>
+                        <td width="10%">联系人</td>
+                        <td width="10%">电话</td>
+                        <td width="10%">手机</td>
+                        <td width="20%">地址</td>
+                        <td width="10%">元器件</td>
+                        <td width="50%">状态</td>
+                    </tr>
+                </table>
+                <div id="content"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!--==========================输出分页按钮=========================-->
+<div class="pagin">
+    @if (ViewBag.PageNavigate == null)
+    {
+        @Html.ShowPageNavigate(Model.CurrentPageIndex, Model.PageSize, Model.RecordCount);
+    }
+</div>
+
+<script type="text/javascript">
+    //function updateSupplierData(OpenUrl) {
+    //    location.href = OpenUrl;
+    //    return false;
+    //}
+
+
+    function updateSupplierData(RetUrl) {
+        //表单验证
+        var options = {
+            url:RetUrl,
+            beforeSend: function () {
+                var h = document.body.clientHeight;
+                $("<div class=\"datagrid-mask\"></div>").css({display:"block",width:"100%",height:h}).appendTo("body");
+                $("<div class=\"datagrid-mask-msg\"></div>").html("更新供应商数据，请稍候。。。").appendTo("body").css({display:"block",
+                    left:($(document.body).outerWidth(true) - 190) / 2,
+                    top:(h - 45) / 2});
+            },
+            complete:function(data) {
+                $('.datagrid-mask-msg').remove();
+                $('.datagrid-mask').remove();
+            },
+            dataType: "json",//这里是指控制器处理后返回的类型，这里返回json格式。
+            success: function (context) {
+                if ("success" == context.result) {
+                    $.messager.alert("操作提示", '更新成功！', 'info', function () {
+                        window.location.reload();
+                    });
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $.messager.alert("操作提示", '操作失败！', 'error');
+            }
+        }
+        $.ajax(options);
+        return false; //为了不刷新页面,返回false
+    }
+
+
+    
+    function edidPage(OpenUrl) {
+        //获取到选中值
+        var arr = GetGridSelete();
+        if (arr.length > 1) {
+            $.messager.alert("操作提示", "只能选择一个！", "warning");
+        }
+        else if (arr.length <= 0) {
+            $.messager.alert("操作提示", "请先选择一条记录后再编辑！", "warning");
+        }
+        else {
+            location.href = OpenUrl + "?id=" + arr[0];
+        }
+
+        return false;
+    }
+
+    function checkPage(OpenUrl) {
+        //获取到选中值
+        var arr = GetGridSelete();
+        if (arr.length > 1) {
+            $.messager.alert("操作提示", "只能选择一个！", "warning");
+        }
+        else if (arr.length <= 0) {
+            $.messager.alert("操作提示", "请先选择一条记录后再查看审核！", "warning");
+        }
+        else {
+            location.href = OpenUrl + "?id=" + arr[0];
+        }
+
+        return false;
+    }
+</script>

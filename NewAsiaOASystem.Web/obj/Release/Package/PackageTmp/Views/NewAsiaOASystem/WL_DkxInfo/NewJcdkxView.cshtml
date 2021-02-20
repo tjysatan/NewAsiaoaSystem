@@ -1,0 +1,84 @@
+﻿@{
+    ViewBag.Title = "检测上线";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+
+<div style="width: 80%; padding: 20px 20px 0 20px">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">起始条数：</label>
+        <div class="layui-input-block">
+            <input type="text" name="qssum" id="qssum" required lay-verify="required" placeholder="起始条数" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">条　　数：</label>
+        <div class="layui-input-block">
+            <input type="text" name="tssum" id="tssum" required lay-verify="required" placeholder="条　　数" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="formDemo" onclick="return AjaxTBjson()">上线检测</button>
+            <button type="reset" class="layui-btn layui-btn-primary" onclick="addClick('/WL_DkxInfo/List')">取消</button>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    //同步
+    function AjaxTBjson() {
+        var qssum = $("#qssum").val();
+        var tssum = $("#tssum").val();
+        if (qssum == "") {
+            layer.alert("起始条数不为空！", { icon: 1 });
+            return false;
+        }
+        if (isNaN(qssum)) {
+            layer.alert("只能填写数字！", { icon: 1 });
+            return false;
+        }
+        if (tssum == "") {
+            layer.alert("检测条数不为空！", { icon: 1 });
+            return false;
+        }
+        if (isNaN(tssum)) {
+            layer.alert("检测条数只能填写纯数字！", { icon: 1 });
+            return false;
+        }
+        $.ajax({
+            url: "../WL_DkxInfo/NewJcDxonline",
+            type: "POST",
+            data: { startsum: qssum, endsum: tssum },
+            dataType: "html",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                if (response == "0") {
+                    disLoading();
+                    layer.alert("当前数据已是最新！", { icon: 1 });
+                }
+                else {
+                    disLoading();
+                    layer.alert("本次检测" + response + "条记录", { icon: 1 });
+                }
+            },
+            error: function (e) {
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+    }
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+</script>

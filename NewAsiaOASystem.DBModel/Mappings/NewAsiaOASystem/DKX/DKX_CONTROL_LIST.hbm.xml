@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="NewAsiaOASystem.DBModel" assembly="NewAsiaOASystem.DBModel">
+  <class name="DKX_CONTROL_LIST" table="DKX_CONTROL_LIST">
+    <id name="Id" column="Id" type="string" unsaved-value="0">
+      <generator class="uuid.hex"/>
+    </id>
+    <property name="dd_Id" column="dd_Id"  />
+    <property name="LIST_ID" column="LIST_ID"  />
+    <property name="CONTROL_INFO_NO" column="CONTROL_INFO_NO"  />
+    <property name="C_DESC" column="C_DESC"  />
+    <property name="SUBTOTAL" column="SUBTOTAL"  />
+    <property name="SUB_PACK" column="SUB_PACK"  />
+    <property name="SUB" column="SUB"  />
+    <property name="TAXATION" column="TAXATION"  />
+    <property name="DQ" column="DQ"  />
+    <property name="KZ" column="KZ"  />
+    <property name="FL" column="FL"  />
+    <property name="BZ" column="BZ"  />
+    <property name="YF" column="YF"  />
+    <property name="ZZF" column="ZZF"  />
+    <property name="GLF" column="GLF"  />
+    <property name="LR" column="LR"  />
+    <property name="SF" column="SF"  />
+    <property name="PRICE" column="PRICE"  />
+    <property name="REMARK" column="REMARK"  />
+    <property name="CREATE_BY" column="CREATE_BY"  />
+    <property name="CREATE_TIME" column="CREATE_TIME"  />
+    <property name="UPDATE_BY" column="UPDATE_BY"  />
+    <property name="UPDATE_TIME" column="UPDATE_TIME"  />
+    <property name="DIS_PRICE" column="DIS_PRICE"  />
+  </class>
+</hibernate-mapping>

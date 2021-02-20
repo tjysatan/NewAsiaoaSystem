@@ -1,0 +1,51 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>系统日志</title>
+</head>
+<body>
+     
+     <script src="~/Scripts/Sys/Sys_log.js"></script>
+    <script>
+
+        $(function () {
+            BindGrid();
+        })
+
+        /*
+   绑定dataGrid数据
+  */
+
+        function BindGrid() {
+             @{ 
+                 if(null!=ViewBag.Strjson)
+                 {
+                     string json = ViewBag.Strjson;
+                       @: var jsonStr = @Html.Raw(json)
+                       @: $("#dg1").datagrid('loadData', jsonStr); 
+                 }
+              }
+        }
+    </script>
+    
+
+<table class="easyui-datagrid" id="dg1"  style="width:100%;height:auto;">
+		<thead>
+			<tr> 
+                <th data-options="field:'logsUrl',checkbox:true,align:'center'"></th>
+				<th data-options="field:'logsName',width:'35%',align:'center'">文件名</th>
+		        <th data-options="field:'logsSize',width:'25%',align:'center'">文件大小</th> 
+                  <th data-options="field:'CreateTime',width:'25%',align:'center'">创建时间</th> 
+			    <th data-options="field:'cz',width:'14%',align:'center',formatter:formatOper">操作</th>
+			</tr>
+		</thead> 
+</table>
+ <div id="windowDia" class="easyui-window" data-options="modal:true,closed:true,iconCls:'icon-save'" style="width: 500px; height: 400px; padding: 10px;"></div>
+</body>
+</html>

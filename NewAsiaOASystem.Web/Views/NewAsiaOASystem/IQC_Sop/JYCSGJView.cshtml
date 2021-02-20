@@ -1,0 +1,176 @@
+﻿@model NewAsiaOASystem.ViewModel.IQC_JYDjyconinfoView
+@{
+    ViewBag.Title = "检验工具和检验方法";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<script type="text/javascript">
+    $(function () {
+        var ccjyff;
+        ccjyff = Ajaxjyffjson();
+        if (ccjyff != null) {
+            $("#ccffcon").html(ccjyff.Jyffcont);
+        }
+
+        var jybzstr;
+        jybzstr = Ajaxjybzjson();
+        var html = "";
+        var html1 = "";
+        if (jybzstr != null) {
+
+            if (jybzstr.Jsggsimgurl != "" && jybzstr.Jsggsimgurl != null) {
+                if (jybzstr.zlname1 != "") {
+                    //html= '<span class="layui-breadcrumb" lay-separator="—" style="line-height: 50px;">';
+                    html += ' <a target="_blank" href=' + jybzstr.Jsggsimgurl + '>资料1</a>';
+                    //html += ' </span>';
+                }
+                else {
+                    //html= '<span class="layui-breadcrumb" lay-separator="—" style="line-height: 50px;">';
+                    html += ' <a target="_blank" href=' + jybzstr.Jsggsimgurl + '>' + jybzstr.zlname1 + '</a>';
+                    //html += ' </span>';
+                }
+            }
+            else {
+                html += "无资料";
+            }
+           
+            if (jybzstr.Jsggsimgurl2 != "" && jybzstr.Jsggsimgurl2 != null) {
+                if (jybzstr.zlname2 != "") {
+                    //html1 += '<span class="layui-breadcrumb" lay-separator="—" style="line-height: 50px;">';
+                    html1 += ' <a target="_blank" href=' + jybzstr.Jsggsimgurl2 + '>资料1</a>';
+                    //html1 += ' </span>';
+                }
+                else {
+                    //html1 += '<span class="layui-breadcrumb" lay-separator="—" style="line-height: 50px;">';
+                    html1 += ' <a target="_blank" href=' + jybzstr.Jsggsimgurl2 + '>' + jybzstr.zlname2 + '</a>';
+                    //html1 += ' </span>';
+                }
+            }
+            else {
+                html1 += "";
+            }
+           
+
+        }
+        else {
+            html += "无资料！";
+        }
+        $("#cszlcon").html(html + html1);
+       
+    })
+
+    //检验方法数据
+    function Ajaxjyffjson() {
+        var json;
+        $.ajax({
+            url: "../IQC_Sop/jyffjson",
+            type: "POST",
+            data: { type: '@ViewData["type"]', sopId: '@ViewData["jybzId"]' },
+            dataType: "json",
+            async: false,
+            success: function (response) {
+                json = response;
+            },
+            error: function (e) {
+                layer.alert("操作失败！" + e, { icon: 2 });
+            }
+        })
+        return json;
+    }
+    //检验标准
+    function Ajaxjybzjson() {
+        var json;
+        $.ajax({
+            url: "../IQC_Sop/GetjybzinfobyId",
+            type: "POST",
+            data: { Id: '@ViewData["jybzId"]' },
+            dataType: "json",
+            async: false,
+            success: function (response) {
+                json = response;
+            },
+            error: function (e) {
+                layer.alert("操作失败！" + e, { icon: 2 });
+            }
+        })
+        return json;
+    }
+
+    //技术规格书查看
+    function jsggimg(val) {
+        alert(val);
+        //layer.open({
+        //    type: 2,
+        //    title: false,
+        //    area: ['530px', '460px'],
+        //    shade: 0.8,
+        //    closeBtn: 0,
+        //    shadeClose: true,
+        //    content: val,
+        //});
+        //layer.msg('点击任意处关闭');
+        var newwin = window.open()
+        //newwin.document.write(val);
+        newwin.location.href = val;
+    }
+
+    //缺点等级显示
+    function qqdjshow(val) {
+        if (val == "0") {
+            return "CR(0)";
+        }
+        else if (val == "0.65") {
+            return "MA(0.65)";
+        }
+        else if (val == "1.5") {
+            return "MI(1.5)";
+        } else {
+            return "未编辑";
+        }
+    }
+
+</script>
+
+
+
+<div class="layui-form-item layui-show">
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+        <legend>测试工具</legend>
+    </fieldset>
+    <blockquote class="layui-elem-quote layui-quote-nm">
+        @Model.jygj
+    </blockquote>
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+        <legend>优缺等级</legend>
+    </fieldset>
+    <blockquote class="layui-elem-quote layui-quote-nm">
+       @if (Model.QDDJ == "0")
+       {
+           <span>CR(0)</span> 
+       }
+       else if (Model.QDDJ == "0.65")
+       {
+             <span>MA(0.65)</span> 
+       }
+       else if (Model.QDDJ == "1.5")
+       {
+            <span>MI(1.5)</span> 
+       }
+       else
+       {
+           <span>无</span> 
+       }
+    </blockquote>
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+        <legend>测试方法</legend>
+    </fieldset>
+    <blockquote class="layui-elem-quote layui-quote-nm" id="ccffcon">
+    </blockquote>
+  
+        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+        <legend>资料</legend>
+    </fieldset>
+          <blockquote class="layui-elem-quote layui-quote-nm" id="cszlcon">
+        </blockquote>
+     
+</div>

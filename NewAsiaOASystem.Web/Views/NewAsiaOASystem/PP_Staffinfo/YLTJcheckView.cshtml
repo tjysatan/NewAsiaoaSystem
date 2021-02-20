@@ -1,0 +1,90 @@
+﻿@{
+    ViewBag.Title = "盈利数据后台统计";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<style>
+    .ppdiv1
+    {
+        width: 100%;
+        padding-top: 50px;
+        padding-bottom: 20px;
+        text-align: center;
+        color: #333333;
+    }
+
+
+    .table_con
+    {
+        border-collapse: collapse;
+        border: none;
+    }
+
+        .table_con td
+        {
+            border: solid #eae5e5 1px;
+            height: 35px;
+            padding: 0 0 0 5px;
+        }
+
+    .btnspan button
+    {
+        width: 120px;
+        height: 30px;
+        background: #337CA8;
+    }
+
+    .table_tr_bg1
+    {
+        background-color: #f9f9f9;
+    }
+
+    .mainDIV
+    {
+        overflow: scroll;
+        /*overflow:visible;*/
+        height: 380px;
+    }
+</style>
+
+<script type="text/javascript">
+
+    $(function () {
+        //YearMon();
+        AjaxGetygjson();
+    })
+</script>
+
+
+<div style="width: 90%; margin: auto; margin-top: 20px; margin-bottom: 20px;">
+    <form name="reg_testdate">
+        <span class="inquiry-input" style="font-size:14px;">
+            日期：
+        </span>
+        <span class="inquiry-input">
+            <input type="text" id="starttime" name="starttime" onclick="WdatePicker()" />
+        </span>
+        <span class="inquiry-input">
+             <input type="text" id="endtime" name="endtime" onclick="WdatePicker()" />
+        </span>
+        <input type="button" class="btna1" value="查询" onclick="btnsever()" />
+    </form>
+</div>
+
+<div class="add-infor-title-bg_header">
+    <table class="table_con" style="width: 98%; color: #000; font-size: 13px; margin: auto">
+        <thead>
+            <tr>
+                <td style="width: 10%">姓名</td>
+                <td style="width: 15%">累计收入</td>
+                <td style="width: 15%">累计支出</td>
+                <td style="width: 15%; color: red">当前利润</td>
+                <td style="width: 15%; color: red">当前利润</td>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+<div id="htmlcon" style="width: 98%; margin: auto" class="mainDIV">
+</div>
+<script src="~/Scripts/NAjs/PP_pulice.js"></script>

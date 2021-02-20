@@ -1,0 +1,67 @@
+移动动力100
+地址：http://www.js.10086.cn/group/
+
+集团编码：25033952965
+密码：345671
+
+
+
+账号：51034347797   密码：343680
+
+手机号码：13915279733
+密码：223400
+
+账号 ：13915279733 密码：223400
+
+
+liux
+
+ip: 118.123.20.146
+30213956
+端口：22000
+
+账号 root
+
+密码  fne8acq5	
+ 
+
+ps
+停止 ：
+killall -9 curl 
+killall -9 xxces.sh
+或是killall -9 sh
+
+查看：
+ps -ef |grep curl
+
+启动：
+nohup sh xxces.sh &
+
+
+
+
+select * from  NewICCIDinfo where tctype='5' and zsdddwzt='0' and   ZbNo in (select ZbNo from NewOrdertcPayinfo where otype='11' and  Iscl='1' and C_time >'2018-05-01 00:00:00' and C_time<='2018-05-31 23:59:59'  and Ispay='1')
+
+
+select * from  NewICCIDinfo where Iscs='3' and ZbNo in (select ZbNo from NewOrdertcPayinfo where otype='15' and  Iscl='1' and C_time >'2018-05-01 00:00:00' and C_time<='2018-05-31 23:59:59'  and Ispay='1')
+
+update NewICCIDinfo set zsdddwzt='0' where Iscs='3' and ZbNo in (select ZbNo from NewOrdertcPayinfo where otype='15' and  Iscl='1' and C_time >'2018-05-01 00:00:00' and C_time<='2018-05-31 23:59:59'  and Ispay='1')
+
+
+select * from  NewICCIDinfo where Iscs='3' and ZbNo in (select ZbNo from NewOrdertcPayinfo where otype='15' and  Iscl='0' and C_time >'2018-06-01 00:00:00' and C_time<='2018-06-01 23:59:59'  and Ispay='1')
+
+//查询全部在用的电信0月租卡
+
+
+8986111825403666693H
+1410335539040
+8986111825403666694H
+1410335539160
+8986111825403666695
+1410335539120
+
+8986111825403666696
+1410335539080
+8986111825403666697
+1410335539140
+

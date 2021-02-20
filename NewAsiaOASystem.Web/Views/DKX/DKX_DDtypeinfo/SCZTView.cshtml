@@ -1,0 +1,356 @@
+﻿@{
+    ViewBag.Title = "生产状态编辑";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<script src="~/Scripts/NAjs/layui.js"></script>
+<script type="text/javascript">
+    //
+    $(function () {
+        var ddstr = AjaxGetddinfoyId();
+        if (ddstr.BJno != "-1") {//关联的
+            var xuqiustr = AJaxxuqiujson(ddstr.BJno);
+            if (ddstr.xqIsgl == "0")//需求关联
+            {
+                var html;
+                // html = '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/MDDetail.aspx?CONTROL_NO=' + xuqiustr.CONTROL_INFO_NO + '">需求</a>';
+                if (xuqiustr.COMPRESSOR_TYPE == '0') {
+                    htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/BLDetail.aspx?CONTROL_NO=' + xuqiustr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                }
+                else if (xuqiustr.COMPRESSOR_TYPE == '1') {
+                    htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/LGDetail.aspx?CONTROL_NO=' + xuqiustr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                }
+                else if (xuqiustr.COMPRESSOR_TYPE == '2') {
+                    htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/LSDetail.aspx?CONTROL_NO=' + xuqiustr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                }
+                else if (xuqiustr.COMPRESSOR_TYPE == '3') {
+                    htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/MDDetail2.aspx?CONTROL_NO=' + xuqiustr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                }
+                else if (xuqiustr.COMPRESSOR_TYPE == '12') {
+                    htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/PTLDetail.aspx?CONTROL_NO=' + xuqiustr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                } else {
+                    htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/XXTDetail.aspx?CONTROL_NO=' + xuqiustr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                }
+                $("#xuqiucon").html(html);
+            }
+            else {//没有关联需求
+                var xqzlstr = AJaxziliaojson(ddstr.Id, "0");//需求
+                var htmlxq;
+                htmlxq = "";
+                if (xqzlstr != "" && xqzlstr != null) {
+                    for (var i = 0, j = xqzlstr.length; i < j; i++) {
+                        var id = "'" + xqzlstr[i].Id + "'";
+                        htmlxq += '<a  target="_blank" href="' + xqzlstr[i].url + '">需求</a>&nbsp;&nbsp;';
+                    }
+                }
+                $("#xuqiucon").html(htmlxq);
+            }
+            if (ddstr.ldIsgl == "0")//料单关联
+            {
+                var html;
+                html = '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/ToExcel2.aspx?NO=' + xuqiustr.CONTROL_INFO_NO + '&TYPE=' + xuqiustr.CONTROL_TYPE + '">料单</a>';
+                $("#liaodancon").html(html);
+            }
+            else {//没有关联料单
+                var liaodanstr = AJaxziliaojson(ddstr.Id, "1");//料单
+                var htmlliaodan = "";
+                if (liaodanstr != "" && liaodanstr != null) {
+
+                    for (var z = 0, s = liaodanstr.length; z < s; z++) {
+                        var id = "'" + liaodanstr[z].Id + "'";
+                        htmlliaodan += '<a  target="_blank" href="' + liaodanstr[z].url + '">料单</a>&nbsp;&nbsp;';
+                    }
+                }
+                $("#liaodancon").html(htmlliaodan);
+            }
+            //图纸
+            var tuzhistr = AJaxziliaojson(ddstr.Id, "2");//图纸
+            var htmltuzhi = "";
+            if (tuzhistr != "" && tuzhistr != null) {
+
+                for (var a = 0, b = tuzhistr.length; a < b; a++) {
+                    var id = "'" + tuzhistr[a].Id + "'";
+                    htmltuzhi += '<a  target="_blank" href="' + tuzhistr[a].url + '">图纸</a>&nbsp;&nbsp;';
+                }
+            }
+            $("#tuzhicon").html(htmltuzhi);
+        }
+        else//没有关联
+        {
+            var xqzlstr = AJaxziliaojson(ddstr.Id, "0");//需求
+            var htmlxq;
+            htmlxq = "";
+            if (xqzlstr != "" && xqzlstr != null) {
+                for (var i = 0, j = xqzlstr.length; i < j; i++) {
+                    var id = "'" + xqzlstr[i].Id + "'";
+                    htmlxq += '<a  target="_blank" href="' + xqzlstr[i].url + '">需求</a>&nbsp;&nbsp;';
+                }
+            }
+            $("#xuqiucon").html(htmlxq);
+
+            var liaodanstr = AJaxziliaojson(ddstr.Id, "1");//料单
+            var htmlliaodan = "";
+            if (liaodanstr != "" && liaodanstr != null) {
+
+                for (var z = 0, s = liaodanstr.length; z < s; z++) {
+                    var id = "'" + liaodanstr[z].Id + "'";
+                    htmlliaodan += '<a  target="_blank" href="' + liaodanstr[z].url + '">料单</a>&nbsp;&nbsp;';
+                }
+            }
+            $("#liaodancon").html(htmlliaodan);
+            var tuzhistr = AJaxziliaojson(ddstr.Id, "2");//图纸
+            var htmltuzhi = "";
+            if (tuzhistr != "" && tuzhistr != null) {
+
+                for (var a = 0, b = tuzhistr.length; a < b; a++) {
+                    var id = "'" + tuzhistr[a].Id + "'";
+                    htmltuzhi += '<a  target="_blank" href="' + tuzhistr[a].url + '">图纸</a>&nbsp;&nbsp;';
+                }
+            }
+            $("#tuzhicon").html(htmltuzhi);
+        }
+    })
+
+    //获取订单信息
+    function AjaxGetddinfoyId() {
+        var json;
+        $.ajax({
+            url: "../DKX_DDtypeinfo/AjaxorderbyId",
+            type: "POST",
+            data: { Id: '@ViewData["Id"]' },
+            dataType: "JSON",
+            async: false,
+            success: function (response) {
+                json = eval(response);
+            },
+            error: function (e) {
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+        return json;
+    }
+
+    //获取需求数据
+    function AJaxxuqiujson(val) {
+        var json;
+        $.ajax({
+            url: "../DKX_DDtypeinfo/AjaxxuqiubyorderNo",
+            type: "POST",
+            data: { Bjno: val },
+            dataType: "JSON",
+            async: false,
+            success: function (response) {
+                json = eval(response);
+            },
+            error: function (e) {
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+        return json;
+    }
+
+    //获取资料数据
+    function AJaxziliaojson(Id, type) {
+        var json;
+        $.ajax({
+            url: "../DKX_DDtypeinfo/GetziliaojsonbyddIdandtype",
+            type: "POST",
+            data: { ddId: Id, type: type },
+            dataType: "JSON",
+            async: false,
+            success: function (response) {
+                json = eval(response);
+            },
+            error: function (e) {
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+        return json;
+    }
+
+    //需求上传
+    function XQshangchuanSavaForm() {
+        //表单验证
+        var options = {
+            beforeSubmit: function () {
+                return true;
+            },
+            dataType: "json",//这里是指控制器处理后返回的类型，这里返回json格式。  
+            success: function (context) {
+                if ("success" == context.result) {
+                    layer.alert("保存成功！", { icon: 1 }, function () { location.reload(); });
+                }
+                if ("error" == context.result) {
+                    layer.alert("提交失败，请重新操作！", { icon: 2 }, function () { location.reload(); });
+                }
+                if ("error1" == context.result) {
+                    layer.alert("请选择文件！", { icon: 2 }, function () { location.reload(); });
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $.messager.alert("操作提示", '操作失败！', 'error');
+            }
+        }
+        $('#form1').ajaxSubmit(options);
+        return false; //为了不刷新页面,返回false 
+    }
+    //料单上传
+    function liaodanshangchuanSavaForm() {
+        //表单验证
+        var options = {
+            beforeSubmit: function () {
+                return true;
+            },
+            dataType: "json",//这里是指控制器处理后返回的类型，这里返回json格式。  
+            success: function (context) {
+                if ("success" == context.result) {
+                    layer.alert("保存成功！", { icon: 1 }, function () { location.reload(); });
+                }
+                if ("error" == context.result) {
+                    layer.alert("提交失败，请重新操作！", { icon: 2 }, function () { location.reload(); });
+                }
+                if ("error1" == context.result) {
+                    layer.alert("请选择文件！", { icon: 2 }, function () { location.reload(); });
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $.messager.alert("操作提示", '操作失败！', 'error');
+            }
+        }
+        $('#form2').ajaxSubmit(options);
+        return false; //为了不刷新页面,返回false 
+    }
+    //图纸上传
+    function tuzhishangchuanSavaForm() {
+        //表单验证
+        var options = {
+            beforeSubmit: function () {
+                return true;
+            },
+            dataType: "json",//这里是指控制器处理后返回的类型，这里返回json格式。  
+            success: function (context) {
+                if ("success" == context.result) {
+                    layer.alert("保存成功！", { icon: 1 }, function () { location.reload(); });
+                }
+                if ("error" == context.result) {
+                    layer.alert("提交失败，请重新操作！", { icon: 2 }, function () { location.reload(); });
+                }
+                if ("error1" == context.result) {
+                    layer.alert("请选择文件！", { icon: 2 }, function () { location.reload(); });
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $.messager.alert("操作提示", '操作失败！', 'error');
+            }
+        }
+        $('#form3').ajaxSubmit(options);
+        return false; //为了不刷新页面,返回false 
+    }
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+
+    //删除资料
+    function ziliaoDel(val) {
+        $.ajax({
+            url: "../DKX_DDtypeinfo/ziliaodel",
+            type: "POST",
+            data: { Id: val },
+            dataType: "html",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response == "0") {
+                    layer.alert("删除失败！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "1") {
+                    layer.alert("删除成功！", { icon: 1 }, function () { location.reload(); });
+                }
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+    }
+
+    //完成制图提交
+    function gcswczhitu(val)
+    {
+        $.ajax({
+            url: "../DKX_DDtypeinfo/GCSwczhituEide",
+            type: "POST",
+            data: { Id: val },
+            dataType: "html",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response == "0") {
+                    layer.alert("图纸缺失,请上传图纸！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "1") {
+                    layer.alert("提交成功！", { icon: 1 }, function () { location.reload(); });
+                }
+                if (response == "2") {
+                    layer.alert("料单缺失,请上传料单！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "3") {
+                    layer.alert("需求缺失,请上传需求！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "4") {
+                    layer.alert("提交异常,请重新提交！", { icon: 2 }, function () { location.reload(); });
+                }
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+    }
+</script>
+
+
+
+<div style="width: 90%; padding: 20px 20px 0 20px">
+        <table style="width: 100%">
+            <tr>
+                <td width="45px">需求：</td>
+                <td id="xuqiucon"></td>
+            </tr>
+        </table>
+    
+    <hr class="layui-bg-blue">
+    
+        <table>
+            <tr>
+                <td width="45px">料单：</td>
+ 
+                <td id="liaodancon"></td>
+            </tr>
+        </table>
+ 
+    <hr class="layui-bg-blue">
+ 
+        <table>
+            <tr>
+                <td width="45px">图纸：</td>
+                <td id="tuzhicon"></td>
+            </tr>
+        </table>
+  
+
+ 
+</div>
+
+

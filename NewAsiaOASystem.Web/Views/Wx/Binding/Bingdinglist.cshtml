@@ -1,0 +1,87 @@
+﻿@model NewAsiaOASystem.ViewModel.PagerInfo<NewAsiaOASystem.ViewModel.WX_OpenIDView>
+@{
+    ViewBag.Title = "Bingdinglist";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@section HeadContent{
+    <script src="~/Scripts/Sys/SysMenu.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            BindGrid();
+        })
+        function BindGrid() {
+             @{
+                
+                 if (null != Model)
+                 {
+                     string json = Model.GetPagingDataJson;//获取json数据
+                    @: var jsonStr =@Html.Raw(json); 
+                              //  @: $("#dg").datagrid('loadData', jsonStr); 
+                 }
+              }
+            if (typeof(jsonStr)!="undefined") {
+                var html="";
+                html='<table cellpadding="0" cellspacing="0">';
+                for (var i = 0,j=jsonStr.length; i < j; i++) {
+                    if (i%2==0)
+                        html+='<tr class="h-table-content-r1">';
+                    else
+                        html+='<tr class="h-table-content-r">';
+                    html+='<td width="30"><input type="checkbox" name="ContentChecked" value="'+jsonStr[i].Id+'"/></td>';
+                    html+='<td width="180">'+showPersonnaem(jsonStr[i].Person_Id)+'</td>';
+                    //if (jsonStr[i].MsgType!=null)
+                    //    html+='<td width="90">'+showtype(jsonStr[i].MsgType)+'</td>';
+                    //else
+                    //    html+='<td width="90"></td>';
+
+                    html+='<td width="200">'+showicname(jsonStr[i].Person_Id)+'</td>';
+                   
+                    html+='<td width="150">'+showDate(jsonStr[i].Time)+'</td>';
+                    html+="</tr>";
+                }
+                html+='</table>';
+                $(".h-table-content").append(html);
+            }
+        }
+    </script>
+}
+
+<div class="h-right">
+    <div class="h-right-c">
+    @*    <div class="h-right-title">您当前的位置：帐号绑定用户管理</div>*@
+        <div class="inquiry-input" style="margin: 10px 0 10px 10px;">
+             
+            <span class="inquiry-input">
+                <button onclick="del('/Binding/Delete')">解除绑定</button></span>
+        
+            <span class="inquiry-input">
+                <button onclick="location.href='/Binding/Bingdinglist'">刷新</button></span>
+        </div>
+
+        <div class="h-table">
+            <div class="h-table-content">
+                <table cellpadding="0" cellspacing="0" class="h-right-table-title1" style="border: 5px;">
+                    <tr>
+                        <td width="30">
+                            <input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" /></td>
+                        <td width="180">用户名</td>
+                        <td width="200">帐号名称</td>
+                     @*   <td width="90">状态</td>*@
+                        <td width="150">创建时间</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--==========================输出分页按钮=========================-->
+<div class="pagin">
+    <table style="width: 100%">
+        <tr>
+            <td>@Html.ShowPageNavigate(Model.CurrentPageIndex, Model.PageSize, Model.RecordCount)</td>
+        </tr>
+    </table>
+</div>
+ <script src="~/Scripts/WX/Bingding.js"></script>

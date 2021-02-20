@@ -1,0 +1,720 @@
+﻿@model NewAsiaOASystem.ViewModel.NQ_OASupplierView
+@{
+    ViewBag.Title = "Check";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+<style>
+    .commonStatus {
+        color: green;
+    }
+
+    .imOutDate {
+        color: red;
+    }
+
+    .hadOutDate {
+        color: red;
+    }
+</style>
+
+@using (Html.BeginForm("checkOASupplier", "NQ_OASupplier", FormMethod.Post, new { id = "form1" }))
+{
+    @Html.HiddenFor(m => m.Id)
+    @Html.Hidden("FLicenceS", ViewData["FLicenceStatus"])
+    @Html.Hidden("FTaxNumS", ViewData["FTaxNumStatus"])
+    @Html.Hidden("FISO9001S", ViewData["FISO9001Status"])
+    @Html.Hidden("FISO14000S", ViewData["FISO14000Status"])
+    @Html.Hidden("FPatentS", ViewData["FPatentStatus"])
+    @Html.Hidden("FOtherS", ViewData["FOtherStatus"])
+    @Html.Hidden("FQuestionnaireS", ViewData["FQuestionnaireStatus"])
+    @Html.Hidden("FAgentS", ViewData["FAgentStatus"])
+    @Html.Hidden("FSampleEvaluationS", ViewData["FSampleEvaluationStatus"])
+    @Html.Hidden("FTrialProductionS", ViewData["FTrialProductionStatus"])
+    @Html.Hidden("FQualityAgreementS", ViewData["FQualityAgreementStatus"])
+
+    @Html.Hidden("hiddenFSupplierType", Model.FSupplierType)
+
+    <div class="infor">
+        <p id="Ptitle"></p>
+        <div class="system-menu-set">
+            <ul class="infor-c">
+
+                <li>
+                    <span class="infor-c-width">供应商名称：</span>
+                    <span class="infor-c-input">
+                        @Html.TextBoxFor(m => m.FName, new { disabled = "disabled" })
+                    </span>
+                </li>
+                <li>
+                    <span class="infor-c-width">地址：</span>
+                    <span class="infor-c-input">@Html.TextBoxFor(m => m.FAddress, new { disabled = "disabled" })</span>
+                </li>
+                <li>
+                    <span class="infor-c-width">手机号：</span>
+                    <span class="infor-c-input">
+                        @Html.TextBoxFor(m => m.FMobilePhone, new { disabled = "disabled" })
+                    </span>
+                </li>
+            </ul>
+            <ul class="infor-c">
+                <li>
+                    <span class="infor-c-width">联系人：</span>
+                    <span class="infor-c-input">@Html.TextBoxFor(m => m.FContact, new { disabled = "disabled" })</span>
+                </li>
+                <li>
+                    <span class="infor-c-width">电话：</span>
+                    <span class="infor-c-input">
+                        @Html.TextBoxFor(m => m.FPhone, new { disabled = "disabled" })
+                    </span>
+                </li>
+
+            </ul>
+
+            <ul class="infor-c ">
+                <li>
+                    <span class="infor-c-width">供应商类型：</span>
+                    <span class="infor-c-input">
+                        @if (Model.FSupplierType == 0)
+                        {
+                            @Html.TextBox("FSupplierType", "厂家", new { disabled = "disabled" })
+                        }
+                        else
+                        {
+                            @Html.TextBox("FSupplierType", "供应商", new { disabled = "disabled" })
+                        }
+                    </span>
+                </li>
+                <li>
+                    <span class="infor-c-width">审核状态：</span>
+                    <span class="infor-c-input">
+                        @Html.DropDownList("checkList", new SelectList(ViewBag.nameList, "Value", "Text", Model.FIsChecked), new { @class = "add-function", @disabled = "disabled" })
+                    </span>
+                </li>
+            </ul>
+
+            <ul class="infor-c ">
+                <li>
+                    <span class="infor-c-width-upload">营业执照(三证合一)：<span style="color: red; font-size: 24px;vertical-align: middle; margin-left: 8px;width: 4px;">*</span></span>
+
+                </li>
+                <li>
+                    <span class="infor-c-width">有效期至：</span>
+                    <span class="infor-c-input">
+                        @{
+                            if (ViewBag.FLicencePermanent == 1)
+                            {
+                                <input type="text" name="FLicenceDeadline" value="永不过期" disabled="disabled" />
+                            }
+                            else
+                            {
+                                <input type="text" name="FLicenceDeadline" value="@(ViewBag.FLicenceDeadline == null ? "":ViewBag.FLicenceDeadline.ToString("D") )" disabled="disabled" />
+                            }
+                        }
+                    </span>
+                </li>
+                <li>
+                    <span class="infor-c-width">状态：</span>
+                    <span class="infor-c-input">
+                        <input type="text" id="FLicenceStatus" name="FLicenceStatus" value="@ViewBag.FLicenceStatusName" disabled="disabled" readonly="readonly" />
+                    </span>
+                </li>
+                <li>
+                    <span class="infor-c-width">
+                        @if (string.IsNullOrEmpty(@ViewBag.FLicenceURL))
+                        {
+                        }
+                        else
+                        {
+                            <a href="#" class="infor-c-width" onclick="upload('@ViewBag.FLicenceURL')">营业执照查看</a>
+                        }
+                    </span>
+                </li>
+            </ul>
+
+            <ul class="infor-c ">
+                <li>
+                    <span class="infor-c-width-upload">税务登记证：</span>
+
+                </li>
+                <li>
+                    <span class="infor-c-width">有效期至：</span>
+                    <span class="infor-c-input">
+                        @{
+                            if (ViewBag.FTaxNumPermanent == 1)
+                            {
+                                <input type="text" name="FTaxDeadLine" value="永不过期" disabled="disabled" />
+                            }
+                            else
+                            {
+                                <input type="text" name="FTaxDeadLine" value="@(ViewBag.FTaxDeadLine == null ? "":ViewBag.FTaxDeadLine.ToString("D") )" disabled="disabled" />
+                            }
+                        }
+                    </span>
+                </li>
+                <li>
+                    <span class="infor-c-width">状态：</span>
+                    <span class="infor-c-input">
+                        <input type="text" id="FTaxNumStatus" name="FTaxNumStatus" value="@ViewBag.FTaxNumStatusName" disabled="disabled" />
+                    </span>
+                </li>
+                <li>
+                    <span class="infor-c-width">
+                        @if (string.IsNullOrEmpty(@ViewBag.FTaxNumURL))
+                        {
+                        }
+                        else
+                        {
+                            <a href="#" class="infor-c-width" onclick="upload('@ViewBag.FTaxNumURL')">税务登记证查看</a>
+                        }
+                    </span>
+                </li>
+            </ul>
+
+            <ul class="infor-c ">
+                <li>
+                    <span class="infor-c-width-upload">ISO9001：</span>
+                </li>
+                <li>
+                    <span class="infor-c-width">有效期至：</span>
+                    <span class="infor-c-input">
+                        @{
+                            if (ViewBag.FISO9001Permanent == 1)
+                            {
+                                <input type="text" name="FISO9001DeadLine" value="永不过期" disabled="disabled" />
+                            }
+                            else
+                            {
+                                <input type="text" name="FISO9001DeadLine" value="@(ViewBag.FISO9001DeadLine == null ? "":ViewBag.FISO9001DeadLine.ToString("D") )" disabled="disabled" />
+                            }
+                        }                    </span>
+                </li>
+                <li>
+                    <span class="infor-c-width">状态：</span>
+                    <span class="infor-c-input">
+                        <input type="text" id="FISO9001Status" name="FISO9001Status" value="@ViewBag.FISO9001StatusName" disabled="disabled" />
+                    </span>
+                </li>
+                <li>
+                    <span class="infor-c-width">
+                        @if (string.IsNullOrEmpty(@ViewBag.FISO9001URL))
+                        {
+                        }
+                        else
+                        {
+                            <a href="#" class="infor-c-width" onclick="upload('@ViewBag.FISO9001URL')">ISO9001查看</a>
+                        }
+                    </span>
+                </li>
+            </ul>
+
+            <ul class="infor-c ">
+                <li>
+                    <span class="infor-c-width-upload">ISO14000：</span>
+                </li>
+                <li>
+                    <span class="infor-c-width">有效期至：</span>
+                    <span class="infor-c-input">
+                        @{
+                            if (ViewBag.FISO14000Permanent == 1)
+                            {
+                                <input type="text" name="FISO14000DeadLine" value="永不过期" disabled="disabled" />
+                            }
+                            else
+                            {
+                                <input type="text" name="FISO14000DeadLine" value="@(ViewBag.FISO14000DeadLine == null ? "":ViewBag.FISO14000DeadLine.ToString("D") )" disabled="disabled" />
+                            }
+                        }
+                    </span>
+                </li>
+                <li>
+                    <span class="infor-c-width">状态：</span>
+                    <span class="infor-c-input">
+                        <input type="text" id="FISO14000Status" name="FISO14000Status" value="@ViewBag.FISO14000StatusName" disabled="disabled" />
+                    </span>
+                </li>
+                <li>
+                    <span class="infor-c-width">
+                        @if (string.IsNullOrEmpty(@ViewBag.FISO14000URL))
+                        {
+                        }
+                        else
+                        {
+                            <a href="#" class="infor-c-width" onclick="upload('@ViewBag.FISO14000URL')">ISO14000查看</a>
+                        }
+                    </span>
+                </li>
+            </ul>
+            <ul class="infor-c ">
+                <li>
+                    <span class="infor-c-width-upload">专利证书：</span>
+                </li>
+                <li>
+                    <span class="infor-c-width">有效期至：</span>
+                    <span class="infor-c-input">
+                        @{
+                            if (ViewBag.FPatentPermanent == 1)
+                            {
+                                <input type="text" name="FPatentDeadLine" value="永不过期" disabled="disabled" />
+                            }
+                            else
+                            {
+                                <input type="text" name="FPatentDeadLine" value="@(ViewBag.FPatentDeadLine == null ? "":ViewBag.FPatentDeadLine.ToString("D") )" disabled="disabled" />
+                            }
+                        }
+
+                    </span>
+                </li>
+                <li>
+                    <span class="infor-c-width">状态：</span>
+                    <span class="infor-c-input">
+                        <input type="text" id="FPatentStatus" name="FPatentStatus" value="@ViewBag.FPatentStatusName" disabled="disabled" />
+                    </span>
+                </li>
+                <li>
+                    <span class="infor-c-width">
+                        @if (string.IsNullOrEmpty(@ViewBag.FPatentURL))
+                        {
+                        }
+                        else
+                        {
+                            <a href="#" class="infor-c-width" onclick="upload('@ViewBag.FPatentURL')">专利证书查看</a>
+                        }
+                    </span>
+                </li>
+            </ul>
+            <ul class="infor-c ">
+                <li>
+                    <span class="infor-c-width-upload">其他认证：</span>
+                </li>
+
+                <li>
+                    <span class="infor-c-width">有效期至：</span>
+                    <span class="infor-c-input">
+                        @{
+                            if (ViewBag.FOtherPermanent == 1)
+                            {
+                                <input type="text" name="FOtherDeadLine" value="永不过期" disabled="disabled" />
+                            }
+                            else
+                            {
+                                <input type="text" name="FOtherDeadLine" value="@(ViewBag.FOtherDeadLine == null ? "":ViewBag.FOtherDeadLine.ToString("D") )" disabled="disabled" />
+                            }
+                        }
+                    </span>
+                </li>
+                <li>
+                <li>
+                    <span class="infor-c-width">状态：</span>
+                    <span class="infor-c-input">
+                        <input type="text" id="FOtherStatus" name="FOtherStatus" value="@ViewBag.FOtherStatusName" disabled="disabled" />
+                    </span>
+                </li>
+                <li>
+                    <span class="infor-c-width">
+                        @if (string.IsNullOrEmpty(@ViewBag.FOtherURL))
+                        {
+                        }
+                        else
+                        {
+                            <a href="#" class="infor-c-width" onclick="upload('@ViewBag.FOtherURL')">其他证书查看</a>
+                        }
+                    </span>
+                </li>
+            </ul>
+            <ul class="infor-c ">
+                <li>
+                    <span class="infor-c-width-upload">供应商调查表：</span>
+                </li>
+
+                <li>
+                    <span class="infor-c-width">有效期至：</span>
+                    <span class="infor-c-input">
+                        @{
+                            if (ViewBag.FQuestionnairePermanent == 1)
+                            {
+                                <input type="text" name="FQuestionnaireDeadLine" value="永不过期" disabled="disabled" />
+                            }
+                            else
+                            {
+                                <input type="text" name="FQuestionnaireDeadLine" value="@(ViewBag.FQuestionnaireDeadLine== null ? "":ViewBag.FQuestionnaireDeadLine.ToString("D") )" disabled="disabled" />
+                            }
+                        }
+                    </span>
+                </li>
+                <li>
+                    <span class="infor-c-width">状态：</span>
+                    <span class="infor-c-input">
+                        <input type="text" id="FQuestionnaireStatus" name="FQuestionnaireStatus" value="@ViewBag.FQuestionnaireStatusName" disabled="disabled" />
+                    </span>
+
+                </li>
+                <li>
+                    <span class="infor-c-width">
+                        @if (string.IsNullOrEmpty(@ViewBag.FQuestionnaireURL))
+                        {
+                        }
+                        else
+                        {
+                            <a href="#" class="infor-c-width" onclick="upload('@ViewBag.FQuestionnaireURL')">供应商调查表查看</a>
+                        }
+                    </span>
+                </li>
+            </ul>
+            <ul class="infor-c" id="agentul">
+                <li>
+                    @{
+                        if (ViewBag.FAgentPermanent == 1)
+                        {
+                            <input type="text" name="FAgentDeadLine" value="永不过期" disabled="disabled" />
+                        }
+                        else
+                        {
+                            <input type="text" name="FAgentDeadLine" value="@(ViewBag.FAgentDeadLine== null ? "":ViewBag.FAgentDeadLine.ToString("D") )" disabled="disabled" />
+                        }
+                    }
+                </li>
+
+                <li>
+                    <span class="infor-c-width">有效期至：</span>
+                    <span class="infor-c-input">
+                        <input type="text" name="FAgentDeadLine" value="@(ViewBag.FAgentDeadLine == null ? " ":ViewBag.FAgentDeadLine.ToString("D") )" disabled="disabled" />
+                    </span>
+                </li>
+                <li>
+                    <span class="infor-c-width">状态：</span>
+                    <span class="infor-c-input">
+                        <input type="text" id="FAgentStatus" name="FAgentStatus" value="@ViewBag.FAgentStatusName" disabled="disabled" class="statusInput" />
+                    </span>
+                </li>
+                <li>
+                    <span class="infor-c-width">
+                        @if (string.IsNullOrEmpty(@ViewBag.FAgentURL))
+                        {
+                        }
+                        else
+                        {
+                            <a href="#" class="infor-c-width" onclick="upload('@ViewBag.FAgentURL')">代理证查看</a>
+                        }
+                    </span>
+                </li>
+            </ul>
+            <ul class="infor-c" id="agentul">
+                <li>
+                    <span class="infor-c-width-upload">样品评估：</span>
+                </li>
+
+                <li>
+                    <span class="infor-c-width">有效期至：</span>
+                    <span class="infor-c-input">
+                        @{
+                            if (ViewBag.FSampleEvaluationPermanent == 1)
+                            {
+                                <input type="text" name="FSampleEvaluationDeadLine" value="永不过期" disabled="disabled" />
+                            }
+                            else
+                            {
+                                <input type="text" name="FSampleEvaluationDeadLine" value="@(ViewBag.FSampleEvaluationDeadLine== null ? "":ViewBag.FSampleEvaluationDeadLine.ToString("D") )" disabled="disabled" />
+                            }
+                        }
+                    </span>
+                </li>
+                <li>
+                    <span class="infor-c-width">状态：</span>
+                    <span class="infor-c-input">
+                        <input type="text" id="FSampleEvaluationStatus" name="FSampleEvaluationStatus" value="@ViewBag.FSampleEvaluationName" disabled="disabled" class="statusInput" />
+                    </span>
+                </li>
+                <li>
+                    <span class="infor-c-width">
+                        @if (string.IsNullOrEmpty(@ViewBag.FSampleEvaluationURL))
+                        {
+                        }
+                        else
+                        {
+                            <a href="#" class="infor-c-width" onclick="upload('@ViewBag.FSampleEvaluationURL')">样品评估查看</a>
+                        }
+                    </span>
+                </li>
+            </ul>
+            <ul class="infor-c" id="agentul">
+                <li>
+                    <span class="infor-c-width-upload">小批量试产：</span>
+                </li>
+
+                <li>
+                    <span class="infor-c-width">有效期至：</span>
+                    <span class="infor-c-input">
+                        @{
+                            if (ViewBag.FTrialProductionPermanent == 1)
+                            {
+                                <input type="text" name="FTrialProductionDeadLine" value="永不过期" disabled="disabled" />
+                            }
+                            else
+                            {
+                                <input type="text" name="FTrialProductionDeadLine" value="@(ViewBag.FTrialProductionDeadLine== null ? "":ViewBag.FTrialProductionDeadLine.ToString("D") )" disabled="disabled" />
+                            }
+                        }
+
+                    </span>
+                </li>
+                <li>
+                    <span class="infor-c-width">状态：</span>
+                    <span class="infor-c-input">
+                        <input type="text" id="FTrialProductionStatus" name="FTrialProductionStatus" value="@ViewBag.FTrialProductionName" disabled="disabled" class="statusInput" />
+                    </span>
+                </li>
+                <li>
+                    <span class="infor-c-width">
+                        @if (string.IsNullOrEmpty(@ViewBag.FTrialProductionURL))
+                        {
+                        }
+                        else
+                        {
+                            <a href="#" class="infor-c-width" onclick="upload('@ViewBag.FTrialProductionURL')">小批量试产查看</a>
+                        }
+                    </span>
+                </li>
+            </ul>
+            <ul class="infor-c" id="agentul">
+                <li>
+                    <span class="infor-c-width-upload">质量协议：</span>
+                </li>
+
+                <li>
+                    <span class="infor-c-width">有效期至：</span>
+                    <span class="infor-c-input">
+                        @{
+                            if (ViewBag.FQualityAgreementPermanent == 1)
+                            {
+                                <input type="text" name="FQualityAgreementDeadLine" value="永不过期" disabled="disabled" />
+                            }
+                            else
+                            {
+                                <input type="text" name="FQualityAgreementDeadLine" value="@(ViewBag.FQualityAgreementDeadLine== null ? "":ViewBag.FQualityAgreementDeadLine.ToString("D") )" disabled="disabled" />
+                            }
+                        }
+                    </span>
+                </li>
+                <li>
+                    <span class="infor-c-width">状态：</span>
+                    <span class="infor-c-input">
+                        <input type="text" id="FQualityAgreementStatus" name="FQualityAgreementStatus" value="@ViewBag.FQualityAgreementName" disabled="disabled" class="statusInput" />
+                    </span>
+                </li>
+                <li>
+                    <span class="infor-c-width">
+                        @if (string.IsNullOrEmpty(@ViewBag.FQualityAgreementURL))
+                        {
+                        }
+                        else
+                        {
+                            <a href="#" class="infor-c-width" onclick="upload('@ViewBag.FQualityAgreementURL')">质量协议查看</a>
+                        }
+                    </span>
+                </li>
+            </ul>
+            <ul class="infor-c" id="agentul">
+                <li>
+                    <span class="infor-c-width-upload">供应商评估表：</span>
+                </li>
+
+                <li>
+                    <span class="infor-c-width">有效期至：</span>
+                    <span class="infor-c-input">
+                        @{
+                            if (ViewBag.FSupplierQuestionnairePermanent == 1)
+                            {
+                                <input type="text" name="FSupplierQuestionnaireDeadLine" value="永不过期" disabled="disabled" />
+                            }
+                            else
+                            {
+                                <input type="text" name="FSupplierQuestionnaireDeadLine" value="@(ViewBag.FSupplierQuestionnaireDeadLine== null ? "":ViewBag.FSupplierQuestionnaireDeadLine.ToString("D") )" disabled="disabled" />
+                            }
+                        }
+                    </span>
+                </li>
+                <li>
+                    <span class="infor-c-width">状态：</span>
+                    <span class="infor-c-input">
+                        <input type="text" id="FSupplierQuestionnaireStatus" name="FSupplierQuestionnaireStatus" value="@ViewBag.FSupplierQuestionnaireName" disabled="disabled" class="statusInput" />
+                    </span>
+                </li>
+                <li>
+                    <span class="infor-c-width">
+                        @if (string.IsNullOrEmpty(@ViewBag.FSupplierQuestionnaireUrl))
+                        {
+                        }
+                        else
+                        {
+                            <a href="#" class="infor-c-width" onclick="upload('@ViewBag.FSupplierQuestionnaireUrl')">质量协议查看</a>
+                        }
+                    </span>
+                </li>
+            </ul>
+        </div>
+        <div class="inquiry-input infor-b">
+            <span>
+                <button onclick="return setCheckForm2()">提交审核通过</button>
+            </span>
+            <span>
+                <button onclick="return setUncheck2()">提交审核不通过</button>
+            </span>
+            <span>
+                <button onclick="return RedirectUrl('/NQ_OASupplier/CheckList')">返回</button>
+            </span>
+        </div>
+    </div>
+}
+<script src="~/Scripts/NAjs/NQ_OASupplier.js"></script>
+<style>
+    .btn_att {
+        margin-left: 30px;
+    }
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var FLicenceStatus = $("#FLicenceS").val();
+        var FTaxNumStatus = $("#FTaxNumS").val();
+        var FISO9001Status = $("#FISO9001S").val();
+        var FISO14000Status = $("#FISO14000S").val();
+        var FPatentStatus = $("#FPatentS").val();
+        var FOtherStatus = $("#FOtherS").val();
+        var FQuestionnaireStatus = $("#FQuestionnaireS").val();
+        var FAgentStatus = $("#FAgentS").val();
+        var FOtherStatus = $("#FSampleEvaluationS").val();
+        var FQuestionnaireStatus = $("#FTrialProductionS").val();
+        var FAgentStatus = $("#FQualityAgreementS").val();
+
+        inputClassSet($("#FLicenceStatus"), FLicenceStatus)
+        inputClassSet($("#FTaxNumStatus"), FTaxNumStatus)
+        inputClassSet($("#FISO9001Status"), FISO9001Status)
+        inputClassSet($("#FISO14000Status"), FISO14000Status)
+        inputClassSet($("#FPatentStatus"), FPatentStatus)
+        inputClassSet($("#FOtherStatus"), FOtherStatus)
+        inputClassSet($("#FQuestionnaireStatus"), FQuestionnaireStatus)
+        inputClassSet($("#FAgentStatus"), FAgentStatus)
+        inputClassSet($("#FSampleEvaluationStatus"), FOtherStatus)
+        inputClassSet($("#FTrialProductionStatus"), FQuestionnaireStatus)
+        inputClassSet($("#FQualityAgreementStatus"), FAgentStatus)
+
+        var sutype = $("#hiddenFSupplierType").val();
+
+        if (sutype == 0) {
+            $('#agentul').hide();
+        }
+        if (sutype == 1) {
+            $('#agentul').show();
+        }
+
+    });
+
+    function inputClassSet(obj, status) {
+        if (status == 3) {
+            obj.addClass("commonStatus");
+        } else if (status == "4") {
+            obj.addClass("imOutDate");
+        } else if (status == "5") {
+            obj.addClass("hadOutDate");
+        }
+    }
+
+    //判定失效
+    function setUncheck2() {
+        var supplierid = @Model.Id;
+        var checkstatus = @Model.FIsChecked;
+
+        if ( checkstatus == 2)
+        {
+            $.messager.alert("操作提示", "供应商已经处于审核未通过状态", "warning");
+            return false;
+        }
+
+        $.messager.confirm('提示框', '你确定要判定未通过吗?', function (data) {
+            if (data) {
+                $.ajax({
+                    type: "POST",
+                    url: '/NQ_OASupplier/setUncheck',
+                    data: { supplierid: supplierid },
+                    async: false,
+                    success: function (context) {
+                        if ("success" == context.result) {
+                            location.href = '/NQ_OASupplier/CheckList'
+                        }
+                    },
+                    error: function (e) {
+                        alert("请求失败！");
+                    }
+                })
+            }
+        });
+
+        return false;
+    }
+
+    //判定合格
+    function setCheckForm2() {
+        var supplierid = @Model.Id;
+        var checkstatus = @Model.FIsChecked;
+
+        if ( checkstatus == 1)
+        {
+            $.messager.alert("操作提示", "供应商已经处于审核状态", "warning");
+            return false;
+        }
+
+        var FLicenceStatus = $("#FLicenceS").val();
+        var FAgentStatus = $("#FAgentS").val();
+        var FSupplierType = $("#hiddenFSupplierType").val();
+
+        if (FLicenceStatus == 0) {
+
+            $.messager.alert("操作提示", "营业执照未上传", "warning");
+            return false;
+        }
+
+        if (FSupplierType == 1) {
+            if (FAgentStatus == 0) {
+
+                $.messager.alert("操作提示", "代理证未上传", "warning");
+                return false;
+            }
+        }
+
+        if (FLicenceStatus == 5) {
+            $.messager.alert("操作提示", "营业执照过期", "warning");
+            return false;
+        }
+
+        if (FSupplierType == 1) {
+            if (FAgentStatus == 5) {
+                $.messager.alert("操作提示", "代理证过期", "warning");
+                return false;
+            }
+        }
+
+        $.messager.confirm('提示框', '你确定要审核吗?', function (data) {
+            if (data) {
+                $.ajax({
+                    type: "POST",
+                    url: '/NQ_OASupplier/setCheck',
+                    data: { supplierid: supplierid },
+                    async: false,
+                    success: function (context) {
+
+                        if ("success" == context.result) {
+
+                            location.href = '/NQ_OASupplier/CheckList'
+                        }
+                    },
+                    error: function (e) {
+                        alert("请求失败！");
+                    }
+                })
+            }
+        });
+
+        return false;
+    }
+
+</script>

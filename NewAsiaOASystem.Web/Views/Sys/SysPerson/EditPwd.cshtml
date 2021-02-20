@@ -1,0 +1,84 @@
+﻿@model NewAsiaOASystem.ViewModel.SysPersonView
+
+@{
+    ViewBag.Title = "EditPwd";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+<script>
+
+    //修改密码 文本框验证
+    function serverLogin() {
+        var OldPassword = $('#OldPassword').val();
+        var NewPassword = $('#NewPassword').val();
+        var CheckPassword = $('#CheckPassword').val();
+        if (OldPassword == '') {
+            $.messager.alert("操作提示", "请输入原始密码！", "error");
+            return false;
+        }
+        if (NewPassword == '') {
+            $.messager.alert("操作提示", "请输入新密码！", "error");
+            return false;
+        }
+        if (CheckPassword == '') {
+            $.messager.alert("操作提示", "请输入确认密码！", "error");
+            return false;
+        }
+
+        if (NewPassword != CheckPassword) {
+            $.messager.alert("操作提示", "两次密码不一致，请重新输入！", "error", function () {
+                $('#NewPassword').val("");
+                $('#CheckPassword').val("");
+            });
+            return false;
+        }
+        Submit(OldPassword, NewPassword);
+    }
+
+    function Submit(OldPassword, NewPassword) {
+        $.ajax({
+            type: "POST",
+            url: "/SysPerson/UpdatePassword",
+            data: { OldPassword: OldPassword, NewPassword: NewPassword },
+            success: function (context) {
+                var data = eval(context.result);
+                if (data == "0")
+                    $.messager.alert("操作提示", "原始密码输入错误！", "error");
+                else if (data == "1")
+                    $.messager.alert("操作提示", "密码修改成功！", "info");
+                else if (data == "2")
+                    $.messager.alert("操作提示", "密码修改失败,请重试！", "error");
+            },
+            error: function () {
+                $.messager.alert("操作提示", "请求失败,请重试！", "error");
+            }
+        })
+    }
+
+    function ReturnIndex() {
+        window.parent.CloseTab('密码修改');
+        //parent.location.href = "/Admin/Index";
+    }
+</script>
+
+<div class="infor">
+   @* <div class="h-right-title">您当前的位置：密码修改</div>*@
+    <p>修改密码</p>
+    <div class="system-menu-set">
+
+        <ul class="infor-c">
+            <li><span class="infor-c-width">旧密码：</span><span class="infor-c-input"><input type="password" id="OldPassword" /></span></li>
+        </ul>
+        <ul class="infor-c">
+            <li><span class="infor-c-width">新密码：</span><span class="infor-c-input"><input type="password" id="NewPassword" /></span></li>
+        </ul>
+        <ul class="infor-c">
+            <li><span class="infor-c-width">确认密码：</span><span class="infor-c-input"><input type="password" id="CheckPassword" /></span></li>
+        </ul>
+
+        <div class="inquiry-input infor-b1">
+            <span>
+                <button onclick="serverLogin()">保存</button></span><span>
+                    <button onclick="ReturnIndex()">关闭</button></span>
+        </div>
+    </div>
+</div>

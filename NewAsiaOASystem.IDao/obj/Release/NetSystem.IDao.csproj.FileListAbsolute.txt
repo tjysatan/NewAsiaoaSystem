@@ -1,0 +1,9 @@
+F:\新疆侨瑞欣源电子 工作\NET框架 开发\Code2\trunk\NetSystem.IDao\bin\Release\NetSystem.IDao.dll
+F:\新疆侨瑞欣源电子 工作\NET框架 开发\Code2\trunk\NetSystem.IDao\bin\Release\NetSystem.IDao.pdb
+F:\新疆侨瑞欣源电子 工作\NET框架 开发\Code2\trunk\NetSystem.IDao\bin\Release\NetSystem.DBModel.dll
+F:\新疆侨瑞欣源电子 工作\NET框架 开发\Code2\trunk\NetSystem.IDao\bin\Release\NetSystem.ViewModel.dll
+F:\新疆侨瑞欣源电子 工作\NET框架 开发\Code2\trunk\NetSystem.IDao\bin\Release\NetSystem.DBModel.pdb
+F:\新疆侨瑞欣源电子 工作\NET框架 开发\Code2\trunk\NetSystem.IDao\bin\Release\NetSystem.ViewModel.pdb
+F:\新疆侨瑞欣源电子 工作\NET框架 开发\Code2\trunk\NetSystem.IDao\obj\Release\NetSystem.IDao.csprojResolveAssemblyReference.cache
+F:\新疆侨瑞欣源电子 工作\NET框架 开发\Code2\trunk\NetSystem.IDao\obj\Release\NetSystem.IDao.dll
+F:\新疆侨瑞欣源电子 工作\NET框架 开发\Code2\trunk\NetSystem.IDao\obj\Release\NetSystem.IDao.pdb

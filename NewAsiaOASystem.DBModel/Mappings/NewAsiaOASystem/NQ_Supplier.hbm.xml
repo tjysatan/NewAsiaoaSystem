@@ -1,0 +1,38 @@
+﻿<?xml version="1.0"  encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="NewAsiaOASystem.DBModel" assembly="NewAsiaOASystem.DBModel">
+  <class name="NQ_Supplier" table="NQ_Supplier">
+    <id name="FItemID" column="FItemID"  unsaved-value="0">
+      <generator class="assigned"/>   
+    </id>
+
+    <property name="FItemClassID" column="FItemClassID" />
+    <property name="FAddress" column="FAddress" />
+    <property name="FPhone" column="FPhone" />
+
+    <property name="FMobilePhone" column="FMobilePhone" />
+    <property name="FNumber" column="FNumber" />
+    <property name="FLevel" column="FLevel" />
+
+    <property name="FName" column="FName" />
+
+    <property name="FContact" column="FContact" />
+    
+    <property name="FShortNumber" column="FShortNumber" />
+    <property name="FFullName" column="FFullName" />
+
+    <property name="FLicence" column="FLicence" />
+    <property name="FTaxNum" column="FTaxNum" />
+
+    <property name="FISO9001" column="FISO9001" />
+    <property name="FISO14000" column="FISO14000" />
+    <property name="FPatent" column="FPatent" />
+    <property name="FOther" column="FOther" />
+    <property name="FQuestionnaire" column="FQuestionnaire" />
+    <property name="FAgent" column="FAgent" />
+    <property name="FIsChecked" column="FIsChecked" />
+    <property name="FIsDeleted" column="FIsDeleted" />
+    <property name="FModifyTime" column="FModifyTime" />
+    <property name="FSupplierType" column="FSupplierType" />
+    
+  </class>
+</hibernate-mapping>

@@ -1,0 +1,124 @@
+﻿@model NewAsiaOASystem.ViewModel.Flow_PlanPPrintinfoView
+@{
+    ViewBag.Title = "常规电控箱的生产任务单的打印数据";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<style id="style1">
+    .table_con
+    {
+        border-collapse: collapse;
+        border: none;
+    }
+
+        .table_con td
+        {
+            border: solid #000 1px;
+            height: 25px;
+            padding: 0 0 0 5px;
+        }
+</style>
+
+<script type="text/javascript">
+
+    function PlanPprintSavaForm(obj) {
+ 
+        var Plan_Id = '@ViewData["PId"]';//生产计划Id
+        var scsl = '@ViewData["yhsl"]';//生产数量
+        var khname = $("#cpname").val();//客户名称
+        var cpname = '@ViewData["cpname"]';//产品名称
+        var cpxh = '@ViewData["cpmodel"]';//功率
+        var xdname = $("#xdname").val();
+        var jdname = $("#jdname").val();
+        var khyaoqiu = $("#beizhu").val();
+        var DHRQ='@ViewData["DHtime"]';
+        $.ajax({
+            url: $(obj).attr("action"),
+            type: "POST",
+            data: { plan_Id: Plan_Id, scsl: scsl, khname: khname, cpname: cpname, cpxh: cpxh, xdname: xdname, jdname: jdname, khyaoqiu: khyaoqiu, DHRQ: DHRQ },
+            dataType: "html",
+            async: false,
+            success: function (response) {
+                //账号或密码为空
+                if ("0" == response) {
+                    layer.alert("提交失败！", { icon: 2 });
+                }
+                if ("1" == response) {
+                    window.location = "/Flow_PlanProductioninfo/DKXPlanPeint?Id=" + Plan_Id;
+                }
+                if ("3" == response) {
+                    $.messager.alert("操作提示", '要货时间小于当前时间，无法提交！！', 'info')
+                }
+
+            },
+            error: function (e) {
+                layer.alert("提交失败！", { icon: 2 });
+            }
+        });
+    }
+
+
+    $(function () {
+        //防止表单被实际提交
+        $("form").submit(function (e) {
+            e.preventDefault();
+            PlanPprintSavaForm(this)
+        });
+    })
+
+    function Closetk() {
+        var ParentObj = window.parent;//获取父窗口
+        window.parent.$('#windowDia').window('close');
+        //window.parent.location = "/ExpressPrinting/printlist";
+    };
+</script>
+
+<table style="width: 100%; color: #000; font-size: 13px;">
+    <tr>
+        <td style="text-align: center; font-size: 28px; letter-spacing: 10px">电气车间任务单</td>
+    </tr>
+</table>
+@using (Html.BeginForm("DKXPrintPlanDATa", "Flow_PlanProductioninfo", FormMethod.Post, new { id = "form1", onsubmit = "return false" }))
+{
+    <table class="table_con" style="width: 99%; margin: auto; color: #000; font-size: 13px; margin-top: 10px">
+        <tr>
+            <td style="font-size: 13px; width: 30%">订货日期： @ViewData["DHtime"]</td>
+            <td style="font-size: 13px; width: 30%">类型：电控箱</td>
+            <td style="font-size: 13px; width: 30%">功率：@ViewData["cpmodel"]</td>
+        </tr>
+        <tr>
+            <td style="font-size: 13px; width: 30%">客户名称：
+            <span class="inquiry-input">
+                <input type="text" id="cpname" name="cpname" />
+            </span>
+            </td>
+            <td style="font-size: 13px; width: 30%">订货型号: @ViewData["cpname"]</td>
+            <td style="font-size: 13px; width: 30%">数量： @ViewData["yhsl"]</td>
+        </tr>
+        <tr>
+            <td colspan="3" style="height: 220px" valign="top">客户要求备注：
+            <span class="inquiry-input">
+                <input type="text" id="beizhu" name="beizhu" style="width: 200px" />
+            </span>
+            </td>
+        </tr>
+        <tr>
+            <td style="font-size: 13px; width: 30%">下单人：
+            <span class="inquiry-input">
+                <input type="text" id="xdname" name="xdname" />
+            </span>
+            </td>
+            <td style="font-size: 13px; width: 30%">接单人：
+            <span class="inquiry-input">
+                <input type="text" id="jdname" name="jdname" />
+            </span>
+            </td>
+            <td style="font-size: 13px; width: 30%">完成日期：</td>
+        </tr>
+    </table>
+    <div class="inquiry-input infor-b">
+        <span>
+            <button>生产打印页面</button></span><span>
+                <button onclick="return RedirectUrl('/Flow_RoutineStockinfo/List')">返回</button></span>
+    </div>
+}

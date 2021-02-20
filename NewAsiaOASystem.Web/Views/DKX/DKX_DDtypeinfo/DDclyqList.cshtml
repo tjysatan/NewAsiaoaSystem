@@ -1,0 +1,223 @@
+﻿@model NewAsiaOASystem.ViewModel.PagerInfo<NewAsiaOASystem.ViewModel.DKX_DDCLyqNoteInfoView>
+@{
+    ViewBag.Title = "订单处理逾期通知数据";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@section HeadContent{
+    <script type="text/javascript">
+
+        $(function () {
+            BindGrid();
+        })
+
+        function BindGrid() {
+            @{
+                if (null != Model && null != Model.GetPagingDataJson)
+                {
+                    string json = Model.GetPagingDataJson;//获取json数据
+                    @: var jsonStr = @Html.Raw(json);
+                }
+             }
+            dataGrid(jsonStr);
+        }
+
+        function dataGrid(jsonStr){
+            if (typeof (jsonStr) != "undefined") {
+                var html = "";
+                html = '<table class="layui-table">';
+                html += '<thead>';
+                html+='<tr style="font-weight:bold;color:#000000">';
+                //html+='<td width="5%"><input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" /></td>';
+                html+='<td width="20%">生产批号</td>';
+                html+='<td width="15%">逾期类型</td>';
+                html+='<td width="10%">接收人</td>';
+                html+='<td width="15%">推送时间</td>';
+                html+='<td width="10%">时段</td>';
+                html+='</tr>';
+                html+='</thead>';
+                for (var i = 0, j = jsonStr.length; i < j; i++)
+                {
+                    //提交人的信息
+                    var TJnamestr=AjaxPerson_Name(jsonStr[i].Jsname);
+                    //订单信息
+                    var ddinfostr=GetddinfobyId(jsonStr[i].DD_Id)
+                    html+='<tr style="color:#000000">';
+                    html+='<td width="20%">'+ddinfostr.DD_Bianhao+'</td>';
+                    html+='<td width="15%">'+YQtypeshow(jsonStr[i].Type)+'</td>';
+                    html+='<td width="10%">'+TJnamestr.UserName+'</td>';
+                    html+='<td width="15%">'+jsonStr[i].C_time+'</td>';
+                    html+='<td width="10%">'+SDshow(jsonStr[i].fstype)+'</td>';
+                }
+                html += '</table>';
+                $("#content").html(html);
+            }
+        }
+
+        function SerchList(pageIndex)
+        {
+            $("input[name='pageIndex']").val(pageIndex);
+            var options = {
+                beforeSubmit: function () {
+                    return true;
+                },
+                dataType: "json",
+                success: function (context) {
+                    var data=eval(context.result);
+                    dataGrid(data);
+                    $(".pagin").html(context.PageN);//输出分页按钮
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $.messager.alert("操作提示", '查询失败请重试！', 'error');
+                }
+            }
+            $('#form1').ajaxSubmit(options);
+            return false;
+        }
+
+        //时段显示
+        function SDshow(val)
+        {
+            var str="";
+            if(val=="0")
+            {
+                str="上午段";
+            }
+            if(val=="1")
+            {
+                str="下午段"
+            }
+            return str;
+        }
+        //逾期类型显示
+        function YQtypeshow(val)
+        {
+            var str="";
+            if(val=="0")
+            {
+                str="制图接单逾期";
+            }
+            if(val=="1")
+                str="制图逾期";
+            if(val=="2")
+                str="箱体库存确认逾期";
+            if(val=="3")
+                str="其他物料库存确认逾期";
+            if(val=="4")
+                str="生产接单逾期";
+            if(val=="5")
+                str="生产逾期";
+            if(val=="6")
+                str="发货逾期";
+            if(val=="7")
+                str="资料审核逾期";
+            return str;
+        }
+
+        //根据订单Id 查找
+        function GetddinfobyId(val)
+        {
+            var json;
+            $.ajax({
+                type: "POST",
+                url: "/DKX_DDtypeinfo/GetDDinfobyId",
+                data: { "Id": val },
+                dataType: "json",
+                async: false,
+                success: function (reslut) {
+                    json = reslut;
+                },
+                error: function (e) {
+                    alert("请求失败");
+                }
+            })
+            return json;
+        }
+    </script>
+}
+
+<div class="h-right">
+    <div class="h-right-c">
+        <!--查询条件-->
+        <div class="inquiry1">
+            <fieldset>
+                <legend>查询条件：</legend>
+                @using (Html.BeginForm("DDclyqSearchList", "DKX_DDtypeinfo", FormMethod.Post, new { id = "form1" }))
+                {
+                    @Html.Hidden("pageIndex");
+                    <ul>
+                        <li>
+                            <span>生产编号：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txt_DDBinahao" id="txt_DDBinahao" />
+                            </span>
+                        </li>
+                        <li>
+                            <span>客户名称：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txt_khname" id="txt_khname" />
+                            </span>
+                        </li>
+                        <li>
+                            <span>逾期类型：</span>
+                            <span class="inquiry-input">
+                                <select id="txt_yqtype" name="txt_yqtype">
+                                    <option value="">全部</option>
+                                    <option value="0">制图接单逾期</option>
+                                    <option value="1">制图逾期</option>
+                                    <option value="2">箱体库存确认逾期</option>
+                                    <option value="3">其他物料库存确认逾期</option>
+                                    <option value="4">生产接单逾期</option>
+                                    <option value="5">生产逾期</option>
+                                    <option value="6">发货逾期</option>
+                                    <option value="7">资料审核逾期</option>
+                                </select>
+                            </span>
+                        </li>
+                        <li>
+                            <span>提醒时间段：</span>
+                            <span class="inquiry-input">
+                                <select id="txt_tztimetype" name="txt_tztimetype">
+                                    <option value="">全部</option>
+                                    <option value="0">上午</option>
+                                    <option value="1">下午</option>
+                                </select>
+                            </span>
+                        </li>
+                        <li>
+                            <span>发送时间：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txt_starttime" id="txt_starttime" onclick="WdatePicker()" />
+                                -
+                                <input type="text" name="txt_endtime" id="txt_endtime" onclick="WdatePicker()" />
+                            </span>
+                        </li>
+
+                        <li style="*width: 100%; *margin: -10px 0 5px 90px;">
+                            <span class="inquiry-input">
+                                <button name="btnSerch" class="layui-btn" onclick="return SerchList(1)"><i class="layui-icon">&#xe615;</i>查询</button>
+                            </span>
+                        </li>
+                    </ul>
+                }
+            </fieldset>
+        </div>
+
+        <div class="h-table">
+            <div class="h-table-content" style="color: #9d9999;">
+                <div id="content"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--==========================输出分页按钮=========================-->
+<div class="pagin">
+    @if (ViewBag.PageNavigate == null)
+    {
+        @Html.ShowPageNavigate(Model.CurrentPageIndex, Model.PageSize, Model.RecordCount);
+    }
+</div>
+
+<script src="~/Scripts/NAjs/DKXpulice.js"></script>

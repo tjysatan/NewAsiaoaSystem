@@ -1,0 +1,66 @@
+﻿@{
+    ViewBag.Title = "设置按钮";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<style type="text/css">
+    .main span {
+        width: 80px;
+        height: 25px;
+        display: block;
+        float: left; 
+        text-align: center;
+        font-weight: bold;
+        font-size: 14px;
+        margin:15px;
+        background-color:#ECECFF;
+        padding-top:5px;
+    }
+</style>
+<div>
+    <input id="menuId" type="hidden" value="@ViewBag.ID" />
+    <input id="select" type="checkbox" value="0"/>全选
+    <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitButton()">保存</a>
+</div>
+<div class="main">
+   
+</div>
+<script src="~/Scripts/Sys/SysMenu.js"></script>
+<script type="text/javascript">
+    $(function () {
+        BindButton();
+        $(".main span").click(function () {
+            if ($(this).attr("name") != "1") {
+                CheckCss(this)
+            }
+            else {
+                CancelCss(this);
+            }
+        })
+    })
+
+   
+
+    function BindButton()
+    {
+        @{
+            string jsonAll = ViewBag.All;
+            string jsonCheck = ViewBag.Check;
+            @: var jsonAll =@Html.Raw(@jsonAll);
+            @: var jsonCheck=@Html.Raw(@jsonCheck);
+        }
+
+        $(".main").html("");
+        for (var i = 0,j=jsonAll.length; i < j; i++) {
+            $(".main").append("<span id='"+jsonAll[i].Id+"'>"+jsonAll[i].Name+"</span>");
+        }
+        for (var k = 0,h=jsonCheck.length; k < h; k++) {
+            $(".main span").each(function(){
+                if($(this).attr("id")==jsonCheck[k].Id)
+                {
+                    CheckCss(this);
+                }
+            })
+        }
+    }
+</script>

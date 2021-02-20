@@ -1,0 +1,36 @@
+﻿<?xml version="1.0"  encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="NewAsiaOASystem.DBModel" assembly="NewAsiaOASystem.DBModel">
+	<class name="SysPerson" table="SysPerson">
+		<id name="Id" column="Id" type="string" unsaved-value="0" > 
+      <generator class="uuid.hex"/>
+    </id>      		
+		<property name="Name" column="Name" type="string"  />
+    <property name="UserName" column="UserName" type="string"  />
+    <property name="Url" column="Url" type="string"  />
+    <property name="Tel" column="Tel" type="string"  />
+		<property name="Sort" column="Sort" type="int"  />
+		<property name="Description" column="Description" type="string"  />
+		<property name="Password" column="Password" type="string"  />
+		<property name="State" column="State" type="int"  />
+		<property name="LogonNum" column="LogonNum" type="int"  />
+		<property name="LastLogonTime" column="LastLogonTime" type="DateTime"  />
+		<property name="CreatePerson" column="CreatePerson" type="string"  />
+		<property name="UpdatePerson" column="UpdatePerson" type="string"  />
+		<property name="UpdateTime" column="UpdateTime" type="DateTime"  />
+		<property name="CreateTime" column="CreateTime" type="DateTime"  />
+    <!--单位-->
+    <property name="DisImmuneCenter"  column="ImmCenterId"  type="string" />
+    <!--用户部门多对多-->
+    <bag name="Department" table="SysPersonDepartment"  inverse="false" lazy="false" cascade="none"    >
+      <key column="PersonId"></key>
+      <many-to-many class="SysDepartment" column="DepartmentId"  not-found="ignore"></many-to-many>
+    </bag>
+
+    <!--角色多对多-->
+    <bag name="Role" table="SysRoleSysPerson"  inverse="false" lazy="false" cascade="none"    >
+      <key column="SysPersonId"></key>
+      <many-to-many class="SysRole" column="SysRoleId"  not-found="ignore"></many-to-many>
+    </bag>
+				
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,24 @@
+F:\新疆侨瑞欣源电子 工作\维稳信息化平台_政府通令\Code\NetSystem.Dao\bin\Debug\CommandSystem.Dao.dll
+F:\新疆侨瑞欣源电子 工作\维稳信息化平台_政府通令\Code\NetSystem.Dao\bin\Debug\CommandSystem.Dao.pdb
+F:\新疆侨瑞欣源电子 工作\维稳信息化平台_政府通令\Code\NetSystem.Dao\bin\Debug\CommandSystem.DBModel.dll
+F:\新疆侨瑞欣源电子 工作\维稳信息化平台_政府通令\Code\NetSystem.Dao\bin\Debug\CommandSystem.IDao.dll
+F:\新疆侨瑞欣源电子 工作\维稳信息化平台_政府通令\Code\NetSystem.Dao\bin\Debug\CommandSystem.ViewModel.dll
+F:\新疆侨瑞欣源电子 工作\维稳信息化平台_政府通令\Code\NetSystem.Dao\bin\Debug\Microsoft.QualityTools.Testing.Fakes.dll
+F:\新疆侨瑞欣源电子 工作\维稳信息化平台_政府通令\Code\NetSystem.Dao\bin\Debug\CommandSystem.DBModel.pdb
+F:\新疆侨瑞欣源电子 工作\维稳信息化平台_政府通令\Code\NetSystem.Dao\bin\Debug\CommandSystem.IDao.pdb
+F:\新疆侨瑞欣源电子 工作\维稳信息化平台_政府通令\Code\NetSystem.Dao\bin\Debug\CommandSystem.ViewModel.pdb
+F:\新疆侨瑞欣源电子 工作\维稳信息化平台_政府通令\Code\NetSystem.Dao\obj\Debug\CommandSystem.Dao.csprojResolveAssemblyReference.cache
+F:\新疆侨瑞欣源电子 工作\维稳信息化平台_政府通令\Code\NetSystem.Dao\obj\Debug\CommandSystem.Dao.dll
+F:\新疆侨瑞欣源电子 工作\维稳信息化平台_政府通令\Code\NetSystem.Dao\obj\Debug\CommandSystem.Dao.pdb
+E:\公司项目\社区\IOT_Community\trunk\NetSystem.Dao\bin\Debug\CommandSystem.Dao.dll
+E:\公司项目\社区\IOT_Community\trunk\NetSystem.Dao\bin\Debug\CommandSystem.Dao.pdb
+E:\公司项目\社区\IOT_Community\trunk\NetSystem.Dao\bin\Debug\CommandSystem.DBModel.dll
+E:\公司项目\社区\IOT_Community\trunk\NetSystem.Dao\bin\Debug\CommandSystem.IDao.dll
+E:\公司项目\社区\IOT_Community\trunk\NetSystem.Dao\bin\Debug\CommandSystem.ViewModel.dll
+E:\公司项目\社区\IOT_Community\trunk\NetSystem.Dao\bin\Debug\Microsoft.QualityTools.Testing.Fakes.dll
+E:\公司项目\社区\IOT_Community\trunk\NetSystem.Dao\bin\Debug\CommandSystem.DBModel.pdb
+E:\公司项目\社区\IOT_Community\trunk\NetSystem.Dao\bin\Debug\CommandSystem.IDao.pdb
+E:\公司项目\社区\IOT_Community\trunk\NetSystem.Dao\bin\Debug\CommandSystem.ViewModel.pdb
+E:\公司项目\社区\IOT_Community\trunk\NetSystem.Dao\obj\Debug\CommandSystem.Dao.csprojResolveAssemblyReference.cache
+E:\公司项目\社区\IOT_Community\trunk\NetSystem.Dao\obj\Debug\CommandSystem.Dao.dll
+E:\公司项目\社区\IOT_Community\trunk\NetSystem.Dao\obj\Debug\CommandSystem.Dao.pdb

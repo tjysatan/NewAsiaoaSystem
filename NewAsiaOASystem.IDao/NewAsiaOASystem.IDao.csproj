@@ -1,0 +1,259 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{59C39A04-C4B4-4C47-BE7E-7D213410FD70}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>NewAsiaOASystem.IDao</RootNamespace>
+    <AssemblyName>NewAsiaOASystem.IDao</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Helper\IBaseDao.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service\Iot\IBb_UpdateDao.cs" />
+    <Compile Include="Service\Iot\IPoint_infoDao.cs" />
+    <Compile Include="Service\IQC\IIQC_JyconstrinfoDao.cs" />
+    <Compile Include="Service\IQC\IIQC_JYDDinfoDao.cs" />
+    <Compile Include="Service\IQC\IIQC_JYDjyconinfoDao.cs" />
+    <Compile Include="Service\IQC\IIQC_JyffinfoDao.cs" />
+    <Compile Include="Service\IQC\IIQC_llNoticeMXordinfoDao.cs" />
+    <Compile Include="Service\IQC\IIQC_llNoticeordinfoDao.cs" />
+    <Compile Include="Service\IQC\IIQC_SopInfoDao.cs" />
+    <Compile Include="Service\NACG\ICG_aqkcDao.cs" />
+    <Compile Include="Service\NAFlow\IFlow_AjaxtxdateDao.cs" />
+    <Compile Include="Service\NAFlow\IFlow_DKXPlanPPrintinfoDao.cs" />
+    <Compile Include="Service\NAFlow\IFlow_NonSProductinfoDao.cs" />
+    <Compile Include="Service\NAFlow\IFlow_PlanPPrintinfoDao.cs" />
+    <Compile Include="Service\NAFlow\IFlow_PlanProductioninfoDao.cs" />
+    <Compile Include="Service\NAFlow\IFlow_PleasepurchaseinfoDao.cs" />
+    <Compile Include="Service\NAFlow\IFlow_ProductionNoticeinfoDao.cs" />
+    <Compile Include="Service\NAFlow\IFlow_RoutineStockinfoDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\DKX\IDKX_CONTROL_LISTDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\DKX\IDKX_CONTROL_LIST_DETAILDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\DKX\IDKX_CPInfoDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\DKX\IDKX_DDCLyqNoteInfoDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\DKX\IDKX_DDinfoDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\DKX\IDKX_DDtypeinfoDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\DKX\IDKX_DKXtypeandgcsDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\DKX\IDKX_GCSinfoDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\DKX\IDKX_k3BominfoDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\DKX\IDKX_LCCZJLinfoDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\DKX\IDKX_PAY_CONTROL_INFODao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\DKX\IDKX_pjgdbinfoDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\DKX\IDKX_PleasepurchaseinfoDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\DKX\IDKX_RKZLDataInfoDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\DKX\IDKX_ZLDataInfoDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\DKX\INewChargebackReasonDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\IAct_SignNamelistinfoDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\ICG_infoDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\ICG_DetailinfoDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\IDisImmuneCenterDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\IEP_jlinfoDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\INACustomerinfoDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\INAReturnListDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\INA_AddresseeInfoDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\INA_QyinfoDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\INA_SharealikeDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\INA_XSdetailsinfoDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\INA_XSinfoDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\INQR_ProductDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\INQR_ReasonDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\INQ_BlinfoDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\INQ_BlxxinfoDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\INQ_CHdetailinfoDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\INQ_chuhuoinfonDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\INQ_GysInfoDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\INQ_productinfoDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\INQ_BaseitemAttachmentDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\INQ_SupplierAndBaseitemDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\INQ_SupplierAttachmentDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\INQ_OASupplierDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\INQ_SupplierDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\INQ_ThdetailinfoDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\INQ_THinfoFXDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\INQ_TjFtwxCPTypeSuminfoDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\INQ_YJinfoDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\K3\IK3_wuliaoinfoDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\KSGZ\IKS_CLPersonnelInfoDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\KSGZ\IKS_ProblemTyleDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\KSGZ\IKS_TrackinglistinfoDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\Record\INA_CustomerRecordDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\WLWDKX\IWL_CPInfoDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\WLWDKX\IWL_DkxInfoDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\WLWDKX\IWL_dkxthjlinfoDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\WLWDKX\IWL_GcsinfoDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\WLWDKX\IWL_JxqnumberDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\WLWDKX\IWL_NewgscinfoDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\WLWDKX\IWL_ReturnVisitDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\WLWDKX\IWL_SalesONlineratioinfoDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\WLWDKX\IWL_SalestargetDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\IWx_FTUserbdopenIdinfoDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\IXSFXdqinfoDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\IXSFXkhinfoDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\IXSFXqxinfoDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\WLWDKX\IWL_XFOrderinfoDao.cs" />
+    <Compile Include="Service\Perprofit\IPP_ProfitpointinfoDao.cs" />
+    <Compile Include="Service\Perprofit\IPP_ProfitSummaryinfoDao.cs" />
+    <Compile Include="Service\Perprofit\IPP_ProfuttoStaffInfoDao.cs" />
+    <Compile Include="Service\Perprofit\IPP_ProfuttoStaffTDInfoDao.cs" />
+    <Compile Include="Service\Perprofit\IPP_ShouruandzhichuDetailsinfoDao.cs" />
+    <Compile Include="Service\Perprofit\IPP_StaffinfoDao.cs" />
+    <Compile Include="Service\Perprofit\IPP_TeaminfoDao.cs" />
+    <Compile Include="Service\Perprofit\IPP_TTShouruandzhichuDetailsinfoDao.cs" />
+    <Compile Include="Service\sbycjk\IYCACCandSIDInfoDao.cs" />
+    <Compile Include="Service\sbycjk\IYCAccountbindingInfoDao.cs" />
+    <Compile Include="Service\sbycjk\IYCnoticeinfoDao.cs" />
+    <Compile Include="Service\Sys\ISysButtonDao.cs" />
+    <Compile Include="Service\Sys\ISysDepartmentDao.cs" />
+    <Compile Include="Service\Sys\ISysLog_historyDao.cs" />
+    <Compile Include="Service\Sys\ISysPersonDao.cs" />
+    <Compile Include="Service\Sys\ISysMenuDao.cs" />
+    <Compile Include="Service\Sys\ISysAuthorizeDao.cs" />
+    <Compile Include="Service\Sys\ISysRoleDao.cs" />
+    <Compile Include="Service\Sys\ISysFunctionDao.cs" />
+    <Compile Include="Service\Vote\IVote_ConfigDao.cs" />
+    <Compile Include="Service\Vote\IVote_ipDao.cs" />
+    <Compile Include="Service\Vote\IVote_QuestionDao.cs" />
+    <Compile Include="Service\Vote\IVote_SubjectDao.cs" />
+    <Compile Include="Service\Vote\IVote_TitleDao.cs" />
+    <Compile Include="Service\Wx\dynamic.cs" />
+    <Compile Include="Service\Wx\IWeChat_AnnualmeetingBarrageDao.cs" />
+    <Compile Include="Service\Wx\IWeChat_AnnualmeetingSignDao.cs" />
+    <Compile Include="Service\Wx\IWeChat_forwardInfoDao.cs" />
+    <Compile Include="Service\Wx\IWeChat_OrderInfoDao.cs" />
+    <Compile Include="Service\Wx\IWeChat_signuppersonInfoDao.cs" />
+    <Compile Include="Service\Wx\IWeChat_SlyderpersonInfoDao.cs" />
+    <Compile Include="Service\Wx\IWechat_TXinfoDao.cs" />
+    <Compile Include="Service\Wx\IWeixinExecutor.cs" />
+    <Compile Include="Service\Wx\IWx_configinfoDao.cs" />
+    <Compile Include="Service\Wx\IWX_MenusDao.cs" />
+    <Compile Include="Service\Wx\IWX_MessageDao.cs" />
+    <Compile Include="Service\Wx\IWX_Message_NewsDao.cs" />
+    <Compile Include="Service\Wx\IWX_M_newDao.cs" />
+    <Compile Include="Service\Wx\IWX_OpenIDDao.cs" />
+    <Compile Include="Service\Wx\IWx_openIdinfoDao.cs" />
+    <Compile Include="Service\Wx\IWX_ReceiveMessageDao.cs" />
+    <Compile Include="Service\Wx\IWX_SendCDao.cs" />
+    <Compile Include="Service\Wx\IWX_SendMessageDao.cs" />
+    <Compile Include="WebApi\IAppSysPersonDao.cs" />
+    <Compile Include="WebApi\IAppPoint_infoDao.cs" />
+    <Compile Include="WebApi\IAppUpdateDao.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NewAsiaOASystem.DBModel\NewAsiaOASystem.DBModel.csproj">
+      <Project>{f20c75b3-412e-4673-9af0-f65cf90590cc}</Project>
+      <Name>NewAsiaOASystem.DBModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NewAsiaOASystem.ViewModel\NewAsiaOASystem.ViewModel.csproj">
+      <Project>{dc94f3e3-b933-44fd-b517-b24f0cd0dc55}</Project>
+      <Name>NewAsiaOASystem.ViewModel</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="bin\Debug\NewAsiaOASystem.IDao.dll" />
+    <Content Include="bin\Debug\NewAsiaOASystem.IDao.pdb" />
+    <Content Include="bin\Release\DiseaseControl.DBModel.dll" />
+    <Content Include="bin\Release\DiseaseControl.DBModel.pdb" />
+    <Content Include="bin\Release\DiseaseControl.IDao.dll" />
+    <Content Include="bin\Release\DiseaseControl.IDao.pdb" />
+    <Content Include="bin\Release\DiseaseControl.ViewModel.dll" />
+    <Content Include="bin\Release\DiseaseControl.ViewModel.pdb" />
+    <Content Include="bin\Release\IOT_Community.DBModel.dll" />
+    <Content Include="bin\Release\IOT_Community.DBModel.pdb" />
+    <Content Include="bin\Release\IOT_Community.IDao.dll" />
+    <Content Include="bin\Release\IOT_Community.IDao.pdb" />
+    <Content Include="bin\Release\IOT_Community.ViewModel.dll" />
+    <Content Include="bin\Release\IOT_Community.ViewModel.pdb" />
+    <Content Include="bin\Release\NetSystem.DBModel.dll" />
+    <Content Include="bin\Release\NetSystem.DBModel.pdb" />
+    <Content Include="bin\Release\NetSystem.IDao.dll" />
+    <Content Include="bin\Release\NetSystem.IDao.pdb" />
+    <Content Include="bin\Release\NetSystem.ViewModel.dll" />
+    <Content Include="bin\Release\NetSystem.ViewModel.pdb" />
+    <Content Include="bin\Release\NewAsiaOASystem.DBModel.dll" />
+    <Content Include="bin\Release\NewAsiaOASystem.DBModel.pdb" />
+    <Content Include="bin\Release\NewAsiaOASystem.IDao.dll" />
+    <Content Include="bin\Release\NewAsiaOASystem.IDao.pdb" />
+    <Content Include="bin\Release\NewAsiaOASystem.ViewModel.dll" />
+    <Content Include="bin\Release\NewAsiaOASystem.ViewModel.pdb" />
+    <Content Include="obj\Debug\CommandSystem.IDao.csproj.FileListAbsolute.txt" />
+    <Content Include="obj\Debug\DiseaseControl.IDao.csproj.FileListAbsolute.txt" />
+    <Content Include="obj\Debug\DiseaseControl.IDao.dll" />
+    <Content Include="obj\Debug\DiseaseControl.IDao.pdb" />
+    <Content Include="obj\Debug\IOT_Community.IDao.csproj.FileListAbsolute.txt" />
+    <Content Include="obj\Debug\IOT_Community.IDao.dll" />
+    <Content Include="obj\Debug\IOT_Community.IDao.pdb" />
+    <Content Include="obj\Debug\NetSystem.IDao.csproj.FileListAbsolute.txt" />
+    <Content Include="obj\Debug\NewAsiaOASystem.IDao.csproj.FileListAbsolute.txt" />
+    <Content Include="obj\Debug\NewAsiaOASystem.IDao.dll" />
+    <Content Include="obj\Debug\NewAsiaOASystem.IDao.pdb" />
+    <Content Include="obj\Release\DiseaseControl.IDao.csproj.FileListAbsolute.txt" />
+    <Content Include="obj\Release\DiseaseControl.IDao.dll" />
+    <Content Include="obj\Release\DiseaseControl.IDao.pdb" />
+    <Content Include="obj\Release\IOT_Community.IDao.csproj.FileListAbsolute.txt" />
+    <Content Include="obj\Release\IOT_Community.IDao.dll" />
+    <Content Include="obj\Release\IOT_Community.IDao.pdb" />
+    <Content Include="obj\Release\NetSystem.IDao.csproj.FileListAbsolute.txt" />
+    <Content Include="obj\Release\NetSystem.IDao.dll" />
+    <Content Include="obj\Release\NetSystem.IDao.pdb" />
+    <Content Include="obj\Release\NewAsiaOASystem.IDao.csproj.FileListAbsolute.txt" />
+    <Content Include="obj\Release\NewAsiaOASystem.IDao.dll" />
+    <Content Include="obj\Release\NewAsiaOASystem.IDao.pdb" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="obj\Debug\CommandSystem.IDao.csprojResolveAssemblyReference.cache" />
+    <None Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
+    <None Include="obj\Debug\DiseaseControl.IDao.csprojResolveAssemblyReference.cache" />
+    <None Include="obj\Debug\IOT_Community.IDao.csprojResolveAssemblyReference.cache" />
+    <None Include="obj\Debug\NetSystem.IDao.csprojResolveAssemblyReference.cache" />
+    <None Include="obj\Debug\NewAsiaOASystem.IDao.csprojResolveAssemblyReference.cache" />
+    <None Include="obj\Release\DesignTimeResolveAssemblyReferencesInput.cache" />
+    <None Include="obj\Release\DiseaseControl.IDao.csprojResolveAssemblyReference.cache" />
+    <None Include="obj\Release\IOT_Community.IDao.csprojResolveAssemblyReference.cache" />
+    <None Include="obj\Release\NetSystem.IDao.csprojResolveAssemblyReference.cache" />
+    <None Include="obj\Release\NewAsiaOASystem.IDao.csprojResolveAssemblyReference.cache" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="obj\Debug\TempPE\" />
+    <Folder Include="obj\Release\TempPE\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

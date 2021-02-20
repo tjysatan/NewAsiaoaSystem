@@ -1,0 +1,393 @@
+﻿
+@{
+    ViewBag.Title = "区域管理列表页面";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+
+@section HeadContent{
+    <script src="~/Scripts/city.js"></script>
+    <script type="text/javascript">
+        var pid = "";
+        var qy_type = "";
+        var loadi;
+        function ddchen() {
+            loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+        }
+        //关闭等待效果
+        function disLoading() {
+            layer.close(loadi);
+        }
+
+        $(function () {
+            //BindGrid();
+            AjaxMenu();
+            //$('#MenuDg').treegrid('collapseAll');//收起来
+        })
+
+        function showMenu(datajson) {
+            layui.use('tree', function () {
+                var tree = layui.tree;
+
+                //渲染
+                var inst1 = tree.render({
+                    elem: '#test1',  //绑定元素,
+                    data: datajson,
+                    spread: true, //展开
+                    //edit: ['add', 'update', 'del'],
+
+                    //showCheckbox: true,
+                    operate: function (obj) {
+                        var type = obj.type; //得到操作类型：add、edit、del
+                        var data = obj.data; //得到当前节点的数据
+                        var elem = obj.elem; //得到当前节点元素
+                        if (type === 'add') { //增加节点
+                            addqy(data.id, "");
+                        } else if (type === 'update') { //修改节点
+                            updateqy(data.id, data.title); //得到修改后的内容
+                        } else if (type === 'del') { //删除节点
+                            delqy(data.id)
+                        };
+                    },
+                    click: function (obj) {
+                        var data = obj.data; //得到当前节点的数据
+                        pid = data.id;
+                        if (typeof (data.children) !="undefined") {
+                            qy_type = "1"
+                        } else { qy_type = "" }
+                        $("#addbtn").css({"display":"block"})
+                        Gettabledata(data.id)
+                    }
+
+                });
+            })
+        }
+
+        //新增
+        function addqy(pid, name) {
+            $.ajax({
+                url: "../NA_Qyinfo/Addqy",
+                type: "POST",
+                data: { Pid: pid, name: name },
+                dataType: "json",
+                async: false,
+                //beforeSend: function () {
+                //    ddchen();
+                //},
+                success: function (response) {
+                    //disLoading();
+                    //if (response.result == "success") {
+
+                    //    layer.alert("新增成功！", { icon: 1 }, function () { location.reload(); });
+                    //}
+                    //if (response.result == "error") {
+                    //    layer.alert("提交异常！", { icon: 2 }, function () { location.reload(); });
+                    //}
+                },
+                error: function (e) {
+                    disLoading();
+                    layer.alert("操作失败！", { icon: 2 });
+                }
+            })
+        }
+
+        //编辑区域名称
+        function updateqy(id, name) {
+            $.ajax({
+                url: "../NA_Qyinfo/updateqy",
+                type: "POST",
+                data: { id: id, name: name },
+                dataType: "json",
+                async: true,
+                beforeSend: function () {
+                    ddchen();
+                },
+                success: function (response) {
+                    disLoading();
+                    if (response.result == "success") {
+                        layer.alert("修改成功！", { icon: 1 });
+                    }
+                    if (response.result == "error") {
+                        layer.alert("提交异常！", { icon: 2 }, function () { location.reload(); });
+                    }
+                },
+                error: function (e) {
+                    disLoading();
+                    layer.alert("操作失败！", { icon: 2 });
+                }
+            })
+        }
+
+        //删除区域
+        function delqy(id) {
+            layer.confirm('确定删除吗？', { btn: ['确定', '取消'] }, function () {
+                $.ajax({
+                    url: "../NA_Qyinfo/Delqy",
+                    type: "POST",
+                    data: { id: id },
+                    dataType: "json",
+                    async: true,
+                    beforeSend: function () {
+                        ddchen();
+                    },
+                    success: function (response) {
+                        disLoading();
+                        if (response.result == "success") {
+                            layer.alert("删除成功！", { icon: 1 });
+                            Gettabledata(pid) 
+                        }
+                        if (response.result == "error") {
+                            layer.alert("提交异常！", { icon: 2 }, function () { location.reload(); });
+                        }
+                    },
+                    error: function (e) {
+                        disLoading();
+                        layer.alert("操作失败！", { icon: 2 });
+                    }
+                })
+            })
+  
+        }
+
+        //获取菜单与设置字段
+        function AjaxMenu() {
+            $.ajax({
+                type: "POST",
+                url: "/NA_Qyinfo/GetqyMenu",
+                data: { '': '' },
+                dataType: "json",
+                async: false,
+                success: function (result) {
+
+                    var json = eval(result);
+                    //$("#MenuDg").treegrid('loadData', json);
+                    console.log('json', json)
+                    //  $("#FieldDg").treegrid('loadData', json);
+                    showMenu(json)
+                },
+                error: function (e) {
+                    $.messager.alert("操作提示", '请求失败！', 'error');
+                }
+            })
+        }
+
+        /*
+         修改记录
+        */
+        function qyupdate(OpenUrl) {
+            //获取到选中值
+            var arr = GetGridSeleteId("MenuDg");
+            if (arr.length > 1) {
+                $.messager.alert("操作提示", "只能选择一个！", "warning");
+            }
+            else if (arr.length <= 0) {
+                $.messager.alert("操作提示", "请先选择一条记录后再编辑！", "warning");
+            }
+            else {
+                location.href = OpenUrl + "?id=" + arr[0];
+            }
+
+            return false;
+        }
+
+        /*新增*/
+        function qyadd(OpenUrl) {
+            //获取到选中值
+            var arr = GetGridSeleteId("MenuDg");
+            if (arr.length > 1) {
+                $.messager.alert("操作提示", "只能选择一个！", "warning");
+            }
+            else {
+                location.href = OpenUrl + "?Pdid=" + arr[0];
+            }
+
+            return false;
+        }
+        function qydel(url) {
+            var arr = GetGridSeleteId("MenuDg");
+            if (arr.length <= 0) {
+                $.messager.alert("操作提示", "请先选择一条记录后再删除！", "warning");
+            }
+            else {
+                $.messager.confirm('提示框', '你确定要删除吗?', function (data) {
+                    if (data) {
+                        var id = '';
+                        for (var i = 0, j = arr.length; i < j; i++) {
+                            id = id + "'" + arr[i] + "',"
+                        }
+
+                        id = id.substring(0, id.length - 1);
+                        location.href = url + "?id=" + id;
+                    }
+                })
+            }
+
+            return false;
+        }
+        //var MenuId = GetGridSeleteId("MenuDg").join(",");
+        /*
+          获取DataGrid选中的值(输入需要获取的DataGrid ID)
+          */
+        function GetGridSeleteId(id) {
+            var arr = new Array();
+            var checkedItems = $('#' + id).datagrid('getChecked'); //getSelected
+            $.each(checkedItems, function (index, item) {
+                arr.push(item.id);
+            });
+            return arr;
+        }
+
+        //
+        //整理数据
+        function zhenglishuju(json) {
+            var cdata = json;
+            var strjson = provice;
+            var sdata;
+            var djdata;
+            for (var i in cdata) {
+                console.log('111', strjson)
+                for (var s in strjson) {
+                    sdata = [];
+                    sdata = eval(strjson[s].city);//省
+                    for (var dj in sdata) {
+                        djdata = [];
+                        if (cdata[i].Qyname.substring(0, 2) == sdata[dj].name.substring(0, 2)) {//地级市 名称
+                            djdata = sdata[dj].districtAndCounty;
+                            var data = eval(djdata);
+                            if (data) {
+                                for (var b in data) {
+                                    console.log('222', data[b])
+                                    addqy(cdata[i].Id, data[b])
+                                }
+                            }
+                        }
+
+                    }
+
+                }
+
+            }
+        }
+        //获取全部地级市的数据
+        function Getalldijishidata() {
+            var str;
+            $.ajax({
+                url: "../NA_Qyinfo/linshi",
+                type: "POST",
+                dataType: "html",
+                async: true,
+                beforeSend: function () {
+                    ddchen();
+                },
+                success: function (response) {
+                    str = eval(response);
+                    zhenglishuju(str);
+                    disLoading();
+
+                },
+                error: function (e) {
+                    disLoading();
+                    layer.alert("操作失败！", { icon: 2 });
+                }
+            })
+            return str;
+        }
+
+        //查询区县数据
+        //function Getquxiandata(str)
+
+        //初始化table数据
+        function Gettabledata(pid) {
+            layui.use('table', function () {
+                var table = layui.table;
+                table.render({
+                    elem: '#xjtable',
+                    url: '/NA_Qyinfo/Getxjdatabypid',
+                    where: { Pid: pid },
+                    //cellMinWidth: 80,
+                    cols: [[
+                        { field: 'Id', width: 80, title: 'ID', },
+                        { field: 'Qyname', width:200, title: '区域名称' },
+                        { field: '', title: '操作', width: 130,  toolbar: "#bar" }
+                    ]],
+                    done: function (res, curr, count) {
+                        $(".layui-table-box").find("[data-field='Id']").css("display", "none");
+                    },
+                    page: false
+                });
+                table.on('tool(test)', function (obj) {
+                    var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+                    var data = obj.data; //获得当前行 tr 的 DOM 对象（如果有的话）
+                    console.log("datat", data)
+                    if (layEvent === 'Eide') { //编辑
+                        updateqyView(data.Id, data.Qyname);
+                    }
+                    if (layEvent === 'delete') {
+                        delqy(data.Id)
+                    }
+                })
+            })
+        }
+
+        //新增跳转页面
+        function addxjView() {
+            if (pid) {
+                layer.open({
+                    type: 2,
+                    title: ['新增', 'font-size:14px;'],
+                    area: ['350px', '200px'],
+                    offset: '10px',
+                    fixed: false, //不固定
+                    maxmin: true,
+                    content: '../NA_Qyinfo/addxjView?pid=' + pid + '&qy_type=' + qy_type,
+                    end: function () {
+                        Gettabledata(pid);
+                    }
+                })
+            }
+            else {
+                layer.alert("请先选择左侧树形菜单！", { icon: 2 });
+            }
+        }
+        //编辑页面
+        function updateqyView(id,name) {
+            layer.open({
+                type: 2,
+                title: ['新增', 'font-size:14px;'],
+                area: ['350px', '200px'],
+                offset: '10px',
+                fixed: false, //不固定
+                maxmin: true,
+                content: '../NA_Qyinfo/updateqyView?id=' + id + '&Qyname=' + name,
+                end: function () {
+                    Gettabledata(pid);
+                }
+            })
+        }
+    </script>
+    <script type="text/html" id="bar">
+        <button class="layui-btn layui-btn-primary layui-btn-small" lay-event="Eide">编辑</button>
+        <button class="layui-btn layui-btn-sm" lay-event="delete">删除</button>
+    </script>
+}
+<blockquote class="layui-elem-quote">
+    区域管理
+</blockquote>
+<div class="layui-container">
+
+
+    <div class="layui-row">
+        <div class="layui-col-md6">
+            <div id="test1"></div>
+        </div>
+        <div class="layui-col-md6">
+            <button type="button" class="layui-btn" onclick="addxjView()" id="addbtn" style="display:none">
+                <i class="layui-icon">&#xe608</i>
+            新增
+            </button>
+            <table id="xjtable" lay-filter="test"></table>
+        </div>
+    </div>
+   
+</div>
+

@@ -1,0 +1,166 @@
+﻿@model NewAsiaOASystem.ViewModel.IQC_JYDjyconinfoView
+@{
+    ViewBag.Title = "检验测试内容判定";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+<style>
+    .sopbtnsave {
+        position: absolute;
+        width: 90%;
+        bottom: 5px;
+        text-align: center;
+    }
+
+    .soptopbtn {
+        position: absolute;
+        width: 90%;
+        top: 1px;
+        text-align: center;
+    }
+</style>
+
+<script type="text/javascript">
+
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+    function guanbi() {
+        //layer.alert("保存成功！", { icon: 2 }, function () { layer.closeAll(); });
+        //layer.closeAll();
+        var index = parent.layer.getFrameIndex(window.name);
+        //关闭弹出层
+        parent.layer.close(index);
+    }
+
+    //判定结果提交
+    function CSconpdEideajax() {
+        var csdata1 = $("#csdata1").val();
+        var csdata2 = $("#csdata2").val();
+        var csdata3 = $("#csdata3").val();
+        var csdata4 = $("#csdata4").val();
+        var csdata5 = $("#csdata5").val();
+        var Ispd = $("#Ispd").val();
+        var beizhu = $("#beizhu").val();
+        if (csdata1 == "") {
+            layer.alert("测试数据1不为空！", { icon: 2 });
+            return false;
+        }
+        if (csdata2 == "") {
+            layer.alert("测试数据2不为空！", { icon: 2 });
+            return false;
+        }
+        if (csdata3 == "") {
+            layer.alert("测试数据3不为空！", { icon: 2 });
+            return false;
+        }
+        if (csdata4 == "") {
+            layer.alert("测试数据4不为空！", { icon: 2 });
+            return false;
+        }
+        if (csdata5 == "") {
+            layer.alert("测试数据5不为空！", { icon: 2 });
+            return false;
+        }
+        if (Ispd == "") {
+            layer.alert("请选择判定结果！", { icon: 2 });
+            return false;
+        }
+        $.ajax({
+            url: "../IQC_Sop/JYDcsconpdEide",
+            type: "POST",
+            data: { Id: '@Model.Id', csjson1: csdata1,csjson2: csdata2,csjson3: csdata3,csjson4: csdata4,csjson5: csdata5, Ispd: Ispd, beizhu: beizhu },
+            dataType: "html",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response == "2") {
+                    layer.alert("保存成功！", { icon: 1 }, function () { guanbi(); });
+                }
+                if (response == "1") {
+                    layer.alert("保存失败！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "0") {
+                    layer.alert("提交异常！", { icon: 2 }, function () { location.reload(); });
+                }
+
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+    }
+</script>
+
+<fieldset class="layui-elem-field layui-field-title">
+    <legend>测试项目判定</legend>
+</fieldset>
+
+<div class="layui-form-item">
+    <div class="layui-form-item">
+        <label class="layui-form-label">测试数据：</label>
+        <div class="layui-input-inline" style="width: 50px;">
+            <input type="text" name="csdata1" id="csdata1" placeholder="" value='@Model.csdatastr1' autocomplete="off" class="layui-input">
+        </div>
+        <div class="layui-form-mid">|</div>
+        <div class="layui-input-inline" style="width: 50px;">
+            <input type="text" name="csdata2" id="csdata2" placeholder="" value='@Model.csdatastr2' autocomplete="off" class="layui-input">
+        </div>
+        <div class="layui-form-mid">|</div>
+        <div class="layui-input-inline" style="width: 50px;">
+            <input type="text" name="csdata3" id="csdata3" placeholder="" value='@Model.csdatastr3' autocomplete="off" class="layui-input">
+        </div>
+        <div class="layui-form-mid">|</div>
+        <div class="layui-input-inline" style="width: 50px;">
+            <input type="text" name="csdata4" id="csdata4" placeholder="" value='@Model.csdatastr4' autocomplete="off" class="layui-input">
+        </div>
+        <div class="layui-form-mid">|</div>
+        <div class="layui-input-inline" style="width: 50px;">
+            <input type="text" name="csdata5" id="csdata5" placeholder="" value='@Model.csdatastr5' autocomplete="off" class="layui-input">
+        </div>
+        @*<div class="layui-input-block" style="width: 70%">
+            <input type="text" name="csdata" id="csdata" placeholder="测试数据" value='@Model.csdataconstr' lay-verify="title" autocomplete="off" class="layui-textarea">
+        </div>*@
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">判定结果：</label>
+        <div class="layui-input-inline">
+            <select id="Ispd" name="Ispd" style="border: 1px solid #e5e5e5; width: 190px; height: 38px;">
+                @if (Model.Ispd == 1)
+                {
+                    <option value="1">OK</option>
+                    <option value="2">NG</option>
+                }
+                else
+                {
+                    <option value="2">NG</option>
+                    <option value="1">OK</option>
+                }
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">备注：</label>
+        <div class="layui-input-block" style="width: 70%">
+            <input type="text" name="beizhu" id="beizhu" placeholder="备注" value='@Model.beizhu' lay-verify="title" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <!--按钮-->
+    <div class="sopbtnsave">
+        <button class="layui-btn layui-btn-primary" onclick='return CSconpdEideajax()'>提交</button>
+        <button class="layui-btn layui-btn-primary" onclick="return guanbi()">关闭</button>
+    </div>
+</div>
+
+

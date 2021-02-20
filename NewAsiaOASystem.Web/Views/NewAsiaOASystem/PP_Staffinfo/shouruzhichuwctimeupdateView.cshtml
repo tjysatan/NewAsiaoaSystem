@@ -1,0 +1,57 @@
+﻿@{
+    ViewBag.Title = "收入支出明细完成时间修改";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<style type="text/css">
+    .input_textcss
+    {
+        border: 1px solid #bbb3b3;
+        height: 30px;
+        width: 90%;
+    }
+</style>
+
+<input type="hidden" id="stafId" name="stafId" value='@ViewData["stafId"]' />
+<input type="hidden" id="Id" name="Id" value='@ViewData["Id"]' />
+
+<div class="h-table">
+    
+    <div class="h-table-content">
+        <div id="content">
+            <table class="table_listNew">
+
+                <tr>
+                    <td colspan="2" style="border: none"></td>
+                </tr>
+                <tr>
+                    <td>当前完成时间：</td>
+                    <td>@ViewData["wctime"]</td>
+                </tr>
+                 <tr>
+                    <td>当前数量：</td>
+                    <td>@ViewData["sl"]</td>
+                </tr>
+                <tr>
+                    <td width="30%">数量：</td>
+                    <td align="left">
+                        <input type="text" id="sum" name="sum" class="input_textcss" placeholder="填写完成的数量" />
+                    </td>
+                </tr>
+                <tr>
+                    <td width="30%">完成时间：</td>
+                    <td align="left">
+                        <input type="text" id="wctime" name="wctime" class="input_textcss" placeholder="请选择时间" onclick="WdatePicker()" /></td>
+                </tr>
+                 
+
+            </table>
+        </div>
+        <div style="text-align: center; width: 100%;">
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="shouruzhichuwctimeupdateeide()">提交,关闭页面</a>
+           
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/NAjs/PP_pulice.js"></script>

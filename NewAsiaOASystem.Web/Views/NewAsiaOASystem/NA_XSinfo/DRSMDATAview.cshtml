@@ -1,0 +1,52 @@
+﻿@{
+    ViewBag.Title = "DRSMDATAview";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+@using (Html.BeginForm("DRSMDATAExcel", "NA_XSinfo", FormMethod.Post, new { id = "form1", enctype = "multipart/form-data" }))
+{
+    <table width="100%" style="height: 200px">
+     <tr>
+        <td colspan="2" nowrap="nowrap" align="center">
+           扫码数据：<input id="filImg" name="filImg" runat="server" type="file" />
+        </td>
+        <td style="width: 20px">
+        </td>
+     </tr>
+     <tr>
+        <td colspan="2" align="center">
+            <div class="inquiry-input infor-b">
+            <span>
+               <button onclick="return kcSavaFrom('/NA_XSinfo/List')">确认</button>
+            </span>
+            </div>
+         </td>
+      </tr>
+ </table>
+}
+
+<script type="text/javascript">
+    function kcSavaFrom(RetUrl) {
+        //表单验证
+        var options = {
+            beforeSubmit: function () {
+                return true;
+            },
+            dataType: "json",//这里是指控制器处理后返回的类型，这里返回json格式。  
+            success: function (context) {
+                if ("success" == context.result) {
+                    $.messager.alert("操作提示", '上传成功！', 'info', function () {
+                        location.href = RetUrl;
+                    });
+                }
+                if ("error" == context.result) {
+                    $.messager.alert("操作提示", '操作失败！', 'error');
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $.messager.alert("操作提示", '操作失败！', 'error');
+            }
+        }
+        $('#form1').ajaxSubmit(options);
+        return false; //为了不刷新页面,返回false 
+    }
+</script>

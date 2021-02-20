@@ -1,0 +1,129 @@
+﻿@{
+    ViewBag.Title = "kzqCcpshuliang";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@section HeadContent{
+    <script type="text/javascript">
+        var loadi;
+        function ddchen() {
+            loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+        }
+        //关闭等待效果
+        function disLoading() {
+            layer.close(loadi);
+        }
+
+        function chaxun(){
+            var cpname=$("#txtstr").val();
+            var tyep=$("#txttype").val();
+            var txt_startctime=$("#txt_startctime").val();
+            var txt_endctiome=$("#txt_endctiome").val();
+            if(cpname=="")
+            {
+                layer.alert("控制器型号/物料代码不为空！", { icon: 2 });
+                return false;
+            }
+
+            $.ajax({
+                url: "../DKX_DDtypeinfo/Getcpinfobykzqxhorwldam",
+                type: "POST",
+                data: { str: cpname, type: tyep, starttime: txt_startctime, endtime: txt_endctiome },
+                dataType: "html",
+                async: true,
+                beforeSend: function () {
+                    ddchen();
+                },
+                success: function (response) {
+                    disLoading();
+                   
+                    var json = eval(response);
+                    dataGrid(json)
+                    
+                },
+                error: function (e) {
+                    disLoading();
+                    layer.alert("操作失败！", { icon: 2 });
+                }
+            })
+
+        }
+
+
+        function dataGrid(jsonStr) {
+            if (typeof (jsonStr) != "undefined") {
+                var html = "";
+                html = '<table class="layui-table">';
+                html += '<thead>';
+                html += '<tr style="font-weight:bold;color:#000000">';
+                html += '<td width="30%">产品</td>';
+                html += '<td width="30%">功率</td>';
+                html += '<td width="40%">生产销售数量</td>';
+                html += '</tr>';
+                html += '</thead>';
+                if (jsonStr != "" && jsonStr != null) {
+                    for (var i = 0, j = jsonStr.length; i < j; i++) {
+                        html += '<tr>';
+                        html += '<td width="30%">' + jsonStr[i].cpname + '</td>';
+                        html += '<td width="30%">' + jsonStr[i].gl + '/' + jsonStr[i].dw + '</td>';
+                        html += '<td width="40%">' + jsonStr[i].scsum + '/套</td>';
+                        html += '</tr>';
+                    }
+                }
+                else {
+                    html += '<tr>';
+                    html += '<td colspan="3">该时间段内，生产的电控箱没有使用该型号的控制器~~~</td>';
+                    html += '</tr>';
+                }
+                html += '</table>';
+                $("#content").html(html);
+            }
+        }
+       </script>
+    }
+
+<div class="h-right">
+    <div class="h-right-c">
+        <!--查询条件-->
+        <div class="inquiry1">
+            <fieldset>
+                <legend>查询条件：</legend>
+                <ul>
+                    <li>
+                        <span>控制型号/物料代码：</span>
+                        <span class="inquiry-input">
+                            <input type="text" name="txtstr" id="txtstr" />
+                        </span>
+                    </li>
+                    <li>
+                        <span>查询类型：</span>
+                        <span class="inquiry-input">
+                            <select id="txttype" name="txttype">
+                                <option value="0">型号</option>
+                                <option value="1">物料代码</option>
+                            </select>
+                        </span>
+                    </li>
+                    <li><span>完成时间：</span>
+                        <span class="inquiry-input">
+                            <input type="text" name="txt_startctime" id="txt_startctime" onclick="WdatePicker()" />
+                            -
+                                <input type="text" name="txt_endctiome" id="txt_endctiome" onclick="WdatePicker()" />
+                        </span>
+                    </li>
+                    <li style="*width: 100%; *margin: -10px 0 5px 90px;">
+                        <span class="inquiry-input">
+                            <button name="btnSerch" class="layui-btn" onclick="return chaxun()"><i class="layui-icon">&#xe615;</i>查询</button>
+                        </span>
+                    </li>
+                </ul>
+            </fieldset>
+        </div>
+        
+         <div class="h-table">
+            <div class="h-table-content" style="color: #9d9999;">
+                <div id="content" ></div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,46 @@
+C:\Users\Administrator\Desktop\IOT_Community\trunk\IOT_Community.IDao\bin\Debug\DiseaseControl.IDao.dll
+C:\Users\Administrator\Desktop\IOT_Community\trunk\IOT_Community.IDao\bin\Debug\DiseaseControl.IDao.pdb
+C:\Users\Administrator\Desktop\IOT_Community\trunk\IOT_Community.IDao\bin\Debug\DiseaseControl.DBModel.dll
+C:\Users\Administrator\Desktop\IOT_Community\trunk\IOT_Community.IDao\bin\Debug\DiseaseControl.ViewModel.dll
+C:\Users\Administrator\Desktop\IOT_Community\trunk\IOT_Community.IDao\bin\Debug\DiseaseControl.DBModel.pdb
+C:\Users\Administrator\Desktop\IOT_Community\trunk\IOT_Community.IDao\bin\Debug\DiseaseControl.ViewModel.pdb
+C:\Users\Administrator\Desktop\IOT_Community\trunk\IOT_Community.IDao\obj\Debug\DiseaseControl.IDao.csprojResolveAssemblyReference.cache
+C:\Users\Administrator\Desktop\IOT_Community\trunk\IOT_Community.IDao\obj\Debug\DiseaseControl.IDao.dll
+C:\Users\Administrator\Desktop\IOT_Community\trunk\IOT_Community.IDao\obj\Debug\DiseaseControl.IDao.pdb
+C:\Users\Administrator\Desktop\IOT_Community\trunk\DiseaseControl.IDao\obj\Debug\DiseaseControl.IDao.csprojResolveAssemblyReference.cache
+C:\Users\Administrator\Desktop\IOT_Community\trunk\DiseaseControl.IDao\obj\Debug\DiseaseControl.IDao.dll
+C:\Users\Administrator\Desktop\IOT_Community\trunk\DiseaseControl.IDao\obj\Debug\DiseaseControl.IDao.pdb
+C:\Users\Administrator\Desktop\IOT_Community\trunk\DiseaseControl.IDao\bin\Debug\DiseaseControl.IDao.dll
+C:\Users\Administrator\Desktop\IOT_Community\trunk\DiseaseControl.IDao\bin\Debug\DiseaseControl.IDao.pdb
+C:\Users\Administrator\Desktop\IOT_Community\trunk\DiseaseControl.IDao\bin\Debug\DiseaseControl.DBModel.dll
+C:\Users\Administrator\Desktop\IOT_Community\trunk\DiseaseControl.IDao\bin\Debug\DiseaseControl.ViewModel.dll
+C:\Users\Administrator\Desktop\IOT_Community\trunk\DiseaseControl.IDao\bin\Debug\DiseaseControl.DBModel.pdb
+C:\Users\Administrator\Desktop\IOT_Community\trunk\DiseaseControl.IDao\bin\Debug\DiseaseControl.ViewModel.pdb
+E:\公司项目\免疫监管平台\disease-control\DiseaseControl.IDao\bin\Debug\DiseaseControl.IDao.dll
+E:\公司项目\免疫监管平台\disease-control\DiseaseControl.IDao\bin\Debug\DiseaseControl.IDao.pdb
+E:\公司项目\免疫监管平台\disease-control\DiseaseControl.IDao\bin\Debug\DiseaseControl.DBModel.dll
+E:\公司项目\免疫监管平台\disease-control\DiseaseControl.IDao\bin\Debug\DiseaseControl.ViewModel.dll
+E:\公司项目\免疫监管平台\disease-control\DiseaseControl.IDao\bin\Debug\DiseaseControl.DBModel.pdb
+E:\公司项目\免疫监管平台\disease-control\DiseaseControl.IDao\bin\Debug\DiseaseControl.ViewModel.pdb
+E:\公司项目\免疫监管平台\disease-control\DiseaseControl.IDao\obj\Debug\DiseaseControl.IDao.csprojResolveAssemblyReference.cache
+E:\公司项目\免疫监管平台\disease-control\DiseaseControl.IDao\obj\Debug\DiseaseControl.IDao.dll
+E:\公司项目\免疫监管平台\disease-control\DiseaseControl.IDao\obj\Debug\DiseaseControl.IDao.pdb
+F:\新疆侨瑞欣源电子 工作\流动儿童计划免疫平台\NewCode\trunk\DiseaseControl.IDao\bin\Debug\DiseaseControl.IDao.dll
+F:\新疆侨瑞欣源电子 工作\流动儿童计划免疫平台\NewCode\trunk\DiseaseControl.IDao\bin\Debug\DiseaseControl.IDao.pdb
+F:\新疆侨瑞欣源电子 工作\流动儿童计划免疫平台\NewCode\trunk\DiseaseControl.IDao\bin\Debug\DiseaseControl.DBModel.dll
+F:\新疆侨瑞欣源电子 工作\流动儿童计划免疫平台\NewCode\trunk\DiseaseControl.IDao\bin\Debug\DiseaseControl.ViewModel.dll
+F:\新疆侨瑞欣源电子 工作\流动儿童计划免疫平台\NewCode\trunk\DiseaseControl.IDao\bin\Debug\DiseaseControl.DBModel.pdb
+F:\新疆侨瑞欣源电子 工作\流动儿童计划免疫平台\NewCode\trunk\DiseaseControl.IDao\bin\Debug\DiseaseControl.ViewModel.pdb
+F:\新疆侨瑞欣源电子 工作\流动儿童计划免疫平台\NewCode\trunk\DiseaseControl.IDao\obj\Debug\DiseaseControl.IDao.csprojResolveAssemblyReference.cache
+F:\新疆侨瑞欣源电子 工作\流动儿童计划免疫平台\NewCode\trunk\DiseaseControl.IDao\obj\Debug\DiseaseControl.IDao.dll
+F:\新疆侨瑞欣源电子 工作\流动儿童计划免疫平台\NewCode\trunk\DiseaseControl.IDao\obj\Debug\DiseaseControl.IDao.pdb
+E:\trunk\DiseaseControl.IDao\bin\Debug\DiseaseControl.IDao.dll
+E:\trunk\DiseaseControl.IDao\bin\Debug\DiseaseControl.IDao.pdb
+E:\trunk\DiseaseControl.IDao\bin\Debug\DiseaseControl.DBModel.dll
+E:\trunk\DiseaseControl.IDao\bin\Debug\DiseaseControl.ViewModel.dll
+E:\trunk\DiseaseControl.IDao\bin\Debug\DiseaseControl.DBModel.pdb
+E:\trunk\DiseaseControl.IDao\bin\Debug\DiseaseControl.ViewModel.pdb
+E:\trunk\DiseaseControl.IDao\obj\Debug\DiseaseControl.IDao.csprojResolveAssemblyReference.cache
+E:\trunk\DiseaseControl.IDao\obj\Debug\DiseaseControl.IDao.dll
+E:\trunk\DiseaseControl.IDao\obj\Debug\DiseaseControl.IDao.pdb
+E:\新亚工作\新亚科技办公OA系统——返退货流程跟踪系统\CodeNEW\NewAsiaOASystem\NewAsiaOASystem.IDao\obj\Debug\DiseaseControl.IDao.csprojResolveAssemblyReference.cache

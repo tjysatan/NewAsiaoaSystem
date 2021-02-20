@@ -1,0 +1,213 @@
+﻿@model NewAsiaOASystem.ViewModel.PagerInfo<NewAsiaOASystem.ViewModel.Flow_PleasepurchaseinfoView>
+@{
+    ViewBag.Title = "元器件请购单";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+
+<style>
+
+</style>
+
+@section HeadContent{
+     <script type="text/javascript">
+         $(function () {
+               BindGrid();
+         })
+
+         function BindGrid() {
+            @{
+                if (null != Model && null != Model.GetPagingDataJson)
+                {
+                    string json = Model.GetPagingDataJson;//获取json数据
+                    @:var pageIndex=@Html.Raw(Model.CurrentPageIndex);
+                    @: var jsonStr = @Html.Raw(json);
+                }
+             }
+                     dataGrid(jsonStr,pageIndex);
+                     $("#pageIndex").val(pageIndex);
+         }
+
+         function dataGrid(jsonStr)
+         {
+             if (typeof (jsonStr) != "undefined") {
+                 var html = "";
+                 html = '<table cellpadding="0" cellspacing="0" style="width:100%;">';
+                 for (var i = 0, j = jsonStr.length; i < j; i++) {
+                     if (i % 2 == 0)
+                         html += '<tr class="h-table-content-r1" id="'+jsonStr[i].Id+'">';
+                     else
+                         html += '<tr class="h-table-content-r"  id="'+jsonStr[i].Id+'">';
+                     html += '<td width="5%"><input type="checkbox" name="ContentChecked" value="' + jsonStr[i].Id + '"/></td>';
+                     html += '<td width="15%">'+jsonStr[i].Yqj_Name + '</td>';
+                     html += '<td width="15%">'+jsonStr[i].Yqj_bianhao + '</td>';
+                     html += '<td width="10%">'+jsonStr[i].Cg_shuliang + '</td>';
+                     html += '<td width="10%">'+showcgr(jsonStr[i].cgy) + '</td>';
+                     html += '<td width="10%">'+showsczt(jsonStr[i].Type) + '</td>';
+                     html += '<td width="10%">'+showDate(jsonStr[i].Jqtime) + '</td>';
+                     html += '<td width="10%">'+showDate(jsonStr[i].C_time) + '</td>';
+                     html+='<td width="15%">'+sccz(jsonStr[i].Id)+'</td>';
+                     html+='</tr>';
+                 }
+                 html += '</table>';
+                 $("#content").html(html);
+             }
+         }
+
+         //pageIndex当前页
+         function SerchList(pageIndex)
+         {
+             $("input[name='pageIndex']").val(pageIndex);
+             var options = {
+                 beforeSubmit: function () {
+                     return true;
+                 },
+                 dataType: "json",
+                 success: function (context) {
+                     var data=eval(context.result);
+                     dataGrid(data);
+                     $(".pagin").html(context.PageN);//输出分页按钮
+                 },
+                 error: function (XMLHttpRequest, textStatus, errorThrown) {
+                     $.messager.alert("操作提示", '查询失败请重试！', 'error');
+                 }
+             }
+             $('#form1').ajaxSubmit(options);
+             return false;
+         }
+
+         //返回状态
+         function showsczt(val){
+             if(val=="0")
+                 return "待处理";
+             if(val=="1")
+                 return "采购中";
+             if(val=="2")
+                 return "完成";
+         }
+
+         //采购人
+         function showcgr(val){
+             if(val=="0"){
+                 return "严春芳";
+             }else
+             {
+                 return "季英";
+             }
+         }
+
+         //返回操作
+         function sccz(val)
+         {
+             var Id="'"+val+"'";
+             var f = '<a href="#" onclick="HFJQ('+Id+')">交期回访</a>&nbsp;&nbsp;'
+             var t = '<a href="#" onclick="">完成</a>&nbsp;&nbsp;';
+             return t+f;
+         }
+
+         //BOM表查看
+         function HFJQ(val){
+             var pageIndex=$("#pageIndex").val();
+             $('#windowDia').html("<iframe src=../Flow_Pleasepurchaseinfo/JQview?Id=" + val + "&&  style='border:0px;' width='610px' height='200px'></iframe>");
+             $("#windowDia").window({
+                 title: '回复交期',
+                 modal: true,
+                 closed: false,
+                 width: 680,
+                 height: 200,
+             });
+            
+         }
+
+     </script>
+    }
+
+
+<!--==================================数据列表=============================-->
+<div class="h-right">
+    <div class="h-right-c">
+        <!--查询条件-->
+        @using (Html.BeginForm("SearchList", "Flow_Pleasepurchaseinfo", FormMethod.Post, new { id = "form1" }))
+        {
+            @Html.Hidden("pageIndex");
+            <div class="inquiry1">
+                <fieldset>
+                    <legend>查询条件：</legend>
+                    <ul>
+                        <li><span>元器件名称：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="CPname" /></span></li>
+                        <li><span>物料代码：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="wl_bm" /></span></li>
+                         <li><span>状态：</span>
+                            <span class="inquiry-input">
+                              <select name="Isscing">
+                                  <option value="">全部</option>
+                                   <option value="0">待处理</option>
+                                   <option value="1">采购中</option>
+                                   <option value="2">完成</option>
+                              </select>
+                            </span>
+                         </li>
+                         <li><span>采购员：</span>
+                            <span class="inquiry-input">
+                              <select name="cgy" id="cgy">
+                                  
+                                   <option value="0">严春芳</option>
+                                   <option value="1">季英</option>
+                                 
+                              </select>
+                            </span>
+                         </li>
+                        <li><span>下单时间：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="starttime" onclick="WdatePicker()" />
+                                -
+                                <input type="text" name="endtime" onclick="WdatePicker()" />
+                            </span>
+                        </li>
+                       
+                        <li style="*width: 100%; *margin: -10px 0 5px 90px;"><span class="inquiry-input">
+                            <button name="btnSerch" onclick="return SerchList(1)">查询</button>
+                        </span></li>
+                        <li> 
+                            <span class="inquiry-input">
+                                <button onclick="return addClick('/Flow_Pleasepurchaseinfo/List')">刷新</button></span></li>
+                    </ul>
+                </fieldset>
+            </div>
+        }
+        <div class="h-table">
+            <div class="h-table-content">
+                <table cellpadding="0" cellspacing="0" class="h-right-table-title1" style="border: none; width: 100%;">
+                    <tr>
+                        <td width="5%">
+                            <input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" /></td>
+                        <td width="15%">元器件</td>
+                        <td width="15%">代码</td>
+                        <td width="10%">缺少数</td>
+                        <td width="10%">采购人</td>
+                        <td width="10%">状态</td>
+                        <td width="10%">预计交期</td>
+                        <td width="10%">创建时间</td>
+                        <td width="15%">操作</td>
+                    </tr>
+                </table>
+                <div id="content"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!--==========================输出分页按钮=========================-->
+<div class="pagin">
+    @if (ViewBag.PageNavigate == null)
+    {
+        @Html.ShowPageNavigate(Model.CurrentPageIndex, Model.PageSize, Model.RecordCount);
+    }
+</div>
+
+<div id="windowDia" class="easyui-window" closed="true" style="width: 680px; height: 600px; padding: 10px;"></div>

@@ -1,0 +1,90 @@
+﻿@{
+    ViewBag.Title = "订单操作记录查询";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<script type="text/javascript">
+    
+    $(function () {
+        var str = AJAXliaodanfkzdata();
+        htmljl(str);
+    })
+
+    //拼接html
+    function htmljl(str)
+    {
+        var constr = str;
+        if (constr != "" && constr != null)
+        {
+            var html = "";
+            html = '<table class="layui-table">';
+            html += '<thead>';
+            html += '<tr style="font-weight:bold;color:#000000">';
+            html += '<td width="100px">操作内容</td>';
+            html += '<td width="90px">操作人</td>';
+            html += '<td width="90px">操作时间</td>';
+            html += '</tr>';
+            html += '</thead>';
+            for (var i = 0, j = constr.length; i < j; i++) {
+                //提交人的信息
+                var TJnamestr = AjaxPerson_Name(constr[i].c_name);
+                var Tjnameuser = "";
+                if (TJnamestr != null && TJnamestr != "") {
+                    Tjnameuser = TJnamestr.UserName;
+                }
+                html += '<tr style="color:#000000">';
+                html += '<td width="100px">' + constr[i].caozuo + '</td>';
+                html += '<td width="90px">' + Tjnameuser + '</td>';
+                html += '<td width="90px">' + constr[i].c_time + '</td>';
+                html += '</tr>';
+            }
+            html += '</table>';
+            $("#content").html(html);
+        }
+
+    }
+
+    //记录
+    function AJAXliaodanfkzdata() {
+        var json;
+        $.ajax({
+            url: "../publicAPI/LCCZJLdata",
+            type: "POST",
+            data: { oId: '@ViewData["Id"]' },
+            dataType: "JSON",
+            async: false,
+            success: function (response) {
+                json = eval(response);
+            },
+            error: function (e) {
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+        return json;
+    }
+
+    /*当前登录用户的信息*/
+    function AjaxPerson_Name(Id) {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "/Api/SysWebApi/GetPersonjson_Id",
+            data: { "": Id },
+            dataType: "json",
+            async: false,
+            success: function (reslut) {
+                json = eval('(' + reslut + ')');
+            },
+            error: function (e) {
+                alert("请求失败");
+            }
+        })
+        return json;
+    }
+</script>
+
+
+<div style="width:95%; margin:auto">
+    <div id="content"></div>
+</div>
+

@@ -1,0 +1,303 @@
+﻿@model NewAsiaOASystem.ViewModel.EP_jlinfoView
+@{
+    ViewBag.Title = "快递单录单";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<script type="text/javascript">
+    $(function () {
+        $("#pageindex").val('@ViewData["pageindex"]');
+        var Cust = AjaxCust_Name('@Model.SjId');
+        var Jcjg = JcIsBing(Cust.Id);//检测结果
+        $("#Cname").html(Cust.Name);
+        $("#Clxr").html(Cust.LxrName);
+        $("#Ctel").html(Cust.Tel);
+        $("#jcjg").html(Jcjg);
+        var pname = AjaxPerson_Name('@Model.JjId');
+        $("#jjname").html(pname.UserName);
+        kdgsname();
+        //发货时间赋值
+        if ('@Model.RL_datetime' == null || '@Model.RL_datetime' == "") {
+            var Rldatetime = Getdatetimejson();
+            var days = YJdayNumber('@Model.Kdgs');
+            $('#RL_datetime').val(Rldatetime);//发货时间赋值
+            $("#DHyjdatetime").val(GetYQdatetimejson(Rldatetime, days));//预计发货时间赋值
+        }
+    })
+
+
+    //快递公司名称
+    function kdgsname() {
+        var val = '@Model.Kdgs';
+        if (val != "") {
+            if (val == "sh") {
+                $("#kdgs").html("盛辉物流");
+            } else if (val == "sf") {
+                $("#kdgs").html("顺丰快递");
+            } else if (val == "db") {
+                $("#kdgs").html("德邦快递");
+            } else if (val == "zt") {
+                $("#kdgs").html("中通快递");
+            } else if (val == "tdhy") {
+                $("#kdgs").html("天地华宇");
+            } else if (val == "JJ") {
+                $("#kdgs").html("佳吉物流");
+            } else if (val == "ycky") {
+                $("#kdgs").html("远成快运");
+            } else if (val == "dbwl") {
+                $("#kdgs").html("德邦物流");
+            } else if (val == "an") {
+                $("#kdgs").html("安能物流");
+            }
+        }
+    }
+
+    function dySavaForm() {
+        var Kd_no = $("#Kd_no").val();
+        if (Kd_no == "") {
+            alert("快递单号不为空！");
+            return false;
+        }
+        var pageindex = $("#pageindex").val();
+        //表单验证
+        var options = {
+            beforeSubmit: function () {
+                return true;
+            },
+            dataType: "json",//这里是指控制器处理后返回的类型，这里返回json格式。  
+            success: function (context) {
+                if ("success" == context.result) {
+                    $.messager.alert("操作提示", '操作成功！', 'info', function () {
+                        var ParentObj = window.parent;//获取父窗口
+                        window.parent.$('#windowDia').window('close');
+                        window.parent.location = "/EP_jlinfo/List?pageIndex=" + pageindex;
+                        return false;
+                    });
+                }
+                if ("error" == context.result) {
+                    $.messager.alert("操作提示", '操作失败！', 'error');
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $.messager.alert("操作提示", '操作失败！', 'error');
+            }
+        }
+        $('#form1').ajaxSubmit(options);
+        return false; //为了不刷新页面,返回false 
+    }
+
+    //获取预计发货日期
+    function Getdatetimejson() {
+        var sl;
+        $.ajax({
+            type: "POST",
+            url: "../EP_jlinfo/Getdatenewjson",
+            dataType: "json",
+            async: false,
+            success: function (reslut) {
+                sl = reslut.status;
+            },
+            error: function (e) {
+                alert(e.error);
+            }
+        })
+        return sl;
+    }
+
+    //根据发货日期计算预计到货日期
+    function GetYQdatetimejson(val1, val2) {
+        var sl;
+        $.ajax({
+            type: "POST",
+            url: "../EP_jlinfo/GetYCdatetime",
+            data: { datetime: val1, DayNumber: val2 },
+            dataType: "html",
+            async: false,
+            success: function (reslut) {
+                sl = reslut;
+            },
+            error: function (e) {
+                alert(e.error);
+                alert("失败！");
+            }
+        })
+        return sl;
+    }
+
+    //检测是否已经绑定微信公众号
+    function JcIsBing(val) {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "../EP_jlinfo/JcIsBingbyCusId",
+            data: { Id: val },
+            dataType: "json",
+            async: false,
+            success: function (reslut) {
+                json = reslut.status;
+            },
+            error: function (e) {
+                alert("数据链接失败！");
+            }
+        })
+        return json;
+    }
+
+    //根据快递公司返回预计到货天数
+    function YJdayNumber(val) {
+        var days;
+        if (val == "tdhy")
+            days = "5";
+        if (val == "db")
+            days = "3";
+        if (val == "sh")
+            days = "3";
+        if(val=="zt")
+            days = "1";
+        if (val == "sf")
+            days = "1";
+        if (val == "JJ")
+            days = "3";
+        if (val == "ycky")
+            days = "4";
+        if (val == "ztky")
+            days = "4";
+        if (val == "dbwl")
+            days="3"
+        return days;
+    }
+
+    //关闭
+    function closeUI() {
+        var ParentObj = window.parent;//获取父窗口
+        window.parent.$('#windowDia').window('close');
+        return false;
+    }
+
+</script>
+
+@using (Html.BeginForm("Edit", "EP_jlinfo", FormMethod.Post, new { id = "form1" }))
+{
+    @Html.HiddenFor(m => m.Id)
+    @Html.HiddenFor(m => m.JjId)
+    @Html.HiddenFor(m => m.SjId)
+    @Html.HiddenFor(m => m.Jjdatetime)
+    @Html.HiddenFor(m => m.RL_Is)
+    @Html.HiddenFor(m => m.Kdgs)
+    @Html.HiddenFor(m => m.IsSend)
+    @Html.HiddenFor(m => m.Source)
+    @Html.HiddenFor(m => m.SjaddId)
+    @Html.HiddenFor(m => m.DDId)
+    @Html.HiddenFor(m => m.QRsjName)
+    @Html.HiddenFor(m => m.DHsjdatetime)
+    @Html.HiddenFor(m=>m.IsDis)
+    <input type="hidden" id="pageindex" name="pageindex" />
+ 
+    <div style="width:98%; height:270px; padding-top:10px; border: 1px solid #ede9e9; padding-left: 5px;">
+        <ul class="infor-c1">
+            <li>
+                <span class="infor-c-width2">到货数量：</span>
+                <span class="infor-c-input">
+                    @Html.TextBoxFor(m => m.DHno)
+                </span>
+                <span class="desc w-register"></span>
+                
+            </li>
+
+            <li>
+                <span class="infor-c-width2">快递单号：</span>
+                <span class="infor-c-input">
+                    @Html.TextBoxFor(m => m.Kd_no)
+                </span>
+                <span class="desc w-register"></span>
+            </li>
+                        <li>
+                <span class="infor-c-width2">K3单号：</span>
+                <span class="infor-c-input">
+                    @Html.TextBoxFor(m => m.k3_ddno)
+                </span>
+                <span class="desc w-register"></span>
+            </li>
+            <li><span class="infor-c-width2">发货时间：</span>
+                <span class="infor-c-input">
+                    @Html.TextBoxFor(m => m.RL_datetime, new { onclick = "WdatePicker()" })
+                </span>
+                <span class="desc w-register"></span>
+            </li>
+            <li><span class="infor-c-width2">预计到货：</span>
+                <span class="infor-c-input">
+                    @Html.TextBoxFor(m => m.DHyjdatetime, new { onclick = "WdatePicker()" })
+                </span>
+                <span class="desc w-register"></span>
+            </li>
+            <li><span class="infor-c-width2">备注：</span>
+                <span class="infor-c-input">
+                    @Html.TextBoxFor(m => m.Beizhu)
+                </span>
+                <span class="desc w-register"></span>
+            </li>
+            <li>
+                <span class="infor-c-width2">微信通知：</span>
+                <input type="radio" name="radiobutton" value="0" checked>
+                发送  
+                   <input type="radio" name="radiobutton" value="1">
+                不发送  
+            </li>
+        </ul>
+        
+    </div>
+    
+    <div class="inquiry-input infor-b" style="margin-left:120px;" >
+        <span>
+            <button onclick="return dySavaForm()">确定</button></span>
+        <span>
+            <button onclick="return  closeUI()">返回</button></span>
+    </div>
+    <div style="width: 98%; height:100px; margin-top: 10px; border: 1px solid #ede9e9; padding-left: 5px;">
+
+        <ul class="infor-c1" >
+            <li>
+                <span class="infor-c-width2">收货单位：</span>
+                <span class="infor-c-q2">
+                    <label id="Cname"></label>
+                    (<label id="jcjg"></label>)
+                </span>
+            </li>
+            <li>
+                <span class="infor-c-width2">联系人：</span>
+                <span class="infor-c-q2">
+                    <label id="Clxr"></label>
+                </span>
+            </li>
+            <li>
+                <span class="infor-c-width2">电话：</span>
+                <span class="infor-c-q2">
+                    <label id="Ctel"></label>
+                </span>
+            </li>
+        </ul>
+    </div>
+    
+    <div style="width: 98%; height:100px; margin-top: 10px; border: 1px solid #ede9e9; padding-left: 5px;">
+        <ul class="infor-c1">
+            <li>
+                <span class="infor-c-width2">寄货人：</span>
+                <span class="infor-c-q2">
+                    <label id="jjname"></label>
+                </span>
+            </li>
+            <li>
+                <span class="infor-c-width2">快递公司：</span>
+                <span class="infor-c-q2">
+                    <label id="kdgs"></label>
+                </span>
+            </li>
+            <li>
+                <span class="infor-c-width2">打印时间：</span>
+                <span class="infor-c-q2">@Model.Jjdatetime</span>
+            </li>
+        </ul>
+    </div>
+}
+
+<script src="~/Scripts/NAjs/NAReturnList.js"></script>

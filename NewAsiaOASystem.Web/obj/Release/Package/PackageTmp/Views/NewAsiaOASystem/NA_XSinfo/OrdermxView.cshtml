@@ -1,0 +1,322 @@
+﻿@{
+    ViewBag.Title = "OrdermxView";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@section HeadContent{
+    <script type="text/javascript">
+
+        $(function () {
+            $(wc).focus();
+            var XSinfomodel = ajaxXSinfojson('@ViewData["OrderId"]');
+            $("#XS_Id").val(XSinfomodel.Id);
+            $("#DDJE").html(XSinfomodel.Xs_je);
+            $("#khid").val(XSinfomodel.KhId)
+            $("#XSDATE").html(showDate(XSinfomodel.Xs_datetime));
+               var Cust = AjaxCust_Name(XSinfomodel.KhId);//客户信息
+               $("#Cname").html(Cust.Name);
+               var Addresseeinfo = AjaxAddresseeinfobyCustId(XSinfomodel.AddresseeId);//收件人信息
+               $("#Clxr").html(Addresseeinfo.Address);
+               $("#Ctel").html(Addresseeinfo.Tel);
+               $("#lxrname").html(Addresseeinfo.Aname);
+               dataGrid();
+               $('#qrcode').qrcode({
+                   width: 150, //宽度 
+                   height: 150, //高度 
+                   text: '@ViewData["OrderId"]', //内容 
+                   typeNumber: -1,//计算模式
+                   correctLevel: 2,//二维码纠错级别
+                   background: "#ffffff",//背景颜色
+                   foreground: "#000000"  //二维码颜色
+               });
+        })
+
+
+        function dataGrid() {
+            var jsonStr;
+            jsonStr = eval(ajaxXSdetailjson('@ViewData["OrderId"]'));
+            $("#content").html("");
+            if (jsonStr != null) {
+                if (jsonStr != null) {
+                    var html = "";
+                    html = '<table style=" width:100%; height:45px; margin:auto;">';
+                    for (var i = 0, j = jsonStr.length; i < j; i++) {
+                        var Perinfo = GetPerinfobyId(jsonStr[i].cpId);
+                        if (i % 2 == 0)
+                            html += '<tr class="h-table-content-r1">';
+                        else
+                            html += '<tr class="h-table-content-r">';
+                        html += '<td width="48%" style="font-size:14px;"  align="center">' + Perinfo.Pname + '</td>';
+                        html += '<td width="10%" style="font-size:14px;"  align="center">x' + jsonStr[i].SL + '</td>';
+                        html += '<td width="10%" style="font-size:14px;"  align="center">' + jsonStr[i].Je + '.00元</td>';
+                        @*  html += '<td width="30%" style="font-size:14px;"  align="center">' + smshow('@ViewData["OrderId"]', $("#khid").val(), jsonStr[i].Id, Perinfo.SMFH) + '</td>';*@
+                        html += '<td width="30%" style="font-size:14px;"  align="center">' + cztesting(jsonStr[i].cpId,'@ViewData["OrderId"]') + '</td>';
+                        html += '</tr>';
+                    }
+                    html += '</table>';
+                    $("#content").html(html);
+                }
+            }
+        }
+
+        //查询销售订单信息
+        function ajaxXSinfojson(r_id) {
+            var json;
+            $.ajax({
+                type: "POST",
+                url: "/NA_XSinfo/GetXsinfojson",
+                data: { Id: r_id },
+                dataType: "json",
+                async: false,
+                success: function (reslut) {
+                    json = reslut;
+                },
+                error: function (e) {
+                    alert("请求失败!");
+                }
+            })
+            return json;
+        }
+
+        //查询客户信息
+        function AjaxCust_Name(Id) {
+            var json;
+            $.ajax({
+                type: "POST",
+                url: "/Api/NAWebApi/GetNACusjs",
+                data: { "": Id },
+                dataType: "json",
+                async: false,
+                success: function (reslut) {
+                    json = eval('(' + reslut + ')');
+                },
+                error: function (e) {
+                    alert("请求失败");
+                }
+            })
+            return json;
+        }
+
+        //根据客户ID 查找收件人信息
+        function AjaxAddresseeinfobyCustId(Id) {
+            var json;
+            $.ajax({
+                type: "POST",
+                url: "/NA_XSinfo/GetaddresseeInfobyCustId",
+                data: { Id: Id },
+                dataType: "json",
+                async: false,
+                success: function (reslut) {
+                    json = eval(reslut);
+                },
+                error: function (e) {
+                    alert("请求失败");
+                }
+            })
+            return json;
+        }
+
+
+        //根据销售订单Id 查找销售明细
+        function ajaxXSdetailjson(XS_Id) {
+            var json;
+            $.ajax({
+                type: "POST",
+                url: "/NA_XSinfo/GetXsdetailjson",
+                data: { Id: XS_Id },
+                dataType: "json",
+                async: false,
+                success: function (reslut) {
+                    json = reslut;
+                },
+                error: function (e) {
+                    alert("请求失败");
+                }
+            })
+            return json;
+        }
+
+
+        /*根据产品Id 查找产品信息*/
+        function GetPerinfobyId(Id) {
+            var json;
+            $.ajax({
+                type: "POST",
+                url: "/NQ_CHdetailinfo/GetPreinfobyId",
+                data: { ID: Id },
+                dataType: "json",
+                async: false,
+                success: function (reslut) {
+                    json = reslut;
+                },
+                error: function (e) {
+                    alert("请求失败！");
+                }
+            })
+            return json;
+        }
+
+
+        function smshow(val,val2,val3,val4) {
+            var Id = "'" + val + "'";
+            var khid = "'" + val2 + "'";
+            var mxid="'"+val3+"'";
+            var s = '<a href="#" onclick="smch(' + Id + ','+ khid+','+mxid +','+val4+')">扫码出货</a>&nbsp;&nbsp;';
+            return s;
+        }
+
+        function cztesting(val1, val2)
+        {
+            var p_Id="'"+val1+"'";
+            var x_Id="'"+val2+"'";
+            var s = '<a href="#" onclick="testingkucun(' + p_Id + ','+ x_Id+')">检测库存</a>&nbsp;&nbsp;';
+            return s;
+        }
+
+        //扫码出货
+        function smch(val1,val2,val3,val4) {
+            var id = val1;
+            var khid = val2;
+            var mxId = val3;
+            if (val4 == "1") {
+                if (id != "") {
+                    $('#windowDia').html("<iframe src=../NA_XSinfo/ChSmSID?Id=" + id + "&&khId=" + khid + "&&mxId=" + mxId + "&&NG= style='border:0px;' width='400px' height='300px'></iframe>");
+                    $("#windowDia").window({
+                        title: '出货扫描（SID）',
+                        modal: true,
+                        closed: false,
+                        width: 455,
+                        height: 300,
+                    });
+                }
+            } else {
+                alert("不是物联网电控箱无需扫码发货！");
+            }
+        }
+
+
+        //检测库存
+        function testingkucun(val1,val2) {
+            var json;
+            $.ajax({
+                type: "POST",
+                url: "/NA_XSinfo/testingstock",
+                data: { Product_Id: val1, Xsorder_Id: val2 },
+                dataType: "json",
+                async: false,
+                success: function (reslut) {
+                    json = reslut;
+                },
+                error: function (e) {
+                    alert("请求失败!");
+                }
+            })
+            return json;
+        }
+    </script>
+    }
+
+<input type="hidden" name="khid" id="khid" />
+ <div style="width:800px; margin: auto;">
+
+     <div style="width:100%; height:50px; background:#CEE3F2;">
+         <span style="line-height:50px; padding-left:10px;">正在查看订单详细信息</span>
+     </div>
+
+     <div style="width:99%; height:180px; margin-top:10px; border:1px solid #808080; padding-left:5px;">
+         <ul>
+             <li>
+                  <span class="infor-c-width2">订单金额：</span>
+                  <span class="infor-c-q2"><label id="DDJE"></label>.00元</span>
+             </li>
+              <li>
+                  <span class="infor-c-width2">下单时间：</span>
+                  <span class="infor-c-q2"><label id="XSDATE"></label></span>
+             </li>
+              <li>
+                  <span class="infor-c-width2">公司名称：</span>
+                  <span class="infor-c-q2"> <label id="Cname"></label></span>
+              </li>
+              <li>
+                  <span class="infor-c-width2">收件人：</span>
+                  <span class="infor-c-q2"><label id="lxrname"></label></span>
+              </li>
+              <li>
+                  <span class="infor-c-width2">电话：</span>
+                  <span class="infor-c-q2">
+                      <label id="Ctel"></label>
+                  </span>
+              </li>
+              <li>
+                  <span class="infor-c-width2">地址：</span>
+                  <span class="infor-c-q2"><label id="Clxr"></label></span>
+              </li>
+     @*        <li>
+                
+<div id="qrcode"></div> 
+             </li>*@
+         </ul>
+     </div>
+     <div style=" position:absolute; right:10px; top:70px;" id="qrcode"></div>
+     <div style="width:99%; height:auto; margin-top:10px; border:1px solid #808080; padding-left:2px; padding-right:2px;">
+          <table style=" width:100%; height:45px; margin:auto; background:#eee8e8;">
+               <tr>
+                   <td style="width:48%; font-size:14px;" align="center">商品名称</td>
+                   <td style="width:10%;font-size:14px;" align="center">数量</td>
+                   <td style="width:10%;font-size:14px;" align="center">总价</td>
+                   <td style="width:30%;font-size:14px;" align="center">操作</td>          
+               </tr>
+          </table>
+          <div id="content">
+
+          </div>
+     </div>
+      <div style="width:99%; height:auto; margin-top:10px; border:1px solid #808080; padding-left:2px; padding-right:2px;">
+           <form id="form1" name="form1">
+          扫码完成：  <input type="text" name="wc" id="wc" style="width:100px; height:25px; border:1px solid #000000" />    
+                 <div class="inquiry-input infor-b"> <button onclick="return orderwcSavaFrom()">保存</button> </div>
+           </form>
+      </div>
+ </div>
+
+<div id="windowDia" class="easyui-window" closed="true" style="width:455px; height: 300px; padding:10px;"></div>
+ <script src="~/Scripts/jquery.qrcode.min.js"></script>
+<script type="text/javascript">
+    function orderwcSavaFrom() {
+        var wcm = $("#wc").val();//完成码
+        if (wcm == "") {
+            alert("完成码不为空!");
+            return false;
+        } if (wcm == "WANCHENG") {
+            var flay = UpdateordersmztbyorderId();
+            if (flay == "true") {
+                var ParentObj = window.parent;//获取父窗口
+                window.parent.$('#windowDia').window('close');
+                window.parent.location = "/NA_XSinfo/list";
+                return false;
+            } else {
+                alert("未出货完成！");
+                return false;
+            }
+        }
+    }
+
+    function UpdateordersmztbyorderId() {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "../NA_XSinfo/Updateordersmzt",
+            data: { orderId: '@ViewData["OrderId"]' },
+                 dataType: "json",
+                 async: false,
+                 success: function (reslut) {
+                     json = reslut.status;
+                 },
+                 error: function (e) {
+                     alert("请求失败！");
+                 }
+             })
+             return json;
+         }
+
+ </script>

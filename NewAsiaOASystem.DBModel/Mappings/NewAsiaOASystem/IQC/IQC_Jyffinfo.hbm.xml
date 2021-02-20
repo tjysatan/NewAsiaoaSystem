@@ -1,0 +1,13 @@
+﻿<?xml version="1.0"  encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="NewAsiaOASystem.DBModel" assembly="NewAsiaOASystem.DBModel">
+  <class name="IQC_Jyffinfo" table="IQC_Jyffinfo">
+    <id name="Id" column="Id" type="string" unsaved-value="0">
+      <generator class="uuid.hex"/>
+    </id>
+    <property name="Jyffcont" column="Jyffcont" length="2147483647" />
+    <property name="sopId" column="sopId" />
+    <property name="Jyxmtype" column="Jyxmtype" />
+    <property name="C_name" column="C_name" />
+    <property name="C_time" column="C_time" />
+  </class>
+</hibernate-mapping>

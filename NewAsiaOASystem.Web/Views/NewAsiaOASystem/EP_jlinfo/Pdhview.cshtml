@@ -1,0 +1,306 @@
+﻿
+@{
+    ViewBag.Title = "到货情况打印";
+}
+
+ <object id="WebBrowser" classid="ClSID:8856F961-340A-11D0-A96B-00C04Fd705A2" width="0"
+    height="0">
+</object>
+<script src="~/Scripts/NAjs/Printjs.js"></script>
+ <script src="~/Scripts/jquery-1.11.2.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        var jonstr = GetdyjljsonbyId('@ViewData["DHid"]');
+        dataGrid(jonstr);
+    })
+    function printpr() {
+        $("#noprint").css("display", "none")
+        window.print();
+    }
+
+    function dataGrid(strjson) {
+        var html = "";
+        $("#jdatar").html(showDate(strjson[0].RL_datetime))
+        for (var i = 0, j = strjson.length; i < j; i++) {
+            var str = GetCusnameby_Id(strjson[i].SjId)
+            var cusname = "";
+            var cuslxrname = "";
+            if (str != ""&&str!=null) {
+                cusname = str.Name.substring(13, 0);
+                if (strjson[i].Source == "0") {
+                    cuslxrname = str.LxrName;
+                } else {
+                    cuslxrname = AjaxAddresseeinfobyCustId(strjson[i].SjaddId).Aname;
+                }
+            }
+            html += '<div class="cov_c_s">';
+            html += '<table cellpadding="0" cellspacing="0" style="width:100%;">';
+            html += '<tr>';
+            html += '<td style="width:22%; height:70px; border-right:#000 1px solid" align="center">';
+            html += '<div style="width:100%; border-bottom:#000 1px solid; height:23px; font-size:14px;line-height:23px;">' + cusname + '</div>';
+            html += '<div style="width:100%; border-bottom:#000 1px solid; height:23px; font-size:14px;line-height:23px;">' + kdgsname(strjson[i].Kdgs) + '</div>';
+            if (strjson[i].Kd_no != null && strjson[i].Kd_no != "")
+                html += '<div style="width:100%; height:23px; font-size:14px;line-height:23px;">' + strjson[i].Kd_no + '</div>';
+            else
+                html += '<div style="width:100%; height:23px; font-size:14px;line-height:23px;">-</div>';
+            html += '</td>';
+            html += '<td style="width:8%;height:70px;border-right:#000 1px solid" align="center" >' + cuslxrname + '</td>';
+            html += '<td style="width:5%;height:70px;border-right:#000 1px solid" align="center">' + showDate(strjson[i].DHyjdatetime) + '</td>';
+            html += '<td style="width:20%;height:70px;border-right:#000 1px solid" align="center" >';
+            html += '<table cellpadding="0" cellspacing="0" style="width:100%;">';
+            html += '<tr>';
+            html += '<td style="width:25%;height:70px;border-right:#000 1px solid" align="center"></td>';
+            html += '<td style="width:25%;height:70px;border-right:#000 1px solid" align="center"></td>';
+            html += '<td style="width:25%;height:70px;border-right:#000 1px solid" align="center"></td>';
+            html += '<td style="width:25%;height:70px;" align="center"></td>';
+            html += '</tr>';
+            html += '</table>';
+            html += '</td>';
+            if (strjson[i].DHsjdatetime != null && strjson[i].DHsjdatetime != "")
+                html += '<td style="width:5%;height:70px;border-right:#000 1px solid" align="center" >' + showDate(strjson[i].DHsjdatetime) + '</td>';
+            else
+                html += '<td style="width:5%;height:70px;border-right:#000 1px solid" align="center" >-</td>';
+            if (strjson[i].DHno != null && strjson[i].DHno != "")
+                html += '<td style="width:5%;height:70px;border-right:#000 1px solid" align="center">' + strjson[i].DHno + '</td>';
+            else
+                html += '<td style="width:5%;height:70px;border-right:#000 1px solid" align="center">-</td>';
+            html += '<td style="width:8%;height:70px;border-right:#000 1px solid" align="center">' + strjson[i].QRsjName + '</td>';
+            html += '<td style="width:8%;height:70px;" align="center">' + Getjjnameby_Id(strjson[i].JjId) + '</td>';
+            html += '</tr>'
+            html += '</table>';
+            html += "</div>";
+        }
+        $("#content").html(html);
+    }
+
+
+
+    //根据收件人  查找收件人信息 （电商平台）
+    function AjaxAddresseeinfobyCustId(Id) {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "../NA_XSinfo/GetaddresseeInfobyCustId",
+            data: { Id: Id },
+            dataType: "json",
+            async: false,
+            success: function (reslut) {
+                json = eval(reslut);
+            },
+            error: function (e) {
+                alert("请求失败");
+            }
+        })
+        return json;
+    }
+    //根据ID查询打印记录ajax
+    function GetdyjljsonbyId(val) {
+        var val2 = Strsplit(val);
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "/EP_jlinfo/GetdyjljsonbyId",
+            data: {
+                Id: val2
+            },
+            dataType: "json",
+            async: false,
+            success: function (reslut) {
+                json = reslut;
+            },
+            error: function (e) {
+                alert("请求失败！");
+            }
+        })
+        return json;
+    }
+    //根据逗号分割字符串
+    function Strsplit(str) {
+        var val;
+        val = str.split(",");
+        var id = '';
+        for (var i = 0, j = val.length; i < j; i++) {
+            id = id + "'" + val[i] + "',"
+        }
+        id = id.substring(0, id.length - 1);
+        return id;
+    }
+
+    //返回客户信息
+    function GetCusnameby_Id(val) {
+        var Cus_info = AjaxCust_Name(val);
+        return Cus_info;
+    }
+
+    function Getjjnameby_Id(val) {
+        var userinfo = AjaxPerson_Name(val);//
+        return userinfo.UserName;
+    }
+
+    //快递公司名称
+    function kdgsname(val) {
+        var kdnam;
+        if (val != "") {
+            if (val == "sh") {
+                kdnam = "盛辉物流";
+            } else if (val == "sf") {
+                kdnam = "顺丰快递";
+            } else if (val == "db") {
+                kdnam = "德邦快递";
+            } else if (val == "zt") {
+                kdnam = "中通快递";
+            } else if (val == "tdhy") {
+                kdnam = "天地华宇";
+            } else if (val == "ycky") {
+                kdnam = "远成快运";
+            }
+            else if (val == "ztky") {
+                kdnam = "中通快运";
+            }
+        }
+        return kdnam;
+    }
+
+    /*
+datagrid日期时间截取
+*/
+    function showDate(val) {
+        if (null != val && "null" != val && undefined != val && "undefined" != val) {
+            var date = val.substring(0, 10);
+            return date;
+        }
+        return "";
+    }
+</script>
+
+ <style>
+     .main {
+         width:690px; height:900px; margin:auto; margin-top:30px;
+     }
+     .title {
+         width:690px; height:80px; margin:auto;
+     }
+     .title_c {
+        width:690px; height:40px; margin:auto;
+     }
+         .title_c h1 {
+             text-align:center;
+             margin:auto;
+             font-size:25px;
+             font-weight:normal;
+             letter-spacing:6px;
+         }
+     .title_c h2 {
+             text-align:center;
+             margin:auto;
+             font-size:25px;
+             font-weight:normal;
+         }
+     .cov {
+         width:690px;
+         height:auto;
+         margin:auto;
+     }
+     .dydata {
+         width:690px;
+         height:30px;
+         margin:auto;
+     }
+     .cov_title {
+         width:690px;
+         height:70px;
+         margin:auto;
+         border:#000 1px solid;
+     }
+     .cov_c {
+         width:690px;
+         height:auto;
+         margin:auto;
+         border-left:#000 1px solid;
+         border-right:#000 1px solid;
+     }
+     .cov_c_s {
+         width:690px;
+         height:70px;
+          margin:auto;
+         border-bottom:#000 1px solid;
+     }
+     td {
+         font-size:12px;
+     }
+ </style>
+
+<body>
+ <div class="main">
+         <!--endprint-->
+    <table width="690" height="30" border="0"  cellpadding="0" cellspacing="0" id="noprint" >
+        <tr>
+            <td width="671" style="height: 27px">
+                <div style="float:right">
+                    <a href="#" onclick=" printpr(6, 1) ">打印</a>
+                </div>
+            </td>
+        </tr>
+    </table>
+     <div class="title">
+         <div class="title_c">
+             <h1>苏州新亚科技有限公司</h1>  
+         </div>
+         <div class="title_c">
+             <h2>到货情况记录表</h2>
+         </div> 
+         <div class="cov">
+             <div class="dydata">
+                 日期： <label id="jdatar"></label> 
+             </div>
+             <div class="cov_title">
+              <table  cellpadding="0" cellspacing="0">
+                  <tr>
+                      <td style="width:22%; height:70px; border-right:#000 1px solid" align="center">
+                          客户名称<br />
+                          货运公司<br />
+                          单号
+                      </td>
+                      <td style="width:8%;height:70px;border-right:#000 1px solid" align="center" >
+                          收货人
+                      </td>
+                      <td style="width:5%;height:70px;border-right:#000 1px solid" align="center">
+                          预计到货日期
+                      </td>
+                       <td style="width:20%;height:70px;border-right:#000 1px solid" align="center" >
+                          <div style="width:100%; border-bottom:#000 1px solid; height:20px; font-size:14px;line-height:20px;">
+                             询问到货情况
+                          </div>
+                          <div style="width:100%; height:50px;">
+                              <table cellpadding="0" cellspacing="0">
+                                  <tr>
+                                      <td style="width:25%;height:50px;border-right:#000 1px solid" align="center">询问时间</td>
+                                      <td style="width:25%;height:50px;border-right:#000 1px solid" align="center">询问结果</td>
+                                      <td style="width:25%;height:50px;border-right:#000 1px solid" align="center">询问时间</td>
+                                      <td style="width:25%;height:50px;" align="center">询问结果</td>
+                                  </tr>
+                              </table>
+                          </div>
+                       </td>
+                       <td style="width:5%;height:70px;border-right:#000 1px solid" align="center" >
+                         实际到货日期
+                      </td>
+                       <td style="width:5%;height:70px;border-right:#000 1px solid" align="center" >
+                          实际到货数
+                      </td>
+                       <td style="width:8%;height:70px;border-right:#000 1px solid" align="center">
+                          确认收货人
+                      </td>
+                      <td style="width:8%;height:70px;" align="center">
+                          经手人
+                      </td>
+                  </tr>
+              </table>
+             </div>
+             <div id="content" class="cov_c">
+
+             </div>
+         </div>
+     </div>
+ </div>
+</body> 

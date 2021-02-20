@@ -1,0 +1,226 @@
+﻿@model NewAsiaOASystem.ViewModel.PagerInfo<NewAsiaOASystem.ViewModel.PP_ProfitpointinfoView>
+@{
+    ViewBag.Title = "团队收入（不固定分）明细增加";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@section HeadContent{
+    <script type="text/javascript">
+
+        var loadi;
+        function ddchen() {
+            loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+        }
+        //关闭等待效果
+        function disLoading() {
+            layer.close(loadi);
+        }
+        $(function () {
+            $("#wctime").val('@ViewData["TDtime"]');
+            BindGrid();
+        })
+
+        function BindGrid() {
+            @{
+                if (null != Model && null != Model.GetPagingDataJson)
+                {
+                    string json = Model.GetPagingDataJson;//获取json数据
+                    @: var jsonStr = @Html.Raw(json);
+                }
+             }
+            dataGrid(jsonStr);
+        }
+
+        function dataGrid(jsonStr){
+            if (typeof (jsonStr) != "undefined") {
+                var html = "";
+                html = '<table class="layui-table">';
+                html += '<thead>';
+                html+='<tr>';
+                html+='<td width="5%"><input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" /></td>';
+                html+='<td width="20%">名称</td>';
+                html+='<td width="15%">单位时间价值</td>';
+                html+='<td width="10%">单位</td>';
+                html+='<td width="20%">描述</td>';
+                html+='</tr>';
+                html+='</thead>'
+                for (var i = 0, j = jsonStr.length; i < j; i++) {
+                    html+='<tr>';
+                    html += '<td width="5%"><input type="checkbox" name="ContentChecked" value="' + jsonStr[i].Id + '"/></td>';
+                    html += '<td width="20%">' + jsonStr[i].Rwname + '</td>';
+                    html+='<td width="15%">'+jsonStr[i].Rwfz+'</td>';
+                    html += '<td width="10%">' +jsonStr[i].Rwdw+ '</td>';
+                    html+='<td width="20%">'+jsonStr[i].Rwms+'</td>';
+                    html+='</tr>';
+                }
+                html += '</table>';
+                $("#content").html(html);
+            }
+        }
+
+        function SerchList(pageIndex)
+        {
+            $("input[name='pageIndex']").val(pageIndex);
+            var options = {
+                beforeSubmit: function () {
+                    return true;
+                },
+                dataType: "json",
+                success: function (context) {
+                    var data=eval(context.result);
+                    dataGrid(data);
+                    $(".pagin").html(context.PageN);//输出分页按钮
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $.messager.alert("操作提示", '查询失败请重试！', 'error');
+                }
+            }
+            $('#form1').ajaxSubmit(options);
+            return false;
+        }
+
+        //提交团队收入明细（不固定分配）
+        function TTsrtweEideajax()
+        {
+            //勾选的项目
+            var arr = GetGridSelete();
+            if (arr.length > 1) {
+                alert("只能选择一个项目！");
+                return false;
+            }
+            if (arr.length <= 0) {
+                alert("请选择项目!");
+                return false;
+            }
+            var sl = $("#sl").val();//完成数量
+            if (isNaN(sl)) {
+                alert("数量为纯数字!");
+                return false;
+            }
+            if(sl==""){
+                alert("数量不为空!");
+                return false;
+            }
+            var profId = arr[0];
+            var wctime = $("#wctime").val();
+            if (wctime == "") {
+                alert("请选择完成时间!");
+                return false;
+            }
+            $.ajax({
+                type: "POST",
+                url: "/PP_Staffinfo/TTsrmxaddtweEide",
+                data: {"profuId": profId, "sl": sl, "wctime": wctime },
+                dataType: "html",
+                async: true,
+                beforeSend: function () {
+                    ddchen();
+                },
+                success: function (context) {
+                    disLoading();
+                    if(context=="0")
+                    {
+                        layer.alert("您不是团队管理员不能添加！", { icon: 2 },function (){ location.reload();});
+                        return false;
+                    }
+                    if(context=="1")
+                    {
+                        layer.alert("该时间内此收入项目已经存在并且已经完成分配！", { icon: 2 },function (){ location.reload();});
+                        return false;
+                    }
+                    if(context=="2")
+                    {
+                        layer.alert("提交成功！", { icon: 1 },function (){guanbi()});
+                        return false;
+                    }
+                    if(context=="3")
+                    {
+                        layer.alert("提交异常！", { icon: 2 },function (){ location.reload();});
+                        return false;
+                    }
+
+                }
+            })
+        }
+
+        function guanbi() {
+            //layer.alert("保存成功！", { icon: 2 }, function () { layer.closeAll(); });
+            //layer.closeAll();
+            var index = parent.layer.getFrameIndex(window.name);
+            //关闭弹出层
+            parent.layer.close(index);
+        }
+
+        
+    </script>
+}
+<style>
+    .sopbtnsave
+    {
+        /*position: absolute;*/
+        width: 90%;
+        /*bottom: 5px;*/
+        text-align: center;
+    }
+
+    .soptopbtn
+    {
+        position: absolute;
+        width: 90%;
+        top: 1px;
+        text-align: center;
+    }
+</style>
+
+<fieldset class="layui-elem-field" style="width: 95%; margin: auto;">
+    <legend style="font-size: 12px;">查询条件</legend>
+    <div class="layui-field-box">
+        @using (Html.BeginForm("TTsrzctweSearchList", "PP_Staffinfo", FormMethod.Post, new { id = "form1" }))
+        {
+            @Html.Hidden("pageIndex");
+            <div class="layui-inline">
+                <label class="layui-form-label">收入名称：</label>
+                <div class="layui-input-block">
+                    <input type="text" id="txtSearch_Name" name="txtSearch_Name" lay-verify="txtSearch_Name" autocomplete="off" placeholder="收入名称" class="layui-input">
+                </div>
+            </div>
+            <input type="hidden" id="type" name="type" value="0" />
+            <button class="layui-btn layui-btn-primary" onclick="return SerchList(1)">
+                <i class="layui-icon" style="font-size: 16px; color: #1E9FFF;">&#xe615;</i> 查询
+            </button>
+        }
+    </div>
+</fieldset>
+
+<div id="content"></div>
+
+ 
+<div class="pp_txt_max" style="background-image: none;">
+    <div class="layui-inline">
+        <label class="layui-form-label">数量：</label>
+        <div class="layui-input-block">
+            <input type="text" id="sl" name="sl" lay-verify="txtSearch_Name" autocomplete="off" placeholder="数量" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-inline">
+        <label class="layui-form-label">完成时间：</label>
+        <div class="layui-input-block">
+            <input type="text" id="wctime" name="wctime" lay-verify="txtSearch_Name" autocomplete="off" placeholder="完成时间" class="layui-input" onclick="WdatePicker()">
+        </div>
+    </div>
+
+
+</div>
+    <!--按钮-->
+    <div class="sopbtnsave">
+        <button class="layui-btn layui-btn-primary" onclick='return TTsrtweEideajax()'>保存</button>
+        <button class="layui-btn layui-btn-primary" onclick="return guanbi()">关闭</button>
+    </div>
+
+<!--==========================输出分页按钮=========================-->
+<div class="pagin">
+    @if (ViewBag.PageNavigate == null)
+    {
+        @Html.ShowPageNavigate(Model.CurrentPageIndex, Model.PageSize, Model.RecordCount);
+    }
+</div>

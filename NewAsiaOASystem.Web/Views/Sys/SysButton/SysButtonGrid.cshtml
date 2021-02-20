@@ -1,0 +1,60 @@
+﻿@model NewAsiaOASystem.ViewModel.PagerInfo<NewAsiaOASystem.ViewModel.SysButtonView>
+
+@{
+    ViewBag.Title = "SysButton";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+
+@section HeadContent{
+    <script type="text/ecmascript">
+        $(function () {
+            BindGrid();
+        })
+        function BindGrid() {
+             @{
+                
+                 if (null != Model && null != Model.GetPagingDataJson)
+                 {
+                     string json = Model.GetPagingDataJson;//获取json数据
+                    @: var jsonStr = eval('(' + '@Html.Raw(json)' + ')'); 
+                    @: $("#dg").datagrid('loadData', jsonStr); 
+                 }
+                 
+              }
+       }
+	 </script>
+    
+   }
+
+   <!--控制列表的显示与隐藏(进入编辑时隐藏列表)-->
+<div class="list_style">
+  
+        <div class="z-toolbar">
+                <a href="#" plain="true" class="easyui-linkbutton" icon="icon-reload" title="刷新" onclick="location.href='/SysButton/Index'">刷新</a>
+                <a href="#" plain="true" class="easyui-linkbutton" icon="icon-add"    title="新增" onclick="addClick('/SysButton/addPage','添加','/SysButton/Index')">新增</a>
+                <a href="#" plain="true" class="easyui-linkbutton" icon="icon-edit"   title="编辑" onclick="update('/SysButton/EditPage','编辑','/SysButton/Index')">编辑</a>
+                <a href="#" plain="true" class="easyui-linkbutton" icon="icon-no"     title="删除" onclick="del('/SysButton/Delete')" >删除</a>
+          </div>
+      
+    <div style="margin: 10px 0;"></div>
+
+        <table id="dg" class="easyui-datagrid"  style="width:100%;height:auto">
+		      <thead>
+			        <tr>
+				        <th data-options="field:'Id',checkbox:true,align:'center'"></th>
+				        <th data-options="field:'Name',width:'30%',align:'center'">按钮名称</th>
+				        <th data-options="field:'Sort',width:'20%',align:'center'">按钮排列次序</th>
+				       @* <th data-options="field:'Ico', width:'20%',formatter:showImg">按钮图标</th>*@
+                        <th data-options="field:'Status',width:'25%',align:'center',formatter:showVal">状态</th>
+				        <th data-options="field:'CreateTime',width:'24%',align:'center',formatter:showDate">创建时间</th>
+			        </tr>
+		        </thead>
+        </table>
+     
+        <div class="pagin">
+         @Html.ShowPageNavigate(Model.CurrentPageIndex,Model.PageSize,Model.RecordCount)
+        </div>
+
+    <div id="windowDia" class="easyui-window"  data-options="modal:true,closed:true,iconCls:'icon-save'" style="width:500px;height:400px;padding:10px;"></div>
+    </div>

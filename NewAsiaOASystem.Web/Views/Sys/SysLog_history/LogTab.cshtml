@@ -1,0 +1,18 @@
+﻿@{
+    ViewBag.Title = "LogTab";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<div id="tt" class="easyui-tabs" style="width:100%; height: auto;">   
+    <div title="登录日志" style="padding:20px;display: block;">   
+      @Html.Action("List", "SysLog_history")  
+    </div>   
+    <div title="操作日志" data-options="closable:true" style="overflow:auto;padding:20px;display:none;">   
+     
+    </div>   
+    <div title="系统日志"  style="padding:20px;display:block;">   
+        @Html.Action("sys_loglist", "SysLog_history")    
+    </div>   
+</div>
+
+<div id="windowDia" class="easyui-window"  data-options="modal:true,closed:true,iconCls:'icon-save'"></div>

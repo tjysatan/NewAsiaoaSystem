@@ -1,0 +1,41 @@
+﻿@{
+    ViewBag.Title = "test";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+   <script src="~/Scripts/jquery-1.11.2.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        GetbcgcsId();
+    })
+
+
+    function GetbcgcsId() {
+        var name = "测试工程商名称";
+        var lxr = "测试联系人";
+        var tel = "测试电话";
+        var adress = "测试地址";
+        var ycId = "6";
+        var YcKey = "4a2f262ac5ac77dbb339fbb1f93b5075";
+        $.ajax({
+            type: "POST",
+            url: "http://222.92.203.58/WL_Gcsinfo/Editgys",
+            data: {
+                Name: name, Lxr: lxr, tel: tel, adress: adress, ycId: ycId, YcKey: YcKey
+            },
+            //dataType: "html",
+            ContentType: "application/json;charset=utf-8;",
+            async: false,
+            success: function (reslut) {
+                var datajson = eval('(' + reslut + ')');
+                alert(datajson.length);
+                alert(reslut.length);
+            },
+            error: function (e) {
+                alert(e.error);
+                alert("失败！");
+            }
+        })
+      
+    }
+</script>

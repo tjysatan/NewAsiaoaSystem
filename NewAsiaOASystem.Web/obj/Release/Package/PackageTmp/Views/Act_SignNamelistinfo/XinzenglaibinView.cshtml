@@ -1,0 +1,99 @@
+﻿@{
+    ViewBag.Title = "新增来宾";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<meta charset="utf-8" />
+
+<meta content="width=device-width, initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport" />
+
+<meta content="yes" name="apple-mobile-web-app-capable" />
+
+<meta content="black" name="apple-mobile-web-app-status-bar-style" />
+
+<meta content="telephone=yes" name="format-detection" />
+
+<meta content="email=no" name="format-detection" />
+
+<meta name="keywords" content="" />
+
+<meta name="description" content="" />
+<link rel="stylesheet" href="~/Content/wx/css/login.css" />
+<link rel="stylesheet" href="~/Content/wx/css/public.css" />
+
+<div class="fullscreen per_login">
+    <div class="alert" style=""></div>
+    <div class="operate_Bar1 clearfix">
+        <div class="text">新增来宾</div>
+    </div>
+    <ul>
+        @using (Html.BeginForm("xinzengEide", "Act_SignNamelistinfo", FormMethod.Post, new { id = "form1" }))
+        { 
+            <li class="username">
+                <input type="text" name="Name" placeholder="姓名" id="Name" value="" />
+            </li>
+            <li class="username">
+                <input type="text" name="company" placeholder="公司名" id="company" value="" />
+            </li>
+            <li style="height: 20px;"></li>
+            <li class="submit_btn">
+                <button onclick="return kcSavaFrom('/Act_SignNamelistinfo/KefuqiandaoView')" id="login_btn">确 定</button>
+            </li>
+        }
+    </ul>
+</div>
+
+<script type="text/javascript">
+    function kcSavaFrom(RetUrl) {
+        //表单验证
+        var options = {
+            beforeSubmit: function () {
+                return true;
+            },
+            dataType: "json",//这里是指控制器处理后返回的类型，这里返回json格式。  
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (context) {
+                if ("success" == context.result) {
+                    disLoading();
+                    $.messager.alert("操作提示", '提交成功！', 'info', function () {
+                        location.href = RetUrl;
+                    });
+                }
+                if ("error" == context.result) {
+                    disLoading();
+                    $.messager.alert("操作提示", '存在相同公司名！', 'error', function () {
+                        disLoading();
+                    });
+                }
+                if ("error1" == context.result) {
+                    disLoading();
+                    $.messager.alert("操作提示", '新增失败,请重试！', 'error', function () {
+                        disLoading();
+                    });
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                disLoading();
+                $.messager.alert("操作提示", '网络异常，请重试！', 'error');
+            }
+        }
+        $('#form1').ajaxSubmit(options);
+        return false; //为了不刷新页面,返回false 
+    }
+
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+
+
+</script>
+
+

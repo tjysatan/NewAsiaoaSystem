@@ -1,0 +1,125 @@
+﻿@model NewAsiaOASystem.ViewModel.WX_OpenIDView
+@{
+    ViewBag.Title = "内部帐号绑定";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+<meta charset="utf-8" />
+
+<meta content="width=device-width, initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport" />
+
+<meta content="yes" name="apple-mobile-web-app-capable" />
+
+<meta content="black" name="apple-mobile-web-app-status-bar-style" />
+
+<meta content="telephone=yes" name="format-detection" />
+
+<meta content="email=no" name="format-detection" />
+
+<meta name="keywords" content=""  />
+
+<meta name="description" content="" />
+<link rel="stylesheet" href="~/Content/wx/css/login.css" />
+<link rel="stylesheet" href="~/Content/wx/css/public.css" />
+ 
+<div class="fullscreen per_login">
+
+
+
+<div class="alert" style=""></div>
+
+ 
+
+<div class="operate_Bar1 clearfix">
+	<div class="text">内部帐号绑定</div>
+</div>
+
+
+
+<section class="inner_content">
+
+     @using (Html.BeginForm("Insideuserbd", "Binding", FormMethod.Post, new { id = "form1" }))
+     { 
+    <li style="display:none"> 
+      <input type="hidden" value="@ViewData["OpendId"]" name="OpenId"/>
+    </li>  
+    <li class="username">
+        <input type="text" name="Name" placeholder="用户名" id="Name" value="" />
+    </li>
+	<li class="pwd">
+        <input type="password" name="pwd" placeholder="密码" id="pwd" value="" /></li>
+	<li class="login_free">
+    </li>
+
+	<li class="submit_btn">
+        <button onclick="return submittest()" id="login_btn">绑 定</button>
+	</li>
+
+	<li class="reg_findPwd">
+	</li>
+
+     }
+
+</section>
+
+<div id="tFooter" class="footer">
+
+	<footer >
+		<div class="footer_l">
+		</div>
+
+		<p class="copyRight"></p>
+	</footer>
+
+</div>
+
+</div>
+
+     
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+@*<script src="~/Content/wx/js/common.js"></script>
+<script src="~/Content/wx/js/jquery.js"></script>*@
+<script>
+    function submittest() {
+        //表单验证
+        var options = {
+            beforeSubmit: function () {
+            return true;
+            },
+            //type: 'POST',
+            //async:false,
+            dataType: "json",//这里是指控制器处理后返回的类型，这里返回json格式。  
+            success: function (context) {
+                if ("success" == context.result) {
+                    $.messager.alert("操作提示", '绑定成功！', 'info', function () {
+                        WeixinJSBridge.call('closeWindow');
+                    });
+                }
+                if ("error" == context.result)
+                {
+                    $.messager.alert("操作提示", '绑定失败！', 'info', function () {
+                        WeixinJSBridge.call('closeWindow');
+                    })
+                }
+                if ("error1" == context.result) {
+                    $.messager.alert("操作提示", '输入的帐号已经绑定了微信号！', 'error1');
+                }
+                if ("error2" == context.result) {
+                    $.messager.alert("操作提示", '微信帐号已经绑定！', 'info', function () {
+                        WeixinJSBridge.call('closeWindow');
+                    });
+                }
+                if ("error3" == context.result) {
+                    $.messager.alert("操作提示", '系统不存在该用户！', 'info', function () {
+                        WeixinJSBridge.call('closeWindow');
+                    });
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $.messager.alert("操作提示", '操作失败11！', 'error');
+                WeixinJSBridge.call('closeWindow');
+            }
+        }
+        $('#form1').ajaxSubmit(options);
+        return false; //为了不刷新页面,返回false 
+    }
+</script>

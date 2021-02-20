@@ -1,0 +1,34 @@
+﻿<?xml version="1.0"  encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="NewAsiaOASystem.DBModel" assembly="NewAsiaOASystem.DBModel">
+  <class name="IQC_SopInfo" table="IQC_SopInfo">
+    <id name="Id" column="Id" type="string" unsaved-value="0">
+      <generator class="uuid.hex"/>
+    </id>
+    <property name="Sopbianhao" column="Sopbianhao" />
+    <property name="Sopbanben" column="Sopbanben" />
+    <property name="Sopwztype" column="Sopwztype" />
+    <property name="Sopfaxing" column="Sopfaxing" />
+    <property name="Sopbianzhi" column="Sopbianzhi" />
+    <property name="Sopshname" column="Sopshname" />
+    <property name="Issh" column="Issh" />
+    <property name="Shdatetime" column="Shdatetime" />
+    <property name="Soppzname" column="Soppzname" />
+    <property name="Ispz" column="Ispz" />
+    <property name="Pzdatetime" column="Pzdatetime" />
+    <property name="YqjId" column="YqjId" />
+    <property name="Yqjname" column="Yqjname" />
+    <property name="Yqjxh" column="Yqjxh" />
+    <property name="Yqjdm" column="Yqjdm" />
+    <property name="Iszf" column="Iszf" />
+    <property name="Zfdatetime" column="Zfdatetime" />
+    <property name="Jsggsimgurl" column="Jsggsimgurl" />
+    <property name="zlname1" column="zlname1" />
+    <property name="Jsggsimgurl2" column="Jsggsimgurl2" />
+    <property name="zlname2" column="zlname2" />
+    <property name="C_name" column="C_name" />
+    <property name="C_datetime" column="C_datetime" />
+    <property name="Updatename" column="Updatename" />
+    <property name="Updatetime" column="Updatetime" />
+    <property name="Iswc" column="Iswc" />
+  </class>
+</hibernate-mapping>

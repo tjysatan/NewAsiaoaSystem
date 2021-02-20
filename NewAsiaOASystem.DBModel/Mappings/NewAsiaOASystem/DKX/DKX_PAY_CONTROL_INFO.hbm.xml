@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="NewAsiaOASystem.DBModel" assembly="NewAsiaOASystem.DBModel">
+  <class name="DKX_PAY_CONTROL_INFO" table="DKX_PAY_CONTROL_INFO">
+    <id name="Id" column="Id" type="string" unsaved-value="0">
+      <generator class="uuid.hex"/>
+    </id>
+    <property name="dd_Id" column="dd_Id"  />
+    <property name="CONTROL_INFO_ID" column="CONTROL_INFO_ID"  />
+    <property name="CONTROL_INFO_NO" column="CONTROL_INFO_NO"  />
+    <property name="AREA_ID" column="AREA_ID"  />
+    <property name="CUST_NAME" column="CUST_NAME"  />
+    <property name="CUST_LEVEL" column="CUST_LEVEL"  />
+    <property name="COMPRESSOR_TYPE" column="COMPRESSOR_TYPE"  />
+    <property name="B_TYPE" column="B_TYPE"  />
+    <property name="COMPRESSOR_BRAND" column="COMPRESSOR_BRAND"  />
+    <property name="COMPRESSOR_MODEL" column="COMPRESSOR_MODEL"  />
+    <property name="RT_TYPE" column="RT_TYPE"  />
+    <property name="CONTROL_TYPE" column="CONTROL_TYPE"  />
+    <property name="COMPRESSOR_POWER" column="COMPRESSOR_POWER"  />
+    <property name="COMPRESSOR_NUMBER" column="COMPRESSOR_NUMBER"  />
+    <property name="UNIT_TYPE" column="UNIT_TYPE"  />
+    <property name="COMPRESSOR_ON_OFF" column="COMPRESSOR_ON_OFF"  />
+    <property name="CONDEN_METHOD" column="CONDEN_METHOD"  />
+    <property name="CONDEN_DL" column="CONDEN_DL"  />
+    <property name="SP_POWER" column="SP_POWER"  />
+    <property name="CONDEN_NUM" column="CONDEN_NUM"  />
+    <property name="CONDEN_POWER" column="CONDEN_POWER"  />
+    <property name="PUMP_NUM" column="PUMP_NUM"  />
+    <property name="PUMP_POWER" column="PUMP_POWER"  />
+    <property name="FAN_NUM" column="FAN_NUM"  />
+    <property name="FAN_POWER" column="FAN_POWER"  />
+    <property name="COOL_FAN_NUM" column="COOL_FAN_NUM"  />
+    <property name="COOL_FAN_POWER" column="COOL_FAN_POWER"  />
+    <property name="ON_OFF" column="ON_OFF"  />
+    <property name="HOUSE_NUMBER" column="HOUSE_NUMBER"  />
+    <property name="HOUSE_FJ" column="HOUSE_FJ"  />
+    <property name="HOUSE_PG" column="HOUSE_PG"  />
+    <property name="EVAPORATION_METHOD" column="EVAPORATION_METHOD"  />
+    <property name="COOLER_NUM" column="COOLER_NUM"  />
+    <property name="COOLER_POWER" column="COOLER_POWER"  />
+    <property name="COOLER_GROUP" column="COOLER_GROUP"  />
+    <property name="DEFROS_METHOD" column="DEFROS_METHOD"  />
+    <property name="DEFROS_GROUP" column="DEFROS_GROUP"  />
+    <property name="COOLER_DEFROS" column="COOLER_DEFROS"  />
+    <property name="IS_AUTO" column="IS_AUTO"  />
+    <property name="IS_PUMP" column="IS_PUMP"  />
+    <property name="HOUSE_OPEN" column="HOUSE_OPEN"  />
+    <property name="ELEC_CHOICE_A" column="ELEC_CHOICE_A"  />
+    <property name="ELEC_CHOICE_C" column="ELEC_CHOICE_C"  />
+    <property name="TOUCH" column="TOUCH"  />
+    <property name="OIL_TYPE" column="OIL_TYPE"  />
+    <property name="OIL_POWER" column="OIL_POWER"  />
+    <property name="HAS_ZKK" column="HAS_ZKK"  />
+    <property name="HAS_GDY" column="HAS_GDY"  />
+    <property name="YLQ_TYPE" column="YLQ_TYPE"  />
+    <property name="YLQ_NUM" column="YLQ_NUM"  />
+    <property name="YLQ_POWER" column="YLQ_POWER"  />
+    <property name="HEATING_OIL" column="HEATING_OIL"  />
+    <property name="IS_ALONE" column="IS_ALONE"  />
+    <property name="IS_YYC" column="IS_YYC"  />
+    <property name="IS_PYZH" column="IS_PYZH"  />
+    <property name="IS_PAIGUAN" column="IS_PAIGUAN"  />
+    <property name="PG_NUM" column="PG_NUM"  />
+    <property name="IS_REMOTE" column="IS_REMOTE"  />
+    <property name="IS_OTHER" column="IS_OTHER"  />
+    <property name="FLAG_ORDER" column="FLAG_ORDER"  />
+    <property name="REMARK" column="REMARK"  />
+    <property name="CREATE_BY" column="CREATE_BY"  />
+    <property name="CREATE_TIME" column="CREATE_TIME"  />
+    <property name="UPDATE_BY" column="UPDATE_BY"  />
+    <property name="UPDATE_TIME" column="UPDATE_TIME"  />
+    <property name="FLAG_XD" column="FLAG_XD"  />
+    <property name="ORDER_NO" column="ORDER_NO"  />
+    <property name="REMARK2" column="REMARK2"  />
+  </class>
+</hibernate-mapping>

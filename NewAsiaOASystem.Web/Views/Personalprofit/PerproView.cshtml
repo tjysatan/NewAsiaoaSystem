@@ -1,0 +1,203 @@
+﻿@{
+    ViewBag.Title = "个人利润统计页面";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+
+<style>
+    .ppdiv1
+    {
+        width: 100%;
+        padding-top: 50px;
+        padding-bottom: 20px;
+        text-align: center;
+        color: #333333;
+    }
+
+
+    .table_con
+    {
+        border-collapse: collapse;
+        border: none;
+    }
+
+        .table_con td
+        {
+            border: solid #eae5e5 1px;
+            height: 35px;
+            padding: 0 0 0 5px;
+        }
+
+    .btnspan button
+    {
+        width: 120px;
+        height: 30px;
+        background: #337CA8;
+    }
+
+    .table_tr_bg1
+    {
+        background-color: #f9f9f9;
+    }
+
+    .mainDIV
+    {
+        overflow: scroll;
+        height: 380px;
+    }
+</style>
+
+<script type="text/javascript">
+
+    $(function () {
+        tablehtml();
+    })
+
+
+    //拼接html
+    function tablehtml() {
+        $("#htmlcon").html("");
+        var strjson = Ajaxgethzdata();
+
+        var html = "";
+
+        html += '<table class="table_con" style="width:100%; color: #000; font-size: 13px; margin: auto">';
+        //html += '<tr>';
+        //html += '<td style="width: 9%">本月排名</td>';
+        //html += '<td style="width: 9%">本月收入</td>';
+        //html += '<td style="width: 9%">累计收入</td>';
+        //html += '<td style="width: 9%">本月支出</td>';
+        //html += '<td style="width: 9%">累计支出</td>';
+        //html += '<td style="width: 9%; color: red">本月利润</td>';
+        //html += '<td style="width: 9%; color: red">累计利润</td>';
+        //html += '<td style="width: 9%">姓名</td>';
+        //html += '<td style="width: 9%">团队</td>';
+        //html += '<td style="width: 9%">操作</td>';
+        //html += '</tr>';
+        if (strjson != null && strjson != "") {
+            for (var i = 0, j = strjson.length; i < j; i++) {
+                var px = i + 1;
+                if (i % 2 == 0)
+                    html += '<tr class="table_tr_bg1">';
+                else
+                    html += '<tr>';
+                html += '<td style="width:9%">' + px + '</td>';
+
+                html += '<td style="width:9%">' + strjson[i].Shouru + '</td>';
+                html += '<td style="width:9%">' + strjson[i].ljshouru + '</td>';
+                html += '<td style="width:9%">' + strjson[i].zhichu + '</td>';
+                html += '<td style="width:9%">' + strjson[i].ljzhichu + '</td>';
+                html += '<td style="width:9%;color:red">' + strjson[i].yingli + '</td>';
+                html += '<td style="width:9%;color:red">' + strjson[i].ljyingli + '</td>';
+                html += '<td style="width:9%">' + AJaxstafIdinfobyId(strjson[i].StafitId).Sat_Name + '</td>';
+                html += '<td style="width:9%">' + AJaxtuanduibyId(strjson[i].Sat_teamId).Team_Name + '</td>';
+                html += '<td style="width:7.8%">-</td>';
+                html += '</tr>';
+            }
+        }
+        html += '</table>';
+
+        $("#htmlcon").html(html);
+    }
+
+    function AJaxyuangongdata() {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "/Personalprofit/Getyuangonginfo",
+            dataType: "json",
+            async: false,
+            success: function (reslut) {
+                json = eval(reslut);
+            },
+            error: function (e) {
+                alert("网络异常,请重试！");
+            }
+        })
+        return json;
+    }
+
+    //查询团队
+    function AJaxtuanduibyId(val) {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "/Personalprofit/GettuanduiinfobyId",
+            dataType: "json",
+            data: { Id: val },
+            async: false,
+            success: function (reslut) {
+                json = eval(reslut);
+            },
+            error: function (e) {
+                alert("网络异常,请重试！");
+            }
+        })
+        return json;
+    }
+
+    //查询汇总数据
+    function Ajaxgethzdata() {
+        var json; 
+        $.ajax({
+            type: "POST",
+            url: "/Personalprofit/AJaxhzdata",
+            dataType: "json",
+            async: false,
+            success: function (reslut) {
+                json = eval(reslut);
+            },
+            error: function (e) {
+                alert("网络异常,请重试！");
+            }
+        })
+        return json;
+    }
+
+    //个人（员工）数据
+    function AJaxstafIdinfobyId(val)
+    {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "/PP_Staffinfo/AjaxGetstafiinfo",
+            dataType: "json",
+            data: { Id: val },
+            async: false,
+            success: function (reslut) {
+                json = eval(reslut);
+            },
+            error: function (e) {
+                alert("网络异常,请重试！");
+            }
+        })
+        return json;
+    }
+</script>
+
+
+<div class="ppdiv1">
+    <h1>新亚员工个人利润统计</h1>
+</div>
+
+<div class="add-infor-title-bg_header">
+    <table class="table_con" style="width: 98%; color: #000; font-size: 13px; margin: auto">
+        <thead>
+            <tr>
+                <td style="width: 9%">本月排名</td>
+                <td style="width: 9%">本月收入</td>
+                <td style="width: 9%">累计收入</td>
+                <td style="width: 9%">本月支出</td>
+                <td style="width: 9%">累计支出</td>
+                <td style="width: 9%; color: red">本月利润</td>
+                <td style="width: 9%; color: red">累计利润</td>
+                <td style="width: 9%">姓名</td>
+                <td style="width: 9%">团队</td>
+                <td style="width: 9%">操作</td>
+            </tr>
+        </thead>
+    </table>
+</div>
+<div id="htmlcon" style="width: 98%; margin: auto" class="mainDIV">
+</div>
+

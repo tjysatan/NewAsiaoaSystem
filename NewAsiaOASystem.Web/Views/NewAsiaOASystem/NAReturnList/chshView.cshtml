@@ -1,0 +1,195 @@
+﻿@model NewAsiaOASystem.ViewModel.NAReturnListView
+@{
+    ViewBag.Title = "品保退货单确认";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@section HeadContent{
+      <script type="text/javascript">
+          $(function () {
+
+              var Cust = AjaxCust_Name('@Model.C_Id');//客户信息
+              $("#Cname").html(Cust.Name);
+              $("#Clxr").html(Cust.Adress);
+              $("#Ctel").html(Cust.Tel);
+              dataGrid();
+          })
+          function dataGrid() {
+              var chjson;
+              chjson = eval(jxkhjgck('@Model.Id'));
+              if (typeof (chjson) != "undefined") {
+                  $("#content").html("");
+                  var html = "";
+                  html = '<table cellpadding="0" cellspacing="0" style="width:100%;">';
+                  for (var i = 0, j = chjson.length; i < j; i++) {
+                      var Perinfo = GetPerinfobyId(chjson[i].P_Id);
+                      html += '<tr style=" height:40px;">';
+                      html += '<td style="width:40%"  align="center">' + Perinfo.Pname + '</td>';
+                      html += '<td style="width:30%"  align="center">' + chjson[i].shuliang + '</td>';
+                      html += '<td style="width:30%"  align="center">' + Perinfo.dw + '</td>';
+                      html += '</tr>';
+                  }
+                  html += '</table>'
+                  $("#content").html(html);
+              }
+          }
+          /*根据返退货Id 查找出货明细*/
+          function jxkhjgck(R_Id) {
+              var json;
+              $.ajax({
+                  type: "POST",
+                  url: "/NQ_CHdetailinfo/GetchinfobyRId",
+                  data: {
+                      R_Id: R_Id
+                  },
+                  dataType: "json",
+                  async: false,
+                  success: function (reslut) {
+                      //  json = eval('(' + reslut + ')');
+                      json = reslut;
+                  },
+                  error: function (e) {
+                      alert("请求失败");
+                  }
+              })
+              return json;
+          }
+
+
+          /*根据产品Id 查找产品信息*/  
+          function GetPerinfobyId(Id) {
+              var json;
+              $.ajax({
+                  type: "POST",
+                  url: "/NQ_CHdetailinfo/GetPreinfobyId",
+                  data: { ID: Id },
+                  dataType: "json",
+                  async: false,
+                  success: function (reslut) {
+                      json = reslut;
+                  },
+                  error: function (e) {
+                      alert("请求失败！");
+                  }
+              })
+              return json;
+          }
+
+          /*根据明细Id 删除*/
+          function DeletechinfonbyId(Id) {
+              $.ajax({
+                  type: "POST",
+                  url: "/NQ_CHdetailinfo/Delete",
+                  data: {
+                      Id: Id
+                  },
+                  dataType: "json",//这里是指控制器处理后返回的类型，这里返回json格式。  
+                  success: function (context) {
+                          dataGrid();
+                  },
+                  error: function (e) {
+                      alert("请求失败！");
+                  }
+              })
+          }
+
+          //操作
+          function czshow(val) {
+              var Id = "'" + val + "'";
+              var s = '<a href="#" onclick="DeletechinfonbyId(' + Id + ')">删除</a>&nbsp;&nbsp;';
+              return s;
+          }
+
+      </script>
+    }
+
+@using (Html.BeginForm("pbqrEdit", "NAReturnList", FormMethod.Post, new { id = "form1" }))
+{
+      @Html.HiddenFor(m=>m.Id)
+<div class="infor">
+       <div class="infor-content" style="width: 100%;">
+            <div class="add-infor-title-bg">
+               <div style="width:100px; height:35px; margin:auto; font-size:16px;">
+                   出货单
+               </div>
+            </div>
+            <ul class="infor-c">
+                <li class="infor-c-in"><span class="infor-c-width">购货单位：</span><span class="infor-c-q"><label id="Cname"></label></span></li>
+                <li class="infor-c-in"><span class="infor-c-width">地址：</span><span class="infor-c-q"><label id="Clxr"></label></span></li>
+                <li class="infor-c-in"><span class="infor-c-width">电话：</span><span class="infor-c-q"><label id="Ctel"></label></span></li>
+            </ul>
+           <div style="background:#f3f3f3; width:100%; margin-top:100px;">
+           <table style="width:90%; margin:auto;">
+               <tr style=" height:40px;">
+                 <td style="width:40%" align="center">
+                     货品名称
+                 </td> 
+                 <td style="width:30%"  align="center">
+                     数量
+                 </td>
+                  <td style="width:30%"  align="center">
+                     单位
+                 </td>
+                
+               </tr>
+           </table>
+          
+           </div>
+            <table style="width:90%; margin:auto;">
+               <tr>
+                   <td id="content">
+
+                   </td>
+               </tr>
+           </table>
+       </div>
+
+       <div class="infor-content" style="width:100%">
+           <ul class="infor-c">
+                <li class="infor-c-in">
+                    <span class="infor-c-width">是否同意：</span>
+                    <span class="inquiry-input">
+                       @* <select id="chy">
+                            <option value="3">
+                                同意
+                             </option>
+                            <option value="2">
+                              不同意
+                             </option>
+                        </select>*@
+                         <select class="add-function" name="R_isty">
+                              @{
+                         if ("1".Equals(Convert.ToString(@Model.R_isty)) && null != @Model.Id)
+                                      {
+                                @:<option value="0">同意</option>
+                                @:<option value="1" selected="selected">不同意</option>
+                                                }
+                                      else
+                                      {
+                                @:<option value="0"  selected="selected">同意</option>
+                                @:<option value="1">不同意</option>
+                                                }
+                                                
+                            }
+                          </select>
+                    </span>
+                </li>
+               <li class="infor-c-in">
+                   <span class="infor-c-width">
+                       原因:
+                   </span>
+                   <span class="inquiry-input">
+                    @Html.TextAreaFor(m=>m.R_ThYY )
+                   </span>
+               </li>
+            </ul>
+       </div>
+       <div class="inquiry-input infor-b">
+            <span>
+                <button onclick="return chqrSavaForm()">确认</button></span><span>
+                <button onclick="return RedirectUrl('/NAReturnList/chqrlist')">返回</button></span>
+        </div>
+</div>
+}
+<script src="~/Scripts/NAjs/NAReturnList.js"></script>
+ 

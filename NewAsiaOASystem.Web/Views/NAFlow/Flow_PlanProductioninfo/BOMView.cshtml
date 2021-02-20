@@ -1,0 +1,286 @@
+﻿@{
+    ViewBag.Title = "BOM信息查看以及元器件的库存";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<style>
+    .titletjbg2
+    {
+        height: 40px;
+        line-height: 40px;
+        background: #fff;
+        float: left;
+        width: 100%;
+        border-radius: 4%;
+    }
+
+    .add-infor-title-bg_tj ul
+    {
+        padding: 10px;
+    }
+
+        .add-infor-title-bg_tj ul li
+        {
+            width: 20%;
+            float: left;
+            font-size: 15px;
+        }
+
+    .titletjbg2 ul
+    {
+        padding: 10px;
+    }
+
+        .titletjbg2 ul li
+        {
+            width: 20%;
+            float: left;
+            font-size: 15px;
+        }
+
+    .add-infor-title-bg_header
+    {
+        height: 46px;
+        line-height: 46px;
+        background: #e8e5e5;
+        float: left;
+        width: 100%;
+    }
+
+        .add-infor-title-bg_header ul
+        {
+            /*padding: 10px;*/
+        }
+
+            .add-infor-title-bg_header ul li
+            {
+                width: 20%;
+                float: left;
+                font-size: 18px;
+            }
+
+    #content table
+    {
+        border-collapse: collapse;
+        border: none;
+    }
+
+        #content table td
+        {
+            border: solid #e8e5e5 1px;
+        }
+</style>
+
+<script type="text/javascript">
+
+    $(function () {
+        GetBomkc('@ViewData["wl_dm"]');
+    })
+
+
+    function dataGrid(jsonStr) {
+        if (jsonStr != null) {
+            var html = "";
+            html += '<table style="width:100%; color:#000; font-size:13px; text-align:center;">';
+            for (var i = 0, j = jsonStr.length; i < j; i++) {
+                html += '<tr>';
+                html += '<td width="15%"  height="25px">' + jsonStr[i]["子项物料代码"] + '</td>';
+                html += '<td width="20%"  height="25px">' + jsonStr[i]["子项物料名称"] + '</td>';
+                html += '<td width="10%"  height="25px">' + jsonStr[i]["子物料型号"] + '</td>';
+                html += '<td width="10%"  height="25px">' + jsonStr[i]["单位用量"] + '</td>';
+                html += '<td width="10%"  height="25px">' + ShowYQJsl(jsonStr[i]["单位用量"]) + ' </td>';
+                html += '<td width="10%"  height="25px">' + jsonStr[i]["库存"] + '</td>';
+                html += '<td width="10%"  height="25px">' + Showqs(ShowYQJsl(jsonStr[i]["单位用量"]), jsonStr[i]["库存"]) + ' </td>';
+                html += '<td width="15%"  height="25px">' + czYQJxd(jsonStr[i]["子项物料代码"], jsonStr[i]["子项物料名称"], jsonStr[i]["单位用量"]) + '</td>';
+                html += '</tr>';
+            }
+            html += '</table>';
+            $("#content").html(html);
+        }
+    }
+
+    //获取BOM及元器件库存
+    function GetBomkc(val) {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "../Flow_PlanProductioninfo/GetBOMKCinfo",
+            data: { wl_hm: val },
+            dataType: "json",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (reslut) {
+                json = reslut;
+                console.log('json', json)
+                dataGrid(json);
+                disLoading();
+
+            },
+            error: function (e) {
+                alert("请求失败");
+            }
+
+        })
+    }
+
+    //返回需要元器件的数量
+    function ShowYQJsl(val) {
+        var sl = '@ViewData["scSL"]' * val;
+        return sl;
+    }
+
+    //返回库存是否缺失
+    function Showqs(val, val1) {
+        if (val > val1) {
+            var qssl = val - val1;
+            return "<span style='color:red'>缺少(" + qssl + ")</span>";
+        } else {
+            return "<span>正常</span>";
+        }
+    }
+
+    //返回操作
+    function czYQJxd(val1, val2, val3) {
+        var YQJdm = "'" + val1 + "'";
+        var YQJname = "'" + val2 + "'";
+        var scsl = ShowYQJsl(val3);;
+        var f = '<a href="#" onclick="ajaxyqj(' + YQJdm + "," + YQJname + "," + scsl + ')">请购</a>&nbsp;&nbsp;'
+        return f;
+    }
+
+    //元器件请购单
+    function ajaxyqj(val1, val2, val3) {
+        var str = checkqgd(val1)
+        if (str == "0") {
+            MakePlan(val1, val2, val3);
+        } else {
+            $.messager.confirm("操作提示", '已经存在请购单,需要继续请购吗？', function (data) {
+                if (data) {
+                    MoreMakePlan(val1, val2, val3);
+                }
+            })
+        }
+    }
+
+    //检测元器件请购单是否重复下单
+    function Jcqgd(val) {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "../Flow_PlanProductioninfo/JCISCZYqj_REQ",
+            data: { P_Id: '@ViewData["cpId"]', YQJ_BM: val },
+            dataType: "html",
+            async: false,
+            success: function (reslut) {
+                json = reslut;
+
+            },
+            error: function (e) {
+                alert("请求失败");
+            }
+        })
+        return json;
+    }
+
+    //检测是否存在未处理的相同的采购元器件
+    function checkqgd(val) {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "/Flow_PlanProductioninfo/checkqgd",
+            data: { "YQJ_BM": val },
+            dataType: "html",
+            async: false,
+            success: function (reslut) {
+                json = reslut;
+
+            },
+            error: function (e) {
+                alert("请求失败");
+            }
+        })
+        return json;
+    }
+
+    var loadi;
+    //ajax提交 等待效果
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+
+
+    //采购计划
+    function MakePlan(val1, val2, val3) {
+        var id = val1;
+            if (id != "") {
+                $('#windowDia').html("<iframe src=../Flow_PlanProductioninfo/YQJ_gcSLView?P_Id=" + '@ViewData["cpId"]' + "&&YQJ_BM=" + val1 + "&&YQJ_name=" + val2 + "&&sl=" + val3 + "&&  style='border:0px;' width='500px' height='400px'></iframe>");
+                $("#windowDia").window({
+                    title: '采购计划',
+                    modal: true,
+                    closed: false,
+                    width: 560,
+                    height: 310,
+                    left: 20,
+                    top:50,
+                });
+            }
+    }
+
+    function MoreMakePlan(val1, val2, val3) {
+        var id = val1;
+        if (id != "") {
+            $('#windowDia').html("<iframe src=../Flow_PlanProductioninfo/DjYQJ_gcSLView?P_Id=" + '@ViewData["cpId"]' + "&&YQJ_BM=" + val1 + "&&YQJ_name=" + val2 + "&&sl=" + val3 + "&&  style='border:0px;' width='500px' height='400px'></iframe>");
+                $("#windowDia").window({
+                    title: '叠加采购',
+                    modal: true,
+                    closed: false,
+                    width: 560,
+                    height: 310,
+                    left: 20,
+                    top: 50,
+                });
+            }
+        }
+
+
+
+</script>
+
+<div class="h-right">
+    <div class="h-right-c">
+        <div style="width: 95%; margin: auto; margin-top: 10px; border: 1px solid #e8e5e5;">
+            <div class="add-infor-title-bg_header">
+                <table style="width: 100%; color: #000; font-size: 13px; text-align: center;">
+                    <tr>
+                        <td width="15%">物料代码
+                        </td>
+                        <td width="20%">元器件
+                        </td>
+                        <td width="10%">物料型号
+                        </td>
+                        <td width="10%">单位用量
+                        </td>
+                        <td width="10%">需要量
+                        </td>
+                        <td width="10%">当前库存
+                        </td>
+                        <td width="10%">是否缺少
+                        </td>
+                        <td width="15%">操作
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div id="content" style="width: 100%;">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="windowDia" class="easyui-window" closed="true" style="width: 680px; height: 600px; padding: 10px;"></div>

@@ -1,0 +1,123 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>告警通知消息</title>
+    <link rel="stylesheet" type="text/css" href="http://at.alicdn.com/t/font_1459473269_4751618.css">
+    <link href="~/Content/NewM2M/Index/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/Content/NewM2M/Index/css/style.css" rel="stylesheet">
+    <script src="~/Content/NewM2M/Index/js/jquery.min.js"></script>
+    <script src="~/Content/NewM2M/Index/js/bootstrap.min.js"></script>
+    <!--必要样式-->
+    <link rel="stylesheet" type="text/css" href="~/Content/NewM2M/Index/css/menu_elastic.css" />
+    <script src="~/Content/NewM2M/Index/js/snap.svg-min.js"></script>
+    <script type="text/javascript" src="../Content/M2Mv2/js/jquery.min.js"></script>
+    <script type="text/javascript" src="../Content/M2Mv2/js/jquery.leanModal.min.js"></script>
+    <link href="../Content/M2Mv2/css/jquery.uls.css" rel="stylesheet" />
+    <link href="../Content/M2Mv2/css/jquery.uls.grid.css" rel="stylesheet" />
+    <link href="../Content/M2Mv2/css/jquery.uls.lcd.css" rel="stylesheet" />
+
+
+    <script src="../Content/M2Mv2/js/jquery.uls.data.js"></script>
+    <script src="../Content/M2Mv2/js/jquery.uls.data.utils.js"></script>
+    <script src="../Content/M2Mv2/js/jquery.uls.lcd.js"></script>
+    <script src="../Content/M2Mv2/js/jquery.uls.languagefilter.js"></script>
+    <script src="../Content/M2Mv2/js/jquery.uls.regionfilter.js"></script>
+    <script src="../Content/M2Mv2/js/jquery.uls.core.js"></script>
+    <script src="../Scripts/layer/layer.js"></script>
+    <script src="../Scripts/jquery-1.9.1.min.js"></script>
+    <script src="../Scripts/jquery-easyui-1.4.1/jquery.easyui.min.js"></script>
+    <link href="../Scripts/jquery-easyui-1.4.1/themes/default/easyui.css" rel="stylesheet" />
+
+    <script src="../Scripts/jquery.form.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            ajaxNoticejson();
+        })
+
+
+        //数据查询
+
+        function ajaxNoticejson() {
+            $.ajax({
+                url: "../Iot/GetwutianNoticejson",
+                type: "POST",
+                data: { openId: '@ViewData["openid"]' },
+                dataType: "json",
+                async: true,
+                beforeSend: function () {
+                    ddchen();
+                },
+                success: function (response) {
+                    disLoading();
+                    var json = eval(response);
+                    Htmlpj(json);
+                },
+                error: function (e) {
+                    disLoading();
+                    layer.alert("操作失败！", { icon: 2 });
+                }
+            })
+        }
+
+        ////拼接html(近五天内的数据)
+        function Htmlpj(str) {
+            var jsonstr = str;
+            var html = "";
+            if (jsonstr != "" && jsonstr != null) {
+                for (var i = 0, j = jsonstr.length; i < j; i++) {
+                    html += '<div class="ddlist">';
+                    html += '<div class="dtit">' + jsonstr[i].JKDname + '</div>';
+                    html += '<div class="dz"><p class="ziku">来源帐号：</p>' + jsonstr[i].username + '</div>';
+                    html += '<div class="dz"><p class="ziku">告警内容：</p>' + encode1(jsonstr[i].Tzcon) + '</div>';
+                    html += '<div class="dz"><p class="ziku">告警时间：</p>' + jsonstr[i].C_time + '</div>';
+                    html += '</div>';
+                }
+
+            }
+            else {
+                html += '<div class="ddlist">';
+                html += '<div class="dz"><div class="dz">近5天没有告警或通知~~</div></div>';
+                html += '</div>';
+            }
+            $("#strcon").html(html);
+        }
+
+        var loadi;
+        function ddchen() {
+            loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+        }
+        //关闭等待效果
+        function disLoading() {
+            layer.close(loadi);
+        }
+        function encode1(s) {
+            return escape(s).replace(/%(u[0-9A-F]{4})|(%[0-9A-F]{2})/gm, function ($0, $1, $2) {
+                return $1 && '\\' + $1.toLowerCase() || unescape($2);
+            });
+        }
+    </script>
+</head>
+<body class="huibg">
+
+
+    <nav class="navbar text-center">
+        <button class="topleft" onclick="javascript:history.go(-1);"><span class="iconfont icon-fanhui"></span></button>
+        <a class="navbar-tit center-block">近五天内告警通知</a>
+    </nav>
+
+    <div class="dingdan" id="strcon">
+ 
+    </div>
+</body>
+</html>

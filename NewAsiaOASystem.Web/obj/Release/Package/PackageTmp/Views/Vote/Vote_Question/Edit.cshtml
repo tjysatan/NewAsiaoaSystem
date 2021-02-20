@@ -1,0 +1,66 @@
+﻿@model NewAsiaOASystem.ViewModel.Vote_QuestionView
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+  }
+
+@section HeadContent{
+    <script type="text/javascript">
+        $(function () {
+            DRP();
+            if ($("#S_ListData").val() != "" || $("#S_ListData").val() != null) {
+                Editdrp();
+            }  
+        })
+    </script>
+    
+    }
+
+@using (Html.BeginForm("Edit", "Vote_Question", FormMethod.Post, new { id = "form1" }))
+{
+    @Html.HiddenFor(m=>m.Id)
+    @Html.HiddenFor(m=>m.Q_Count)
+    @Html.HiddenFor(m=>m.Q_Person)
+    @Html.HiddenFor(m=>m.Q_time)
+     <div class="infor">
+        <p id="Ptitle"></p>
+        <div class="system-menu-set">
+            <ul class="infor-c">
+                <li><span class="infor-c-width">所属主题：</span>
+                     <span class="infor-c-input">
+                      @Html.DropDownList("S_ListData", ViewData["SList"] as SelectList, new { @class="add-function"})
+                     </span>
+                    
+                </li>
+            </ul>
+            <ul class="infor-c ">
+                <li><span class="infor-c-width">所属标题：</span>
+                    <span class="infor-c-input">
+                        <select id="aa" name="aa" class="add-function">
+                        </select>
+                    </span>
+                     
+                </li>
+            </ul>
+            <ul class="infor-c">
+                <li><span class="infor-c-width">选项名称：</span>
+                    <span class="infor-c-input">
+                        @Html.TextBoxFor(m => m.Q_Question, new { })
+                    </span>
+                </li>
+            </ul>
+
+           <ul class="infor-c">
+                <li><span class="infor-c-width">当前票数：</span>
+                    <span class="infor-c-input">
+                        @Html.TextBoxFor(m => m.Q_Count, new { })
+                    </span>
+                </li>
+            </ul>
+                       
+        </div>
+        <div class="inquiry-input infor-b"><span><button onclick="return SavaForm('/Vote_Subject/Index')">保存</button></span><span><button onclick="return RedirectUrl('/FirstBack/Index')">返回</button></span></div>
+    </div>
+}
+
+ <script src="~/Scripts/Vote/Vote_Q.js"></script>

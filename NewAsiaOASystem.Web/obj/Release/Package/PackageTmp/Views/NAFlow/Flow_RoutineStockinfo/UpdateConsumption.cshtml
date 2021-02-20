@@ -1,0 +1,89 @@
+﻿@model NewAsiaOASystem.ViewModel.Flow_RoutineStockinfoView
+@{
+    ViewBag.Title = "产品用量修改";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+
+
+
+@using (Html.BeginForm("Edit", "Flow_RoutineStockinfo", FormMethod.Post, new { id = "form1" }))
+{
+    @Html.HiddenFor(m => m.Updatetime);//更新时间
+    @Html.HiddenFor(m => m.N_Stock);//当天库存
+    @Html.HiddenFor(m => m.Isbj);//是否异常
+    @Html.HiddenFor(m => m.Isscing);//是否生产
+    @Html.HiddenFor(m => m.A_Sum);//报警数据
+    @Html.HiddenFor(m => m.SC_Sum);//需要生产的数量
+    @Html.HiddenFor(m => m.P_Bianhao);//K3物料代码
+    @Html.HiddenFor(m => m.Id);//编号
+    @Html.HiddenFor(m => m.P_Name);//产品名称
+    @Html.HiddenFor(m=>m.Category);
+    @Html.HiddenFor(m=>m.Sjsc_Sum);//实际生产的数量
+    @Html.HiddenFor(m=>m.type);
+    @Html.HiddenFor(m=>m.state);
+    <div class="infor" style="width:450px;">
+        <p id="Ptitle"></p>
+        <div class="system-menu-set">
+            <ul class="infor-c">
+                <li>
+                    <span class="infor-c-width">月用量：</span>
+                    <span class="infor-c-input">@Html.TextBoxFor(m => m.M_Consumption)</span>
+                    <span style="color: red; font-size: 24px; vertical-align: middle; margin-left: 8px;">*</span>
+                    <span class="desc w-register">月用量</span>
+                </li>
+            </ul>
+            <ul class="infor-c">
+                <li>
+                    <span class="infor-c-width">周用量：</span>
+                    <span class="infor-c-input">@Html.TextBoxFor(m => m.W_Consumption)</span>
+                    <span style="color: red; font-size: 24px; vertical-align: middle; margin-left: 8px;">*</span>
+                    <span class="desc w-register">周用量</span>
+                </li>
+            </ul>
+        </div>
+         <div class="inquiry-input infor-b" style="width:450px;">
+            <span style="margin-left:100px;">
+                <button onclick="return UpSavaForm()">保存</button></span><span>
+                    <button onclick="return closeUI()">返回</button></span>
+        </div>
+    </div>
+}
+@*<script src="~/Scripts/Flow/Flow_RoutineStockinfo.js"></script>*@
+
+<script type="text/javascript">
+    function UpSavaForm() {
+        var options = {
+            beforeSubmit: function () {
+                return true;
+            },
+            dataType: "json",//这里是指控制器处理后返回的类型，这里返回json格式。 
+            success: function (context) {
+                if ("success" == context.result) {
+                    $.messager.alert("操作提示", '修改成功！', 'info', function () {
+                        var ParentObj = window.parent;//获取父窗口
+                        window.parent.$('#windowDia').window('close');
+                        window.parent.location = "/Flow_RoutineStockinfo/list";
+                        return false;
+                    });
+                }
+                if ("error" == context.result) {
+                    $.messager.alert("操作提示", '修改失败！', 'error');
+                }
+            },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $.messager.alert("操作提示", '操作失败！', 'error');
+                }
+            }
+        $('#form1').ajaxSubmit(options);
+        return false; //为了不刷新页面,返回false 
+    }
+
+
+    //关闭
+    function closeUI() {
+        var ParentObj = window.parent;//获取父窗口
+        window.parent.$('#windowDia').window('close');
+        return false;
+    }
+</script>

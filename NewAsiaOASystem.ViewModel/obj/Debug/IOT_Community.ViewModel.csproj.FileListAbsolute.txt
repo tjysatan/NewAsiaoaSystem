@@ -1,0 +1,5 @@
+E:\公司项目\社区\IOT_Community\trunk\ViewModel\bin\Debug\IOT_Community.ViewModel.dll
+E:\公司项目\社区\IOT_Community\trunk\ViewModel\bin\Debug\IOT_Community.ViewModel.pdb
+E:\公司项目\社区\IOT_Community\trunk\ViewModel\obj\Debug\IOT_Community.ViewModel.dll
+E:\公司项目\社区\IOT_Community\trunk\ViewModel\obj\Debug\IOT_Community.ViewModel.pdb
+E:\公司项目\社区\IOT_Community\trunk\ViewModel\obj\Debug\IOT_Community.ViewModel.csprojResolveAssemblyReference.cache

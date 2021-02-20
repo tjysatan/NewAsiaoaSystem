@@ -1,0 +1,58 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>附近免疫点</title>
+    
+		<style type="text/css">
+		body, html,#allmap {width: 100%;height: 100%;overflow: hidden;margin:0;}
+		 
+	 
+	</style>
+        <script src="~/Scripts/jquery-1.11.2.min.js"></script>
+    	@*<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0"></script>*@
+       <script type="text/javascript" src="http://developer.baidu.com/map/jsdemo/demo/convertor.js"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=ZDvn9C2GjVmN1YVGUhUAwQOy"></script>
+ 
+ 
+    <script src="~/Content/Gis/js/Jquery-ajax.js"></script>
+    <script src="~/Content/Gis/js/Jquery-Gis.js"></script>
+    <script src="http://libs.baidu.com/jquery/1.9.0/jquery.js"></script>
+</head>
+<body>
+    <div>'@ViewData["code"]'</div>
+     <div>'@ViewData["AID"]'</div>
+    <div id="allmap"></div>
+</body>
+</html>
+<script>
+    $(function () {
+        if ('@ViewData["AID"]' == "null") {
+            window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx44f57e0f1268190b&redirect_uri=http://wx.chinanewasia.com/Gis/index?AID=" + '@ViewData["code"]' + "&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect";
+        }
+    })
+    //var longtitude;
+    //var latitude;
+   
+    //$(function () {
+    //    navigator.geolocation.getCurrentPosition(
+    //         function (pos) { // 如果成果则执行该回调函数 
+    //             longtitude = pos.coords.longitude;
+    //             latitude = pos.coords.latitude;
+    //             //初始化地图
+    //             InitializeMap(longtitude, latitude);
+    //         }
+    //        )
+        //初始化地图 web测试
+              
+     //  InitializeMap(87.611291, 43.862435);
+        //  Find_FJ(87.611292, 43.862435);
+
+//    }
+//)
+</script>

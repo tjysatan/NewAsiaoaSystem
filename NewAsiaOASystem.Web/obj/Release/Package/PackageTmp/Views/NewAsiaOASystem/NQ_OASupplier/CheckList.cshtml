@@ -1,0 +1,303 @@
+﻿@model NewAsiaOASystem.ViewModel.PagerInfo<NewAsiaOASystem.ViewModel.NQ_OASupplierView>
+@{
+    ViewBag.Title = "供应商信息列表";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+@section HeadContent{
+
+    <style>
+        .commonStatus {
+            color: green;
+        }
+
+        .imOutDate {
+            color: red;
+        }
+        
+        .hadOutDate {
+            color: red;
+        }
+    </style>
+
+    <script type="text/javascript">
+
+        $(function () {
+            BindGrid();
+        })
+        function BindGrid() {
+            @{
+                if (null != Model && null != Model.GetPagingDataJson)
+                {
+                    string json = Model.GetPagingDataJson;//获取json数据
+                    @: var jsonStr = @Html.Raw(json);
+                                                                             }
+             }
+            dataGrid(jsonStr);
+        }
+
+        function dataGrid(jsonStr)
+        {
+            var Id="";
+
+            if (typeof (jsonStr) != "undefined") {
+                var html = "";
+                html = '<table cellpadding="0" cellspacing="0" style="width:100%;">';
+                for (var i = 0, j = jsonStr.length; i < j; i++) {
+                    if (i % 2 == 0)
+                        html += '<tr class="h-table-content-r1">';
+                    else
+                        html += '<tr class="h-table-content-r">';
+                    html += '<td width="5%"><input type="checkbox" name="ContentChecked" value="' + jsonStr[i].Id + '"/></td>';
+                    //html += '<td width="5%">' + jsonStr[i].FNumber + '</td>';
+
+                    html += '<td width="20%">' +jsonStr[i].FName + '</td>';
+                    if(jsonStr[i].FContact!=null)
+                    {
+                        html += '<td width="10%">' +jsonStr[i].FContact + '</td>';
+                    }
+                    else
+                    {
+                        html+='<td width="10%">暂无</td>';
+                    }
+                    if(jsonStr[i].FPhone!=null)
+                        html += '<td width="10%">' +jsonStr[i].FPhone + '</td>';
+                    else
+                        html+='<td width="10%">暂无</td>';
+                    if(jsonStr[i].FMobilePhone!=null)
+                        html += '<td width="10%" >' + jsonStr[i].FMobilePhone + '</td>';
+                    else
+                        html += '<td width="10%" >暂无</td>';
+                    if(jsonStr[i].FAddress!=null)
+                        html += '<td width="15%">' + jsonStr[i].FAddress + '</td>';
+                    else
+                        html += '<td width="10%"></td>';
+
+                    html += '<td width="10%"><div class="layui-btn-group">';
+                    html+= '<a class="layui-btn layui-btn-primary layui-btn-small" onclick="baseitem_iframeopenCheck('+jsonStr[i].Id+')" >'+jsonStr[i].itemsCount+'个元器件<i class="layui-icon">&#xe642;</i></a>';
+                    html+='</div></td>';
+
+                    if(jsonStr[i].supplierStatus !=null)
+                        html += '<td width="8%" id="listStatus" style="color:'+jsonStr[i].supplierStatus.strStatusColor+'">' + jsonStr[i].supplierStatus.strStatusName  + ' <input type="hidden" name="istatus" id="hidstatus" value="' + jsonStr[i].supplierStatus.iStatus + '"/></td>';
+                    else
+                        html+='<td width="8%">暂无</td>';
+                    if(jsonStr[i].FAddress!=null)
+                        html += '<td width="7%">' + showDate(jsonStr[i].FCreateDate) + '</td>';
+                    else
+                        html += '<td width="7%"></td>';
+                    html+='</tr>';
+                }
+                html += '</table>';
+                $("#content").html(html);
+            }
+        }
+
+        //pageIndex当前页
+        function SerchList(pageIndex)
+        {
+            $("input[name='pageIndex']").val(pageIndex);
+            var options = {
+                beforeSubmit: function () {
+                    return true;
+                },
+                dataType: "json",
+                success: function (context) {
+                    var data=eval(context.result);
+                    dataGrid(data);
+                    $(".pagin").html(context.PageN);//输出分页按钮
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $.messager.alert("操作提示", '查询失败请重试！', 'error');
+                }
+            }
+            $('#form1').ajaxSubmit(options);
+            return false;
+        }
+
+        function editPage(OpenUrl) {
+            //获取到选中值
+            var arr = GetGridSelete();
+            if (arr.length > 1) {
+                $.messager.alert("操作提示", "只能选择一个！", "warning");
+            }
+            else if (arr.length <= 0) {
+                $.messager.alert("操作提示", "请先选择一条记录后再编辑！", "warning");
+            }
+            else {
+                location.href = OpenUrl + "?id=" + arr[0];
+            }
+
+            return false;
+        }
+
+        function checkPage(OpenUrl) {
+            //获取到选中值
+            var arr = GetGridSelete();
+            if (arr.length > 1) {
+                $.messager.alert("操作提示", "只能选择一个！", "warning");
+            }
+            else if (arr.length <= 0) {
+                $.messager.alert("操作提示", "请先选择一条记录后再查看审核！", "warning");
+            }
+            else {
+                location.href = OpenUrl + "?id=" + arr[0];
+            }
+            return false;
+        }
+
+        function delSu(url) {
+            var arr = GetGridSelete();
+
+            var status = $('#hidstatus').val();
+
+            if (status >= 3)
+            {
+                $.messager.alert("操作提示", "已经审核无法删除！", "warning");
+                return false;
+            }
+
+            if (arr.length > 1) {
+                $.messager.alert("操作提示", "只能选择一个！", "warning");
+            }
+            else if (arr.length <= 0) {
+                $.messager.alert("操作提示", "请先选择一条记录后再查删除！", "warning");
+            }
+            else {
+                $.messager.confirm('提示框', '你确定要删除吗?', function (data) {
+                    if (data) {
+                        location.href = url + "?id=" + arr[0];
+                    }
+                } );
+            }
+
+            return false;
+        }
+
+        
+
+        //layer
+        //明细分页页面
+        function baseitem_iframeopenCheck(val)
+        {
+            layer.open({
+                type: 2,
+                title: ['供应商元器件明细', 'font-size:14px;'],
+                area: ['1100px', '650px'],
+                offset: '10px',
+                fixed: false, //不固定
+                maxmin: true,
+                content: '../NQ_YJinfo/supplierAndItemListCheck?supplierId='+val,
+                end: function () {
+                    location.reload();
+                }
+            });
+        }
+    </script>
+}
+
+<!--==================================数据列表=============================-->
+<div class="h-right">
+    <div class="h-right-c">
+        
+        <!--查询条件-->
+        @using (Html.BeginForm("SearchList", "NQ_OASupplier", FormMethod.Post, new { id = "form1" }))
+        {
+            @Html.Hidden("pageIndex");
+            <div class="inquiry1">
+                <fieldset>
+                    <legend>查询条件：</legend>
+                    <ul class="infor-c">
+                        <li>
+                            <span>供应商名称：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txtSearch_Name" />
+                            </span>
+                        </li>
+                        <li>
+                            <span>联系人名称：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txtSearch_Con" />
+                            </span>
+                        </li>
+                        <li>
+                            <span>电话号码：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txtSearch_Tel" />
+                            </span>
+                        </li>
+                        <li>
+                            <span class="infor-c-width">审核状态：</span>
+                            <span class="infor-c-input">
+                                @Html.DropDownList("statusList", new SelectList(ViewBag.searchStatus, "Value", "Text"))
+                            </span>
+                        </li>
+                    </ul>
+                    <ul class="infor-c" style="margin-left:50px">
+                        @{
+                            if (ViewBag.isShowView == 1)
+                            {
+                                <li>
+                                    <span class="inquiry-input">
+                                        <button name="btnSerch" onclick="return SerchList(1)">查询</button>
+                                    </span>
+                                </li>
+                            }
+                        }
+                        @{
+                            if (ViewBag.isShowView == 1)
+                            {
+                                <li>
+
+                                    <span class="inquiry-input">
+                                        <button onclick="return addClick('/NQ_OASupplier/CheckList')">刷新</button>
+                                    </span>
+                                </li>
+                            }
+                        }
+
+                        @{
+                            if (ViewBag.isShowChcek == 1)
+                            {
+                                <li>
+                                    <span class="inquiry-input">
+                                        <button onclick="return checkPage('/NQ_OASupplier/CheckPage')">查看审核</button>
+                                    </span>
+                                </li>                            }
+                        }
+
+
+                    </ul>
+                </fieldset>
+            </div>
+        }
+        <div class="h-table">
+            <div class="h-table-content">
+                <table cellpadding="0" cellspacing="0" class="h-right-table-title1" style="border: none;width:100%;">
+                    <tr>
+                        <td width="5%">
+                            <input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" />
+                        </td>
+                        
+                        <td width="20%">供应商</td>
+                        <td width="10%">联系人</td>
+                        <td width="10%">电话</td>
+                        <td width="10%">手机</td>
+                        <td width="15%">地址</td>
+                        <td width="10%">元器件</td>
+                        <td width="8%">状态</td>
+                        <td width="7%">创建时间</td>
+                    </tr>
+                </table>
+                <div id="content"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--==========================输出分页按钮=========================-->
+<div class="pagin">
+    @if (ViewBag.PageNavigate == null)
+    {
+        @Html.ShowPageNavigate(Model.CurrentPageIndex, Model.PageSize, Model.RecordCount);
+    }
+</div>
+

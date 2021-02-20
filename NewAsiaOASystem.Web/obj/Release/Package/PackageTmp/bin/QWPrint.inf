@@ -1,0 +1,13 @@
+[version] 
+signature="$CHINA$" 
+AdvancedINF=2.0 
+[Add.Code] 
+QWPrint.dll=QWPrint.dll 
+[QWPrint.dll] 
+file-win32-x86=thiscab     
+RegisterServer=yes  
+clsid={3EDE745C-4ADB-42A6-AB25-5621EDBDFD6B}  
+DestDir=11     
+FileVersion=1,3,8,2
+[RegisterFiles]  
+%11%\QWPrint.dll

@@ -1,0 +1,68 @@
+﻿@{
+    ViewBag.Title = "文件上传";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@section HeadContent{
+    <script type="text/javascript">
+        function submit() {
+            //表单验证
+            var Verification = $("#form1").form('validate');
+            if (Verification == true) {
+                var options = {
+                    beforeSubmit: function () {
+                        return true;
+                    },
+                    dataType: "json",//这里是指控制器处理后返回的类型，这里返回json格式。  
+                    success: function (context) {
+                        if ("success" == context.result) {
+                            $.messager.alert("操作提示", '操作成功！', 'info');
+                        }
+                        if ("error" == context.result) {
+                            $.messager.alert("操作提示", '操作失败！', 'error');
+                        }
+
+
+                    }
+                }
+                $('#form1').ajaxSubmit(options);
+                return false; //为了不刷新页面,返回false 
+            }
+        }
+    </script>
+   
+    }
+
+@using (Html.BeginForm("AppFileUpload", "AppFileUpload", FormMethod.Post, new { id = "form1",enctype="multipart/form-data"}))
+{
+
+                   <table cellpadding="5" id="TableForm" >
+	    		                <tr>
+	    			                <td>文件名称:</td>
+	    			                <td> 
+                                        <input type="text" class = "easyui-textbox txt_box" name="FileName" data_options="required:true,missingMessage:'名称不为空！'" />
+                                      
+	    			                </td>
+	    		                </tr>
+                                 <tr>
+	    			                <td>选择文件:</td>
+	    			                <td> 
+                                       @*<input type="file" name="AppFile"/>*@
+                                         <input class="easyui-filebox" name="AppFile" data-options="prompt:'请选择'">
+	    			                </td>
+	    		                </tr>
+                                <tr>
+	    			                <td>应用类型:</td>
+	    			                <td> 
+                                       <input type="radio" name="fileType" value="apk" checked="checked" style="width:30px;"/>android
+                                        <input type="radio" name="fileType" value="ipa" style="width:30px;"/>iphone
+                                        <input type="radio" name="fileType" value="wp" style="width:30px;"/>windows phone
+	    			                </td>
+	    		                </tr>
+                    </table>
+}
+
+                         <div style="text-align:center;padding:5px;width:300px;">
+                             <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submit()">保存</a>
+	    	                <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">清除</a>
+                         </div>

@@ -1,0 +1,120 @@
+﻿@{
+    ViewBag.Title = "电控箱——元器件请购页面";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+
+<style>
+    .sopbtnsave
+    {
+        position: absolute;
+        width: 90%;
+        bottom: 5px;
+        text-align: center;
+    }
+
+    .soptopbtn
+    {
+        position: absolute;
+        width: 90%;
+        top: 1px;
+        text-align: center;
+    }
+</style>
+
+<script type="text/javascript">
+
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+    //提交
+    function CGXDAjax(val) {
+        var wlbm = $("#wlbm").val();
+        var yqjname = $("#YQJNAME").val();
+        var YQJXH = $("#YQJXH").val();
+        var sjshuliang = $("#sjshuliang").val();
+        if (sjshuliang == "")
+        {
+            layer.alert("请填写需要采购的数量！", { icon: 2 });
+            return false;
+        }
+        if (isNaN(sjshuliang))
+        {
+            layer.alert("填写的采购数量为纯数字！", { icon: 2 });
+            return false;
+        }
+        $.ajax({
+            url: "../DKX_DDtypeinfo/CGtjEide",
+            type: "POST",
+            data: { YQJBM: wlbm, YQJName: yqjname, YQJxh: yqjname, shuliang: sjshuliang },
+            dataType: "html",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response == "1") {
+                    layer.alert("提交异常！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "0") {
+                    layer.alert("提交成功！", { icon: 1 }, function () { guanbi(); });
+                }
+                 
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+    }
+
+    function guanbi() {
+        var index = parent.layer.getFrameIndex(window.name);
+        //关闭弹出层
+        parent.layer.close(index);
+    }
+</script>
+
+<input type="hidden" id="wlbm" name="wlbm" value='@ViewData["YQJBM"]' />
+<div class="layui-tab-content" style="height: 100px;">
+    <div class="layui-tab-item layui-show">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">元器件名称:</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="YQJNAME" id="YQJNAME" value='@ViewData["YQJName"]' readonly="readonly" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label">型号:</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="YQJXH" id="YQJXH" value='@ViewData["YQJxh"]' readonly="readonly" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">建议采购:</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="jyshuliang" id="jyshuliang" value='@ViewData["shuliang"]' readonly="readonly" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">实际采购:</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="sjshuliang" id="sjshuliang" value='@ViewData["shuliang"]' lay-verify="title" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <!--按钮-->
+        <div class="sopbtnsave">
+            <button class="layui-btn layui-btn-primary" onclick="return CGXDAjax()">提交</button>
+        </div>
+    </div>
+
+</div>

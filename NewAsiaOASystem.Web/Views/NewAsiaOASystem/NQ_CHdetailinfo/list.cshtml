@@ -1,0 +1,197 @@
+﻿@model NewAsiaOASystem.ViewModel.PagerInfo<NewAsiaOASystem.ViewModel.NQ_productinfoView>
+@{
+    ViewBag.Title = "添加产品";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@section HeadContent{
+    <script type="text/javascript">
+        $(function () {
+            sfycdj();
+            BindGrid();
+            // $("#btnhtm").html("");
+        })
+
+        //确定按钮提交html
+
+        function BindGrid() {
+            @{
+                if (null != Model && null != Model.GetPagingDataJson)
+                {
+                    string json = Model.GetPagingDataJson;//获取json数据
+                    @: var jsonStr = @Html.Raw(json);
+                }
+             }
+            dataGrid(jsonStr);
+        }
+
+        function dataGrid(jsonStr)
+        {
+            console.log("jsonStr", jsonStr)
+            if (typeof (jsonStr) != "undefined") {
+                var html = "";
+                html = '<table cellpadding="0" cellspacing="0" style="width:100%;">';
+                for (var i = 0, j = jsonStr.length; i < j; i++) {
+                    if (i % 2 == 0)
+                        html += '<tr class="h-table-content-r1">';
+                    else
+                        html += '<tr class="h-table-content-r">';
+                    html += '<td width="5%"><input type="checkbox" name="ContentChecked" value="' + jsonStr[i].Id + '"/></td>';
+                    html += '<td width="25%"  style="text-align:left"><a title="' + jsonStr[i].Pname + '">'+jsonStr[i].Pname+'</a></td>';
+                    html+='<td width="15%">'+jsonStr[i].P_bianhao+'</td>';
+                    html+='<td width="10%">'+jsonStr[i].P_xh+'</td>';
+                    //if(jsonStr[i].p_type!=null)
+                    //    html += '<td width="10%">' + Showtl(jsonStr[i].p_type)+ '</td>';
+                    //else
+                    //    html += '<td width="10%"></td>';
+                    //if(jsonStr[i].CreateTime!=null)
+                    //    html += '<td width="15%">' + showDate(jsonStr[i].CreateTime) + '</td>';
+                    //else
+                    //    html += '<td width="15%"></td>';
+                    html+='</tr>';
+                }
+                html += '</table>';
+                $("#content").html(html);
+            }
+        }
+        //pageIndex当前页
+        function SerchList(pageIndex)
+        {
+            $("input[name='pageIndex']").val(pageIndex);
+            var options = {
+                beforeSubmit: function () {
+                    return true;
+                },
+                dataType: "json",
+                success: function (context) {
+                    var data=eval(context.result);
+                    dataGrid(data);
+                    $(".pagin").html(context.PageN);//输出分页按钮
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $.messager.alert("操作提示", '查询失败请重试！', 'error');
+                }
+            }
+            $('#form1').ajaxSubmit(options);
+            return false;
+        }
+
+        function sfycdj(){
+            if('@ViewData["type"]'==3){
+                $("#djsfxc").css('display', 'block');
+               
+            }
+            if ('@ViewData["type"]' == 0) {
+                $("#cusbaddes").css('display', 'block');
+            }
+        }
+    </script>
+}
+
+<div class="h-right">
+    <div class="h-right-c">
+        @using (Html.BeginForm("SearchList", "NQ_productinfo", FormMethod.Post, new { id = "form1" }))
+        {
+            @Html.Hidden("pageIndex");
+            <div class="inquiry1">
+                <fieldset style="margin:5px !important;">
+                    <legend>查询条件：</legend>
+                    <ul style="padding:0 !important;">
+                        <li><span>产品名称：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txtSearch_Name" /></span></li>
+                        <li><span>产品型号：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txtSearch_P_xh" />
+                            </span>
+                        </li>
+                        <li>
+                            <span>物料代码：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txtSearch_bianhao" />
+                            </span>
+                        </li>
+                        <li style="*width: 100%; *margin: -10px 0 5px 90px;"><span class="inquiry-input">
+                            <button name="btnSerch" onclick="return SerchList(1)">查询</button>
+                        </span></li>
+                    </ul>
+                </fieldset>
+            </div> 
+        }
+
+        <input type="hidden" id="ft_Id" name="ft_Id" value="@ViewData["Id"]" />
+
+        <input type="hidden" id="cp" name="cp" />
+ 
+        <div class="h-table">
+            <div class="h-table-content">
+                <table cellpadding="0" cellspacing="0" class="h-right-table-title1" style="border: none; width: 100%;">
+                    <tr>
+                        <td width="5%">
+                            <input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" /></td>
+                        <td width="25%">产品名称</td>
+                        <td width="15%">物料代理</td>
+                        <td width="10%">产品型号</td>
+                        @*<td width="10%">所属类型</td>*@
+                        @*<td width="15%">创建时间</td>*@
+                    </tr>
+                </table>
+                <div id="content"></div>
+            </div>
+
+        </div>
+ 
+        <div class="inquiry1">
+
+            <ul>
+                <li>
+                    <span>数量：</span>
+                    <span class="infor-c-input">
+                        <input type="text" name="sl" id="sl" value="1" />
+                    </span>
+                </li>
+                <li>
+                    <span>备注：</span>
+                    <span class="infor-c-input">
+                        <input type="text" name="bz" id="bz" />
+                    </span>
+                </li>
+                <li id="cusbaddes" style="display: none">
+                    @*<span>客户描述不良现象：</span>*@
+                    <span class="infor-c-input">
+                        <textarea placeholder="客户描述不良现象" class="layui-textarea" style="width:300px;height:80px" name="txtBaddescribe" id="txtBaddescribe"></textarea>
+                    </span>
+                </li>
+                <li id="djsfxc" style="display: none">
+                    <span>单价:</span>
+                    <span class="infor-c-input">
+                        <input type="text" name="dj" id="dj" value="0" />
+                    </span>
+                </li>
+                <li>
+                    <span id="infor-c-input">
+                        <button type="button" class="layui-btn" style="padding:0 20px 0 20px;" onclick="return chkdSavaForm('@ViewData["type"]')">确认提交</button>
+                    </span>
+                </li>
+            </ul>
+
+        </div>
+
+
+        @*<div class="inquiry-input infor-b">
+            <span id="btnhtm">
+                <button onclick="return chkdSavaForm('@ViewData["type"]')">确认</button>
+            </span>
+        </div>*@
+               <!--==========================输出分页按钮=========================-->
+        <div class="pagin">
+            @if (ViewBag.PageNavigate == null)
+            {
+                @Html.ShowPageNavigate(Model.CurrentPageIndex, Model.PageSize, Model.RecordCount);
+            }
+        </div>
+    </div>
+</div>
+
+
+<script src="~/Scripts/NAjs/NQR_Product.js"></script>

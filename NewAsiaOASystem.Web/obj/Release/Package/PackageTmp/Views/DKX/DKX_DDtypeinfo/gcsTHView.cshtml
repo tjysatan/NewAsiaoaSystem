@@ -1,0 +1,87 @@
+﻿@{
+    ViewBag.Title = "待制图-制图中返回提交状态";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<script src="~/Scripts/NAjs/layui.js"></script>
+<script type="text/javascript">
+
+    //返回未提交状态
+    function gcsFHaajx(val)
+    {
+        var THyy = $("#THyy").val();
+        if (THyy == "")
+        {
+            layer.alert("退回原因不为空！", { icon: 2 }, function () { location.reload(); });
+            return false;
+        }
+        $.ajax({
+            url: "../DKX_DDtypeinfo/GcsfanhuiwtjEide",
+            type: "POST",
+            data: { Id: val, thyy: THyy},
+            dataType: "html",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response == "2") {
+                    layer.alert("提交成功！", { icon: 1 }, function () { guanbi(); });
+                }
+                if (response == "1") {
+                    layer.alert("订单不存在！", { icon: 2 }, function () { location.reload(); });
+                }
+ 
+                if (response == "3") {
+                    layer.alert("提交失败！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "0") {
+                    layer.alert("提交异常,请重新提交！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "4") {
+                    layer.alert("该状态下无法操作！", { icon: 2 }, function () { location.reload(); });
+                }
+                
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+    }
+
+
+    //
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+
+    function guanbi() {
+        var index = parent.layer.getFrameIndex(window.name);
+        //关闭弹出层
+        parent.layer.close(index);
+    }
+ </script>
+
+<div style="width: 90%; padding: 20px 20px 0 20px">
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">退回原因：</label>
+        <div class="layui-input-block">
+            <textarea placeholder="退回原因" id="THyy" name="THyy" class="layui-textarea"></textarea>
+        </div>
+    </div>
+
+    <div class="layui-form-item" style="margin: auto">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit="" lay-filter="demo1" onclick="gcsFHaajx('@ViewData["Id"]')">退回提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary" onclick="guanbi()">关闭</button>
+        </div>
+    </div>
+     <hr class="layui-bg-black">
+</div>

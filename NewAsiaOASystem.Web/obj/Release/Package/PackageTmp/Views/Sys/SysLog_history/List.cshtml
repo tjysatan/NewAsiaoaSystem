@@ -1,0 +1,101 @@
+﻿@model NewAsiaOASystem.ViewModel.PagerInfo<NewAsiaOASystem.ViewModel.SysLog_historyView>
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>登录日志</title>
+</head>
+<body>
+      <script>
+
+          $(function () {
+              BindGrid1();
+          })
+
+          /*
+     绑定dataGrid数据
+    */
+          function BindGrid1() {
+             @{
+                 if (null != Model && null != Model.GetPagingDataJson)
+                 {
+                     string json=Model.GetPagingDataJson;//获取json数据
+                    @: var jsonStr = JSON.parse('@Html.Raw(json)');
+                     @: $("#dg").datagrid('loadData', jsonStr); 
+                 }
+              }
+        }
+    </script>
+    <script type="text/javascript">
+        function showDate1(val)
+        {
+            if (val != null)
+                return val.replace("T", " ");
+            else
+            {
+                return "";
+            }
+        }
+
+        function LogDel(url) {
+            var arr = GetTreeGridSelete();
+            if (arr.length <= 0) {
+                $.messager.alert("操作提示", "请先选择一条记录后再删除！", "warning");
+            }
+            else {
+                $.messager.confirm('提示框', '你确定要删除吗?', function (data) {
+                    if (data) {
+                        var id = '';
+                        for (var i = 0, j = arr.length; i < j; i++) {
+                            id = id + "'" + arr[i] + "',"
+                        }
+
+                        id = id.substring(0, id.length - 1);
+                        location.href = url + "?id=" + id;
+                    }
+                })
+            }
+
+            return false;
+        }
+
+        /*
+        获取DataGrid选中的值
+        */
+        function GetTreeGridSelete() {
+            var arr = new Array();
+            var checkedItems = $('#dg').datagrid('getChecked'); //getSelected
+            $.each(checkedItems, function (index, item) {
+                arr.push(item.Id);
+            });
+            return arr;
+        }
+    </script>
+   <div class="z-toolbar">
+        <a href="#" plain="true" class="easyui-linkbutton" icon="icon-reload" title="刷新" onclick="location.href='/SysLog_history/LogTab'">刷新</a>
+        <a href="#" plain="true" class="easyui-linkbutton" icon="icon-no"  title="删除" onclick="LogDel('/SysLog_history/Delete')"  >删除</a>
+    </div>
+
+<table class="easyui-datagrid" id="dg"  style="width:100%;height:auto;">
+		<thead>
+			<tr> 
+                <th data-options="field:'Id',checkbox:true,align:'center'"></th> 
+				<th data-options="field:'Personname',width:'33%',align:'center'">登录帐号</th>
+		        <th data-options="field:'LogonIP',width:'33%',align:'center'">登录IP</th>
+       @*         <th data-options="field:'Client_name',width:'25%',align:'center'">登录机器名称</th> *@
+				<th data-options="field:'LogonTime',width:'33%',align:'center',formatter:showDate1">登录时间</th>
+			</tr>
+		</thead> 
+</table>
+ 
+         <div class="pagin"> 
+             @Html.ShowPageNavigate(Model.CurrentPageIndex, Model.PageSize,Model.RecordCount)  
+        </div>
+
+</body>
+</html>

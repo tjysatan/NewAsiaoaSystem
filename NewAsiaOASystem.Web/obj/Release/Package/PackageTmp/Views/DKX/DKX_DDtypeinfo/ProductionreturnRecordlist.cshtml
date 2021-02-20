@@ -1,0 +1,267 @@
+﻿@{
+    ViewBag.Title = "生产退单操作记录统计";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@section HeadContent{
+    <script type="text/javascript">
+        var loadi;
+        function ddchen() {
+            loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+        }
+        //关闭等待效果
+        function disLoading() {
+            layer.close(loadi);
+        }
+
+        $(function () {
+            getlistjson();
+        })
+
+        function BindGrid(strjson)
+        {
+            $("#content").html("");
+            var jsonStr=strjson
+            //if (typeof (jsonStr) != "undefined"){
+            var totle=0
+            if(jsonStr!=null)
+            {
+                totle =jsonStr.length
+            }
+            var html = "";
+            html='<span class="layui-badge">当前生产退单次数： '+totle+'/次</span>'
+            html +='<table class="layui-table" style="TBBLE-LBYOUT: fixed">';
+            html +='<thead>';
+            html +='<tr style="font-weight:bold;color:#000000">';
+            html +='<td width="15%">生产批号</td>';
+            html +='<td width="10%">责任工程师</td>';
+            html +='<td width="30%">退单原因</td>';
+            html +='<td width="20%">备注</td>';
+            html +='<td width="10%">退单时间</td>';
+            html +='<td width="15%">操作</td>';
+            html +='</tr>';
+            html +='</thead>';
+            if(jsonStr!=null){
+                for (var i = 0, j = jsonStr.length; i < j; i++)
+                {
+                    html += '<tr style="color:#000000">';
+                    html += '<td width="15%">'+jsonStr[i].dd_bianhao+'</td>';
+                    html += '<td width="10%">' + getgcsname(jsonStr[i].gcs_Id) + '</td>';
+                    html += '<td width="30%">' + cbrcon(jsonStr[i].CBRId,jsonStr[i].caozuo,jsonStr[i].CBRName)+ '</td>';
+                    html += '<td width="20%">' +isnull(jsonStr[i].CBRRemarks)+'</td>';
+                    html += '<td width="10%">' + showDate(jsonStr[i].c_time) + '</td>';
+                    if (jsonStr[i].CBRId == "" || jsonStr[i].CBRId == null) {
+                     html += '<td width="15%">' + listbtnshow(jsonStr[i].Id) + '</td>';
+                    } else {html += '<td width="15%">-</td>';}
+
+                    html += '</tr>';
+                }
+            }else
+            {
+                html+='<tr style="color:#000000">';
+                html+='<td colspan="4">没有查出生产退单的操作记录~~</td>';
+                html+='</tr>';
+            }
+            html += '</table>';
+            $("#content").html(html);
+        }
+        //列表中数据的显示
+        function cbrcon(CBRId, caozuo, cbrname) {
+            if (CBRId == null || CBRId == "") {
+                return caozuo
+            } else {
+                return cbrname
+            }
+        }
+        //列表中判断非空显示
+        function isnull(val) {
+            if (val == null || val == "") {
+                return "";
+            } else {
+                return val;
+            }
+        }
+
+        //列表中操作的列表
+        function listbtnshow(val) {
+            var id = "'" + val + "'";
+            var x = '<a class="layui-btn layui-btn-primary layui-btn-small" onclick="openEide(' + id + ')">编辑</a>';
+            return x;
+        }
+        //打开编辑页面
+        function openEide(val) {
+            layer.open({
+                type: 2,
+                title: ['编辑退单操作记录', 'font-size:14px;'],
+                area: ['450px', '400px'],
+                offset: '10px',
+                fixed: false, //不固定
+                maxmin: true,
+                content: '../DKX_DDtypeinfo/SCTDoldjlupdateView?Id=' + val,
+                end: function () {
+                    location.reload();
+                }
+            })
+        }
+
+
+        //查询当前条件查询的退单操作记录数据
+        function getlistjson(){
+            var gcsid=$("#txtGCS").val();
+            var ddbianhao=$("#txt_DD_Bianhao").val();
+            var c_timestart = $("#txt_startctime").val();
+            var c_timeend = $("#txt_endctiome").val();
+            var cbrId = $("#CBRId").val()
+            $.ajax({
+                url: "../DKX_DDtypeinfo/ProductionreturnRecorddatajson",
+                type: "POST",
+                data: { gcsid: gcsid,ddbianhao:ddbianhao,c_timestart:c_timestart,c_timeend:c_timeend,CBRId: cbrId},
+                dataType: "json",
+                async: true,
+                beforeSend: function () {
+                    ddchen();
+                },
+                success: function (response) {
+                    disLoading();
+                    BindGrid(response)
+
+                },
+                error: function (e) {
+                    disLoading();
+                    layer.alert("操作失败！", { icon: 2 });
+                }
+            })
+
+        }
+
+        //整理数据
+        function zldata(){
+            $.ajax({
+                url: "../DKX_DDtypeinfo/zlshuj",
+                type: "POST",
+                dataType: "html",
+                async: true,
+                beforeSend: function () {
+                    ddchen();
+                },
+                success: function (response) {
+                    disLoading();
+                    if (response == "0") {
+                        layer.alert("操作异常！", { icon: 2 }, function () { location.reload(); });
+                    }
+                    if (response == "1") {
+                        layer.alert("操作完成！", { icon: 1 }, function () { location.reload(); });
+                    }
+                    if (response == "2")
+                    {
+                        layer.alert("没有要处理的数据！", { icon: 2 }, function () { location.reload(); });
+                    }
+                }
+            })
+        }
+
+        //根据工程师的Id 返回工程师的名称
+        function getgcsname(id) {
+            var jsonstr=@Html.Raw(ViewBag.MyJson);
+            if(id!=null)
+            {
+                var str;
+                if(jsonstr!=null){
+                    for (var i = 0;i <jsonstr.length; i++)
+                    {
+                        if(jsonstr[i].Id==id)
+                        {
+                            str=jsonstr[i].Name
+                        }
+                    }
+                    if(str!=null)
+                    {
+                        return str
+                    }
+                    else
+                    {
+                        return '-'
+                    }
+                }
+            }else
+            {
+                return '--';
+            }
+        }
+        //导出excl数据
+        function Exportexcl(){
+            var gcsid=$("#txtGCS").val();
+            var ddbianhao=$("#txt_DD_Bianhao").val();
+            var c_timestart=$("#txt_startctime").val()
+            var c_timeend = $("#txt_endctiome").val()
+            var cbrId = $("#CBRId").val();
+            //if (c_timestart == "" || c_timestart == null) {
+                //配置一个透明的询问框
+                layer.msg('操作时间默认当前月份', {
+                    time: 2500, //2.5s后自动关闭
+                    btn: ['确定导出', '取消'],
+                    yes: function () {
+                        window.location.href = "../DKX_DDtypeinfo/DC_ProductionreturnRecordFilResult?gcsid=" + gcsid + "&ddbianhao=" + ddbianhao + "&c_timestart=" + c_timestart + "&c_timeend=" + c_timeend + "&CBRId=" + cbrId;
+                    }
+                });
+            }
+           //}
+            //
+
+
+
+    </script>
+}
+<div class="h-right">
+    <div class="inquiry1">
+        <fieldset>
+            <legend>查询条件</legend>
+            <ul>
+                <li>
+                    <span>生产批号：</span>
+                    <span class="inquiry-input">
+                        <input type="text" name="txt_DD_Bianhao" placeholder="订单编号" id="txt_DD_Bianhao" />
+                    </span>
+                </li>
+                <li>
+                    <span>工程师：</span>
+                    <span class="inquiry-input">
+                        @Html.DropDownList("txtGCS", ViewData["GCSDATA"] as SelectList)
+                    </span>
+                </li>
+                <li>
+                    <span>退单原因：</span>
+                    <span class="inquiry-input">
+                        @Html.DropDownList("CBRId", ViewData["SCCBRTlist"] as SelectList)
+                    </span>
+                </li>
+                <li>
+                    <span>操作时间：</span>
+                    <span class="inquiry-input">
+                        <input type="text" name="txt_startctime" id="txt_startctime" placeholder="默认当前自然月" onclick="WdatePicker()" />
+                        -
+                        <input type="text" name="txt_endctiome" id="txt_endctiome" placeholder="默认当前自然月" onclick="WdatePicker()" />
+                    </span>
+                </li>
+                <li style="*width: 100%; *margin: -10px 0 5px 90px;">
+                    <span class="inquiry-input">
+                        <button name="btnSerch" class="layui-btn" onclick="return getlistjson()"><i class="layui-icon">&#xe615;</i>查询</button>
+                    </span>
+                    <span class="inquiry-input">
+                        <button name="btnSerch" class="layui-btn" onclick="return addClick('/DKX_DDtypeinfo/ProductionreturnRecordlist')"><i class="layui-icon">&#xe9aa;</i>刷新</button>
+                    </span>
+                    <span class="inquiry-input">
+                        <button type="button" onclick="return Exportexcl()">记录导出</button>
+                    </span>
+                </li>
+            </ul>
+        </fieldset>
+    </div>
+    <div class="h-table">
+        <div class="h-table-content" style="color: #9d9999;">
+            <div id="content">
+            </div>
+        </div>
+    </div>
+</div>
+

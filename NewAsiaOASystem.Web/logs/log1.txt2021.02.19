@@ -1,0 +1,52 @@
+2021-02-19 16:33:59,084 [7] ERROR ApplicationInfoLog [(null)] <(null)< - Spring.Data.BadSqlGrammarException: Hibernate operation: could not execute query
+[ select wx_menus0_.Id as Id51_, wx_menus0_.M_Name as M2_51_, wx_menus0_.M_Type as M3_51_, wx_menus0_.M_Key as M4_51_, wx_menus0_.M_Url as M5_51_, wx_menus0_.M_Level as M6_51_, wx_menus0_.M_ParentID as M7_51_, wx_menus0_.M_IsValid as M8_51_, wx_menus0_.M_CreateTime as M9_51_, wx_menus0_.M_CreateUser as M10_51_, wx_menus0_.Sort as Sort51_ from WX_Menus wx_menus0_ where wx_menus0_.Id in (a46341f222564e1cb8e2566fedc5b43f) ]
+[SQL: select wx_menus0_.Id as Id51_, wx_menus0_.M_Name as M2_51_, wx_menus0_.M_Type as M3_51_, wx_menus0_.M_Key as M4_51_, wx_menus0_.M_Url as M5_51_, wx_menus0_.M_Level as M6_51_, wx_menus0_.M_ParentID as M7_51_, wx_menus0_.M_IsValid as M8_51_, wx_menus0_.M_CreateTime as M9_51_, wx_menus0_.M_CreateUser as M10_51_, wx_menus0_.Sort as Sort51_ from WX_Menus wx_menus0_ where wx_menus0_.Id in (a46341f222564e1cb8e2566fedc5b43f)]; bad SQL grammar [select wx_menus0_.Id as Id51_, wx_menus0_.M_Name as M2_51_, wx_menus0_.M_Type as M3_51_, wx_menus0_.M_Key as M4_51_, wx_menus0_.M_Url as M5_51_, wx_menus0_.M_Level as M6_51_, wx_menus0_.M_ParentID as M7_51_, wx_menus0_.M_IsValid as M8_51_, wx_menus0_.M_CreateTime as M9_51_, wx_menus0_.M_CreateUser as M10_51_, wx_menus0_.Sort as Sort51_ from WX_Menus wx_menus0_ where wx_menus0_.Id in (a46341f222564e1cb8e2566fedc5b43f)]; 列名 'a46341f222564e1cb8e2566fedc5b43f' 无效。 ---> System.Data.SqlClient.SqlException: 列名 'a46341f222564e1cb8e2566fedc5b43f' 无效。
+   在 System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   在 System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   在 System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   在 System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   在 System.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   在 System.Data.SqlClient.SqlDataReader.get_MetaData()
+   在 System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, Boolean inRetry, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method)
+   在 System.Data.SqlClient.SqlCommand.ExecuteReader(CommandBehavior behavior, String method)
+   在 System.Data.SqlClient.SqlCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   在 System.Data.Common.DbCommand.System.Data.IDbCommand.ExecuteReader()
+   在 NHibernate.AdoNet.AbstractBatcher.ExecuteReader(IDbCommand cmd)
+   在 NHibernate.Loader.Loader.GetResultSet(IDbCommand st, Boolean autoDiscoverTypes, Boolean callable, RowSelection selection, ISessionImplementor session)
+   在 NHibernate.Loader.Loader.DoQuery(ISessionImplementor session, QueryParameters queryParameters, Boolean returnProxies)
+   在 NHibernate.Loader.Loader.DoQueryAndInitializeNonLazyCollections(ISessionImplementor session, QueryParameters queryParameters, Boolean returnProxies)
+   在 NHibernate.Loader.Loader.DoList(ISessionImplementor session, QueryParameters queryParameters)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 Spring.Data.NHibernate.Generic.HibernateTemplate.ExecuteFind[T](IFindHibernateCallback`1 action, Boolean exposeNativeSession)
+   在 Spring.Data.NHibernate.Generic.HibernateTemplate.Find[T](String queryString, Object[] values, IType[] types)
+   在 Spring.Data.NHibernate.Generic.HibernateTemplate.Find[T](String queryString)
+   在 NewAsiaOASystem.Dao.DBService`1.GetList_id(String id) 位置 C:\Users\96297\source\repos\NewRepo\NewAsiaOASystem\NewAsiaOASystem.Dao\Helper\DBService.cs:行号 208
+2021-02-19 16:34:18,395 [7] ERROR ApplicationInfoLog [(null)] <(null)< - Spring.Data.BadSqlGrammarException: Hibernate operation: could not execute query
+[ select wx_menus0_.Id as Id51_, wx_menus0_.M_Name as M2_51_, wx_menus0_.M_Type as M3_51_, wx_menus0_.M_Key as M4_51_, wx_menus0_.M_Url as M5_51_, wx_menus0_.M_Level as M6_51_, wx_menus0_.M_ParentID as M7_51_, wx_menus0_.M_IsValid as M8_51_, wx_menus0_.M_CreateTime as M9_51_, wx_menus0_.M_CreateUser as M10_51_, wx_menus0_.Sort as Sort51_ from WX_Menus wx_menus0_ where wx_menus0_.Id in (a46341f222564e1cb8e2566fedc5b43f) ]
+[SQL: select wx_menus0_.Id as Id51_, wx_menus0_.M_Name as M2_51_, wx_menus0_.M_Type as M3_51_, wx_menus0_.M_Key as M4_51_, wx_menus0_.M_Url as M5_51_, wx_menus0_.M_Level as M6_51_, wx_menus0_.M_ParentID as M7_51_, wx_menus0_.M_IsValid as M8_51_, wx_menus0_.M_CreateTime as M9_51_, wx_menus0_.M_CreateUser as M10_51_, wx_menus0_.Sort as Sort51_ from WX_Menus wx_menus0_ where wx_menus0_.Id in (a46341f222564e1cb8e2566fedc5b43f)]; bad SQL grammar [select wx_menus0_.Id as Id51_, wx_menus0_.M_Name as M2_51_, wx_menus0_.M_Type as M3_51_, wx_menus0_.M_Key as M4_51_, wx_menus0_.M_Url as M5_51_, wx_menus0_.M_Level as M6_51_, wx_menus0_.M_ParentID as M7_51_, wx_menus0_.M_IsValid as M8_51_, wx_menus0_.M_CreateTime as M9_51_, wx_menus0_.M_CreateUser as M10_51_, wx_menus0_.Sort as Sort51_ from WX_Menus wx_menus0_ where wx_menus0_.Id in (a46341f222564e1cb8e2566fedc5b43f)]; 列名 'a46341f222564e1cb8e2566fedc5b43f' 无效。 ---> System.Data.SqlClient.SqlException: 列名 'a46341f222564e1cb8e2566fedc5b43f' 无效。
+   在 System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   在 System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   在 System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   在 System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   在 System.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   在 System.Data.SqlClient.SqlDataReader.get_MetaData()
+   在 System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, Boolean inRetry, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method)
+   在 System.Data.SqlClient.SqlCommand.ExecuteReader(CommandBehavior behavior, String method)
+   在 System.Data.SqlClient.SqlCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   在 System.Data.Common.DbCommand.System.Data.IDbCommand.ExecuteReader()
+   在 NHibernate.AdoNet.AbstractBatcher.ExecuteReader(IDbCommand cmd)
+   在 NHibernate.Loader.Loader.GetResultSet(IDbCommand st, Boolean autoDiscoverTypes, Boolean callable, RowSelection selection, ISessionImplementor session)
+   在 NHibernate.Loader.Loader.DoQuery(ISessionImplementor session, QueryParameters queryParameters, Boolean returnProxies)
+   在 NHibernate.Loader.Loader.DoQueryAndInitializeNonLazyCollections(ISessionImplementor session, QueryParameters queryParameters, Boolean returnProxies)
+   在 NHibernate.Loader.Loader.DoList(ISessionImplementor session, QueryParameters queryParameters)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 Spring.Data.NHibernate.Generic.HibernateTemplate.ExecuteFind[T](IFindHibernateCallback`1 action, Boolean exposeNativeSession)
+   在 Spring.Data.NHibernate.Generic.HibernateTemplate.Find[T](String queryString, Object[] values, IType[] types)
+   在 Spring.Data.NHibernate.Generic.HibernateTemplate.Find[T](String queryString)
+   在 NewAsiaOASystem.Dao.DBService`1.GetList_id(String id) 位置 C:\Users\96297\source\repos\NewRepo\NewAsiaOASystem\NewAsiaOASystem.Dao\Helper\DBService.cs:行号 208

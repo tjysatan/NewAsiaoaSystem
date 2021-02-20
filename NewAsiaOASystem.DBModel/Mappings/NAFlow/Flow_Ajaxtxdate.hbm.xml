@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="NewAsiaOASystem.DBModel" assembly="NewAsiaOASystem.DBModel">
+  <class name="Flow_Ajaxtxdate" table="Flow_Ajaxtxdate">
+    <id name="Id" column="Id" type="string" unsaved-value="0">
+      <generator class="uuid.hex"/>
+    </id>
+    <property name="Type" column="Type" />
+    <property name="Istz" column="Istz" />
+    <property name="Tzdatetime" column="Tzdatetime" />
+    <property name="Js_userId" column="Js_userId" />
+    <property name="tzdtype" column="tzdtype" />
+    <property name="Sccptype" column="Sccptype" />
+  </class>
+</hibernate-mapping>

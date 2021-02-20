@@ -1,0 +1,25 @@
+﻿<?xml version="1.0"  encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="NewAsiaOASystem.DBModel" assembly="NewAsiaOASystem.DBModel">
+  <class name="IQC_JYDjyconinfo" table="IQC_JYDjyconinfo">
+    <id name="Id" column="Id" type="string" unsaved-value="0">
+      <generator class="uuid.hex"/>
+    </id>
+    <property name="jydId" column="jydId" />
+    <property name="type" column="type" />
+    <property name="conff" column="conff" />
+    <property name="jygj" column="jygj" />
+    <property name="csdataconstr" column="csdataconstr" />
+    <property name="csdatastr1" column="csdatastr1" />
+    <property name="csdatastr2" column="csdatastr2" />
+    <property name="csdatastr3" column="csdatastr3" />
+    <property name="csdatastr4" column="csdatastr4" />
+    <property name="csdatastr5" column="csdatastr5" />
+    <property name="Ispd" column="Ispd" />
+    <property name="beizhu" column="beizhu" />
+    <property name="txtime" column="txtime" />
+    <property name="txname" column="txname" />
+    <property name="C_time" column="C_time" />
+    <property name="QDDJ" column="QDDJ" />
+    <property name="Ismj" column="Ismj" />
+  </class>
+</hibernate-mapping>

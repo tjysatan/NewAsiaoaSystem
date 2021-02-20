@@ -1,0 +1,410 @@
+﻿@{
+    ViewBag.Title = "FTbillView";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<script src="~/Scripts/layer/layer.js"></script>
+<script type="text/javascript">
+    //年
+    function YYYYMMDDstart() {
+        MonHead = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+        //先给年下拉框赋内容   
+        var y = new Date().getFullYear();
+        for (var i = (y - 1) ; i < (y + 30) ; i++) //以今年为准，前30年，后30年   
+            document.reg_testdate.YYYY.options.add(new Option(" " + i, i));
+
+        //赋月份的下拉框   
+        for (var i = 1; i < 13; i++)
+            document.reg_testdate.MM.options.add(new Option(" " + i, i));
+
+        document.reg_testdate.YYYY.value = y;
+        document.reg_testdate.MM.value = new Date().getMonth() + 1;
+        var n = MonHead[new Date().getMonth()];
+        if (new Date().getMonth() == 1 && IsPinYear(YYYYvalue)) n++;
+        //  writeDay(n); //赋日期下拉框Author:meizz   
+        //  document.reg_testdate.DD.value = new Date().getDate();
+    }
+    if (document.attachEvent)
+        window.attachEvent("onload", YYYYMMDDstart);
+    else
+        window.addEventListener('load', YYYYMMDDstart, false);
+    function YYYYDD(str) //年发生变化时日期发生变化(主要是判断闰平年)   
+    {
+        var MMvalue = document.reg_testdate.MM.options[document.reg_testdate.MM.selectedIndex].value;
+        if (MMvalue == "") { var e = document.reg_testdate.DD; optionsClear(e); return; }
+        var n = MonHead[MMvalue - 1];
+        if (MMvalue == 2 && IsPinYear(str)) n++;
+        //writeDay(n)
+    }
+
+    //月
+    function MMDD(str)   //月发生变化时日期联动   
+    {
+        var YYYYvalue = document.reg_testdate.YYYY.options[document.reg_testdate.YYYY.selectedIndex].value;
+        if (YYYYvalue == "") { var e = document.reg_testdate.DD; optionsClear(e); return; }
+        var n = MonHead[str - 1];
+        if (str == 2 && IsPinYear(YYYYvalue)) n++;
+        // writeDay(n)
+    }
+
+    function IsPinYear(year)//判断是否闰平年   
+    {
+        return (0 == year % 4 && (year % 100 != 0 || year % 400 == 0));
+    }
+
+
+
+    //产品更新
+    function CPupdateajax() {
+        var Year = $("#YYYY").val();
+        var Mon = $("#MM").val();
+        if (Year == "") {
+            layer.alert("请选择年份！", { icon: 2 });
+            return false;
+        }
+        if (Mon == "") {
+            layer.alert("请选择月份！", { icon: 2 });
+            return false;
+        }
+        $.ajax({
+            type: "POST",
+            url: "/NAReturnList/InsertorupdateTjFTCPtypeinfobytime",
+            dataType: "html",
+            data: { Year: Year, Mon: Mon },
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (reslut) {
+                if (reslut == "1") {
+                    disLoading();
+                    layer.alert("更新成功！", { icon: 1 })
+                }
+                if (reslut == "0") {
+                    disLoading();
+                    layer.alert("该月没有维修返退货！", { icon: 1 });
+                }
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("网络异常，请重试！", { icon: 2 })
+            }
+        })
+
+    }
+    //产品数据更新
+    function CPsumupdateajax() {
+        var Year = $("#YYYY").val();
+        var Mon = $("#MM").val();
+        if (Year == "") {
+            layer.alert("请选择年份！", { icon: 2 });
+            return false;
+        }
+        if (Mon == "") {
+            layer.alert("请选择月份！", { icon: 2 });
+            return false;
+        }
+        $.ajax({
+            type: "POST",
+            url: "/NAReturnList/UpdateFTcpsumbytypeandYm",
+            dataType: "html",
+            data: { Year: Year, Mon: Mon },
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (reslut) {
+                if (reslut == "1") {
+                    disLoading();
+                    layer.alert("更新成功！", { icon: 1 })
+                }
+                if (reslut == "0") {
+                    disLoading();
+                    layer.alert("该月没有维修返退货！", { icon: 1 });
+                }
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("网络异常，请重试！", { icon: 2 })
+            }
+        })
+
+    }
+
+    //维修元器件更新
+    function YQJupdateajax() {
+        var Year = $("#YYYY").val();
+        var Mon = $("#MM").val();
+        if (Year == "") {
+            layer.alert("请选择年份！", { icon: 2 });
+            return false;
+        }
+        if (Mon == "") {
+            layer.alert("请选择月份！", { icon: 2 });
+            return false;
+        }
+        $.ajax({
+            type: "POST",
+            url: "/NAReturnList/InsertorupdateTjYQJtypeinfobytime",
+            dataType: "html",
+            data: { Year: Year, Mon: Mon },
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (reslut) {
+                if (reslut == "1") {
+                    disLoading();
+                    layer.alert("更新成功！", { icon: 1 })
+                }
+                if (reslut == "0") {
+                    disLoading();
+                    layer.alert("该月没有维修返退货！", { icon: 1 });
+                }
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("网络异常，请重试！", { icon: 2 })
+            }
+        })
+    }
+
+    //元器件数量更新
+    function YQJsumupdateajax() {
+        var Year = $("#YYYY").val();
+        var Mon = $("#MM").val();
+        if (Year == "") {
+            layer.alert("请选择年份！", { icon: 2 });
+            return false;
+        }
+        if (Mon == "") {
+            layer.alert("请选择月份！", { icon: 2 });
+            return false;
+        }
+        $.ajax({
+            type: "POST",
+            url: "/NAReturnList/UpdateFTwxYQJsumbyYm",
+            dataType: "html",
+            data: { Year: Year, Mon: Mon },
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (reslut) {
+                if (reslut == "1") {
+                    disLoading();
+                    layer.alert("更新成功！", { icon: 1 })
+                }
+                if (reslut == "0") {
+                    disLoading();
+                    layer.alert("该月没有维修返退货！", { icon: 1 });
+                }
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("网络异常，请重试！", { icon: 2 })
+            }
+        })
+    }
+
+
+    //维修不良原因统计
+    function BLYYupdatetajax() {
+        var Year = $("#YYYY").val();
+        var Mon = $("#MM").val();
+        if (Year == "") {
+            layer.alert("请选择年份！", { icon: 2 });
+            return false;
+        }
+        if (Mon == "") {
+            layer.alert("请选择月份！", { icon: 2 });
+            return false;
+        }
+        $.ajax({
+            type: "POST",
+            url: "/NAReturnList/InsertorupdateTjblyyinfobytime",
+            dataType: "html",
+            data: { Year: Year, Mon: Mon },
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (reslut) {
+                if (reslut == "1") {
+                    disLoading();
+                    layer.alert("更新成功！", { icon: 1 })
+                }
+                if (reslut == "0") {
+                    disLoading();
+                    layer.alert("该月没有维修返退货！", { icon: 1 });
+                }
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("网络异常，请重试！", { icon: 2 })
+            }
+        })
+    }
+
+    //不良原因数量更新
+    function BLYYsumupdateajax() {
+        var Year = $("#YYYY").val();
+        var Mon = $("#MM").val();
+        if (Year == "") {
+            layer.alert("请选择年份！", { icon: 2 });
+            return false;
+        }
+        if (Mon == "") {
+            layer.alert("请选择月份！", { icon: 2 });
+            return false;
+        }
+        $.ajax({
+            type: "POST",
+            url: "/NAReturnList/UpdateFTwxblyysumbyYm",
+            dataType: "html",
+            data: { Year: Year, Mon: Mon },
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (reslut) {
+                if (reslut == "1") {
+                    disLoading();
+                    layer.alert("更新成功！", { icon: 1 })
+                }
+                if (reslut == "0") {
+                    disLoading();
+                    layer.alert("该月没有维修返退货！", { icon: 1 });
+                }
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("网络异常，请重试！", { icon: 2 })
+            }
+        })
+    }
+
+
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+
+
+</script>
+
+<style>
+
+</style>
+
+<div style="width: 90%; margin: auto; margin-top: 20px; margin-bottom: 20px;">
+    <form name="reg_testdate">
+        <span class="inquiry-input">维修时间：
+        </span>
+        <span class="inquiry-input">
+            <select name="YYYY" id="YYYY" onchange="YYYYDD(this.value)">
+                <option value="">请选择 年</option>
+            </select>
+        </span>
+        <span class="inquiry-input">
+            <select name="MM" id="MM" onchange="MMDD(this.value)">
+                <option value="">选择 月</option>
+            </select>
+        </span>
+
+    </form>
+</div>
+
+<table>
+    <tr>
+        <td>
+            <div class="divone">
+                <table class="table_conNew" style="width: 100%; color: #000; margin-top: 20px; font-size: 13px;">
+                    <tr>
+                        <td>第一步： 
+                <input type="button" class="btnstyle1" value="产品更新" onclick="CPupdateajax()" />
+                        </td>
+                        <td>第二步： 
+               <input type="button" class="btnstyle1" value="返退数量更新" onclick="CPsumupdateajax()" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="height: 30px;" colspan="2"></td>
+                    </tr>
+                </table>
+                <div style="font-size: 14px; color: #f00;">
+                    &nbsp; &nbsp;以返退产品种类统计:<br />
+                    <p style="text-indent: 2em">
+                        1.选择返退年和月<br />
+                    </p>
+                    <p style="text-indent: 2em">2.更新当月返退产品的种类</p>
+                    <p style="text-indent: 2em">3.更新各个产品的数量</p>
+
+                </div>
+            </div>
+        </td>
+        <td>
+            <div class="divone">
+                <table class="table_conNew" style="width: 100%; color: #000; margin-top: 20px; font-size: 13px;">
+                    <tr>
+                        <td>第一步： 
+                <input type="button" class="btnstyle1" value="维修元器件更新" onclick="YQJupdateajax()" />
+                        </td>
+                        <td>第二步： 
+               <input type="button" class="btnstyle1" value="元器件数量更新" onclick="YQJsumupdateajax()" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="height: 30px;" colspan="2"></td>
+                    </tr>
+                </table>
+                <div style="font-size: 14px; color: #f00;">
+                    &nbsp; &nbsp;以维修元器件种类统计:<br />
+                    <p style="text-indent: 2em">
+                        1.选择返退年和月<br />
+                    </p>
+                    <p style="text-indent: 2em">2.更新当月维修元器件的种类</p>
+                    <p style="text-indent: 2em">3.更新维修的数量</p>
+
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+
+
+
+
+
+
+
+<div class="divone">
+    <table class="table_conNew" style="width: 100%; color: #000; margin-top: 20px; font-size: 13px;">
+        <tr>
+            <td>第一步： 
+                <input type="button" class="btnstyle1" value="不良原因更新" onclick="BLYYupdatetajax()" />
+            </td>
+            <td>第二步： 
+               <input type="button" class="btnstyle1" value="不良原因数量更新" onclick="BLYYsumupdateajax()" />
+            </td>
+        </tr>
+        <tr>
+            <td style="height: 30px;" colspan="2"></td>
+        </tr>
+    </table>
+    <div style="font-size: 14px; color: #f00;">
+        &nbsp; &nbsp;以不良原因种类统计:<br />
+        <p style="text-indent: 2em">
+            1.选择返退年和月<br />
+        </p>
+        <p style="text-indent: 2em">2.更新当月维修产品不良原因种类</p>
+        <p style="text-indent: 2em">3.更新维修的数量</p>
+
+    </div>
+</div>

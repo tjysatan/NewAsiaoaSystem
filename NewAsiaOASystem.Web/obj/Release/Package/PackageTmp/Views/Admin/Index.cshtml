@@ -1,0 +1,212 @@
+﻿@{
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<link href="~/Content/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+<link href="~/Content/assets/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" />
+<link href="~/Content/assets/bootstrap/css/bootstrap-fileupload.css" rel="stylesheet" />
+<link href="~/Content/assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
+<link href="~/Content/css/styleNew.css" rel="stylesheet" />
+<link href="~/Content/css/style-responsive.css" rel="stylesheet" />
+<link href="~/Content/css/style-default.css" rel="stylesheet" id="style_color" />
+<link href="~/Content/assets/fullcalendar/bootstrap-fullcalendar.css" rel="stylesheet" />
+<link href="~/Content/assets/jquery-easy-pie-chart/jquery.easy-pie-chart.css" rel="stylesheet" type="text/css" media="screen">
+<script type="text/javascript">
+    function addTab(title, url) {
+        var closable = true;
+        if (title == "主页")
+            closable = false;
+        if ($('#easyui-tabs').tabs('exists', title)) {
+            var content = '<iframe  scrolling="auto"  frameborder="0"  src="' + url + '" style="width:100%;height:calc(100vh - 136px)"></iframe>';
+            $("#easyui-tabs").tabs('select', title);//选中指定标签
+            var tab = $("#easyui-tabs").tabs('getSelected');//获取被选中的选项卡对象
+            $('#easyui-tabs').tabs('update', {
+                tab: tab,
+                options: {
+                    title: title,
+                    content: content,
+                    closable: closable,
+                    fit: true,
+                    selected: true
+                }
+            });
+        }
+        else {
+            var content = '<iframe  scrolling="auto" frameborder="0"  src="' + url + '"  style="width:100%;height:calc(100vh - 136px)"></iframe>';
+            $('#easyui-tabs').tabs('add', {
+                title: title,
+                content: content,
+                closable: closable
+            });
+        }
+    }
+
+    $(function () {
+        //intsetTimeout();
+        addTab("主页", "/Admin/h_right");
+    })
+
+    function CloseTab(title) {
+        $("#easyui-tabs").tabs('close', title);
+    }
+    window.setInterval(function () { ajaxsetTimeout(); }, 600000);
+</script>
+
+
+@*<body class="fixed-top">*@
+<!-- BEGIN HEADER -->
+<div id="header" class="navbar navbar-inverse navbar-fixed-top">
+    <!-- BEGIN TOP NAVIGATION BAR -->
+    <div class="navbar-inner">
+        <div class="container-fluid">
+            <!--BEGIN 切换导航开始-->
+            <div class="sidebar-toggle-box hidden-phone">
+                <div class="icon-reorder tooltips" data-placement="right" data-original-title="切换导航"></div>
+            </div>
+            <!--END 切换导航结束-->
+            <!-- BEGIN LOGO -->
+            <a class="brand" href="#">
+                <img src="~/Content/img/logo.png" alt="苏州新亚科技有限公司" />
+            </a>
+            <!-- END LOGO -->
+       
+    
+            <div class="top-nav ">
+                <ul class="nav pull-right top-menu">
+                    <!-- BEGIN USER LOGIN DROPDOWN -->
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <img src="~/Content/img/avatar1_small.jpg" alt="">
+                            <span class="username">@ViewBag.user</span>
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu extended logout">
+                            @*  <li><a href="#"><i class="icon-user"></i>我的资料</a></li>*@
+                            <li><a style="cursor: pointer;" onclick="addTab('密码修改', '/SysPerson/GoPasswordPage')" target="right"><i class="icon-cog"></i>设置密码</a></li>
+                            <li><a href="/Login/Login"><i class="icon-key"></i>退出</a></li>
+                        </ul>
+                    </li>
+                    <!-- END USER LOGIN DROPDOWN -->
+                </ul>
+                <!-- END TOP NAVIGATION MENU -->
+            </div>
+        </div>
+    </div>
+    <!-- END TOP NAVIGATION BAR -->
+</div>
+<!-- END HEADER -->
+
+<!-- BEGIN CONTAINER -->
+<div id="container" class="row-fluid">
+    <!-- BEGIN SIDEBAR -->
+    <div class="sidebar-scroll">
+        <div id="sidebar" class="nav-collapse collapse">
+            <!-- BEGIN RESPONSIVE QUICK SEARCH FORM -->
+            <div class="navbar-inverse">
+                <form class="navbar-search visible-phone">
+                    <input type="text" class="search-query" placeholder="Search" />
+                </form>
+            </div>
+            <!-- BEGIN 菜单开始 -->
+            <ul class="sidebar-menu">
+            </ul>
+            <!-- END 菜单结束 -->
+        </div>
+    </div>
+    <!-- END SIDEBAR -->
+
+    <!-- BEGIN 主题颜色开始 -->
+    <div id="main-content">
+        <div id="easyui-tabs" class="easyui-tabs">
+
+        </div>
+    </div>
+    <!-- END  主题颜色结束 -->
+</div>
+<!-- END CONTAINER -->
+
+<!-- BEGIN FOOTER -->
+<div id="footer">
+    2016 &copy; 苏州新亚科技有限公司.
+</div>
+<!-- END FOOTER -->
+
+<!-- BEGIN JAVASCRIPTS -->
+<!-- Load javascripts at bottom, this will reduce page load time -->
+
+<script src="~/Content/js/jquery.nicescroll.js" type="text/javascript"></script>
+@*<script type="text/javascript" src="~/Content/assets/jquery-slimscroll/jquery-ui-1.9.2.custom.min.js"></script>*@
+<script type="text/javascript" src="~/Content/assets/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+<script src="~/Content/assets/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+
+    // 测试页面无刷新
+    $(function () {
+        var date = new Date();
+        $("#ajaxtest").html(date.getSeconds());
+        //var winheight = $(window).height();
+        //$("#main-content").height(winheight - 100);
+    });
+    $(window).resize(function () {
+        //var winheight = $(window).height();
+        //$("#main-content").height(winheight - 100);
+    });
+    $(function () {
+
+        $("#sidebar .sub-menu .sub a ").click(function (e) {
+            var hturl = e.target || e.srcElement, href;
+            var ht = hturl.toString();
+            var str = ht.substring(ht.length - 1, ht.length);
+            if (str == "#") {
+                (this).setAttribute("target", "");
+                (this).setAttribute("href", "Error404.html");
+            }
+        });
+    })
+</script>
+<!-- ie8 fixes -->
+<!--[if lt IE 9]>
+<script src="~/Content/js/excanvas.js"></script>
+<script src="~/Content/js/respond.js"></script>
+<![endif]-->
+
+<script src="~/Content/js/jquery.sparkline.js" type="text/javascript"></script>
+<script src="~/Content/js/jquery.scrollTo.min.js"></script>
+<!--common script for all pages-->
+<script src="~/Content/js/common-scripts.js"></script>
+
+
+<!--script for this page only-->
+<!-- END JAVASCRIPTS -->
+@*</body>*@
+
+@*<div class="h-main" id="h-main" style="height: 775px;">
+    <div class="h-title">
+        <ul>
+            <li><span>您好：</span><span class="h-name">@ViewBag.user</span></li>
+            <li><span class="h-title-icon h-icon1"></span><span><a style="cursor: pointer;" onclick="addTab('密码修改', '/SysPerson/GoPasswordPage')" target="right">密码修改</a></span></li>
+            <li><span class="h-title-icon h-icon2"></span><span><a id="loginOut" href="/Login/Login">退出</a></span></li>
+        </ul>
+    </div>
+    <div class="h-down" id="h-down" style="height: 682px;">
+        <div class="d_div_l" style="height: 682px;">
+            <div class="h-left">
+                <div id="masterdiv">
+                    <div class="sub">
+                        <div class="menutitle">
+                            <a style="cursor: pointer;" onclick="addTab('主页', '/Admin/h_right')">
+                                <span class="h-left-icon h-left-icon1"></span>
+                                <span class="w-user">主菜单</span></a>
+                            <span class="h-left-icon h-left-icon5"></span>
+                        </div>
+                        <div class="menuContent"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="d_div_r" style="height: 682px;">
+            <div id="easyui-tabs" class="easyui-tabs">
+            </div>
+        </div>
+    </div>
+</div>*@

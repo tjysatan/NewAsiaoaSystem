@@ -1,0 +1,249 @@
+﻿@model NewAsiaOASystem.ViewModel.PagerInfo<NewAsiaOASystem.ViewModel.NQ_THinfoFXView>
+@{
+    ViewBag.Title = "查看返退具体的明细页面";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<style>
+    .tableheader {
+        font-size: 10px;
+    }
+</style>
+@section HeadContent{
+    <script type="text/javascript">
+        $(function () {
+            $("#cpname").val('@ViewData["cpname"]');
+            @*$("#Isdz").val('@ViewData["Isdz"]');*@
+            BindGrid();
+        })
+        function BindGrid() {
+            @{
+                if (null != Model && null != Model.GetPagingDataJson)
+                {
+                    string json = Model.GetPagingDataJson;//获取json数据
+                    @: var jsonStr = @Html.Raw(json);
+                }
+             }
+            dataGrid(jsonStr);
+        }
+        function dataGrid(jsonStr) {
+              if (typeof (jsonStr) != "undefined") {
+                var html = "";
+                html = '<table class="layui-table" >';
+                html += '<thead>';
+                html+='<tr  style="font-size:12px;">';
+                html+='<td width="4%"><input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" /></td>';
+                html+='<td width="15%">产品名称</td>';
+                html+='<td width="8%">型号</td>';
+                html+='<td width="8%">批号</td>';
+                html+='<td width="8%">不良现象</td>';
+                html+='<td width="8%">不良原因</td>';
+                html+='<td width="8%">时间</td>';
+                html+='<td width="8%">处理方式</td>';
+                html+='<td width="8%">备注</td>';
+                //html+='<td width="8%">状态</td>';
+                html+='<td width="8%">责任部门</td>';
+                html+='<td width="15%">操作</td>';
+                html+='';
+                html+='</tr>';
+                html+='</thead>';
+                var xh;
+                for (var i = 0, j = jsonStr.length; i < j; i++) {
+                    xh = i + 1;
+                    //var Perinfo = GetPerinfobyId(jsonStr[i].P_Id);
+                    if (jsonStr[i].TH_YQJname != null && jsonStr[i].TH_YQJname != "") {
+                        var yjmodel = ajaxyjmodelbyidjson(jsonStr[i].TH_YQJname);//元器件
+                        var gysinfo = ajaxgysinfobydm(yjmodel.G_Dm);
+                    }
+                    if (jsonStr[i].TH_BLXXX != null && jsonStr[i].TH_BLXXX != "") {
+                        var blxxxmodel = ajaxNewblxxmodeljson(jsonStr[i].TH_BLXXX);//不良现象
+                    }
+                    if (jsonStr[i].TH_BLXX != null && jsonStr[i].TH_BLXX != "") {
+                        var blxxmmodel = ajaxNewblyymodelbyidjson(jsonStr[i].TH_BLXX);//不良原因1
+                    }
+                    if (jsonStr[i].TH_BLYY != null && jsonStr[i].TH_BLYY != "") {
+                        var blyymmodel = ajaxNewblyymodelbyidjson(jsonStr[i].TH_BLYY);//不良原因2
+                    }
+                    html+='<tr>';
+                    html += '<td width="4%"><input type="checkbox" name="ContentChecked" value="' + jsonStr[i].Id + '"/></td>';
+                    html += '<td width="15%">' + jsonStr[i].Cpname + '</td>';//产品名称
+                    if (jsonStr[i].Cpmode != null)
+                        html += '<td width="8%">' + jsonStr[i].Cpmode + '</td>';//型号
+                    else
+                        html += '<td width="8%">-</td>';//型号
+                    if (jsonStr[i].TH_SCdate != null)//产品生产批号
+                        html += '<td width="8%"><a title="' + jsonStr[i].TH_Ph + '">' + jsonStr[i].TH_Ph + '</a></td>';
+                    else
+                        html += '<td width="8%">-</td>';
+                    if (jsonStr[i].TH_BLXXX != null && jsonStr[i].TH_BLXXX != "")//不良现象
+                        html += '<td width="8%"><a title="' + blxxxmodel.Name + '">' + blxxxmodel.Name.substring(0, 4) + '</a></td>';
+                    else
+                        html += '<td width="8%">暂无</td>';
+
+                    if (jsonStr[i].TH_BLYY != null && jsonStr[i].TH_BLYY != "") {//不良原因1
+                        html += '<td width="8%"><a title="' + blyymmodel.Name + '">' + blyymmodel.Name.substring(0, 7) + '</a></td>';
+                    }
+                    else if (jsonStr[i].TH_BLXX != null && jsonStr[i].TH_BLXX != "") {//不良原因2
+                        html += '<td width="8%"><a title="' + blxxmmodel.Name + '">' + blxxmmodel.Name.substring(0, 7) + '</a></td>';
+                    } else {
+                        html += '<td width="8%">-</td>';
+                    }
+                    if (jsonStr[i].TH_zbshj != null)//是否在保
+                        html += '<td width="8%">' + showNewISZB(jsonStr[i].TH_zbshj) + '</td>';
+                    else
+                        html += '<td width="8%">暂无</td>';
+
+                    if (jsonStr[i].TH_bz != null && jsonStr[i].TH_bz != "")//处理方式
+                        html += '<td width="8%">' + jsonStr[i].TH_bz + '</td>';
+                    else
+                        html += '<td width="8%">-</td>';
+                    if (jsonStr[i].TH_bz2 != null)//备注
+                        html += '<td width="8%">' + jsonStr[i].TH_bz2 + '</td>';
+                    else
+                        html += '<td width="8%">-</td>';
+                    //if (jsonStr[i].Isdz != null && jsonStr[i].Isdz != "")//是否定责
+                    //    html += '<td width="8%">' + showdzzt(jsonStr[i].Isdz) + '</td>';
+                    //else
+                    //    html += '<td width="8%">-</td>';
+                    if (jsonStr[i].zrbm != "" && jsonStr[i].zrbm != null)//责任部门
+                        html += '<td width="8%">' + jsonStr[i].zrbm + '</td>';
+                    else
+                        html += '<td width="8%">-</td>';
+                    html += '<td width="15%"><div class="layui-btn-group">' + Caozuo(jsonStr[i].Id, '@ViewData["RId"]', jsonStr[i].TH_imgurl1, jsonStr[i].TH_bz, jsonStr[i].zrbm, jsonStr[i].TH_bz2,jsonStr[i].TH_imgurl2) + '</div></td>';
+                    html += '</tr>';
+                }
+                html+='</table>';
+                $("#dzmxcon").html(html);
+            }
+        }
+
+        //根据元器件ID 查找元器件信息
+        function ajaxyjmodelbyidjson(Id) {
+            var json;
+            $.ajax({
+                type: "POST",
+                url: "/NQ_YJinfo/Getyjinfomodelbyid",
+                data: { Id: Id },
+                async: false,
+                success: function (reslut) {
+                    json = eval('(' + reslut + ')');
+                },
+                error: function (e) {
+                    alert("请求失败！");
+                }
+            })
+            return json;
+        }
+
+        //根据供应商代码查找供应商信息
+        function ajaxgysinfobydm(dm) {
+            var json;
+            $.ajax({
+                type: "POST",
+                url: "/NQ_GysInfo/Getgysinfobydm",
+                data: { dm: dm },
+                async: false,
+                success: function (reslut) {
+                    json = eval('(' + reslut + ')');
+                },
+                error: function (e) {
+                    alert("请求失败！");
+                }
+            })
+            return json;
+        }
+
+        //列表按钮
+        //操作
+        //val 维修记录Id
+        //val2 返退货Id
+        function Caozuo(val, val2, val3, val4, val5, val6, val7) {
+            var Id = "'" + val + "'";
+            var R_Id = "'" + val2 + "'";
+            var clmethod = "'" + val4 + "'";
+            var zrbm = "'" + val5 + "'";
+            var TH_bz2 = "'" + val6 + "'";
+            //var s = '<a class="layui-btn layui-btn-primary layui-btn-small" onclick="neweditdz(' + Id + ',' + clmethod + ',' + zrbm + ',' + TH_bz2 + ')" >定责</a>&nbsp;&nbsp;';
+            var j = '<a class="layui-btn layui-btn-primary layui-btn-small" onclick="Checktupian(' + Id + ')" >资料查看</a>&nbsp;&nbsp;';
+            if (val3 != null && val3 != "") {
+                return j;
+            } else if (val7 != null && val7 != "") {
+                return j;
+            }
+            else {
+                return "";
+            }
+        }
+        // 
+        function Checktupian(id) {
+            layer.open({
+                type: 2,
+                title: ['图片/资料查看', 'font-size:14px;'],
+                area: ['750px', '350px'],
+                offset: '10px',
+                fixed: false, //不固定
+                maxmin: true,
+                content: '../NAReturnList/CheckwxtupianView?Id=' + id,
+                end: function () {
+                    location.reload();
+                }
+            });
+        }
+
+        //pageIndex当前页
+        function SerchList(pageIndex) {
+            $("input[name='pageIndex']").val(pageIndex);
+            var options = {
+                beforeSubmit: function () {
+                    return true;
+                },
+                dataType: "json",
+                success: function (context) {
+                    var data = eval(context.result);
+                    dataGrid(data);
+                    $(".pagin").html(context.PageN);//输出分页按钮
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $.messager.alert("操作提示", '查询失败请重试！', 'error');
+                }
+            }
+            $('#form1').ajaxSubmit(options);
+            return false;
+        }
+    </script>
+}
+<!--查询条件-->
+<fieldset class="layui-elem-field" style="width: 95%; margin: auto;">
+    <legend style="font-size: 12px;">查询条件</legend>
+    <div class="layui-field-box">
+        @using (Html.BeginForm("dzmxSearchList", "NAReturnList", FormMethod.Post, new { id = "form1" }))
+        {
+            @Html.Hidden("pageIndex");
+            <div class="layui-inline">
+                <label class="layui-form-label">产品名称：</label>
+                <div class="layui-input-block">
+                    <input type="text" id="cpname" name="cpname" lay-verify="title" autocomplete="off" placeholder="产品名称" class="layui-input">
+                </div>
+            </div>
+            <button class="layui-btn layui-btn-primary" onclick="return SerchList(1)">
+                <i class="layui-icon" style="font-size: 16px; color: #1E9FFF;">&#xe615;</i> 查询
+            </button>
+        }
+        </div>
+</fieldset>
+
+<div class="h-table">
+    <div class="h-table-content">
+
+        <div id="dzmxcon"></div>
+    </div>
+</div>
+
+<!--==========================输出分页按钮=========================-->
+<div class="pagin">
+    @if (ViewBag.PageNavigate == null)
+    {
+        @Html.ShowPageNavigate(Model.CurrentPageIndex, Model.PageSize, Model.RecordCount);
+    }
+</div>
+<script src="~/Scripts/NAjs/NAReturnList.js"></script>

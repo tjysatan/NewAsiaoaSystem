@@ -1,0 +1,26 @@
+﻿<?xml version="1.0"  encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="NewAsiaOASystem.DBModel" assembly="NewAsiaOASystem.DBModel">
+	<class name="DisImmuneCenter" table="DisImmuneCenter">
+		<id name="Id" column="Id" type="string" unsaved-value="0">
+      <generator class="uuid.hex"/>	      			
+    </id>      		
+		<property name="Name" column="Name" type="string"  />
+		<property name="Sort" column="Sort" type="int"  />
+    <property name="DisAddress" column="DisAddress" type="string"  />
+    <property name="DisPhone" column="DisPhone" type="string"  />
+    <property name="DisPerson" column="DisPerson" type="string"  />
+		<property name="Description" column="Description" type="string"  />
+		<property name="CreatePerson" column="CreatePerson" type="string"  />
+		<property name="CreateTime" column="CreateTime" type="DateTime"  />
+		<property name="UpdatePerson" column="UpdatePerson" type="string"  />
+		<property name="UpdateTime" column="UpdateTime" type="DateTime"  />
+    <property name="Status" column="Status" type="int"  />
+    <property name="D_Address" column="D_Address" type="string"  />
+    <property name="D_Lat" column="D_Lat" type="string"  />
+    <property name="D_lon" column="D_lon" type="string"  />
+    <!--<bag name="ListCommunity" cascade="none" lazy="true" >
+      <key column="ImmId" />
+      <one-to-many class="Administrative_divisions" />
+    </bag>-->
+  </class>
+</hibernate-mapping>

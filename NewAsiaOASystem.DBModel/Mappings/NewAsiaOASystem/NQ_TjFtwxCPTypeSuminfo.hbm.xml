@@ -1,0 +1,17 @@
+﻿<?xml version="1.0"  encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="NewAsiaOASystem.DBModel" assembly="NewAsiaOASystem.DBModel">
+  <class name="NQ_TjFtwxCPTypeSuminfo" table="NQ_TjFtwxCPTypeSuminfo">
+    <id name="Id" column="Id" type="string" unsaved-value="0">
+      <generator class="uuid.hex"/>
+    </id>
+    <property name="Cp_Id" column="Cp_Id" />
+    <property name="CP_bianhao" column="CP_bianhao" />
+    <property name="CP_name" column="CP_name" />
+    <property name="CP_XH" column="CP_XH" />
+    <property name="FT_SUM" column="FT_SUM" />
+    <property name="Updatetime" column="Updatetime" />
+    <property name="FT_Year" column="FT_Year"/>
+    <property name="FT_Mone" column="FT_Mone"/>
+    <property name="Tj_Type" column="Tj_Type"/>
+  </class>
+</hibernate-mapping>

@@ -1,0 +1,208 @@
+﻿@{
+    ViewBag.Title = "试产生产通知单";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<style>
+    table
+    {
+        border-collapse: collapse;
+        border: none;
+    }
+
+    table td
+        {
+            border: solid #e8e5e5 1px;
+            height: 35px;
+            padding: 0 0 0 5px;
+        }
+</style>
+
+<script type="text/javascript">
+    function FZ() {
+        $("#scph1").val('@ViewData["Newdatetime"]');//生产批号前一部分
+        var sp2 = Getscp2();
+        $("#scph2").val(sp2)
+        $("#cpname").val('@ViewData["pname"]');//产品名称
+        $("#DYdy").val('@ViewData["pmodel"]');
+    }
+
+    $(function () {
+        FZ();
+        //防止表单被实际提交
+        $("form").submit(function (e) {
+            e.preventDefault();
+            PlanPprintSavaForm(this)
+        });
+    })
+
+    //获取批号顺序
+    function Getscp2() {
+        var sp2;
+        $.ajax({
+            type: "POST",
+            url: "/Flow_PlanProductioninfo/GetcountPproduction",
+            dataType: "html",
+            async: false,
+            success: function (reslut) {
+                sp2 = reslut;
+            },
+            error: function (e) {
+                alert("请求失败");
+            }
+        })
+        return sp2;
+    }
+
+    function PlanPprintSavaForm(obj) {
+        var scph1 = $("#scph1").val();//批号前面
+        var scph2 = $("#scph2").val();//批号后面
+        var yhsl = $("#yhsl").val();//要货数量
+        var Cusname = $("#Cusname").val();//客户名称
+        var yhdatetime = $("#yhdatetime").val();//要货时间
+        var cpname = $("#cpname").val();//产品名称
+        var DYdy = $("#DYdy").val();//电源电压
+        var yhxz = $("#yhxz").val();//要货性质
+        var kfbeizhu = $("#kfbeizhu").val();//客服备注
+        var p_type;
+        if ('@ViewData["p_type"]' == "0") {
+            p_type = 1;
+        } else if ('@ViewData["p_type"]' == "1") {
+            p_type = 2;
+        } else if ('@ViewData["p_type"]'=="2") {
+            p_type=3;
+        }
+
+        if (scph1 == "" || scph2 == "") {
+            layer.alert("生产批号不为空！", { icon: 2 });
+            $("#scph1").focus();
+            return;
+        }
+        if (yhsl == "") {
+            layer.alert("要货数量不为空！", { icon: 2 });
+            $("#scph1").focus();
+            return;
+        }
+        if (cpname == "") {
+            layer.alert("产品名称不为空！", { icon: 2 });
+            $("#cpname").focus();
+            return;
+        }
+        if (yhdatetime == "") {
+            layer.alert("要货时间不为空！", { icon: 2 });
+            $("#yhdatetime").focus();
+            return;
+        }
+        $.ajax({
+            url: $(obj).attr("action"),
+            type: "POST",
+            data: { pId: '@ViewData["Id"]', scph1: scph1, scph2: scph2, yhsl: yhsl, Cusname: Cusname, yhdatetime: yhdatetime, cpname: cpname, DYdy: DYdy, yhxz: yhxz, p_type: p_type, kfbeizhu: kfbeizhu },
+            dataType: "html",
+            async: false,
+            success: function (response) {
+                if ("0" == response) {
+                    layer.alert("操作失败", { icon: 2 });
+                }
+                if ("1" == response) {
+                    $.messager.alert("操作提示", '提交成功！', 'info', function () {
+                        var ParentObj = window.parent;//获取父窗口
+                        window.parent.$('#windowDia').window('close');
+                        window.parent.location = "/Flow_NonSProductinfo/BatchProductionView";
+                        return false;
+                    });
+                }
+                if ("2" == response) {
+                    $.messager.alert("操作提示", '提交失败！！', 'info')
+                }
+                if ("3" == response) {
+                    $.messager.alert("操作提示", '要货时间小于当前时间，无法提交！！', 'info')
+                }
+
+            },
+            error: function (e) {
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+    }
+
+    //关闭当前窗口
+
+</script>
+
+
+
+<div class="infor">
+    <p id="Ptitle">小批量试产   当前库存：'@ViewData["kcsl"]'</p>
+    <div class="system-menu-set">
+        @using (Html.BeginForm("PrintPlanDATa", "Flow_NonSProductinfo", FormMethod.Post, new { id = "form1", onsubmit = "return false" }))
+        {
+            <table style="width: 100%; color: #000; font-size: 13px;">
+                <tr>
+                    <td>生产批号：
+                         <span class="infor-c-input">
+                             <input type="text" id="scph1" name="scph1" />-
+                              <input type="text" style="width: 20px;" id="scph2" name="scph2" />
+                         </span>
+                    </td>
+                    <td>要货数量：
+                            <span class="infor-c-input">
+                                <input type="text" id="yhsl" name="yhsl" />
+                            </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>客户名称：
+                         <span class="infor-c-input">
+                             <input type="text" id="Cusname" name="Cusname" />
+                         </span>
+                    </td>
+                    <td>要货日期：
+                            <span class="infor-c-input">
+                                <input type="text" id="yhdatetime" name="yhdatetime" onclick="WdatePicker()" />
+                            </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>产品名称：
+                      <span class="infor-c-input">
+                          <input type="text" id="cpname" name="cpname" />
+                      </span>
+                    </td>
+                    <td>电源电压：
+                    <span class="inquiry-input">
+                        <select id="DYdy" name="DYdy">
+                            <option value="220V">220V</option>
+                            <option value="380V">380V</option>
+                            <option value="12V">12V</option>
+                            <option value="24V">24V</option>
+                        </select>
+                    </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>要货性质：
+                    <span class="inquiry-input">
+                        <select id="yhxz" name="yhxz">
+                            <option value="0">库存储备</option>
+                            <option value="2">订单生产</option>
+                        </select>
+                    </span>
+                    </td>
+                    <td>
+                        备注：
+                        <span class="infor-c-input">
+                          <input type="text" id="kfbeizhu" name="kfbeizhu" />
+                      </span>
+                    </td>
+
+                </tr>
+            </table>
+
+            <div class="inquiry-input infor-b">
+                <span style="padding-left:150px;">
+                    <button>确定</button></span><span>
+                    <button onclick="return RedirectUrl('/Flow_RoutineStockinfo/List')">返回</button></span>
+            </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,75 @@
+﻿@{
+    ViewBag.Title = "采购接单回复预计交期";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<script type="text/javascript">
+
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+
+    function guanbi() {
+        var index = parent.layer.getFrameIndex(window.name);
+        //关闭弹出层
+        parent.layer.close(index);
+    }
+
+    //采购提交
+    function CGJDEide() {
+        var Id = '@ViewData["Id"]';
+        var yjtime = $("#yjtime").val();
+        if (yjtime == "" || yjtime == null)
+        {
+            layer.alert("请填写预计交期！", { icon: 2 });
+            return false;
+        }
+        $.ajax({
+            url: "../DKX_DDtypeinfo/CGJDEide",
+            type: "POST",
+            data: { Id: Id, yjdatetime: yjtime },
+            dataType: "html",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response == "0") {
+                    layer.alert("提交异常,请重新再试！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "1") {
+                    layer.alert("接单成功！", { icon: 1 }, function () { guanbi() });
+                }
+                if (response == "2") {
+                    layer.alert("提交异常,请重新再试！", { icon: 2 }, function () { location.reload(); });
+                }
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+    }
+</script>
+
+<div style="width: 90%; padding: 20px 20px 0 20px">
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">预计日期：</label>
+        <div class="layui-input-block" style="width: 300px">
+            <input class="layui-input" id="yjtime" name="yjtime"  value='@ViewData["yjtime"]' placeholder="预计完成日期" type="text" onclick="WdatePicker()" />
+        </div>
+    </div>
+
+    <div class="layui-form-item" style="margin: auto">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit="" lay-filter="demo1" onclick="CGJDEide()">确定接单</button>
+            <button type="reset" class="layui-btn layui-btn-primary" onclick="guanbi()">关闭</button>
+        </div>
+    </div>
+</div>

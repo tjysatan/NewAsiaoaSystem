@@ -1,0 +1,87 @@
+﻿@model NewAsiaOASystem.ViewModel.PagerInfo<NewAsiaOASystem.ViewModel.Vote_SubjectView>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@section HeadContent{
+  <script type="text/javascript">
+        $(function () {
+            BindGrid();
+        })
+        function BindGrid() {
+             @{
+                
+                 if (null != Model)
+                 {
+                     string json = Model.GetPagingDataJson;//获取json数据
+                    @: var jsonStr =@Html.Raw(json); 
+                      
+                 }
+              }
+            if (typeof(jsonStr)!="undefined") {
+                var html="";
+                html='<table cellpadding="0" cellspacing="0">';
+                for (var i = 0,j=jsonStr.length; i < j; i++) {
+                    if (i%2==0)
+                        html+='<tr class="h-table-content-r1">';
+                    else
+                        html+='<tr class="h-table-content-r">';
+                    html+='<td width="30"><input type="checkbox" name="ContentChecked" value="'+jsonStr[i].S_Id+'"/></td>';
+                    html+='<td width="180">'+jsonStr[i].S_title+'</td>';
+                    //html+='<td width="90">'+showDate(jsonStr[i].S_QX)+'</td>';
+                    html+='<td width="250"> '+show_Vtype(jsonStr[i].S_Type)+'</td>';
+                    //html+='<td width="200"><span onclick="test('+"'"+jsonStr[i].S_Id+"'"+')">点击赋值</span> </td>';
+                    html+='<td width="50"><a href="/Vote_Subject/Votecount?Id='+jsonStr[i].S_Id+'">查看</a></td>';
+                    html+='<td width="50">'+jsonStr[i].S_QX+'</td>';
+                    html+="</tr>";
+                }
+                html+='</table>';
+                $(".h-table-content").append(html);
+            }
+        }
+    </script>
+}
+
+
+<!--==================================数据列表=============================-->
+<div class="h-right">
+    <div class="h-right-c">
+        <div class="inquiry-input" style="margin: 10px 0 10px 10px;">
+            <span class="inquiry-inputM">   
+                <button onclick="addClick('/Vote_Subject/addPage')">添加</button></span>
+            <span class="inquiry-input">
+                <button onclick="del('/Vote_Subject/Delete')">删除</button></span>
+            <span class="inquiry-input">
+                <button onclick="update('/Vote_Subject/EditPage')">编辑</button></span>
+            <span class="inquiry-input">
+                <button onclick="location.href='/Vote_Subject/Index'">刷新</button></span>
+        </div>
+
+        <div class="h-table">
+            <div class="h-table-content">
+                <table cellpadding="0" cellspacing="0" class="h-right-table-title1" style="border: 5px;">
+                    <tr>
+                        <td width="30">
+                            <input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" /></td>
+                        <td width="180">主题名称</td>
+                     @*   <td width="90">到期时间</td>*@
+                        <td width="250">问卷类型</td>
+                        <td width="50">统计结果</td>
+                        <td width="50">状态</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!--==========================输出分页按钮=========================-->
+<div class="pagin">
+    <table style="width: 100%">
+        <tr>
+            <td>@Html.ShowPageNavigate(Model.CurrentPageIndex, Model.PageSize, Model.RecordCount)</td>
+        </tr>
+    </table>
+
+</div>
+ <script src="~/Scripts/Vote/Vote_Subject.js"></script>

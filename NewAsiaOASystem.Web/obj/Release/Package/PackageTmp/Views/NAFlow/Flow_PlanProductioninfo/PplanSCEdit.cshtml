@@ -1,0 +1,110 @@
+﻿@{
+    ViewBag.Title = "生产订单 生产管理编辑页面";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+
+<style>
+    table
+    {
+        border-collapse: collapse;
+        border: none;
+    }
+
+        table td
+        {
+            border: solid #e8e5e5 1px;
+            height: 35px;
+            padding: 0 0 0 5px;
+        }
+</style>
+
+<script type="text/javascript">
+    $(function () {
+        //防止表单被实际提交
+        $("form").submit(function (e) {
+            e.preventDefault();
+            PlanPprintSavaForm(this)
+        });
+    })
+
+    function PlanPprintSavaForm(obj) {
+        var P_type = $("#P_type").val();//订单状态
+        var yjdatetime = $("#yjdatetime").val();//预计时间
+
+        if (P_type == "") {
+            layer.alert("请选择订单状态！", { icon: 2 });
+            return;
+        }
+        $.ajax({
+            url: $(obj).attr("action"),
+            type: "POST",
+            data: { Id: '@ViewData["Id"]', p_type: P_type, yjdatetime: yjdatetime },
+            dataType: "html",
+            async: false,
+            success: function (response) {
+                if ("2" == response) {
+                    layer.alert("操作失败", { icon: 2 });
+                }
+                if ("1" == response) {
+                    //layer.alert("提交成功！", { icon: 1 }, function index() { window.location = "/Flow_PlanProductioninfo/list" });
+                    $.messager.alert("操作提示", '提交成功！', 'info', function () {
+                        var ParentObj = window.parent;//获取父窗口
+                        window.parent.$('#windowDia').window('close');
+                        window.parent.location = "/Flow_PlanProductioninfo/List";
+                        return false;
+                    });
+                }
+                if ("3" == response) { layer.alert("订单已经完成，无法改变状态", { icon: 2 });}
+            },
+            error: function (e) {
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+    }
+
+    //关闭
+    function closeUI() {
+        var ParentObj = window.parent;//获取父窗口
+        window.parent.$('#windowDia').window('close');
+        window.location = "/Flow_PlanProductioninfo/list";
+        return false;
+    }
+</script>
+
+<div class="infor">
+    <p id="Ptitle">生产订单状态编辑</p>
+    <div class="system-menu-set">
+        @using (Html.BeginForm("PplanSCEditUPdate", "Flow_PlanProductioninfo", FormMethod.Post, new { id = "form1" }))
+        {
+            <table style="width: 100%; color: #000; font-size: 13px;">
+                <tr>
+                    <td>生产状态：
+                    <span class="inquiry-input">
+                        <select name="P_type" id="P_type">
+                            <option value="0">生产中</option>
+                            <option value="1">缺料</option>
+                        </select>
+                    </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>预计完成：
+                  <span class="infor-c-input">
+                      <input type="text" id="yjdatetime" name="yjdatetime" onclick="WdatePicker()" />
+                  </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="inquiry-input infor-b" style="width:100px;">
+                            <span>
+                                <button>确认提交</button></span>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+                           
+        }
+    </div>
+</div>

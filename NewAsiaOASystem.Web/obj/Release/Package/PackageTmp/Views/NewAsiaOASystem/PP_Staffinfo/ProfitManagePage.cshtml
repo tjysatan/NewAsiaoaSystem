@@ -1,0 +1,36 @@
+﻿@{
+    ViewBag.Title = "个人收入项设置页面";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<!--title-->
+<div>
+    <h1 style="margin-left: 25px;">收入项设置</h1>
+    <input id="staffId" type="hidden"  value="@ViewBag.RoleId" />
+</div>
+
+<!--Tabs-->
+<div id="ProManage" class="easyui-tabs" style="width: 90%; height: 320px; margin: 20px; padding: 0px;">
+    <div id="ButtonAuth" title="收入业务" style="overflow: auto; padding: 20px;">
+         <table id="ButtonDg" class="easyui-datagrid" style="width: 100%; height: auto">
+            <thead>
+                <tr>
+                    <th data-options="field:'Id',checkbox:true,align:'center'"></th>
+                    <th data-options="field:'Rwname',width:'60%',align:'center'">收入项名称</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+<!--按钮-->
+<div style="text-align: center;width: 100%;">
+    <a href="javascript:void(0)" class="easyui-linkbutton" onclick="ProfitEide('@ViewBag.RoleId')">保存</a>
+</div>
+<script src="~/Scripts/NAjs/PP_pulice.js"></script>
+<script type="text/javascript">
+    $(function () {
+        ajaxproffby('@ViewBag.RoleId');
+        GetSelectedAuth();
+    })
+</script>

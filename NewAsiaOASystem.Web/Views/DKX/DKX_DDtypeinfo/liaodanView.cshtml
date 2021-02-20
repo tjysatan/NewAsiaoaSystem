@@ -1,0 +1,492 @@
+﻿@model NewAsiaOASystem.ViewModel.DKX_PAY_CONTROL_INFOView
+@{
+    ViewBag.Title = "liaodanView";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<style id="style1">
+    .table_con
+    {
+        border-collapse: collapse;
+        border: none;
+    }
+
+        .table_con td
+        {
+            border: solid #000 1px;
+            height: 25px;
+            padding: 0 0 0 5px;
+        }
+
+    .Miantitle
+    {
+        width: 100%;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .hedertitle
+    {
+        width: 100%;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .fontsizetd
+    {
+        font-size: 14px;
+    }
+
+    .bhcss
+    {
+        width: 98%;
+       
+        margin: auto;
+        height: 100px;
+    }
+
+    .xkk
+    {
+        width: 5px;
+        height: 5px;
+        border: 1px solid #000;
+    }
+
+    i
+    {
+        width: 10px;
+        height: 10px;
+        line-height: 24px;
+        vertical-align: top;
+        margin: 4px 2px 0 0;
+        overflow: hidden;
+        border: 1px solid #000;
+        display: inline-block;
+    }
+</style>
+<script src="~/Scripts/Printjs/LodopFuncs.js" type="text/javascript"></script>
+<script type="text/javascript">
+
+    var LODOP; //声明为全局变量
+    function myPreview1() {
+        LODOP = getLodop();
+        var strBodyStyle = "<style>" + document.getElementById("style1").innerHTML + "</style>";
+        var strFormHtml = strBodyStyle + "<body>" + document.getElementById("form1").innerHTML + "</body>";
+        //LODOP.PRINT_INIT("打印控件功能演示_Lodop功能_样式风格");	
+        //LODOP.ADD_PRINT_TEXT(50,50,260,39,"打印与显示样式一致：");
+        //第一个参数是距顶部的距离/2 距左边的距离 /3 宽度 /4 高度
+        LODOP.ADD_PRINT_HTM(25,50, 680, 1110, strFormHtml);
+        LODOP.PREVIEW();
+    };
+
+    //
+
+    $(function () {
+        var liaodan = AJAXliaodandata('@Model.CONTROL_INFO_NO');
+        var liaodanmxfkz = AJAXliaodanfkzdata('@Model.CONTROL_INFO_NO');
+        var liaodanmxkz = AJAXliaodankzdata('@Model.CONTROL_INFO_NO');
+        HTMLpj(liaodan, liaodanmxfkz, liaodanmxkz);
+    })
+
+    //html拼接
+    function HTMLpj(str, str1, str2) {
+        var liaodan = str;
+        var liaodanmxfkz = str1;
+        var liaodanmxzk = str2;
+        var xh;
+        var html = "";
+        html = '<tr><td colspan="8"></td></tr>';
+        html += '<tr>';
+        html += '<td>序号</td>';
+        html += '<td>产品名称</td>';
+        html += '<td>品牌</td>';
+        html += '<td>规格型号</td>';
+        html += '<td>数量</td>';
+        html += '<td>单价</td>';
+        html += '<td>总价</td>';
+        html += '<td>备注</td>';
+        html += '</tr>';
+        //非控制部分料单明细
+        if (liaodanmxfkz != "") {
+            for (var i = 0, j = liaodanmxfkz.length; i < j; i++) {
+                xh = i + 1;
+                html += '<tr>';
+                html += '<td>' + xh + '</td>';
+                html += '<td>' + cpnamshow(liaodanmxfkz[i].PARTS_TYPE) + '</td>';
+                html += '<td>' + cpppshow(liaodanmxfkz[i].BRAND) + '</td>';
+                html += '<td>' + liaodanmxfkz[i].PARTS_NAME + '</td>';
+                html += '<td>' + liaodanmxfkz[i].P_COUNT + '</td>';
+                html += '<td>' + liaodanmxfkz[i].UNIT_PRICE + '</td>';
+                html += '<td>' + liaodanmxfkz[i].PRICE + '</td>';
+                if (liaodanmxfkz[i].REMARK != "" && liaodanmxfkz[i].REMARK != null) {
+                    html += '<td>' + liaodanmxfkz[i].REMARK + '</td>';
+                }
+                else {
+                    html += '<td></td>';
+                }
+                html += '</tr>';
+            }
+
+            //材料费小计
+            html += '<tr>';
+            html += '<td colspan="6">一、材料费小计</td>';
+            html += '<td>' + liaodan.DQ + '</td>';
+            html += '<td></td>';
+            html += '</tr>';
+            //电线及辅材
+            html += '<tr>';
+            html += '<td colspan="6">二、电线及辅材（按材料费10%计算）</td>';
+            html += '<td>' + liaodan.FL + '</td>';
+            html += '<td></td>';
+            html += '</tr>';
+            //控制部分标题
+            html += '<tr>';
+            html += '<td colspan="8">控制部分</td>';
+            html += '</tr>';
+            if (liaodanmxzk != "") {
+                for (var i = 0, j = liaodanmxzk.length; i < j; i++) {
+                    xh = xh + 1;
+                    html += '<tr>';
+                    html += '<td>' + xh + '</td>';
+                    html += '<td>' + cpnamshow(liaodanmxzk[i].PARTS_TYPE) + '</td>';
+                    html += '<td>' + cpppshow(liaodanmxzk[i].BRAND) + '</td>';
+                    html += '<td>' + liaodanmxzk[i].PARTS_NAME + '</td>';
+                    html += '<td>' + liaodanmxzk[i].P_COUNT + '</td>';
+                    html += '<td>' + liaodanmxzk[i].UNIT_PRICE + '</td>';
+                    html += '<td>' + liaodanmxzk[i].PRICE + '</td>';
+                    if (liaodanmxzk[i].REMARK != "" && liaodanmxzk[i].REMARK != null) {
+                        html += '<td>' + liaodanmxzk[i].REMARK + '</td>';
+                    }
+                    else {
+                        html += '<td></td>';
+                    }
+                    html += '</tr>';
+                }
+            }
+            //控制部分小计
+            html += '<tr>';
+            html += '<td colspan="6">三、控制部分小计</td>';
+            html += '<td>' + liaodan.KZ + '</td>';
+            html += '<td></td>';
+            html += '</tr>';
+            //设计费
+            html += '<tr>';
+            html += '<td colspan="6">四、设计费（箱体、电器布置、图纸、标贴等软件说明书设计）</td>';
+            html += '<td>' + liaodan.TAXATION + '</td>';
+            html += '<td></td>';
+            html += '</tr>';
+            //包装费
+            html += '<tr>';
+            html += '<td colspan="6">五、包装费（按一、二、三项部分2%计算）</td>';
+            html += '<td>' + liaodan.BZ + '</td>';
+            html += '<td></td>';
+            html += '</tr>';
+            //运费
+            html += '<tr>';
+            html += '<td colspan="6">六、运费（按一、二、三项部分2%计算）</td>';
+            html += '<td>' + liaodan.YF + '</td>';
+            html += '<td></td>';
+            html += '</tr>';
+            //组装调式费
+            html += '<tr>';
+            html += '<td colspan="6">七、组装调式费（按一、二、三项部分新亚洲PLC按5%计算,其余按10%计算）</td>';
+            html += '<td>' + liaodan.ZZF + '</td>';
+            html += '<td></td>';
+            html += '</tr>';
+            //管理费
+            html += '<tr>';
+            html += '<td colspan="6">八、管理费（按一、二、三项部分5%计算）</td>';
+            html += '<td>' + liaodan.GLF + '</td>';
+            html += '<td></td>';
+            html += '</tr>';
+            //利润
+            html += '<tr>';
+            html += '<td colspan="6">九、利润（按一、二项部分5%计算）</td>';
+            html += '<td>' + liaodan.LR + '</td>';
+            html += '<td></td>';
+            html += '</tr>';
+            //税费
+            html += '<tr>';
+            html += '<td colspan="6">十、税费（按以上九项合计部分10%计算）</td>';
+            html += '<td>' + liaodan.SF + '</td>';
+            html += '<td></td>';
+            html += '</tr>';
+            //总价
+            html += '<tr>';
+            html += '<td colspan="6">十一、总价</td>';
+            html += '<td>' + liaodan.PRICE + '</td>';
+            html += '<td></td>';
+            html += '</tr>';
+            //优惠价
+            html += '<tr>';
+            html += '<td colspan="6">十二、优惠价</td>';
+            html += '<td>' + liaodan.DIS_PRICE + '</td>';
+            html += '<td></td>';
+            html += '</tr>';
+        }
+        $("#table_con").html(html);
+    }
+    //料单数据
+    function AJAXliaodandata(val) {
+        var json;
+        $.ajax({
+            url: "../DKX_DDtypeinfo/GetliaodanDATA",
+            type: "POST",
+            data: { XQNO: val },
+            dataType: "JSON",
+            async: false,
+            success: function (response) {
+                json = eval(response);
+            },
+            error: function (e) {
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+        return json;
+    }
+
+    //非控制部分料单的明细
+    function AJAXliaodanfkzdata(val) {
+        var json;
+        $.ajax({
+            url: "../DKX_DDtypeinfo/GetliaodanFKZDATA",
+            type: "POST",
+            data: { XQNO: val },
+            dataType: "JSON",
+            async: false,
+            success: function (response) {
+                json = eval(response);
+            },
+            error: function (e) {
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+        return json;
+    }
+
+    //控制部分的料单的明细
+    function AJAXliaodankzdata(val) {
+        var json;
+        $.ajax({
+            url: "../DKX_DDtypeinfo/GetliaodanKZDATA",
+            type: "POST",
+            data: { XQNO: val },
+            dataType: "JSON",
+            async: false,
+            success: function (response) {
+                json = eval(response);
+            },
+            error: function (e) {
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+        return json;
+    }
+
+    //产品名称显示
+    function cpnamshow(val)
+    {
+        if (val == "0")
+        {
+            return "箱体";
+        }
+        if (val == "1")
+        {
+            return "接触器";
+        }
+        if (val == "2")
+        {
+            return "断路器";
+        }
+        if (val == "3") {
+            return "电机保护器";
+        }
+        if (val == "4") {
+            return "指示灯";
+        }
+        if (val == "5") {
+            return "蜂鸣器";
+        }
+        if (val == "6") {
+            return "急停按钮";
+        }
+        if (val == "7") {
+            return "触摸屏";
+        }
+        if (val == "8") {
+            return "接线端子";
+        }
+        if (val == "9") {
+            return "接线柱零线排";
+        }
+        if (val == "10") {
+            return "中间继电器";
+        }
+        if (val == "11") {
+            return "转换开头";
+        }
+        if (val == "12") {
+            return "微动开头";
+        }
+        if (val == "13") {
+            return "辅助触头";
+        }
+        if (val == "14") {
+            return "线槽";
+        }
+        if (val == "15") {
+            return "风扇";
+        }
+        if (val == "16") {
+            return "常用控制器";
+        }
+        if (val == "17") {
+            return "专用控制器";
+        }
+        if (val == "18") {
+            return "压力传感器";
+        }
+        if (val == "19") {
+            return "保险丝座";
+        }
+        if (val == "20") {
+            return "时间继电器";
+        }
+        if (val == "21") {
+            return "相序保护器";
+        }
+        if (val == "22") {
+            return "PLC";
+        }
+        if (val == "23") {
+            return "温度传感器";
+        }
+        if (val == "24") {
+            return "开关电源";
+        }
+        if (val == "25") {
+            return "通信模块";
+        }
+        if (val == "26") {
+            return "传感器线";
+        }
+        if (val == "27") {
+            return "辅助配件";
+        }
+    }
+
+    //产品品牌显示
+    function cpppshow(val)
+    {
+        if (val == "0")
+        {
+            return "正泰";
+        }
+        if (val == "1") {
+            return "施耐德";
+        }
+        if (val == "2") {
+            return "LG";
+        }
+        if (val == "3") {
+            return "西门子";
+        }
+        if (val == "4") {
+            return "欣灵";
+        }
+        if (val == "5") {
+            return "艾默生";
+        }
+        if (val == "6") {
+            return "昆仑通态";
+        }
+        if (val == "7") {
+            return "其他";
+        }
+        if (val == "8") {
+            return "新亚洲";
+        }
+        if (val == "9") {
+            return "亿维";
+        }
+        if (val == "10") {
+            return "九纯健";
+        }
+        if (val == "11") {
+            return "国达";
+        }
+        if (val == "12") {
+            return "江阴长江";
+        }
+        if (val == "13") {
+            return "联捷";
+        }
+        if (val == "14") {
+            return "升亚";
+        }
+        if (val == "15") {
+            return "明伟";
+        }
+        if (val == "16") {
+            return "威纶通";
+        }
+        if (val == "17") {
+            return "捷迈";
+        }
+        if (val == "18") {
+            return "施耐德(标)";
+        }
+    }
+</script>
+<div id="form1">
+    <div id="Mcon" style="width: 100%; margin: auto">
+        <div class="bhcss">
+            <table style="width: 100%;">
+                <tr style="line-height: 30px;">
+                    <td style="width: 60%">客户名称：@Model.CUST_NAME</td>
+                    <td>报价日期:@Model.CREATE_TIME</td>
+                </tr>
+                <tr style="line-height: 30px;">
+                    <td>数量： 套</td>
+                    <td>型号：</td>
+                </tr>
+                <tr style="line-height: 30px;">
+                    <td>订单号：@Model.ORDER_NO
+                    </td>
+                    <td></td>
+                </tr>
+            </table>
+        </div>
+        <table class="table_con" style="width: 98%; color: #000; font-size: 13px; margin: auto;" id="table_con">
+            @*        <tr>
+            <td colspan="8"></td>
+        </tr>
+        <tr>
+            <td>序号</td>
+            <td>产品名称</td>
+            <td>品牌</td>
+            <td>规格型号</td>
+            <td>数量</td>
+            <td>单价</td>
+            <td>总价</td>
+            <td>备注</td>
+        </tr>*@
+        </table>
+    </div>
+</div>
+
+<div style="width: 200px; height: 80px; overflow: hidden">
+    <div class="inquiry-input infor-b">
+        <span>
+            <button onclick="return myPreview1()">打印</button>
+        </span>
+        <span>
+            <button onclick="window.history.go(-1)">返回</button></span>
+    </div>
+</div>

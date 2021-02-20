@@ -1,0 +1,231 @@
+﻿@model NewAsiaOASystem.ViewModel.NAReturnListView
+@{
+    ViewBag.Title = "返退货技术分析报告-苏州新亚科技有限公司";
+    Layout = "~/Views/Shared/NoEasyUiLayout.cshtml";
+}
+<script src="~/Scripts/layer/layer.js"></script>
+
+@section HeadContent{
+    <script type="text/javascript">
+        var loadi;
+        function ddchen() {
+            loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+        }
+
+        //关闭等待效果
+        function disLoading() {
+            layer.close(loadi);
+        }
+
+        $(function () {
+               //客服流程
+        var Cust = AjaxCust_Name('@Model.C_Id');//客户信息
+        $("#Cname").html(Cust.Name);
+            GetNQ_THinfoFXdatajson();
+        })
+
+        //获取分析明细
+        function GetNQ_THinfoFXdatajson() {
+            var json;
+            $.ajax({
+                type: "POST",
+                url: "/Aftersale/GetNQ_THinfoFXdatajson ",
+                async: true,
+                data: { Rid: '@Model.Id' },
+                dataType: "json",
+                beforeSend: function () {
+                    ddchen();
+                },
+                success: function (reslut) {
+                    disLoading();
+                    dataGrid(reslut)
+                },
+                error: function (e) {
+                    alert("请求失败！");
+                }
+            })
+            return json;
+        }
+        //table拼接
+        function dataGrid(jsonStr) {
+            if (typeof (jsonStr) != "undefined") {
+                var html = "";
+                html = '<table class="layui-table" >';
+                html += '<thead>';
+                html += '<tr  style="font-size:12px;">';
+                html += '<td width="4%">序号</td>';
+                html += '<td width="15%">产品名称</td>';
+                html += '<td width="8%">型号</td>';
+                html += '<td width="8%">批号</td>';
+                html += '<td width="8%">不良现象</td>';
+                html += '<td width="8%">不良原因</td>';
+                html += '<td width="8%">时间</td>';
+                html += '<td width="10%">处理方式</td>';
+                html += '<td width="6%">备注</td>';
+                html += '<td width="15%"></td>';
+                html += '';
+                html += '</tr>';
+                html += '</thead>';
+                var xh;
+                for (var i = 0, j = jsonStr.length; i < j; i++) {
+                    xh = i + 1;
+                    if (jsonStr[i].TH_BLXXX != null && jsonStr[i].TH_BLXXX != "") {
+                        var blxxxmodel = asajaxNewblxxmodeljson(jsonStr[i].TH_BLXXX);//不良现象
+                    }
+                    if (jsonStr[i].TH_BLXX != null && jsonStr[i].TH_BLXX != "") {
+                        var blxxmmodel = asajaxNewblyymodelbyidjson(jsonStr[i].TH_BLXX);//不良原因1
+                    }
+                    if (jsonStr[i].TH_BLYY != null && jsonStr[i].TH_BLYY != "") {
+                        var blyymmodel = asajaxNewblyymodelbyidjson(jsonStr[i].TH_BLYY);//不良原因2
+                    }
+
+                    html += '<tr>';
+                    html += '<td width="2%">' + xh + '</td>';//序号
+                    html += '<td width="15%">' + jsonStr[i].Cpname + '</td>';//产品名称
+                    if (jsonStr[i].Cpmode != null)
+                        html += '<td width="5%">' + jsonStr[i].Cpmode + '</td>';//型号
+                    else
+                        html += '<td width="5%">-</td>';//型号
+                    if (jsonStr[i].TH_SCdate != null)//产品生产批号
+                        html += '<td width="8%"><a title="' + jsonStr[i].TH_Ph + '">' + jsonStr[i].TH_Ph + '</a></td>';
+                    else
+                        html += '<td width="8%">-</td>';
+
+                    if (jsonStr[i].TH_BLXXX != null && jsonStr[i].TH_BLXXX != "")//不良现象
+                        html += '<td width="8%"><a title="' + blxxxmodel.Name + '">' + blxxxmodel.Name.substring(0, 4) + '</a></td>';
+                    else
+                        html += '<td width="8%">暂无</td>';
+                    if (jsonStr[i].TH_BLYY != null && jsonStr[i].TH_BLYY != "") {//不良原因1
+                        html += '<td width="8%"><a title="' + blyymmodel.Name + '">' + blyymmodel.Name.substring(0, 4) + '</a></td>';
+                    }
+                    else if (jsonStr[i].TH_BLXX != null && jsonStr[i].TH_BLXX != "") {//不良原因2
+                        html += '<td width="8%"><a title="' + blxxmmodel.Name + '">' + blxxmmodel.Name.substring(0, 4) + '</a></td>';
+                    } else {
+                        html += '<td width="8%">-</td>';
+                    }
+                    //元器件
+                    if (jsonStr[i].TH_zbshj != null)//是否在保
+                        html += '<td width="8%">' + showNewISZB(jsonStr[i].TH_zbshj) + '</td>';
+                    else
+                        html += '<td width="8%">暂无</td>';
+                    if (jsonStr[i].TH_bz != null && jsonStr[i].TH_bz != "")//处理方式
+                        html += '<td width="5%">' + jsonStr[i].TH_bz + '</td>';
+                    else
+                        html += '<td width="5%">-</td>';
+                    if (jsonStr[i].TH_bz2 != null)//备注
+                        html += '<td width="8%">' + jsonStr[i].TH_bz2 + '</td>';
+                    else
+                        html += '<td width="8%">-</td>';
+                    html += '<td width="15%"><div class="layui-btn-group">' + Caozuo(jsonStr[i].Id, jsonStr[i].TH_imgurl1, jsonStr[i].TH_imgurl2)+'</div></td>';
+                    html += '</tr>';
+                }
+                html += '</table>';
+                $("#wxmxcon").html(html);
+            }
+        }
+
+        //根据不良原因ID 查找不良原因信息(新的)
+        function asajaxNewblyymodelbyidjson(Id) {
+            var json;
+            $.ajax({
+                type: "POST",
+                url: "/Aftersale/GetblyymodelbyId",
+                data: { Id: Id },
+                async: false,
+                success: function (reslut) {
+                    json = eval('(' + reslut + ')');
+                },
+                error: function (e) {
+                    alert("请求失败！");
+                }
+            })
+            return json;
+        }
+
+        //根据不良现象ID 查找不良现象信息(新的)
+        function asajaxNewblxxmodeljson(Id) {
+            var json;
+            $.ajax({
+                type: "POST",
+                url: "/Aftersale/GetblXXmodelbyId",
+                data: { Id: Id },
+                async: false,
+                success: function (reslut) {
+                    json = eval('(' + reslut + ')');
+                },
+                error: function (e) {
+                    alert("请求失败！");
+                }
+            })
+            return json;
+        }
+
+        function Caozuo(val,val2, val3) {
+            var Id = "'" + val + "'";
+            var j = '<a class="layui-btn layui-btn-primary layui-btn-small" onclick="Checktupian(' + Id + ')" >资料查看</a>&nbsp;&nbsp;';
+            if (val2 != null && val2 != "") {
+                return j;
+            } else if (val3 != null && val3 != "") {
+                return j;
+            }
+            else {
+                return "";
+            }
+        }
+
+        function Checktupian(id) {
+            layer.open({
+                type: 2,
+                title: ['图片/资料查看', 'font-size:14px;'],
+                area: ['750px', '350px'],
+                offset: '10px',
+                fixed: false, //不固定
+                maxmin: true,
+                content: '../NAReturnList/CheckwxtupianView?Id=' + id,
+                //end: function () {
+                //    location.reload();
+                //}
+            });
+        }
+    </script>
+}
+
+<div class="title">
+    <h2>返退货技术分析报告</h2>
+</div>
+<div style="padding: 20px; background-color: #F2F2F2;">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    <div class="layui-row">
+
+                        <div class="layui-col-md4">客户名称：<label id="Cname"></label></div>
+                        <div class="layui-col-md2">订单号：@Model.fthbianhao</div>
+                        <div class="layui-col-md3">退货数量：@Model.R_Number 件</div>
+                        <div class="layui-col-md3">返退时间：@Model.R_FTdate</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div>
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+        <legend>分析明细</legend>
+    </fieldset>
+</div>
+<div style="padding: 20px; background-color: #F2F2F2;">
+    <div id="wxmxcon"></div>
+</div>
+
+
+<style>
+    .title {
+        margin: auto;
+        text-align: center;
+        padding: 10px 0 10px 0;
+    }
+</style>
+
+<script src="~/Scripts/NAjs/NAReturnList.js"></script>

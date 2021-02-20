@@ -1,0 +1,141 @@
+﻿@model NewAsiaOASystem.ViewModel.Flow_PlanPPrintinfoView
+@{
+    ViewBag.Title = "生产通知单详情查看";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<style>
+    table {
+        border-collapse: collapse;
+        border: none;
+    }
+
+        table td {
+            border: solid #e8e5e5 1px;
+            height: 35px;
+            padding: 0 0 0 5px;
+        }
+</style>
+
+<div class="infor">
+    <p id="Ptitle">生产通知单详情</p>
+    <div class="system-menu-set">
+        <table style="width: 100%; color: #000; font-size: 13px;">
+            <tr>
+                <td>
+                    生产批号：
+                    <span class="infor-c-input">
+                        <input type="text" id="scph1" name="scph1" value='@Model.Scph' readonly="readonly" />
+                    </span>
+                </td>
+                <td>
+                    要货数量：
+                    <span class="infor-c-input">
+                        <input type="text" id="yhsl" name="yhsl" value='@Model.Scsl' readonly="readonly" />
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    客户名称：
+                    <span class="infor-c-input">
+                        <input type="text" id="Cusname" name="Cusname" value='@Model.Cusname' readonly="readonly" />
+                    </span>
+                </td>
+                <td>
+                    要货日期：
+                    <span class="infor-c-input">
+                        <input type="text" id="yhdatetime" name="yhdatetime" value='@Model.Yhdate' readonly="readonly" />
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    产品名称：
+                    <span class="infor-c-input">
+                        <input type="text" id="cpname" name="cpname" value='@Model.CPname' readonly="readonly" />
+                    </span>
+                </td>
+                <td>
+                    电源电压：
+                    <span class="inquiry-input">
+                        <input type="text" value='@Model.DYDY' readonly="readonly" />
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    要货性质：
+                    <span class="inquiry-input">
+                        @if (Model.Yhxz == 0)
+                        {
+                            <input type="text" value="库存备货" readonly="readonly" />
+                        }
+                        else if (Model.Yhxz == 1)
+                        {
+                            <input type="text" value="订单生产" readonly="readonly" />
+                        }
+
+                    </span>
+                </td>
+
+                <td>
+                    客服确认：
+                    <span class="inquiry-input">
+                        <input type="text" value='@Model.Kfname' readonly="readonly" />
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    备注：
+                    <span class="inquiry-input">
+                        <input type="text" value='@Model.kfBeizhu' readonly="readonly" />
+                    </span>
+                </td>
+            </tr>
+            <table style="width: 100%; color: #000; font-size: 13px; margin-top: 20px">
+                <tr>
+                    <td>
+                        配料方面：
+                        <span class="infor-c-input">
+                            @if (Model.PLname != null)
+                            {
+                                <input type="text" id="PL" name="PL" value='@Model.PLname' readonly="readonly" />
+                            }
+                            else
+                            {
+                                <input type="text" id="PL1" name="PL" value='@Model.CPname' readonly="readonly" />
+                            }
+                        </span>
+                    </td>
+                    <td>
+                        生产工艺：
+                        <span class="infor-c-input">
+                            @if (Model.Scgy != null)
+                            {
+                                <input type="text" id="GY" name="GY" value='@Model.Scgy' readonly="readonly" />
+                            }
+                            else
+                            {
+                                <input type="text" id="GY1" name="GY" value='@Model.CPname' readonly="readonly" />
+                            }
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        技术确认：
+                        <input type="text" id="jsbeizhu" name="jsbeizhu" value='@Model.Jsname' readonly="readonly" />
+
+                    </td>
+                    <td>
+                        备注：
+                        <span class="inquiry-input">
+                            <input type="text" id="jsbeizhu" name="jsbeizhu" value='@Model.JsBeizhu'  readonly="readonly"/>
+                        </span>
+                    </td>
+                </tr>
+            </table>
+</div>
+</div>

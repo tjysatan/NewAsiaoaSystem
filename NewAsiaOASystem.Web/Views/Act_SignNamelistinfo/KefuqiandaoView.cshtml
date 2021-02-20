@@ -1,0 +1,172 @@
+﻿@{
+    ViewBag.Title = "与会签到_客服后端签到";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<meta charset="utf-8" />
+
+<meta content="width=device-width, initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport" />
+
+<meta content="yes" name="apple-mobile-web-app-capable" />
+
+<meta content="black" name="apple-mobile-web-app-status-bar-style" />
+
+<meta content="telephone=yes" name="format-detection" />
+
+<meta content="email=no" name="format-detection" />
+
+<meta name="keywords" content="" />
+
+<meta name="description" content="" />
+<link rel="stylesheet" href="~/Content/wx/css/login.css" />
+<link rel="stylesheet" href="~/Content/wx/css/public.css" />
+
+
+<div class="fullscreen per_login">
+    <div class="alert" style=""></div>
+    <div class="operate_Bar1 clearfix">
+        <div class="text">签到上墙操作</div>
+    </div>
+    <ul>
+        @using (Html.BeginForm("KefuqiandaoEide", "Act_SignNamelistinfo", FormMethod.Post, new { id = "form1" }))
+        { 
+            <li class="username">
+                <input type="text" name="Name" placeholder="与会者" id="Name" value="" />
+            </li>
+            <li style="height: 20px;"></li>
+            <li>
+                <select id="type" name="type" style="border: 1px solid #808080; width: 100%; height: 45px;">
+                    <option value="2">公司编码</option>
+                    <option value="0">与会者名称</option>
+                    <option value="1">公司名称</option>
+                </select>
+            </li>
+            <li style="height: 20px;"></li>
+            <li class="submit_btn">
+                <button onclick="return kcSavaFrom('/Act_SignNamelistinfo/KefuqiandaoView')" id="login_btn">确 定</button>
+            </li>
+            
+            <li style="height: 20px;"></li>
+
+        }
+        <li class="submit_btn">
+            <button onclick="return Xinzengurl()">新增来宾</button>
+        </li>
+    </ul>
+</div>
+
+<script type="text/javascript">
+    function kcSavaFrom(RetUrl) {
+                //表单验证
+                var options = {
+                    beforeSubmit: function () {
+                        return true;
+                    },
+                    dataType: "json",//这里是指控制器处理后返回的类型，这里返回json格式。  
+                    async: true,
+                    beforeSend: function () {
+                        ddchen();
+                    },
+                    success: function (context) {
+                    
+                        if ("error" == context.result) {
+                            disLoading();
+                            $.messager.alert("操作提示", '签到失败！', 'error', function () {
+                                disLoading();
+                            });
+                        }
+                      else  if ("error1" == context.result) {
+                            disLoading();
+                            $.messager.alert("操作提示", '根据与会者名称,原定名单里面查询不到信息！', 'error', function () {
+                                disLoading();
+                            });
+                        }
+                      else if ("error2" == context.result) {
+                            disLoading();
+                            $.messager.alert("操作提示", '根据公司名称,原定名单里面查询不到信息！', 'error', function () {
+                                disLoading();
+                            });
+                        }
+                      else if ("error3" == context.result) {
+                            disLoading();
+                            $.messager.alert("操作提示", '根据与会者代码,原定名单里面查询不到信息！', 'error', function () {
+                                disLoading();
+                            });
+                        }
+                      else if ("error4" == context.result) {
+                            disLoading();
+                            $.messager.alert("操作提示", '原定名单里面查询不到信息！', 'error', function () {
+                                disLoading();
+                            });
+                        }
+                      else if ("error5" == context.result) {
+                            disLoading();
+                            $.messager.alert("操作提示", '已经签到过了！', 'error', function () {
+                                disLoading();
+                            });
+                        }
+                        else {
+                            
+                                disLoading();
+                                //$.messager.alert("操作提示", '提交成功！', 'info', function () {
+                                //    location.href = RetUrl;
+                                //});
+                                $.messager.confirm('提示框', context.result + '确定提交吗?', function (data) {
+                                    if (data) {
+                                        var name = $("#Name").val();
+                                        var type = $("#type").val();
+                                        xiugaishangqiangzhuangt(name,type)
+                                    } else {
+                                        location.href = RetUrl;
+                                    }
+                                })
+                          }
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        disLoading();
+                        $.messager.alert("操作提示", '网络异常，请重试！', 'error');
+                    }
+                }
+                $('#form1').ajaxSubmit(options);
+                return false; //为了不刷新页面,返回false 
+            }
+        
+ 
+
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+
+    //跳转
+    function Xinzengurl() {
+        window.location.href = "/Act_SignNamelistinfo/XinzenglaibinView";
+    }
+
+    //修改上墙状态
+    function xiugaishangqiangzhuangt(val, val2) {
+     
+        $.ajax({
+            type: "POST",
+            url: "/Act_SignNamelistinfo/Kefuqianupdate",
+            data:{name:val,type:val2},
+            dataType: "json",
+            async: false,
+            success: function (reslut) {
+              
+                if (reslut == "0") {
+                    $.messager.alert("操作提示", '签到成功！', 'info');
+                }
+            },
+            error: function (e) {
+                alert("网络异常,请重试！");
+            }
+        })
+       
+    }
+</script>
+

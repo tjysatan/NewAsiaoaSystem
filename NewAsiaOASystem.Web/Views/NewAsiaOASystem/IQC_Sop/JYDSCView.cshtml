@@ -1,0 +1,742 @@
+﻿@model NewAsiaOASystem.ViewModel.IQC_JYDDinfoView
+@{
+    ViewBag.Title = "检验单";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+
+
+<div class="layui-tab" lay-filter="test">
+    <ul class="layui-tab-title">
+        <li class="layui-this" lay-id="11">基本信息</li>
+        <li lay-id="22">电气性能测试</li>
+        <li lay-id="33">尺寸测试</li>
+        <li lay-id="44">外观测试</li>
+        <li lay-id="55">可靠性测试</li>
+        <li lay-id="66">其他测试</li>
+        <li lay-id="77">测试结果</li>
+    </ul>
+    <div class="layui-tab-content" style="height: 100px;">
+        <div class="layui-tab-item layui-show">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">供应商：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="sopbianhao"  value='@Model.Gysname' readonly="readonly" lay-verify="title" autocomplete="off" class="layui-input" />
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">来料日期：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="sopbianhao"  value='@Model.Lltime' readonly="readonly" lay-verify="title" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">来料数量：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="sopbianhao" id=""  value='@Model.Llsum' readonly="readonly" lay-verify="title" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">抽检数量：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="sopbianhao"  id="" value='@Model.Cjsum' readonly="readonly" lay-verify="title" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">进料单号：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="sopbianhao" id="sopbianhao"  value='@Model.Jyddno' ondblclick="ajaxupdateddno()" lay-verify="title" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">规格型号：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="sopbianhao"  value='@Model.Yqjxh' readonly="readonly" lay-verify="title" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">测试日期：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="sopbianhao"  value='@Model.C_time' readonly="readonly" lay-verify="title" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">检验依据：</label>
+                    <div class="layui-input-inline" id="cszlcon" style="line-height: 40px;">
+                    </div>
+                </div>
+            </div>
+            <blockquote class="layui-elem-quote">双击检验单号文本框，修改检验单号</blockquote>
+        </div>
+
+        <div class="layui-tab-item">
+
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>测试项目</legend>
+                <div class="layui-field-box" id="dqxncon">
+                </div>
+            </fieldset>
+        </div>
+
+        <div class="layui-tab-item">
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>测试项目</legend>
+                <div class="layui-field-box" id="cccon">
+                </div>
+            </fieldset>
+        </div>
+
+        <div class="layui-tab-item">
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>测试项目</legend>
+                <div class="layui-field-box" id="wgcon">
+                </div>
+            </fieldset>
+        </div>
+        <div class="layui-tab-item">
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>测试项目</legend>
+                <div class="layui-field-box" id="kkxcon">
+                </div>
+            </fieldset>
+        </div>
+        <div class="layui-tab-item">
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>测试项目</legend>
+                <div class="layui-field-box" id="qtcon">
+                </div>
+            </fieldset>
+        </div>
+        <div class="layui-tab-item">
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>测试结果</legend>
+
+
+
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">处理结果：</label>
+                        <div class="layui-input-inline">
+                            <select id="Ispd" name="Ispd" style="border: 1px solid #e5e5e5; width: 190px; height: 38px;">
+                                @if (Model.Jydjg == 0)
+                                {
+                                    <option value="0">合格</option>
+                                    <option value="1">退货</option>
+                                    <option value="2">特采</option>
+                                    <option value="3">试用</option>
+                                }
+                                else if (Model.Jydjg == 1)
+                                {
+                                    <option value="1">退货</option>
+                                    <option value="0">合格</option>
+                                    <option value="2">特采</option>
+                                    <option value="3">试用</option>
+                                }
+                                else if (Model.Jydjg == 2)
+                                {
+                                    <option value="2">特采</option>
+                                    <option value="1">退货</option>
+                                    <option value="0">合格</option>
+                                    <option value="3">试用</option>
+                                }
+                                else if (Model.Jydjg == 3)
+                                {
+                                    <option value="3">试用</option>
+                                    <option value="0">合格</option>
+                                    <option value="1">退货</option>
+                                    <option value="2">特采</option>
+                                }
+                                else
+                                {
+                                    <option value="0">合格</option>
+                                    <option value="1">退货</option>
+                                    <option value="2">特采</option>
+                                    <option value="3">试用</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">备注：</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="beizhu" id="beizhu"  value='@Model.beizhu'  lay-verify="title" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">不合格：</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="Bhgsum" id="Bhgsum"  value='@Model.BHgesum'  lay-verify="title" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <label class="layui-form-label">不良说明：</label>
+                        <div class="layui-input-block" style="width: 70%">
+                            <textarea placeholder="请输入内容" id="blsm" name="blsm" class="layui-textarea">@Model.blmxsm</textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">LotNO：</label>
+                    <div class="layui-input-block" style="width: 70%">
+                        <input type="text" name="LotNO" id="LotNO"  value='@Model.LotNO'  lay-verify="title" autocomplete="off" class="layui-input">
+                    </div>
+
+                </div>
+
+
+            </fieldset>
+
+
+            <!--按钮-->
+            <div class="sopbtnsave">
+                <button class="layui-btn layui-btn-primary" onclick='return JYDWCEide()'>提交审核</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .sopbtnsave {
+        position: absolute;
+        width: 90%;
+        bottom: 5px;
+        text-align: center;
+    }
+
+    .soptopbtn {
+        position: absolute;
+        width: 90%;
+        top: 1px;
+        text-align: center;
+    }
+</style>
+
+<script src="~/Scripts/NAjs/layui.js"></script>
+
+<script type="text/javascript">
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+
+    $(function () {
+        //电气性能
+        ajaxjyconjson('@Model.Id', "0");
+        //尺寸
+        ajaxjyconjson('@Model.Id', "1");
+        //外观
+        ajaxjyconjson('@Model.Id', "2");
+        //可靠性
+        ajaxjyconjson('@Model.Id', "3");
+        //其他
+        ajaxjyconjson('@Model.Id', "4");
+    })
+
+    var jybzstr;
+    jybzstr = Ajaxjybzjson();
+    var html = "";
+    var html1 = "";
+    if (jybzstr != null) {
+        if (jybzstr.Jsggsimgurl != "" && jybzstr.Jsggsimgurl != null) {
+            if (jybzstr.zlname1 != "") {
+                //html= '<span class="layui-breadcrumb" lay-separator="—" style="line-height: 50px;">';
+                html += ' <a target="_blank" href="' + jybzstr.Jsggsimgurl + '">资料1</a>';
+                //html += ' </span>';
+            }
+            else {
+                //html= '<span class="layui-breadcrumb" lay-separator="—" style="line-height: 50px;">';
+                html += ' <a target="_blank" href="' + jybzstr.Jsggsimgurl + '">' + jybzstr.zlname1 + '</a>';
+                //html += ' </span>';
+            }
+        }
+        else {
+            html += "无资料";
+        }
+
+        if (jybzstr.Jsggsimgurl2 != "" && jybzstr.Jsggsimgurl2 != null) {
+            if (jybzstr.zlname2 != "") {
+                //html1 += '<span class="layui-breadcrumb" lay-separator="—" style="line-height: 50px;">';
+                html1 += ' <a target="_blank" href="' + jybzstr.Jsggsimgurl2 + '">资料2</a>';
+                //html1 += ' </span>';
+            }
+            else {
+                //html1 += '<span class="layui-breadcrumb" lay-separator="—" style="line-height: 50px;">';
+                html1 += ' <a target="_blank" href="' + jybzstr.Jsggsimgurl2 + '">' + jybzstr.zlname2 + '</a>';
+                //html1 += ' </span>';
+            }
+        }
+        else {
+            html1 += "";
+        }
+
+
+    }
+    else {
+        html += "无资料！";
+    }
+    $("#cszlcon").html(html + html1);
+
+    layui.use('element', function () {
+        var $ = layui.jquery
+        , element = layui.element(); //Tab的切换功能，切换事件监听等，需要依赖element模块
+
+        //触发事件
+        var active = {
+            tabAdd: function () {
+                //新增一个Tab项
+                element.tabAdd('demo', {
+                    title: '新选项' + (Math.random() * 1000 | 0) //用于演示
+                  , content: '内容' + (Math.random() * 1000 | 0)
+                  , id: new Date().getTime() //实际使用一般是规定好的id，这里以时间戳模拟下
+                })
+            }
+          , tabDelete: function (othis) {
+              //删除指定Tab项
+              element.tabDelete('demo', '44'); //删除：“商品管理”
+
+
+              othis.addClass('layui-btn-disabled');
+          }
+          , tabChange: function () {
+              //切换到指定Tab项
+              element.tabChange('demo', '22'); //切换到：用户管理
+          }
+        };
+
+        $('.site-demo-active').on('click', function () {
+            var othis = $(this), type = othis.data('type');
+            active[type] ? active[type].call(this, othis) : '';
+        });
+
+        //Hash地址的定位
+        var layid = location.hash.replace(/^#test=/, '');
+        element.tabChange('test', layid);
+
+        element.on('tab(test)', function (elem) {
+            location.hash = 'test=' + $(this).attr('lay-id');
+        });
+
+    });
+
+
+    //检验内容显示htmlPJ
+    function JYDjyconhtml(strval, type) {
+        var jsonStr = strval;
+        var html = "";
+        if (jsonStr != null) {
+            if (typeof (jsonStr) != "undefined") {
+                html = '<table class="layui-table">';
+                html += '<colgroup>';
+                html += '<col width="25%">';
+                html += '<col width="35%">';
+                html += '<col width="25%">';
+                html += '<col width="15%">';
+                html += '<col>';
+                html += '</colgroup>';
+                html += '<thead>';
+                html += '<tr>';
+                html += '<th>测试项目</th>';
+                html += '<th>测试数据</th>';
+                html += '<th>判定</th>';
+                html += '<th>操作</th>';
+                html += '</tr>';
+                html += '</thead>';
+                for (var i = 0, j = jsonStr.length; i < j; i++) {
+                    html += '<tr>';
+                    html += '<td>' + jsonStr[i].conff + '</td>';
+                    if (jsonStr[i].Ismj != "1") {
+                    html += '<td>';
+                    html += '<table >';
+                    html += '<tr style="border:none">';
+                        html += '<td style="border:none">';
+                        html += ' <div class="layui-input-inline" style="width: 50px;">';
+                        if (jsonStr[i].csdatastr1 != null && jsonStr[i].csdatastr1 != "") {
+                            html += ' <input type="text" name="csdata1" id="' + jsonStr[i].Id + "1" + '" placeholder="" value="' + jsonStr[i].csdatastr1 + '" autocomplete="off" class="layui-input">';
+                        } else {
+                            html += ' <input type="text" name="csdata1" id="' + jsonStr[i].Id + "1" + '" placeholder="" value="" autocomplete="off" class="layui-input">';
+                        }
+                        html += ' </div>';
+                        html += '</td>';
+                        html += '<td style="border:none">';
+                        html += ' <div class="layui-input-inline" style="width: 50px;">';
+                        if (jsonStr[i].csdatastr2 != null && jsonStr[i].csdatastr2 != "") {
+                            html += ' <input type="text" name="csdata2" id="' + jsonStr[i].Id + "2" + '" placeholder="" value="' + jsonStr[i].csdatastr2 + '" autocomplete="off" class="layui-input">';
+                        } else {
+                            html += ' <input type="text" name="csdata2" id="' + jsonStr[i].Id + "2" + '" placeholder="" value="" autocomplete="off" class="layui-input">';
+                        }
+                        html += ' </div>';
+                        html += '</td>';
+                        html += '<td style="border:none">';
+                        html += ' <div class="layui-input-inline" style="width: 50px;">';
+                        if (jsonStr[i].csdatastr3 != null && jsonStr[i].csdatastr3 != "") {
+                            html += ' <input type="text" name="csdata3" id="' + jsonStr[i].Id + "3" + '" placeholder="" value="' + jsonStr[i].csdatastr3 + '" autocomplete="off" class="layui-input">';
+                        }
+                        else {
+                            html += ' <input type="text" name="csdata3" id="' + jsonStr[i].Id + "3" + '" placeholder="" value="" autocomplete="off" class="layui-input">';
+                        }
+                        html += ' </div>';
+                        html += '</td>';
+                        html += '<td style="border:none">';
+                        html += ' <div class="layui-input-inline" style="width: 50px;">';
+                        if (jsonStr[i].csdatastr4 != null && jsonStr[i].csdatastr4 != "") {
+                            html += ' <input type="text" name="csdata4" id="' + jsonStr[i].Id + "4" + '" placeholder="" value="' + jsonStr[i].csdatastr4 + '" autocomplete="off" class="layui-input">';
+                        }
+                        else {
+                            html += ' <input type="text" name="csdata4" id="' + jsonStr[i].Id + "4" + '" placeholder="" value="" autocomplete="off" class="layui-input">';
+                        }
+                        html += ' </div>';
+                        html += '</td>';
+                        html += '<td style="border:none">';
+                        html += ' <div class="layui-input-inline" style="width: 50px;">';
+                        if (jsonStr[i].csdatastr5 != null && jsonStr[i].csdatastr5 != "") {
+                            html += ' <input type="text" name="csdata1" id="' + jsonStr[i].Id + "5" + '" placeholder="" value="' + jsonStr[i].csdatastr5 + '" autocomplete="off" class="layui-input">';
+                        } else {
+                            html += ' <input type="text" name="csdata1" id="' + jsonStr[i].Id + "5" + '" placeholder="" value="" autocomplete="off" class="layui-input">';
+                        }
+                        html += ' </div>';
+                        html += '</td>';
+                        html += '</tr>';
+                        html += '</table>';
+                        html += '</td>';
+                    }
+                    else {
+                        html += '<td>免检</td>';
+                    }
+
+                    if (jsonStr[i].Ismj != "1") {
+                        html += '<td>' + xzpdsel(jsonStr[i].Id, jsonStr[i].Ispd) + '</div>';
+                    } else {
+                        html += '<td>OK</div>';
+                    }
+                    html += '<td>' + listbtnshow(jsonStr[i].Id, type) + '</td>';
+                    html += '</tr>';
+                }
+                html += '<tbody>';
+                html += '</tbody>';
+                html += '</table>';
+            }
+        }
+        else {
+
+            html = '<table class="layui-table">';
+            html += '<tr>';
+            html += '<td>暂无检验标准</td>';
+            html += '</tr>';
+            html += '</table>';
+        }
+        if (type == "0") {
+            $("#dqxncon").html(html);
+        }
+        if (type == "1") {
+            $("#cccon").html(html);
+        }
+        if (type == "2") {
+            $("#wgcon").html(html);
+        }
+        if (type == "3") {
+            $("#kkxcon").html(html);
+        }
+        if (type == "4") {
+            $("#qtcon").html(html);
+        }
+    }
+
+    //检验内容的数据
+    function ajaxjyconjson(jydId, type) {
+        $.ajax({
+            url: "../IQC_Sop/ajaxJYDjyconinfojson",
+            type: "POST",
+            data: { jydId: jydId, type: type },
+            dataType: "json",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                var jsonstr = eval(response);
+                JYDjyconhtml(jsonstr, type);
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+    }
+
+    //修改单号
+    function ajaxupdateddno()
+    {
+        var jydId = '@Model.Id';
+        var ddno = $("#sopbianhao").val();
+        $.ajax({
+            url: "../IQC_Sop/JYDnoupdateEide",
+            type: "POST",
+            data: { Id: jydId, dhno: ddno },
+            dataType: "html",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response == "0") {
+                    layer.alert("保存成功！", { icon: 1 }, function () { location.reload(); });
+                }
+                else {
+                    layer.alert("提交失败！", { icon: 2 }, function () { location.reload(); });
+                }
+                
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+    }
+
+    //测试项目的处理判定
+    function showclpd(val) {
+        if (val == "0")
+            return "未判定";
+        if (val == "1")
+            return "OK";
+        if (val == "2")
+            return "NG";
+    }
+
+    //检验测试项目列表中按钮
+    function listbtnshow(Id, type) {
+
+        var id = "'" + Id + "'";
+        type = "'" + type + "'";
+        var s = '<a class="layui-btn layui-btn-primary layui-btn-small" onclick="JYDcspdIframeopen(' + id + ')"><i class="layui-icon">&#xe642;</i></a>';
+        var t = '<a class="layui-btn layui-btn-primary layui-btn-small" onclick="ajaaxjygjandffopen(' + id + ',' + type + ')">测试工具</a>';
+        return t;
+    }
+
+    //选择判断
+    function xzpdsel(Id, valzt) {
+        var id = "'" + Id + "'";
+        var html = "";
+        html += '<div>';
+        if (valzt == "0") {
+            html += '<select  class="layui-input"  Id="' + id + '" onchange="func(' + id + ',' + "this.options[this.options.selectedIndex].value" + ')">';
+            html += '<option value="0">未判断</option>';
+            html += '<option value="1">OK</option>';
+            html += '<option value="2">NG</option>';
+            html += '</section>';
+        }
+        if (valzt == "1") {
+            html += '<select  class="layui-input"  Id="' + id + '" onchange="func(' + id + ',' + "this.options[this.options.selectedIndex].value" + ')">';
+            html += '<option value="1">OK</option>';
+            html += '<option value="2">NG</option>';
+            html += '</section>';
+        }
+        if (valzt == "2") {
+            html += '<select  class="layui-input"  Id="' + id + '" onchange="func(' + id + ',' + "this.options[this.options.selectedIndex].value" + ')">';
+            html += '<option value="2">NG</option>';
+            html += '<option value="1">OK</option>';
+            html += '</section>';
+        }
+        html += '</div>';
+        return html;
+    }
+
+    //打开测试项目的判定页面
+    function JYDcspdIframeopen(Id) {
+        if ('@Model.Jydzt' == 0 || '@Model.Jydzt' == 2) {
+            layer.open({
+                type: 2,
+                title: ['测试项目结果判定', 'font-size:14px;'],
+                area: ['700px', '350px'],
+                fixed: false, //不固定
+                maxmin: true,
+                content: '../IQC_Sop/JYDcsconpdView?Id=' + Id,
+                end: function () {
+                    location.reload();
+                }
+            })
+        }
+        else if ('@Model.Jydzt' == 2) {
+            layer.alert("该单已经提交待审核中,无法进行编辑！", { icon: 2 });
+        }
+        else {
+            layer.alert("该单已经审核完成,无需进行编辑！", { icon: 2 });
+        }
+    }
+
+    //检验工具/检验方法
+    function ajaaxjygjandffopen(Id, type) {
+        layer.open({
+            type: 2,
+            title: ['测试工具/方法', 'font-size:14px;'],
+            area: ['700px', '350px'],
+            fixed: false, //不固定
+            maxmin: true,
+            content: '../IQC_Sop/JYCSGJView?Id=' + Id + '&jybzId=' + '@Model.JYBZId' + '&type=' + type,
+            end: function () {
+                location.reload();
+            }
+        })
+    }
+
+    //完成提交
+    function JYDWCEide() {
+        var Bhgsum = $("#Bhgsum").val();//不合格数量
+        var Ispd = $("#Ispd").val();//处理结果
+        var blsm = $("#blsm").val();//不良说明
+        var beizhu = $("#beizhu").val();//备注
+        var LotNO = $("#LotNO").val();
+        if (Bhgsum == "") {
+            Bhgsum = 0;
+        }
+        if (isNaN(Bhgsum)) {
+            layer.alert("不合格数量为纯数字！", { icon: 2 });
+            return false;
+        }
+        if (Bhgsum < 0) {
+            layer.alert("不合格数量大于等于0！", { icon: 2 });
+            return false;
+        }
+        $.ajax({
+            url: "../IQC_Sop/JYDCSJGEide",
+            type: "POST",
+            data: { Id: '@Model.Id', Bhgsum: Bhgsum, pdzt: Ispd, blsm: blsm, beizhu: beizhu, LotNO: LotNO },
+            dataType: "json",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response == "2") {
+                    layer.alert("保存成功！", { icon: 1 }, function () { guanbi(); });
+                }
+                if (response == "1") {
+                    layer.alert("保存失败！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "0") {
+                    layer.alert("提交异常！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "4") {
+                    layer.alert("还有未处理的测试项目,无法提交完成！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "5") {
+                    layer.alert("该已经提交待审核，无法编辑提交！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "6") {
+                    layer.alert("该已经完成审核，无需提交！", { icon: 2 }, function () { location.reload(); });
+                }
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+    }
+
+    //检验标准
+    function Ajaxjybzjson() {
+        var json;
+        $.ajax({
+            url: "../IQC_Sop/GetjybzinfobyId",
+            type: "POST",
+            data: { Id: '@Model.JYBZId' },
+            dataType: "json",
+            async: false,
+            success: function (response) {
+                json = response;
+            },
+            error: function (e) {
+                layer.alert("操作失败！" + e, { icon: 2 });
+            }
+        })
+        return json;
+    }
+
+    function guanbi() {
+        //layer.alert("保存成功！", { icon: 2 }, function () { layer.closeAll(); });
+        //layer.closeAll();
+        var index = parent.layer.getFrameIndex(window.name);
+        //关闭弹出层
+        parent.layer.close(index);
+    }
+
+    function func(Id, val) {
+        var vs = val;
+
+        var dat1 = $("#" + Id + "1").val();
+        var dat2 = $("#" + Id + "2").val();
+        var dat3 = $("#" + Id + "3").val();
+        var dat4 = $("#" + Id + "4").val();
+        var dat5 = $("#" + Id + "5").val();
+        if (dat1 == "null") {
+            layer.alert("测试数据1不为空！", { icon: 2 });
+            return false;
+        }
+        if (dat2 == "null") {
+            layer.alert("测试数据2不为空！", { icon: 2 });
+            return false;
+        }
+        if (dat3 == "null") {
+            layer.alert("测试数据3不为空！", { icon: 2 });
+            return false;
+        }
+        if (dat4 == "null") {
+            layer.alert("测试数据4不为空！", { icon: 2 });
+            return false;
+        }
+        if (dat5 == "null") {
+            layer.alert("测试数据5不为空！", { icon: 2 });
+            return false;
+        }
+        if (vs == "0") {
+            layer.alert("请选择判定结果！", { icon: 2 });
+            return false;
+        }
+        $.ajax({
+            url: "../IQC_Sop/JYDcsconpdEide",
+            type: "POST",
+            data: { Id: Id, csjson1: dat1, csjson2: dat2, csjson3: dat3, csjson4: dat4, csjson5: dat5, Ispd: vs, beizhu: "" },
+            dataType: "html",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response == "2") {
+                    location.reload();
+                }
+                if (response == "1") {
+                    layer.alert("保存失败！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "0") {
+                    layer.alert("提交异常！", { icon: 2 }, function () { location.reload(); });
+                }
+
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+    }
+</script>

@@ -1,0 +1,86 @@
+﻿@{
+    ViewBag.Title = "采购完成采购编辑";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<script type="text/javascript">
+
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+
+    function guanbi() {
+        var index = parent.layer.getFrameIndex(window.name);
+        //关闭弹出层
+        parent.layer.close(index);
+    }
+
+    //采购提交
+    function CGJDEide() {
+        var Id = '@ViewData["Id"]';
+        var wctime = $("#wctime").val();
+        var sjshuliang = $("#sjshuliang").val();
+        if (wctime == "" || wctime == null) {
+            layer.alert("请填写完成采购的时间！", { icon: 2 });
+            return false;
+        }
+        if (sjshuliang == "" || sjshuliang == null)
+        {
+            layer.alert("请填写实际入库数量！", { icon: 2 });
+            return false;
+        }
+        $.ajax({
+            url: "../DKX_DDtypeinfo/CGWCEide",
+            type: "POST",
+            data: { Id: Id, wctime: wctime, rkshuliang: sjshuliang },
+            dataType: "html",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response == "0") {
+                    layer.alert("提交异常,请重新再试！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "1") {
+                    layer.alert("接单成功！", { icon: 1 }, function () { guanbi() });
+                }
+                if (response == "2") {
+                    layer.alert("提交异常,请重新再试！", { icon: 2 }, function () { location.reload(); });
+                }
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+    }
+</script>
+
+<div style="width: 90%; padding: 20px 20px 0 20px">
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">完成日期：</label>
+        <div class="layui-input-block" style="width: 300px">
+            <input class="layui-input" id="wctime" name="wctime"  value='@ViewData["wctime"]' placeholder="完成日期" type="text" onclick="WdatePicker()" />
+        </div>
+    </div>
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">入库数量：</label>
+        <div class="layui-input-block" style="width: 200px">
+            <input class="layui-input" id="sjshuliang" name="sjshuliang" placeholder="入库数量" type="text" />
+        </div>
+    </div>
+
+    <div class="layui-form-item" style="margin: auto">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit="" lay-filter="demo1" onclick="CGJDEide()">确认完成</button>
+            <button type="reset" class="layui-btn layui-btn-primary" onclick="guanbi()">关闭</button>
+        </div>
+    </div>
+</div>

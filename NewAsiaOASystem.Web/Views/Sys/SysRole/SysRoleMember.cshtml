@@ -1,0 +1,38 @@
+﻿@{
+    ViewBag.Title = "角色成员管理";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+
+<style type="text/css">
+    #parson span {
+        width: 80px;
+        height: 25px;
+        display: block;
+        float: left; 
+        text-align: center;
+        font-weight: bold;
+        font-size: 14px;
+        margin:15px;
+        background-color:#ECECFF;
+        padding-top:5px;
+    }
+</style>
+<div>
+    <img src="~/Content/images/use.ico" style="width: 25px; height: 25px; float: left;" />
+    <h1 style="margin-left: 25px;">成员管理</h1>
+    <input id="RoleId" type="hidden"  value="@ViewBag.RoleId" />
+</div>
+
+<!--Tabs-->
+
+<div id="RoleManage" class="easyui-tabs" style="width: 560px; height: 320px; margin: 20px; padding: 0px;">
+    <div id="parson" title="用户成员" style="overflow: auto; padding: 20px;">
+    </div>
+</div>
+<script src="~/Scripts/Sys/SysRole.js"></script>
+<script type="text/javascript">
+    $(function () {
+        GetPersonMember();
+    })
+</script>

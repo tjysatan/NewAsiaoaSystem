@@ -1,0 +1,115 @@
+﻿@{
+    ViewBag.Title = "会议原定与会者名单导入";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<style>
+    .table_con
+    {
+        border-collapse: collapse;
+        border: none;
+    }
+
+        .table_con td
+        {
+            border: solid #eae5e5 1px;
+            height: 35px;
+            padding: 0 0 0 5px;
+        }
+
+    .concss
+    {
+        width: 450px;
+        height: 250px;
+        margin: auto;
+        margin-top: 100px;
+        border: solid #eae5e5 1px;
+        background: #fff;
+        -moz-border-radius: 15px;
+        -webkit-border-radius: 15px;
+        border-radius: 15px;
+    }
+
+    .btncss
+    {
+        width: 100px;
+        height: 30px;
+        -moz-border-radius: 15px;
+        -webkit-border-radius: 15px;
+        border-radius: 15px;
+    }
+</style>
+
+<div id="Con" style="" class="concss">
+    @using (Html.BeginForm("DRhuiyimingdanExcel", "Act_SignNamelistinfo", FormMethod.Post, new { id = "form1", enctype = "multipart/form-data" }))
+    {
+        <table class="table_con" style="width: 100%; color: #000; margin-top: 20px; font-size: 13px;">
+            <tr>
+
+                <td align="center" style=" border: none;">选择文件：
+                    <input id="fileImport" name="fileImport" runat="server" type="file" /></td>
+            </tr>
+            <tr>
+                <td style="height: 30px; border: none;"></td>
+            </tr>
+            <tr>
+                <td align="center" style=" border: none;">
+                    <input type="button" class="btncss" value="导入" onclick="return kcSavaFrom('/Act_SignNamelistinfo/ImporthuiyiinfoView')" />
+                </td>
+            </tr>
+        </table>
+        <div style="font-size: 14px; color: #f00;">
+            &nbsp; &nbsp;文件格式说明:<br />
+            <p style="text-indent: 2em">1.导入必须是XX.xls文件<br />
+            </p>
+            <p style="text-indent: 2em">2.只导入EXCEL文件的第一个标签页</p>
+            <p style="text-indent: 2em">3.文件第一行为标题Name Tel  Company  Dm</p>
+
+        </div>
+    }
+</div>
+
+
+<script type="text/javascript">
+    function kcSavaFrom(RetUrl) {
+        //表单验证
+        var options = {
+            beforeSubmit: function () {
+                return true;
+            },
+            dataType: "json",//这里是指控制器处理后返回的类型，这里返回json格式。  
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (context) {
+                if ("success" == context.result) {
+                    disLoading();
+                    $.messager.alert("操作提示", '数据导入成功！', 'info', function () {
+                        location.href = RetUrl;
+                    });
+                }
+                if ("error" == context.result) {
+                    $.messager.alert("操作提示", '导入失败！', 'error', function () {
+                        disLoading();
+                    });
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                disLoading();
+                $.messager.alert("操作提示", '操作失败！', 'error');
+            }
+        }
+        $('#form1').ajaxSubmit(options);
+        return false; //为了不刷新页面,返回false 
+    }
+
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+</script>

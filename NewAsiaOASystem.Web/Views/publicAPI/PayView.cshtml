@@ -1,0 +1,32 @@
+﻿@{
+    ViewBag.Title = "PayView";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+
+<script type="text/javascript">
+    //获取当天的退货扫码数据
+    function Pay() {
+
+        var total_fee = $("#total_fee").val();//支付金额
+        if (total_fee == "") {
+            layer.alert("请输入充值金额！", { icon: 2 });
+            $("#total_fee").focus();
+            return false;
+        }
+        window.location.href = "/publicAPI/payzf?total_fee=" + total_fee;
+    }
+</script>
+<div style="width: 70%; margin: auto; margin-top: 40px;">
+    <div class="layui-form-item">
+        <label class="layui-form-label">金额:</label>
+        <div class="layui-input-block">
+            <input type="text" name="total_fee" id="total_fee" required lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="formDemo" onclick="return Pay()">立即提交</button>
+        </div>
+    </div>
+</div>

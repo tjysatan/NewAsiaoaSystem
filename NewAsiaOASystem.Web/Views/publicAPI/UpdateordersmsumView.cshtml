@@ -1,0 +1,112 @@
+﻿@model NewAsiaOASystem.ViewModel.NA_XSinfoView
+@{
+    ViewBag.Title = "仓库扫码数量修改";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<style>
+    .sopbtnsave {
+        position: absolute;
+        width: 90%;
+        bottom: 5px;
+        text-align: center;
+    }
+
+    .soptopbtn {
+        position: absolute;
+        width: 90%;
+        top: 1px;
+        text-align: center;
+    }
+</style>
+
+<div style="width: 95%; margin: auto; padding: 10px 0 0 0;">
+    <div class="layui-tab-item layui-show">
+        <div class="layui-form-item">
+            <div class="layui-form-item">
+                <label class="layui-form-label">当前数量：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="yxsmsum" id="yxsmsum" lay-verify="required" value='@Model.S_Number' placeholder="" autocomplete="off" class="layui-input" readonly="readonly">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">扫码数量：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="smsum" id="smsum" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <!--按钮-->
+        <div class="sopbtnsave">
+            <button class="layui-btn layui-btn-primary" onclick="return AjaxupdateEide()">提交</button>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+
+    //直接关闭所有弹出框
+    function Closeiform() {
+        var index = parent.layer.getFrameIndex(window.name);
+        parent.layer.close(index);
+    }
+    //ajax 提交修改
+    function AjaxupdateEide()
+    {
+        var yxsmsum = $("#yxsmsum").val();
+        var smsum = $("#smsum").val();
+        if (smsum == "")
+        {
+            layer.alert("扫码数量不为空！！", { icon: 2 });
+            return false;
+        }
+        if (isNaN(smsum))
+        {
+            layer.alert("扫码数量为纯数字！", { icon: 2 });
+            return false;
+        }
+        if (parseFloat(smsum) < 0)
+        {
+            layer.alert("扫码数量大于0！", { icon: 2 });
+            return false;
+        }
+        $.ajax({
+            url: "../publicAPI/EideUpdateordersmsun",
+            type: "POST",
+            data: { Id:'@Model.Id',sum:smsum },
+            dataType: "html",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response == "0")
+                {
+                    layer.alert("保存成功！", { icon: 1 }, function () { Closeiform(); });
+                }
+                if (response == "1") {
+                    layer.alert("保存失败！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "2") {
+                    layer.alert("保存失败！", { icon: 2 }, function () { location.reload(); });
+                }
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+
+    }
+</script>
+

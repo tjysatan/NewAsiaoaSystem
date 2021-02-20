@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="NewAsiaOASystem.DBModel" assembly="NewAsiaOASystem.DBModel">
+  <class name="NQ_THinfoFX" table="NQ_THinfoFX">
+    <id name="Id" column="Id" type="string" unsaved-value="0">
+      <generator class="uuid.hex"/>
+    </id>
+    <property name="Iscl" column="Iscl" />
+    <property name="R_Id" column="R_Id" />
+    <property name="P_Id" column="P_Id" />
+    <property name="Cpname" column="Cpname" />
+    <property name="Cpmode" column="Cpmode" />
+    <property name="Cpwlno" column="Cpwlno" />
+    <property name="TH_Ph" column="TH_Ph" />
+    <property name="TH_SCdate" column="TH_SCdate" />
+    <property name="TH_BLXXX" column="TH_BLXXX" />
+    <property name="TH_BLXX" column="TH_BLXX" />
+    <property name="TH_BLYY" column="TH_BLYY" />
+    <property name="TH_YQJname" column="TH_YQJname" />
+    <property name="TH_YQJpp" column="TH_YQJpp" />
+    <property name="TH_imgurl1" column="TH_imgurl1" />
+    <property name="TH_imgurl2" column="TH_imgurl2" />
+    <property name="TH_imgurl3" column="TH_imgurl3" />
+    <property name="TH_zbshj" column="TH_zbshj" />
+    <property name="TH_bz" column="TH_bz" />
+    <property name="TH_yqjjg" column="TH_yqjjg" />
+    <property name="TH_RGF" column="TH_RGF" />
+    <property name="TH_BCF" column="TH_BCF" />
+    <property name="TH_XJ" column="TH_XJ" />
+    <property name="TH_YF" column="TH_YF"/>
+    <property name="TH_JHYF" column="TH_JHYF"/>
+    <property name="TH_bz2" column="TH_bz2" />
+    <property name="Sort" column="Sort" />
+    <property name="C_time" column="C_time" />
+    <property name="wx_time" column="wx_time" />
+    <property name="Isdz" column="Isdz"/>
+    <property name="zrbm" column="zrbm"/>
+    <property name="dzdatetime" column="dzdatetime"/>
+    <property name="dz_cusId" column="dz_cusId"/>
+    <property name="Cust_Baddescribe" column="Cust_Baddescribe"/>
+    <property name="Analyst" column="Analyst"/>
+  </class>
+</hibernate-mapping>

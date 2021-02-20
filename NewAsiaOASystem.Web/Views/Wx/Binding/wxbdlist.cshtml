@@ -1,0 +1,201 @@
+﻿@model NewAsiaOASystem.ViewModel.PagerInfo<NewAsiaOASystem.ViewModel.Wx_FTUserbdopenIdinfoView>
+@{
+    ViewBag.Title = "微信绑定数据列表";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+
+@section HeadContent{
+    <script type="text/javascript">
+        $(function () {
+            BindGrid();
+        })
+        function BindGrid() {
+            @{
+                if (null != Model && null != Model.GetPagingDataJson)
+                {
+                    string json = Model.GetPagingDataJson;//获取json数据
+                    @: var jsonStr = @Html.Raw(json);
+                }
+             }
+            dataGrid(jsonStr);
+        }
+        function dataGrid(jsonStr)
+        {
+            if (typeof (jsonStr) != "undefined") {
+                var html = "";
+                html = '<table class="layui-table">';
+                html += '<thead>';
+                html+='<tr>';
+                html+='<td width="5%"><input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" /></td>';
+                html+='<td width="15%">帐号</td>';
+                html+='<td width="10%">绑定角色</td>';
+                html+='<td width="8%">OpenId</td>';
+                html+='<td width="10%">绑定时间</td>';
+                html+='</tr>';
+                html+='</thead>';
+                for (var i = 0, j = jsonStr.length; i < j; i++) {
+                    //帐号
+                    var TJnamestr=AjaxPerson_Name(jsonStr[i].UserId);
+                    var Tjnameuser="";
+                    if(TJnamestr!=null&&TJnamestr!="")
+                    {
+                        Tjnameuser=TJnamestr.UserName;
+                    }
+                    html+='<tr>';
+                    html += '<td width="5%"><input type="checkbox" name="ContentChecked" value="' + jsonStr[i].Id + '"/></td>';
+                    html += '<td width="15%">'+ Tjnameuser+ '</td>';
+                    html += '<td width="10%">'+ Showbdjiaose(jsonStr[i].Bmtype) + '</td>';
+                    html += '<td width="8%">'+ jsonStr[i].OpenId + '</td>';
+                    html += '<td width="10%">'+ jsonStr[i].C_time + '</td>';
+                    html+='</tr>';
+                }
+                html += '</table>';
+                $("#content").html(html);
+            }
+        }
+        //pageIndex当前页
+        function SerchList(pageIndex)
+        {
+            $("input[name='pageIndex']").val(pageIndex);
+            var options = {
+                beforeSubmit: function () {
+                    return true;
+                },
+                dataType: "json",
+                success: function (context) {
+                    var data=eval(context.result);
+                    dataGrid(data);
+                    $(".pagin").html(context.PageN);//输出分页按钮
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $.messager.alert("操作提示", '查询失败请重试！', 'error');
+                }
+            }
+            $('#form1').ajaxSubmit(options);
+            return false;
+        }
+
+        /*用户帐号*/
+        function AjaxPerson_Name(Id) {
+            var json;
+            $.ajax({
+                type: "POST",
+                url: "/Api/SysWebApi/GetPersonjson_Id",
+                data: { "": Id },
+                dataType: "json",
+                async: false,
+                success: function (reslut) {
+                    json = eval('(' + reslut + ')');
+                },
+                error: function (e) {
+                    alert("请求失败");
+                }
+            })
+            return json;
+        }
+        /*绑定角色*/
+        function Showbdjiaose(val)
+        {
+            if(val=="1")
+                return "客服主管";
+            if(val=="2")
+                return "电控维修";
+            if(val=="3")
+                return "温控维修";
+            if(val=="4")
+                return "配件维修";
+            if(val=="5")
+                return "品保经理";
+            if(val=="6")
+                return "电气工程师";
+            if(val=="13")
+                return "主管工程师";
+            if(val=="7")
+                return "生产主管";
+            if(val=="8")
+                return "客服";
+            if(val=="9")
+                return "采购";
+            if(val=="10")
+                return "箱体确认";
+            if(val=="11")
+                return "其他物料";
+            if(val=="12")
+                return "仓库";
+        }
+    </script>
+}
+
+<!--==================================数据列表=============================-->
+<div class="h-right">
+    <div class="h-right-c">
+        <!--查询条件-->
+        <div class="inquiry1">
+            <fieldset>
+                <legend>查询条件：</legend>
+                <ul>
+                    @using (Html.BeginForm("WXBDSearchList", "Binding", FormMethod.Post, new { id = "form1" }))
+                    {
+                        @Html.Hidden("pageIndex");
+                        <li>
+                            <span>绑定帐号:</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="user" id="user" />
+                            </span>
+                        </li>
+                        <li>
+                            <span>绑定角色：</span>
+                            <span>
+                                <select id="type" name="type" class="add-function">
+                                    <option value="">全部</option>
+                                    <option value="1">客服主管</option>
+                                    <option value="2">电控维修</option>
+                                    <option value="3">温控维修</option>
+                                    <option value="4">配件维修</option>
+                                    <option value="5">品保经理</option>
+                                    <option value="6">电气工程师</option>
+                                    <option value="13">主管工程师</option>
+                                    <option value="7">生产主管</option>
+                                    <option value="8">客服</option>
+                                    <option value="9">采购</option>
+                                    <option value="10">箱体确认</option>
+                                    <option value="11">其他物料</option>
+                                    <option value="12">仓库</option>
+                                </select>
+                            </span>
+                        </li>
+                       
+                        <li style="*width: 100%; *margin: -10px 0 5px 90px;"><span class="inquiry-input">
+                            <button class="layui-btn" onclick="return SerchList(1)"><i class="layui-icon">&#xe615;</i> 查询</button>
+                        </span>
+                        </li>
+                    }
+                    <li>
+                        <span class="inquiry-input">
+                            <button class="layui-btn" onclick="return addClick('/Binding/wxbdlist')"><i class="layui-icon">&#x1002;</i> 刷新</button>
+                        </span>
+                    </li>
+                </ul>
+            </fieldset>
+        </div>
+
+        <div class="h-table">
+            <div class="h-table-content">
+
+
+                <div id="content"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--==========================输出分页按钮=========================-->
+<div class="pagin">
+    @if (ViewBag.PageNavigate == null)
+    {
+        @Html.ShowPageNavigate(Model.CurrentPageIndex, Model.PageSize, Model.RecordCount);
+    }
+</div>
+<div id="windowDia" class="easyui-window" closed="true" style="width: 600px; height: 400px; padding: 10px;"></div>
+
+

@@ -1,0 +1,57 @@
+2020-07-07 23:51:12,055 [16] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2020-07-07 23:51:12,056 [16] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2020-07-07 23:51:12,056 [16] ERROR ApplicationInfoLog [(null)] <(null)< - 未将对象引用设置到对象的实例。
+2020-07-07 23:51:12,056 [16] ERROR ApplicationInfoLog [(null)] <(null)< - Void loginsession(NewAsiaOASystem.ViewModel.SessionUser)
+2020-07-07 23:51:12,056 [16] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================
+2020-07-07 23:51:36,741 [16] ERROR ApplicationInfoLog [(null)] <(null)< - 保持返回订单号a0588eaa54884038a559bf609debd6e3
+2020-07-07 23:51:38,067 [25] ERROR ApplicationInfoLog [(null)] <(null)< - 已经进来
+2020-07-07 23:51:38,084 [25] ERROR ApplicationInfoLog [(null)] <(null)< - 订单号3a0588eaa54884038a559bf609debd6e3
+2020-07-07 23:51:38,115 [25] ERROR ApplicationInfoLog [(null)] <(null)< - 订单号4http://dpsanbox.deppon.com/sandbox-web/dop-standard-ewborder/createOrderNotify.action
+2020-07-07 23:51:38,301 [25] ERROR ApplicationInfoLog [(null)] <(null)< - 订单号777{
+	"result":"true",
+	"reason":"成功",
+	"mailNo":"6512339944",
+	"logisticID":"LUKFa0588eaa54884038a559bf609debd6e3",
+	"arrivedOrgSimpleName":"上海上海市",
+	"resultCode":"1000",
+	"uniquerRequestNumber":"38051250824945640"
+}
+2020-07-07 23:51:38,301 [25] ERROR ApplicationInfoLog [(null)] <(null)< - 返回的结构{
+	"result":"true",
+	"reason":"成功",
+	"mailNo":"6512339944",
+	"logisticID":"LUKFa0588eaa54884038a559bf609debd6e3",
+	"arrivedOrgSimpleName":"上海上海市",
+	"resultCode":"1000",
+	"uniquerRequestNumber":"38051250824945640"
+}
+2020-07-07 23:51:48,765 [24] ERROR ApplicationInfoLog [(null)] <(null)< - 订单号4http://gwapi.deppon.com/dop-interface-async/dop-standard-ewborder/cancelEwaybillOrder.action
+2020-07-07 23:51:48,941 [24] ERROR ApplicationInfoLog [(null)] <(null)< - 订单号777{
+	"mailNo":"6512339944",
+	"reason":"成功",
+	"result":"true",
+	"resultCode":"1000",
+	"uniquerRequestNumber":"27094368586858338"
+}
+2020-07-07 23:51:56,051 [25] ERROR ApplicationInfoLog [(null)] <(null)< - 保持返回订单号299ca81b583d45ee97b3807c62598482
+2020-07-07 23:51:59,162 [16] ERROR ApplicationInfoLog [(null)] <(null)< - 已经进来
+2020-07-07 23:51:59,177 [16] ERROR ApplicationInfoLog [(null)] <(null)< - 订单号3299ca81b583d45ee97b3807c62598482
+2020-07-07 23:51:59,183 [16] ERROR ApplicationInfoLog [(null)] <(null)< - 订单号4http://dpsanbox.deppon.com/sandbox-web/dop-standard-ewborder/createOrderNotify.action
+2020-07-07 23:51:59,323 [16] ERROR ApplicationInfoLog [(null)] <(null)< - 订单号777{
+	"result":"true",
+	"reason":"成功",
+	"mailNo":"6350043355",
+	"logisticID":"LUKF299ca81b583d45ee97b3807c62598482",
+	"arrivedOrgSimpleName":"上海上海市",
+	"resultCode":"1000",
+	"uniquerRequestNumber":"38051271849719002"
+}
+2020-07-07 23:51:59,323 [16] ERROR ApplicationInfoLog [(null)] <(null)< - 返回的结构{
+	"result":"true",
+	"reason":"成功",
+	"mailNo":"6350043355",
+	"logisticID":"LUKF299ca81b583d45ee97b3807c62598482",
+	"arrivedOrgSimpleName":"上海上海市",
+	"resultCode":"1000",
+	"uniquerRequestNumber":"38051271849719002"
+}

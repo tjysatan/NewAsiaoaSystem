@@ -1,0 +1,5 @@
+2020-09-23 16:00:31,265 [76] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2020-09-23 16:00:31,265 [76] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2020-09-23 16:00:31,265 [76] ERROR ApplicationInfoLog [(null)] <(null)< - 列“fnumber”不属于表 mapTable。
+2020-09-23 16:00:31,265 [76] ERROR ApplicationInfoLog [(null)] <(null)< - System.Data.DataColumn GetDataColumn(System.String)
+2020-09-23 16:00:31,267 [76] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================

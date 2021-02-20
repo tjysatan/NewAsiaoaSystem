@@ -1,0 +1,213 @@
+﻿@model NewAsiaOASystem.ViewModel.PagerInfo<NewAsiaOASystem.ViewModel.PP_StaffinfoView>
+@{
+    ViewBag.Title = "分配明细添加（员工分页列表）";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<script type="text/javascript">
+    
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+    $(function () {
+        BindGrid();
+    })
+    function BindGrid() {
+            @{
+                if (null != Model && null != Model.GetPagingDataJson)
+                {
+                    string json = Model.GetPagingDataJson;//获取json数据
+                    @: var jsonStr = @Html.Raw(json);
+                }
+             }
+        dataGrid(jsonStr);
+    }
+    function dataGrid(jsonStr){
+        if (typeof (jsonStr) != "undefined") {
+            var html = "";
+            html = '<table class="layui-table">';
+            html += '<thead>';
+            html+='<tr>';
+            html+='<td width="5%"><input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" /></td>';
+            html+='<td width="15%">姓名</td>';
+            html+='<td width="15%">电话</td>';
+            html+='<td width="25%">操作</td>';
+            html+='</tr>';
+            html+='</thead>'
+            for (var i = 0, j = jsonStr.length; i < j; i++) {
+                html+='<tr>';
+                html += '<td width="5%"><input type="checkbox" name="ContentChecked" value="' + jsonStr[i].Id + '"/></td>';
+                html += '<td width="15%">' + jsonStr[i].Sat_Name + '</td>';
+                html+='<td width="15%">'+jsonStr[i].Sat_Tel+'</td>';
+                html+='<td width="25%"><div class="layui-btn-group">-</div></td>';
+                html+='</tr>';
+            }
+            html += '</table>';
+            $("#content").html(html);
+        }
+    }
+ 
+    function SerchList(pageIndex)
+    {
+        $("input[name='pageIndex']").val(pageIndex);
+        var options = {
+            beforeSubmit: function () {
+                return true;
+            },
+            dataType: "json",
+            success: function (context) {
+                var data=eval(context.result);
+                dataGrid(data);
+                $(".pagin").html(context.PageN);//输出分页按钮
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $.messager.alert("操作提示", '查询失败请重试！', 'error');
+            }
+        }
+        $('#form1').ajaxSubmit(options);
+        return false;
+    }
+
+
+    //提交分配明细
+    function FPADDEideajax(val)
+    {
+        //勾选的项目
+        var arr = GetGridSelete();
+        if (arr.length > 1) {
+            alert("只能选择一个员工！");
+            return false;
+        }
+        if (arr.length <= 0) {
+            alert("请选择员工!");
+            return false;
+        }
+        var zb = $("#zb").val();//完成数量
+        if (isNaN(zb)) {
+            alert("数量为纯数字!");
+            return false;
+        }
+        if(zb==""){
+            alert("数量不为空!");
+            return false;
+        }
+        var staffId = arr[0];
+        $.ajax({
+            type: "POST",
+            url: "/PP_Staffinfo/FPmxaddEide",
+            data: {"TTsrmxId": '@ViewData["TTsrmxId"]', "staffId": staffId, "zb": zb },
+            dataType: "html",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (context) {
+                disLoading();
+                if(context=="0")
+                {
+                    layer.alert("提交失败！", { icon: 2 });
+                    return false;
+                }
+                if(context=="1")
+                {
+                    if(val=="0"){
+                        layer.alert("提交成功！", { icon: 1 },function (){Closeiform()});
+                        return false;
+                    }
+                    else
+                    {
+                        layer.alert("提交成功！", { icon: 1 },function(){location.reload();});
+                        return false;
+                    }
+                }
+               
+
+            }
+        })
+    }
+
+
+    //直接关闭所有弹出框
+    function Closeiform() {
+        var index = parent.layer.getFrameIndex(window.name);
+        parent.layer.close(index);
+    }
+</script>
+<style>
+    .sopbtnsave
+    {
+        /*position: absolute;*/
+        width: 90%;
+        /*top: 5px;*/
+        text-align: center;
+    }
+
+    .soptopbtn
+    {
+        position: absolute;
+        width: 90%;
+        top: 1px;
+        text-align: center;
+    }
+</style>
+
+
+<fieldset class="layui-elem-field" style="width: 95%; margin: auto;">
+    <legend style="font-size: 12px;">查询条件</legend>
+    <div class="layui-field-box">
+        @using (Html.BeginForm("FPaddstaffSearchList", "PP_Staffinfo", FormMethod.Post, new { id = "form1" }))
+        {
+            @Html.Hidden("pageIndex");
+            <div class="layui-inline">
+                <label class="layui-form-label">员工姓名：</label>
+                <div class="layui-input-block">
+                    <input type="text" id="name" name="name" lay-verify="txtSearch_Name" autocomplete="off" placeholder="员工姓名" class="layui-input">
+                </div>
+            </div>
+             
+            <div class="layui-inline">
+                <label class="layui-form-label">员工电话：</label>
+                <div class="layui-input-block">
+                    <input type="text" id="员工电话" name="员工电话" lay-verify="txtSearch_Name" autocomplete="off" placeholder="员工电话" class="layui-input">
+                </div>
+            </div>
+            
+            <button class="layui-btn layui-btn-primary" onclick="return SerchList(1)">
+                <i class="layui-icon" style="font-size: 16px; color: #1E9FFF;">&#xe615;</i> 查询
+            </button>
+        }
+    </div>
+</fieldset>
+
+
+<div id="content"></div>
+
+<div class="pp_txt_max" style="background-image: none;">
+    <div class="layui-inline">
+        <label class="layui-form-label">占比：</label>
+        <div class="layui-input-block">
+            <input type="text" id="zb" name="zb" lay-verify="txtSearch_Name" autocomplete="off" placeholder="占比" class="layui-input">
+        </div>
+    </div>
+     %
+</div>
+
+<!--按钮-->
+<div class="sopbtnsave">
+    <button class="layui-btn layui-btn-primary" onclick='return FPADDEideajax(0)'>保存,关闭</button>
+    <button class="layui-btn layui-btn-primary" onclick='return FPADDEideajax(1)'>保存,停留</button>
+    <button class="layui-btn layui-btn-primary" onclick="return Closeiform()">关闭</button>
+</div>
+
+<!--==========================输出分页按钮=========================-->
+<div class="pagin">
+    @if (ViewBag.PageNavigate == null)
+    {
+        @Html.ShowPageNavigate(Model.CurrentPageIndex, Model.PageSize, Model.RecordCount);
+    }
+</div>

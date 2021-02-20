@@ -1,0 +1,473 @@
+﻿@model NewAsiaOASystem.ViewModel.PagerInfo<NewAsiaOASystem.ViewModel.WL_DkxInfoView>
+@{
+    ViewBag.Title = "物联网电控箱信息管理列表";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+
+@section HeadContent{
+    <script type="text/javascript">
+        $(function () {
+            BindGrid();
+        })
+        function BindGrid() {
+            @{
+                if (null != Model && null != Model.GetPagingDataJson)
+                {
+                    string json = Model.GetPagingDataJson;//获取json数据
+                    @: var jsonStr = @Html.Raw(json);
+                }
+             }
+            dataGrid(jsonStr);
+        }
+
+        function dataGrid(jsonStr)
+        {
+            if (typeof (jsonStr) != "undefined") {
+                var html = "";
+                html = '<table class="layui-table">';
+                html += '<thead>';
+                html+='<tr>';
+                html+='<td width="5%"><input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" /></td>';
+                html+='<td width="15%">SID</td>';
+                html+='<td width="10%">经销商</td>';
+                html+='<td width="8%">销售时间</td>';
+                html+='<td width="8%">上线时间</td>';
+                html+='<td width="5%">是否在保</td>';
+                html+='<td width="5%">是否欠费</td>';
+                html+='<td wodth="5%">剩余天数</td>';
+                html+='<td width="8%">到期日期</td>';
+                html+='<td width="5%">上线状态</td>';
+                html+='<td width="5%">销售状态</td>';
+                html+='<td width="8%">监控点</td>'
+                html+='<td width="15%">操作</td>';
+                html+='</tr>';
+                html+='</thead>';
+                for (var i = 0, j = jsonStr.length; i < j; i++) {
+                    var Isqf;//是否欠费
+                    var syts;//剩余天数
+                    if(jsonStr[i].Jf_endtime!=null) 
+                        syts=JSjfdaysumajax(jsonStr[i].Jf_endtime);
+                    else
+                        syts="-";
+                    html+='<tr>';
+                    html += '<td width="5%"><input type="checkbox" name="ContentChecked" value="' + jsonStr[i].Id + '"/></td>';
+                    html += '<td width="15%">'+ jsonStr[i].WL_SSD + '</td>';
+                    if(jsonStr[i].Xs_jxsId==null||jsonStr[i].Xs_jxsId=="")
+                        html+='<td width="10%">未销售</td>';
+                    else
+                        html+='<td width="10%">'+AjaxCust_Name(jsonStr[i].Xs_jxsId).Name+'</td>';
+                    if(jsonStr[i].Xs_datetime==null||jsonStr[i].Xs_datetime=="") 
+                        html+='<td width="8%">未销售</td>';
+                    else
+                        html+='<td width="8%">'+showDate(jsonStr[i].Xs_datetime)+'</td>';
+                    if(jsonStr[i].Sx_time==null||jsonStr[i].Sx_time=="")
+                        html+='<td width="8%">'+checkIsnotOnline(jsonStr[i].Xs_datetime)+'</td>';
+                    else
+                        html+='<td width="8%">'+showDate(jsonStr[i].Sx_time)+'</td>';
+                    html+='<td width="5%">是</td>';
+                    if(parseFloat(syts)<0)
+                        html+='<td width="5%" style="color:red">欠费</td>';
+                    else
+                        html+='<td width="5%">正常</td>';
+                    if(parseFloat(syts)<0)
+                        html+='<td width="5%" style="color:red">'+syts +'天</td>';//剩余天数
+                    else
+                        html+='<td width="5%">'+syts +'天</td>';//剩余天数
+                    if(jsonStr[i].Jf_endtime!=null) 
+                        html+='<td width="10%">'+showDate(jsonStr[i].Jf_endtime) +'</td>';
+                    else
+                        html+='<td width="10%">-</td>';
+                    if(jsonStr[i].Is_sx=="1")
+                        html+='<td width="5%">已上线</td>';
+                    else
+                        html+='<td width="5%">未上线</td>';
+                    if(jsonStr[i].Is_xs=="1")
+                        html+='<td width="5%">已销售</td>';
+                    else
+                        html+='<td width="5%">未销售</td>';
+                    if(jsonStr[i].monitor_name!=""&&jsonStr[i].monitor_name!=null)
+                        html+='<td width="8%">'+jsonStr[i].monitor_name+'</td>';
+                    else
+                        html+='<td width="8%">-</td>';
+                    html+='<td width="15%">'+czshowcs(jsonStr[i].Id,jsonStr[i].OrdermxId,jsonStr[i].Is_sx,jsonStr[i].WL_SSD)+'</td>';
+                    html+='</tr>';
+                }
+                html += '</table>';
+                $("#content").html(html);
+            }
+        }
+        //pageIndex当前页
+        function SerchList(pageIndex)
+        {
+            $("input[name='pageIndex']").val(pageIndex);
+            var options = {
+                beforeSubmit: function () {
+                    return true;
+                },
+                dataType: "json",
+                success: function (context) {
+                    var data=eval(context.result);
+                    dataGrid(data);
+                    $(".pagin").html(context.PageN);//输出分页按钮
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $.messager.alert("操作提示", '查询失败请重试！', 'error');
+                }
+            }
+            $('#form1').ajaxSubmit(options);
+            return false;
+        }
+        //查询客户信息
+        function AjaxCust_Name(Id) {
+            var json;
+            $.ajax({
+                type: "POST",
+                url: "/Api/NAWebApi/GetNACusjs",
+                data: { "": Id },
+                dataType: "json",
+                async: false,
+                success: function (reslut) {
+                    json = eval('(' + reslut + ')');
+                },
+                error: function (e) {
+                    alert("请求失败");
+                }
+            })
+            return json;
+        }
+
+        function AjaxGcsjsonbyId(Id){
+            var json;
+            $.ajax({
+                type: "POST",
+                url: "/WL_Gcsinfo/GetGcsjsonbyId",
+                data: {Id: Id },
+                dataType: "json",
+                async: false,
+                success: function (reslut) {
+                    json = eval(reslut);
+                },
+                error: function (e) {
+                    alert("请求失败");
+                }
+            })
+            return json;
+        }
+        
+        //检测上线
+        function  JcDxOline(){
+            $.ajax({
+                type: "POST",
+                url: "/WL_DkxInfo/JcDxOnline",
+                dataType: "json",
+                async: false,
+                success: function (reslut) {
+                    window.location="../WL_DkxInfo/List";
+                },
+                error: function (e) {
+                    alert("请求失败");
+                }
+            })
+        }
+
+        //操作
+        //val Id
+        //val2 订单Id
+        //val3 上线状态
+        //val4 sid号码
+        function czshowcs(val,val2,val3,val4) {  
+            var Id = "'" + val + "'";
+            var orederId=null;
+            if(val2){
+                orederId ="'"+val2+"'";
+            } 
+            var Is_sx="'"+val3+"'";
+            var sid="'"+val4+"'";
+            var z='<a href="#" onclick="DangeJConline(' + Is_sx + ','+sid+')">上线</a>&nbsp;&nbsp;';
+            var t='<a href="#" onclick="OrderSSID(' + orederId + ')">订单</a>&nbsp;&nbsp;';
+            return z+t;
+        }
+
+        //初始化设置
+        function csSIDbyId(val){
+            $.messager.confirm("操作提示", '确定要初始化此电控箱吗？', function (data) {
+                if(data){
+                    var flay=CSHsidbyID(val);
+                    if(flay=="true"){
+                        $.messager.alert("提示", '初始化成功！','info', function () {
+                            location.href = "../WL_DkxInfo/list";
+                        });
+                    }else
+                    {
+                        $.messager.alert("提示", '初始化失败！','error', function () {
+                            location.href = "../WL_DkxInfo/list";
+                        });
+                    }
+                }
+            })
+        }
+        //初始化电控箱信息ajax
+        function CSHsidbyID(Id){
+            var json;
+            $.ajax({
+                type: "POST",
+                url: "/WL_DkxInfo/cshSID",
+                data: {Id: Id },
+                dataType: "json",
+                async: false,
+                success: function (reslut) {
+                    json =reslut.status;
+                },
+                error: function (e) {
+                    alert("请求失败");
+                }
+            })
+            return json;
+        }
+        //设置手动上线
+        function SDSXsidbyID(Id){
+            var id = Id;
+            if (id != "") {
+                $('#windowDia').html("<iframe src=../WL_DkxInfo/EditPagesdsx?Id=" + id + " style='border:0px;' width='500px' height='400px'></iframe>");
+                $("#windowDia").window({
+                    title: '手动上线',
+                    modal: true,
+                    closed: false,
+                    width: 500,
+                    height:400,
+                });
+            }
+        }
+
+        function checkIsnotOnline(xs_time)
+        {
+            var sl;
+            $.ajax({
+                type: "POST",
+                url: "../WL_DkxInfo/checkIsnotOnline",
+                dataType: "json",
+                data: { Xs_time: xs_time},
+                async: false,
+                success: function (reslut) {
+                    sl = reslut.status;
+                },
+                error: function (e) {
+                    alert(e.error);
+                    alert("失败！");
+                }
+            })
+            return sl;
+        }
+
+        //根据上线时间计算剩余的缴费的天数
+        function JSjfdaysumajax(sx_time)
+        {
+            var str;
+            $.ajax({
+                type: "POST",
+                url: "../WL_DkxInfo/JcIsqfbyjfdatatime",
+                dataType: "html",
+                data: { sxdatetime: sx_time},
+                async: false,
+                success: function (reslut) {
+                    str = reslut;
+                },
+                error: function (e) {
+                    alert(e.error);
+                    alert("失败！");
+                }
+            })
+            return str;
+        }
+
+        //订单详情页面以及SID 查看
+        function OrderSSID(val) {
+            var id = val;
+            if (id) {
+                $('#windowDia').html("<iframe src=../NA_XSinfo/SOrderSID?Id=" + id + " style='border:0px;' width='800px' height='500px'></iframe>");
+                $("#windowDia").window({
+                    title: '订单详情',
+                    modal: true,
+                    closed: false,
+                    width: 855,
+                    height: 500,
+                });
+            }else{
+                $.messager.alert("提示", '电控箱尚未出售！')
+            }
+        }
+
+        //单个检测上线
+        //val 上线状态
+        //val2
+        function DangeJConline(val,val2)
+        {
+            if(val=="0"){
+                $.ajax({
+                    type: "POST",
+                    url: "../WL_DkxInfo/Jcsxtimebysid",
+                    data: { sid:val2 },
+                    dataType: "html",
+                    async: true,
+                    beforeSend: function () {
+                        ddchen();
+                    },
+                    success: function (reslut) {
+                        if (reslut == "1") {
+                            disLoading();
+                            layer.alert("检测成功！", { icon: 1 })
+                        }
+                        if (reslut == "0")
+                        {
+                            disLoading();
+                            layer.alert("不存在该sid码！", { icon: 2 })
+                        }
+                        if(reslut=="2")
+                        {
+                            disLoading();
+                            layer.alert("尚未上线或者不是物联网电控箱！", { icon: 2 })
+                        }
+                    },
+                    error: function (e) {
+                        disLoading();
+                        layer.alert("网络异常，请重试！", { icon: 2 })
+                    }
+                })
+            }
+            else
+            {
+                layer.alert("已经上线,无需重新检测！", { icon: 2 })
+            }
+        }
+        var loadi;
+        function ddchen() {
+            loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+        }
+        //关闭等待效果
+        function disLoading() {
+            layer.close(loadi);
+        }
+    </script>
+}
+
+<!--==================================数据列表=============================-->
+<div class="h-right">
+    <div class="h-right-c">
+        <!--查询条件-->
+        <div class="inquiry1">
+            <fieldset>
+                <legend>查询条件：</legend>
+                <ul>
+                    @using (Html.BeginForm("SearchList", "WL_DkxInfo", FormMethod.Post, new { id = "form1" }))
+                    {
+                        @Html.Hidden("pageIndex");
+                        <li><span>经销权：</span>
+                            <span class="inquiry-input">
+                                @Html.DropDownList("txtSearch_Name", ViewData["CustList"] as SelectList, new { @class = "add-function" })
+                            </span>
+                        </li>
+                        <li>
+                            <span>买一送一：</span>
+                            <span class="inquiry-input">
+                                @Html.DropDownList("txtSearch_Name2", ViewData["Cus2tList"] as SelectList, new { @class = "add-function" })
+                            </span>
+                        </li>
+                        <li>
+                            <span>是否上线：</span>
+                            <span>
+                                <select id="Is_sx" name="Is_sx" class="add-function">
+                                    <option value="">全部</option>
+                                    <option value="0">未上线</option>
+                                    <option value="1">已上线</option>
+                                </select>
+                            </span>
+                        </li>
+                        <li>
+                            <span>是否销售：</span>
+                            <span>
+                                <select id="Is_xs" name="Is_xs" class="add-function">
+                                    <option value="">全部</option>
+                                    <option value="0">未销售</option>
+                                    <option value="1">已销售</option>
+                                </select>
+                            </span>
+                        </li>
+                        <li>
+                            <span>是否欠费：</span>
+                            <span>
+                                <select id="Is_qf" name="Is_qf" class="add-function">
+                                    <option value="">全部</option>
+                                    <option value="0">欠费</option>
+                                    <option value="1">正常</option>
+                                </select>
+                            </span>
+                        </li>
+                        <li style="display:none">
+                            <span>状态：</span>
+                            <span>
+                                <select id="wl_zt" name="wl_zt" class="add-function">
+                                    <option value="">全部</option>
+                                    <option value="0">未售</option>
+                                    <option value="1">已售</option>
+                                    <option value="2">在线</option>
+                                    <option value="3">返修</option>
+                                </select>
+                            </span>
+                        </li>
+                        <li>
+                            <span>SID:</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="wl_sid" />
+                            </span>
+                        </li>
+                        <li>
+                            <span>销售时间：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txtSearch_startdate" onclick="WdatePicker()" />
+                            </span>
+                            到    <span class="inquiry-input">
+                                <input type="text" name="txtSearch_enddate" onclick="WdatePicker()" /></span>
+                        </li>
+                        <li>
+                            <span>上线时间：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txtSearch_SXstartdate" onclick="WdatePicker()" />
+                            </span>
+                            到
+                             <span class="inquiry-input">
+                                 <input type="text" name="txtSearch_SXenddate" onclick="WdatePicker()" />
+                             </span>
+                        </li>
+                        <li style="*width: 100%; *margin: -10px 0 5px 90px;"><span class="inquiry-input">
+                            <button class="layui-btn" onclick="return SerchList(1)"><i class="layui-icon">&#xe615;</i> 查询</button>
+                        </span>
+                        </li>
+                    }
+                    <li>
+                        <span class="inquiry-input">
+                            <button class="layui-btn" onclick="return addClick('/WL_DkxInfo/JsList')"><i class="layui-icon">&#x1002;</i> 刷新</button>
+                        </span>
+                    </li>
+                </ul>
+            </fieldset>
+        </div>
+
+        <div class="h-table">
+            <div class="h-table-content">
+
+
+                <div id="content"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--==========================输出分页按钮=========================-->
+<div class="pagin">
+    @if (ViewBag.PageNavigate == null)
+    {
+        @Html.ShowPageNavigate(Model.CurrentPageIndex, Model.PageSize, Model.RecordCount);
+    }
+</div>
+<div id="windowDia" class="easyui-window" closed="true" style="width: 600px; height: 400px; padding: 10px;"></div>

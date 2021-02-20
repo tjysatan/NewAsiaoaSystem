@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="NewAsiaOASystem.DBModel" assembly="NewAsiaOASystem.DBModel">
+  <class name="Flow_PlanProductioninfo" table="Flow_PlanProductioninfo">
+    <id name="Id" column="Id" type="string" unsaved-value="0">
+      <generator class="uuid.hex"/>
+    </id>
+    <property name="P_CPId" column="P_CPId" />
+    <property name="P_CPname" column="P_CPname" />
+    <property name="P_Pianhao" column="P_Pianhao" />
+    <property name="P_Model" column="P_Model" />
+    <property name="P_SCnumber" column="P_SCnumber" />
+    <property name="P_Issc" column="P_Issc" />
+    <property name="C_time" column="C_time" />
+    <property name="C_name" column="C_name" />
+    <property name="Sort" column="Sort" />
+    <property name="Status" column="Status" />
+    <property name="P_type" column="P_type" />
+    <property name="Isprint" column="Isprint" />
+    <property name="YJdatetime" column="YJdatetime" />
+    <property name="wcdatetime" column="wcdatetime" />
+    <property name="gwy" column="gwy" />
+    <property name="gwe" column="gwe" />
+    <property name="gws" column="gws" />
+    <property name="gwsi" column="gwsi" />
+    <property name="gww" column="gww" />
+    <property name="gwl" column="gwl" />
+    <property name="gwq" column="gwq" />
+    <property name="gwb" column="gwb" />
+    <property name="gwj" column="gwj" />
+    <property name="gwshi" column="gwshi" />
+    <property name="scbianhao" column="scbianhao" />
+    
+    <bag name="Ppurchaselist">
+      <key column="P_Id"/>
+      <one-to-many class="Flow_Pleasepurchaseinfo"/>
+    </bag>
+  </class>
+</hibernate-mapping>

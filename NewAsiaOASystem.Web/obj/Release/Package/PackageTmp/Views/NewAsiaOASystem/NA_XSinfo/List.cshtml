@@ -1,0 +1,568 @@
+﻿@model NewAsiaOASystem.ViewModel.PagerInfo<NewAsiaOASystem.ViewModel.NA_XSinfoView>
+@{
+    ViewBag.Title = "销售订单列表";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+
+@section HeadContent{
+    <script type="text/javascript">
+        $(function () {
+            BindGrid();
+        })
+        function BindGrid() {
+            @{
+                if (null != Model && null != Model.GetPagingDataJson)
+                {
+                    string json = Model.GetPagingDataJson;//获取json数据
+                    @: var jsonStr = @Html.Raw(json);
+                }
+             }
+            dataGrid(jsonStr);
+        }
+
+        function dataGrid(jsonStr)
+        {
+            if (typeof (jsonStr) != "undefined") {
+                var html = "";
+                html = '<table cellpadding="0" cellspacing="0" style="width:100%;">';
+                for (var i = 0, j = jsonStr.length; i < j; i++) {
+                    var Khinfo;//客户信息
+                    Khinfo=AjaxCust_Name(jsonStr[i].KhId);
+                    var Addresseeinfo=AjaxAddresseeinfobyCustId(jsonStr[i].AddresseeId);
+                    var xsmxinfo;//订单明细
+                    xsmxinfo=eval(ajaxXSdetailjson(jsonStr[i].Id));
+                    var ALLcpName="";
+                    if(xsmxinfo!=null){
+                        for (var a = 0,b=xsmxinfo.length; a < b; a++) {
+                            var CPname="";
+                     
+                            if(GetPerinfobyId(xsmxinfo[a].cpId)!=null)
+                            {
+                                CPname=GetPerinfobyId(xsmxinfo[a].cpId).Pname;
+                            }
+                            ALLcpName=ALLcpName+","+CPname;
+                        }
+                    }else{
+                        ALLcpName="无";
+                    }
+                    if (i % 2 == 0)
+                        html += '<tr class="h-table-content-r1">';
+                    else
+                        html += '<tr class="h-table-content-r">';
+                    html += '<td width="5%"><input type="checkbox" name="ContentChecked" value="' + jsonStr[i].Id + '"/></td>';
+                    html += '<td width="15%"><a href="#" title="'+ALLcpName +'" style="color:#256ea7">'+ALLcpName.substring(1,13) +'</a></td>';
+                    html+='<td width="10%">'+showDate(jsonStr[i].Xs_datetime)+'</td>';
+                    html+='<td width="10%">'+jsonStr[i].Xs_je+'元</td>';
+                    if(Addresseeinfo!=null){
+                        html+='<td width="10%"><a href="#" title="'+Addresseeinfo.Aname +'" style="color:#256ea7">'+Addresseeinfo.Aname.substring(0,8)+'</a></td>';
+                    }else
+                    {
+                        html+='<td width="10%">-</td>';
+                    }
+                    if(Khinfo!=null){
+                        html+='<td width="10%"><a href="#" title="'+Khinfo.Name +'" style="color:#256ea7">'+Khinfo.Name.substring(0,8)+'</a></td>';
+                    }else
+                    {
+                        html+='<td width="10%"></td>';
+                    }
+                    html+='<td width="10%">'+Smzt(jsonStr[i].SM_ZT)+'</td>';
+                    //html+='<td width="10%">'+xstype(jsonStr[i].Xs_type)+'</td>';
+                    if(Khinfo!=null){
+                        if(Khinfo.qyId!=null){
+                            html+='<td width="5%">有</td>';
+                        }else
+                        {
+                            html+='<td width="5%">无</td>';
+                        }
+                    }else
+                    {
+                        html+='<td width="5%">-</td>';
+                    }
+                    html+='<td width="25%"><div class="layui-btn-group">'+czshow1(jsonStr[i].Id,jsonStr[i].KhId,jsonStr[i].AddresseeId,jsonStr[i].Sort)+'</div></td>';
+                    html+='</tr>';
+                }
+                html += '</table>';
+                $("#content").html(html);
+            }
+        }
+        //pageIndex当前页
+        function SerchList(pageIndex)
+        {
+            $("input[name='pageIndex']").val(pageIndex);
+            var options = {
+                beforeSubmit: function () {
+                    return true;
+                },
+                dataType: "json",
+                success: function (context) {
+                    var data=eval(context.result);
+                    dataGrid(data);
+                    $(".pagin").html(context.PageN);//输出分页按钮
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $.messager.alert("操作提示", '查询失败请重试！', 'error');
+                }
+            }
+            $('#form1').ajaxSubmit(options);
+            return false;
+        }
+
+        //查询客户信息
+        function AjaxCust_Name(Id) {
+            var json;
+            $.ajax({
+                type: "POST",
+                url: "/Api/NAWebApi/GetNACusjs",
+                data: { "": Id },
+                dataType: "json",
+                async: false,
+                success: function (reslut) {
+                    json = eval('(' + reslut + ')');
+                },
+                error: function (e) {
+                    alert("请求失败");
+                }
+            })
+            return json;
+        }
+
+        //根据客户ID 查找收件人信息
+        function AjaxAddresseeinfobyCustId(Id) {
+            var json;
+            $.ajax({
+                type: "POST",
+                url: "../NA_XSinfo/GetaddresseeInfobyCustId",
+                data: { Id: Id },
+                dataType: "json",
+                async: false,
+                success: function (reslut) {
+                    json = eval(reslut);
+                },
+                error: function (e) {
+                    alert("请求失败");
+                }
+            })
+            return json;
+
+        }
+
+        //根据销售订单Id 查找销售明细
+        function ajaxXSdetailjson(XS_Id) {
+            var json;
+            $.ajax({
+                type: "POST",
+                url: "../NA_XSinfo/GetXsdetailjson",
+                data: { Id: XS_Id },
+                dataType: "json",
+                async: false,
+                success: function (reslut) {
+                    json = reslut;
+                },
+                error: function (e) {
+                    alert("请求失败");
+                }
+            })
+            return json;
+        }
+
+        /*根据产品Id 查找产品信息*/
+        function GetPerinfobyId(Id) {
+            var json;
+            $.ajax({
+                type: "POST",
+                url: "../NQ_CHdetailinfo/GetPreinfobyId",
+                data: { ID: Id },
+                dataType: "json",
+                async: false,
+                success: function (reslut) {
+                    json = reslut;
+                },
+                error: function (e) {
+                    alert("请求失败！");
+                }
+            })
+            return json;
+        }
+
+        //订单状态的返回显示
+        function Ddztshow(val){
+            if(val=="0"){
+                return "未付款";
+            }else if(val=="1"){
+                return "已付款";
+            }else if(val=="2"){
+                return "配货中";
+            }else if(val=="3"){
+                return "已发货";
+            }else if(val=="4"){
+                return "已签收";
+            }else if(val=="5"){
+                return "已取消";
+            }
+        }
+
+        //扫描状态
+        function Smzt(val){
+            if(val=="0"){
+                return "<a style='color:red'>未出货</a>";
+            }else if(val=="1"){
+                return "已出货";
+            }
+        }
+
+        //销售类型返回显示
+        function xstype(val){
+            if(val=="0"){
+                return "传统销售";
+            }else{
+                return "新亚商城";
+            }
+        }
+
+        function GetbcgcsId() { 
+            $.ajax({
+                type: "POST",
+                url: "../publicAPI/Addorder",
+                dataType: "json",
+                data: {},
+                async: false,
+                success: function (reslut) {
+                    window.location="../NA_XSinfo/List";
+                },
+                error: function (e) {
+                    alert(e.error);
+                    alert("失败！");
+                }
+            })
+        }
+
+        //操作
+        //val 订单Id
+        //val1 客户Id
+        //val2 收件地址Id
+        //val3 uId
+        function czshow1(val,val1,val2,val3) {
+            var Id = "'" + val + "'";
+            var khId="'"+val1+"'";
+            var addId="'"+val2+"'";
+            var UId="'"+val3+"'";
+            //var s = '<a class="layui-btn layui-btn-primary layui-btn-small" onclick="OrderSmx(' + Id + ')">查看</a>&nbsp;&nbsp;';
+            var z='<a class="layui-btn layui-btn-primary layui-btn-small" onclick="DYorder('+Id +')">打印1</a>';
+            var y='<a class="layui-btn layui-btn-primary layui-btn-small" onclick="OrderSSID('+Id +')">SID</a>';
+            var x='<a class="layui-btn layui-btn-primary layui-btn-small" onclick="Updatesmsum('+Id +')">扫量</a>';
+            var s = '<a class="layui-btn layui-btn-primary layui-btn-small" onclick="prindz(' + khId + ','+addId+','+UId+')">打印2</a>';
+            var a = '<a class="layui-btn layui-btn-primary layui-btn-small" onclick="updaterecView(' + addId +')">区域</a>;';
+            return z+y+x+s+a;
+        }
+
+        //修改收件人区域
+        function updaterecView(Id){
+            layer.open({
+                type: 2,
+                title: ['收件人地址区域', 'font-size:14px;'],
+                area: ['900px', '650px'],
+                offset: '10px',
+                fixed: false, //不固定
+                maxmin: true,
+                content: '../NA_XSinfo/resinfoView?addId='+Id,
+                //end: function () {
+                //    location.reload();
+                //}
+            })
+        }
+
+        //订单打印页面
+        function DYorder(val){
+            window.open("../NA_XSinfo/EwmOrderch" + "?id=" + val, "news", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=no,top=50,left=300,width=800,height=600,resizable=no")
+        }
+        //订单详情页面
+        function OrderSmx(val) {
+            var id = val;
+            if (id != "") {
+                $('#windowDia1').html("<iframe src=../NA_XSinfo/OrdermxView?Id=" + id + " style='border:0px;' width='800px' height='500px'></iframe>");
+                $("#windowDia1").window({
+                    title: '订单详情',
+                    modal: true,
+                    closed: false,
+                    width: 855,
+                    height: 500,
+                });
+            }
+        }
+        //订单sid详情页面
+        function OrderSSID(val) {
+            var id = val;
+            if (id != "") {
+                $('#windowDia1').html("<iframe src=../NA_XSinfo/SOrderSID?Id=" + id + " style='border:0px;' width='800px' height='500px'></iframe>");
+                $("#windowDia1").window({
+                    title: '订单详情',
+                    modal: true,
+                    closed: false,
+                    width: 855,
+                    height: 500,
+                });
+            }
+        }
+
+        //查询销售订单信息
+        function ajaxXSinfojson(r_id) {
+            var json;
+            $.ajax({
+                type: "POST",
+                url: "/NA_XSinfo/GetXsinfojson",
+                data: { Id: r_id },
+                dataType: "json",
+                async: false,
+                success: function (reslut) {
+                    json = reslut;
+                },
+                error: function (e) {
+                    alert("请求失败!");
+                }
+            })
+            return json;
+        }
+
+        /*快递单打印跳转*/
+        function prindz(khId,addId,Uid){
+            var kdgs=$("#kdgs").val();//
+           
+            //获取到选中值
+            var OpenUrl;
+            if(kdgs!=0)
+            {
+                if(kdgs=="sh")
+                {
+                    OpenUrl="/ExpressPrinting/DsshPrint";
+                }
+                if(kdgs=="sf")
+                {
+                    OpenUrl="/ExpressPrinting/DssfPrint";
+                }
+                if(kdgs=="db")
+                {
+                    OpenUrl="/ExpressPrinting/DsdbPrint";
+                }
+                if(kdgs=="zt")
+                {
+                    OpenUrl="/ExpressPrinting/DsztPrint";
+                }
+                if(kdgs=="tdhy")
+                {
+                    OpenUrl="/ExpressPrinting/DstdhyPrint";
+                }
+                if(kdgs=="JJ")
+                {
+                    OpenUrl="/ExpressPrinting/DsztPrint";
+                }
+                if(kdgs=="ycky")
+                {
+                    OpenUrl="/ExpressPrinting/DsyckyPrint";
+                }
+                if(kdgs=="ztky")
+                {
+                   
+                    OpenUrl="/ExpressPrinting/DsztkyPrint";
+                }
+                if(kdgs=="dbwl")
+                {
+                   
+                    OpenUrl="/ExpressPrinting/DsdbwlPrint";
+                }
+                if (kdgs == "an") {
+                    OpenUrl = "/ExpressPrinting/DsanPrint";
+                }
+                var start=InsEPModel(khId,addId,Uid,kdgs);
+                if(start=="1")
+                {
+                    if (kdgs == "db") {
+                        layer.open({
+                            type: 2,
+                            title: ['德邦快递云下单', 'font-size:14px;'],
+                            area: ['660px', '500px'],
+                            offset: '10px',
+                            fixed: false, //不固定
+                            maxmin: true,
+                            content: OpenUrl,
+                            end: function () {
+                                location.reload();
+                            }
+                        })
+                    } else {
+                     $('#windowDia').html("<iframe src="+OpenUrl+"?kdId=" + khId+"&addId="+addId + "  style='border:0px;' width='200px' height='100px' style='overflow:hidden'></iframe>");
+                    $("#windowDia").window({
+                        title: '确定打印',
+                        modal: true,
+                        closed: false,
+                        width:240,
+                        height:140,
+                    });
+                    }
+                    //window.open(OpenUrl + "?kdId=" + khId+"&addId="+addId, "news", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=yes,top=50,left=300,width=900,height=600,resizable=no")
+
+                } else if(start=="0"){
+                    $.messager.alert("操作提示", "打印记录保存失败！", "warning");
+                }else if(start=="2")
+                    {
+                        $.messager.alert("操作提示", "客户联系方式不完整！", "warning");
+                    }else if(start=="3")
+                    {
+                        $.messager.alert("操作提示", "客户收件地址不完整！", "warning");
+                    }
+               
+            }
+            else   
+            { 
+                $.messager.alert("操作提示", "请选好快递公司！", "warning");
+            }
+            return false;
+        }
+
+        function InsEPModel(KhId,addId,Uid,kdgs) {
+            var json;
+            $.ajax({
+                type: "POST",
+                url: "/EP_jlinfo/UInsEPModel",
+                data: {
+                    sjId: KhId, kdgs: kdgs,addId:addId,UId:Uid
+                },
+                dataType: "json",
+                async: false,
+                success: function (reslut) {
+                    json = reslut;
+                },
+                error: function (e) {
+                    alert("请求失败！");
+                }
+            })
+            return json;
+        }
+
+
+        /*需要扫码数量为*/
+        function Updatesmsum(Id) {
+            layer.open({
+                type: 2,
+                title: ['扫码条数修改', 'font-size:14px;'],
+                area: ['700px', '350px'],
+                offset: '40px',
+                fixed: false, //不固定
+                maxmin: true,
+                content: '../NA_XSinfo/UpdateordersmsumView?Id=' + Id,
+                end: function () {
+                    location.reload();
+                }
+            })
+        }
+
+
+    </script>
+}
+
+<!--==================================数据列表=============================-->
+<div class="h-right">
+    <div class="h-right-c">
+        <!--查询条件-->
+        <div class="inquiry1">
+            <fieldset>
+                <legend>查询条件：</legend>
+                <ul>
+                    @using (Html.BeginForm("SearchList", "NA_XSinfo", FormMethod.Post, new { id = "form1" }))
+                    {
+                        @Html.Hidden("pageIndex");
+                        <li><span>客户名称：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txtSearch_Name" /></span></li>
+                        <li>
+                            <span>订单类别：</span>
+                            <span class="inquiry-input">
+                                <select id="Issm" name="Issm">
+                                    <option value="">全部</option>
+                                    <option value="1">扫码出货</option>
+                                    <option value="0">无需扫码</option>
+                                </select>
+                            </span>
+                        </li>
+                        <li>
+                            <span>订单状态：
+                            </span>
+                            <span class="inquiry-input">
+                                <select id="sm_zt" name="sm_zt">
+                                    <option value="">全部</option>
+                                    <option value="0">未出货</option>
+                                    <option value="1">已出货</option>
+                                </select>
+                            </span>
+                        </li>
+                        <li style="*width: 100%; *margin: -10px 0 5px 90px;"><span class="inquiry-input">
+                            <button name="btnSerch" onclick="return SerchList(1)">查询</button>
+                        </span>
+                        </li>
+                    }
+                    <li>
+                        <span>快递公司:</span>
+                        <span class="inquiry-input">
+                            <select id="kdgs" name="kdgs" style="margin-top: 5px;">
+                                <option value="0">请选择</option>
+                                <option value="sh">盛辉物流</option>
+                                <option value="sf">顺丰速运</option>
+                                <option value="db">德邦快递</option>
+                                <option value="dbwl">德邦物流</option>
+                                <option value="zt">中通快递</option>
+                                <option value="tdhy">天地华宇</option>
+                                <option value="ycky">远成快运</option>
+                                <option value="JJ">佳吉物流</option>
+                                <option value="ztky">中通快运</option>
+                                <option value="an">安能物流</option>
+                            </select>
+                        </span>
+                    </li>
+                    <li>
+                        <span class="inquiry-input" style="display: none">
+                            <button onclick="return addClick('/NA_XSinfo/Xskdlist')">添加</button></span>
+                        <span class="inquiry-input">
+                            <button onclick="return del('/NA_XSinfo/xsDelete')">删除</button></span>
+                        <span class="inquiry-input">
+                            <button onclick="return addClick('/NA_XSinfo/List')">刷新</button></span>
+                        <span class="inquiry-input">
+                            <button onclick="return GetbcgcsId()">更新订单</button></span>
+                        <span class="inquiry-input" style="display: none">
+                            <button onclick="prindz()">打印</button>
+                        </span>
+                    </li>
+                </ul>
+            </fieldset>
+        </div>
+         <span style="color:red">注：表格中操作按钮说明：“打印1”出货单打印；"SID" 出货SID查看；"扫量"扫码数量修改；“打印2”快递单打印；“区域”收件人区域编辑</span>
+        <div class="h-table">
+            <div class="h-table-content">
+                <table cellpadding="0" cellspacing="0" class="h-right-table-title1" style="border: none; width: 100%;">
+                    <tr>
+                        <td width="5%">
+                            <input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" /></td>
+                        <td width="15%">商品名称</td>
+                        <td width="10%">下单时间</td>
+                        <td width="10%">应付总额</td>
+                        <td width="10%">收货人</td>
+                        <td width="10%">公司名称</td>
+                        <td width="10%">出货状态</td>
+                        <td width="5%">区域</td>
+                        <td width="25%">操作</td>
+                    </tr>
+                </table>
+                <div id="content"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--==========================输出分页按钮=========================-->
+<div class="pagin">
+    @if (ViewBag.PageNavigate == null)
+    {
+        @Html.ShowPageNavigate(Model.CurrentPageIndex, Model.PageSize, Model.RecordCount);
+    }
+</div>
+<div id="windowDia1" class="easyui-window" closed="true" style="width: 855px; height: 250px; padding: 10px;"></div>
+<div id="windowDia" class="easyui-window" closed="true" style="width: 600px; height: 400px; padding: 0px;"></div>
+

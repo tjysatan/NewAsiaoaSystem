@@ -1,0 +1,9 @@
+E:\公司项目\社区\IOT_Community\trunk\IOT_Community.IDao\bin\Release\IOT_Community.IDao.dll
+E:\公司项目\社区\IOT_Community\trunk\IOT_Community.IDao\bin\Release\IOT_Community.IDao.pdb
+E:\公司项目\社区\IOT_Community\trunk\IOT_Community.IDao\bin\Release\IOT_Community.DBModel.dll
+E:\公司项目\社区\IOT_Community\trunk\IOT_Community.IDao\bin\Release\IOT_Community.ViewModel.dll
+E:\公司项目\社区\IOT_Community\trunk\IOT_Community.IDao\bin\Release\IOT_Community.DBModel.pdb
+E:\公司项目\社区\IOT_Community\trunk\IOT_Community.IDao\bin\Release\IOT_Community.ViewModel.pdb
+E:\公司项目\社区\IOT_Community\trunk\IOT_Community.IDao\obj\Release\IOT_Community.IDao.csprojResolveAssemblyReference.cache
+E:\公司项目\社区\IOT_Community\trunk\IOT_Community.IDao\obj\Release\IOT_Community.IDao.dll
+E:\公司项目\社区\IOT_Community\trunk\IOT_Community.IDao\obj\Release\IOT_Community.IDao.pdb

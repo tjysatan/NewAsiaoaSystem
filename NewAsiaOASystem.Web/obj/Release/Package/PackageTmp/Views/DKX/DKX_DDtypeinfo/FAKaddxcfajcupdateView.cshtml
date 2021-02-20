@@ -1,0 +1,206 @@
+﻿@model NewAsiaOASystem.ViewModel.DKX_CPInfoView
+@{
+    ViewBag.Title = "现成方案库基础资料修改";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<script type="text/javascript">
+    $(function () {
+        zdfz();
+    })
+
+    ///赋值
+    function zdfz() {
+        $("#ddxh").val('@Model.Cpname');//型号
+        $("#gl").val('@Model.Power');//功率
+        $("#dw").val('@Model.DW');//单位
+        $("#dkxtype").val('@Model.Type');//电控箱类型
+        if ('@Model.Type' == "2") {
+            $("#wlwtyep").css('display', 'block');
+            var html;
+            html = '<label class="layui-form-label">物联类型：</label>';
+            html += '<div class="layui-input-block">';
+            html += '<select id="DD_WLWtype" name="DD_WLWtype" class="layui-input">';
+            html += '<option value="0">一体</option>';
+            html += '<option value="1">分体</option>';
+            html += '</section>';
+            html += '</div>';
+            $("#wlwtyep").html(html);
+            $("#DD_WLWtype").val('@Model.Isft');
+        }
+        else {
+            $("#wlwtyep").css('display', 'none');
+        }
+        var gcsstr = AjaxGetgcsjson('@Model.Type');
+        if (gcsstr != "" && gcsstr != null) {
+            $("#gcscon").css('display', 'block');
+            var html;
+            html = '<label class="layui-form-label">工程师：</label>';
+            html += '<div class="layui-input-block">';
+            html += '<select id="gcs" name="gcs" class="layui-input">';
+            for (var i = 0; i < gcsstr.length; i++) {
+                html += '<option value="' + gcsstr[i].Id + '">' + gcsstr[i].Name + '</option>';
+            }
+            html += '</section>';
+            html += '</div>';
+            $("#gcscon").html(html);
+            $("#gcs").val('@Model.Gcs_name');
+        }
+        $("#gnjsstr").val('@Model.cpgnjs');//型号
+    }
+
+    //获取工程师的数据
+    function AjaxGetgcsjson(val) {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "/DKX_DDtypeinfo/GetgcsjsonbydkxtypeId",
+            data: { type: val },
+            dataType: "json",
+            async: false,
+            success: function (reslut) {
+                json = eval(reslut);
+            },
+            error: function (e) {
+                alert("请求失败");
+            }
+        })
+        return json;
+    }
+
+    function guanbi() {
+        var index = parent.layer.getFrameIndex(window.name);
+        //关闭弹出层
+        parent.layer.close(index);
+    }
+
+    //
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+
+    //下单提交
+    function xdtj() {
+        var ddxh = $("#ddxh").val();
+        var gl = $("#gl").val();
+        var dw = $("#dw").val();
+        var dkxtype = $("#dkxtype").val();
+        var wlwtyep = $("#DD_WLWtype").val();
+        var gcscon = $("#gcs").val();
+        var gnjsstr = $("#gnjsstr").val();
+        if (ddxh == "") {
+            layer.alert("产品型号不为空！", { icon: 2 });
+            return false;
+        }
+        if (gl == "") {
+            layer.alert("请填写功率！", { icon: 2 });
+            return false;
+        }
+        //if (isNaN(gl)) {
+        //    layer.alert("功率为纯数字！", { icon: 2 });
+        //    return false;
+        //}
+        if (dkxtype == "") {
+            layer.alert("请选择订单类型！", { icon: 2 });
+            return false;
+        }
+        $.ajax({
+            url: "../DKX_DDtypeinfo/FAKaddjcupdateEide",
+            type: "POST",
+            data: {Id:'@ViewData["Id"]', ddxh: ddxh, gl: gl, dw: dw, dkxtype: dkxtype, wlwtyep: wlwtyep, gcscon: gcscon, gnjsstr: gnjsstr },
+            dataType: "html",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response == "2") {
+                    layer.alert("提交成功！", { icon: 1 }, function () { guanbi(); });
+                }
+                if (response == "3") {
+                    layer.alert("提交失败！", { icon: 2 }, function () { location.reload(); });
+                }
+
+                if (response == "1") {
+                    layer.alert("已存在相同的产品！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "0") {
+                    layer.alert("提交异常,请重新提交！", { icon: 2 }, function () { location.reload(); });
+                }
+
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+    }
+</script>
+
+
+
+<div style="width: 80%; padding: 20px 20px 0 20px">
+    <div class="layui-form-item">
+        <label class="layui-form-label">产品型号：</label>
+        <div class="layui-input-inline">
+            <input class="layui-input" id="ddxh" name="ddxh" placeholder="产品型号" type="text" style="width: 200px" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">功率：</label>
+        <div class="layui-input-block">
+            <input class="layui-input" id="gl" name="gl" placeholder="功率,请选择单位" type="text" style="width: 200px;" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">功率单位：</label>
+        <div class="layui-input-block" style="width: 200px;">
+            <select id="dw" name="dw" class="layui-input">
+                <option value="P">P</option>
+                <option value="KW">KW</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">订单类型：</label>
+        <div class="layui-input-block">
+            @Html.DropDownList("dkxtype", ViewData["dkxtypeList"] as SelectList, new { @class = "layui-input", @onchange = "ddtypechange()" })
+        </div>
+    </div>
+
+    <div class="layui-form-item" id="wlwtyep" style="display: none">
+    </div>
+    <div class="layui-form-item" id="gcscon" style="display: none">
+    </div>
+
+    <div class="layui-form-item" style="display: none">
+        <label class="layui-form-label">产品批号：</label>
+        <div class="layui-input-block">
+            <input class="layui-input" id="cpph" name="cpph" placeholder="产品批号" type="text" style="width: 200px;" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">功能简述：</label>
+        <div class="layui-input-block">
+            <textarea placeholder="功能简述" id="gnjsstr" name="gnjsstr" class="layui-textarea"></textarea>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="formDemo" onclick="return xdtj()">修改</button>
+            <button type="reset" class="layui-btn layui-btn-primary" onclick="guanbi()">取消</button>
+        </div>
+    </div>
+</div>
+

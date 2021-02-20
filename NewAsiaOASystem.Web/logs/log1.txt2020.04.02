@@ -1,0 +1,5 @@
+2020-04-02 23:04:23,895 [48] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2020-04-02 23:04:23,896 [48] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2020-04-02 23:04:23,896 [48] ERROR ApplicationInfoLog [(null)] <(null)< - 未将对象引用设置到对象的实例。
+2020-04-02 23:04:23,896 [48] ERROR ApplicationInfoLog [(null)] <(null)< - Void loginsession(NewAsiaOASystem.ViewModel.SessionUser)
+2020-04-02 23:04:23,896 [48] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================

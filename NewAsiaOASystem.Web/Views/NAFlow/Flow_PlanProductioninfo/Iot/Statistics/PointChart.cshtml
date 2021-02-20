@@ -1,0 +1,23 @@
+﻿@{
+    ViewBag.Title = "统计图表";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@section HeadContent{
+    <script src="~/Scripts/highcharts.js"></script>
+    <script src="~/Scripts/exporting.js"></script>
+
+    <script src="~/Content/Iot/Statistics.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            PointChart();
+        })
+    </script>
+    }
+
+	<div style="margin:20px 0;">
+		<a href="#" class="easyui-linkbutton" onclick="PointChart()">线型图</a>
+		<a href="#" class="easyui-linkbutton" onclick="BarGraph()">柱状图</a>
+        <a href="#" class="easyui-linkbutton" onclick="PieGraph()">饼状图</a>
+	</div>
+ <div id="container" style="min-width:700px;height:400px"></div>

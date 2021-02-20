@@ -1,0 +1,317 @@
+﻿@{
+    ViewBag.Title = "各经销商的销售上线情况统计";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<style>
+    .titletjbg2
+    {
+        height: 40px;
+        line-height: 40px;
+        background: #fff;
+        float: left;
+        width: 100%;
+        border-radius: 4%;
+    }
+
+    .add-infor-title-bg_tj ul
+    {
+        padding: 10px;
+    }
+
+        .add-infor-title-bg_tj ul li
+        {
+            width: 20%;
+            float: left;
+            font-size: 15px;
+        }
+
+    .titletjbg2 ul
+    {
+        padding: 10px;
+    }
+
+        .titletjbg2 ul li
+        {
+            width: 20%;
+            float: left;
+            font-size: 15px;
+        }
+
+    .add-infor-title-bg_header
+    {
+        height: 46px;
+        line-height: 46px;
+        background: #e8e5e5;
+        float: left;
+        width: 100%;
+    }
+
+        .add-infor-title-bg_header ul
+        {
+            /*padding: 10px;*/
+        }
+
+            .add-infor-title-bg_header ul li
+            {
+                width: 20%;
+                float: left;
+                font-size: 18px;
+            }
+
+    #content table
+    {
+        border-collapse: collapse;
+        border: none;
+    }
+
+        #content table td
+        {
+            border: solid #e8e5e5 1px;
+        }
+</style>
+<script async="" src="../Scripts/Blob.js"></script>
+<script async="" src="../Scripts/FileSaver.js"></script>
+<script type="text/javascript">
+
+    $(function () {
+        document.getElementById("saveBtn").onclick = function (event) {
+            event.preventDefault();
+            var BB = self.Blob;
+            saveAs(
+                  new BB(
+                      ["\ufeff" + document.getElementById("PrintA").value] //\ufeff防止utf8 bom防止中文乱码
+                    , { type: "text/plain;charset=utf8" }
+                )
+                , document.getElementById("filename").value
+            );
+        };
+    })
+
+
+    //html数据
+    function dataGrid(datestr, datestr2) {
+        var jsonStr;
+        var str = "省份,客户名称,销售量,上线量,累计销售,累计上线";
+        jsonStr = P_Saleonline(datestr, datestr2);//查询省份数据
+        var ALLsalecount = 0;//全部销售
+        var ALLonlinecount = 0;//上线合计
+        var ALLLJsalecount = 0;//累计销售合计
+        var ALLLJonlinecount = 0;//累计上线合计
+        if (jsonStr != null) {
+            var html = "";
+            html += '<table style="width:100%; color:#000; font-size:13px; text-align:center;">';
+            for (var i = 0, j = jsonStr.length; i < j; i++) {
+                str = str + "\n" + jsonStr[i].Pname + "," + jsonStr[i].CusName + "," + jsonStr[i].salecount + "," + jsonStr[i].onlinecount + "," + jsonStr[i].LJsalecount + "," + jsonStr[i].LJonlinecount;
+                html += '<tr>';
+                html += '<td width="10%"  height="30px">' + jsonStr[i].Pname + '</td>';
+                if (jsonStr[i].CusType == "1")
+                    html += '<td width="30%"  height="30px">(经销权)' + jsonStr[i].CusName + '</td>';
+                else
+                    html += '<td width="30%"  height="30px">(一般)' + jsonStr[i].CusName + '</td>';
+                html += '<td width="15%" height="30px">' + jsonStr[i].salecount + '</td>';
+                html += '<td width="15%" height="30px">' + jsonStr[i].onlinecount + '</td>';
+                html += '<td width="15%" height="30px">' + jsonStr[i].LJsalecount + '</td>';
+                html += '<td width="15%" height="30px">' + jsonStr[i].LJonlinecount + '</td>';
+                html += '</tr>';
+                ALLsalecount += parseInt(jsonStr[i].salecount);
+                ALLonlinecount += parseInt(jsonStr[i].onlinecount);
+                ALLLJsalecount += parseInt(jsonStr[i].LJsalecount);
+                ALLLJonlinecount += parseInt(jsonStr[i].LJonlinecount);
+            }
+            html += "<tr>";
+            html += '<td width="10%"  height="30px"></td>';
+            html += '<td width="30%"  height="30px">合计：</td>';
+            html += '<td width="15%"  height="30px">' + ALLsalecount + '</td>';
+            html += '<td width="15%"  height="30px">' + ALLonlinecount + '</td>';
+            html += '<td width="15%"  height="30px">' + ALLLJsalecount + '</td>';
+            html += '<td width="15%"  height="30px">' + ALLLJonlinecount + '</td>';
+            html += "</tr>";
+            html += '</table>';
+            $("#content").html(html);
+            str = str + "\n" + "null" + ",合计：," + ALLsalecount + "," + ALLonlinecount + "," + ALLLJsalecount + "," + ALLLJonlinecount;
+            document.getElementById("PrintA").innerHTML = str;
+            document.getElementById("PrintA2").innerHTML = str2;
+        }
+    }
+
+    function CheckDATA() {
+        var time;
+        var DDsum;
+        var time2;
+        if ($("#YYYY").val() != null && $("#YYYY").val() != "") {
+            time = $("#YYYY").val() + "-" + $("#MM").val() + "-01";
+            DDsum = GetDDjst($("#MM").val())
+            time2 = $("#YYYY").val() + "-" + $("#MM").val() + "-" + DDsum;
+        }
+        dataGrid(time, time2);
+    }
+
+    //经销商销售量上线量
+    function P_Saleonline(month, Endtime) {
+        var sl;
+        $.ajax({
+            type: "POST",
+            url: "../WL_DkxInfo/CusDkxsaleOnlineJson",
+            dataType: "json",
+            data: { month: month, Endtime: Endtime },
+            async: false,
+            success: function (reslut) {
+                sl = reslut;
+            },
+            error: function (e) {
+                alert("失败！");
+            }
+        })
+        return sl;
+    }
+
+    //指定页面区域“单元格”内容导入Excel
+    function CellAreaExcel() {
+        var oXL = new ActiveXObject("Excel.Application");
+        var oWB = oXL.Workbooks.Add();
+        var oSheet = oWB.ActiveSheet;
+        var Lenr = PrintA.rows.length;
+        for (i = 0; i < Lenr; i++) {
+            var Lenc = PrintA.rows(i).cells.length;
+            for (j = 0; j < Lenc; j++) {
+                oSheet.Cells(i + 1, j + 1).value = PrintA.rows(i).cells(j).innerText;
+            }
+        }
+        oXL.Visible = true;
+    }
+
+    //展开
+    function CZopen(val) {
+        if ($("#" + val).css("display") == "none") {
+            $("#zk" + val).html("收起");
+            $("#" + val).css('display', 'block');
+        } else {
+            $("#zk" + val).html("展开");
+            $("#" + val).css('display', 'none');
+        }
+    }
+
+    function YYYYMMDDstart() {
+        MonHead = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+        //先给年下拉框赋内容   
+        var y = new Date().getFullYear();
+        for (var i = (y - 1) ; i < (y + 30) ; i++) //以今年为准，前30年，后30年   
+            document.reg_testdate.YYYY.options.add(new Option(" " + i, i));
+
+        //赋月份的下拉框   
+        for (var i = 1; i < 13; i++)
+            document.reg_testdate.MM.options.add(new Option(" " + i, i));
+
+        document.reg_testdate.YYYY.value = y;
+        document.reg_testdate.MM.value = new Date().getMonth() + 1;
+        var n = MonHead[new Date().getMonth()];
+        if (new Date().getMonth() == 1 && IsPinYear(YYYYvalue)) n++;
+        //  writeDay(n); //赋日期下拉框Author:meizz   
+        //  document.reg_testdate.DD.value = new Date().getDate();
+    }
+    if (document.attachEvent)
+        window.attachEvent("onload", YYYYMMDDstart);
+    else
+        window.addEventListener('load', YYYYMMDDstart, false);
+    function YYYYDD(str) //年发生变化时日期发生变化(主要是判断闰平年)   
+    {
+        var MMvalue = document.reg_testdate.MM.options[document.reg_testdate.MM.selectedIndex].value;
+        if (MMvalue == "") { var e = document.reg_testdate.DD; optionsClear(e); return; }
+        var n = MonHead[MMvalue - 1];
+        if (MMvalue == 2 && IsPinYear(str)) n++;
+        //writeDay(n)
+    }
+
+    function MMDD(str)   //月发生变化时日期联动   
+    {
+        var YYYYvalue = document.reg_testdate.YYYY.options[document.reg_testdate.YYYY.selectedIndex].value;
+        if (YYYYvalue == "") { var e = document.reg_testdate.DD; optionsClear(e); return; }
+        var n = MonHead[str - 1];
+        if (str == 2 && IsPinYear(YYYYvalue)) n++;
+        // writeDay(n)
+    }
+
+    function IsPinYear(year)//判断是否闰平年   
+    {
+        return (0 == year % 4 && (year % 100 != 0 || year % 400 == 0));
+    }
+
+    //获取当月的天数
+    function GetDDjst(str) {
+        var YYYYvalue = document.reg_testdate.YYYY.options[document.reg_testdate.YYYY.selectedIndex].value;
+        if (YYYYvalue == "") { var e = document.reg_testdate.DD; optionsClear(e); return; }
+        var n = MonHead[str - 1];
+        if (str == 2 && IsPinYear(YYYYvalue)) n++;
+        return n;
+        // writeDay(n)
+    }
+
+</script>
+
+
+<textarea rows="6" id="PrintA" style="display: none;">
+</textarea>
+
+<input type="hidden" name="filename" id="filename" value="各客户物联网销售上线情况.xls" />
+
+<div class="infor">
+    <div class="inquiry1">
+        <fieldset>
+            <ul>
+                <li>
+                    <span class="inquiry-input">
+                        <button type="button" id="saveBtn">导出数据</button>
+                    </span>
+                </li>
+
+                <li>
+                    <form name="reg_testdate">
+                        <span class="inquiry-input">
+                            <select name="YYYY" id="YYYY" onchange="YYYYDD(this.value)">
+                                <option value="">请选择 年</option>
+                            </select>
+                        </span>
+                        <span class="inquiry-input">
+                            <select name="MM" id="MM" onchange="MMDD(this.value)">
+                                <option value="">选择 月</option>
+                            </select>
+                        </span>
+
+                    </form>
+                </li>
+                <li>
+                    <span class="inquiry-input">
+                        <button type="button" id="saveBtn3" onclick="CheckDATA()">查询</button>
+                    </span>
+                </li>
+            </ul>
+
+        </fieldset>
+    </div>
+
+</div>
+
+<div style="width: 95%; margin: auto; margin-top: 10px; border: 1px solid #e8e5e5;">
+    <div class="add-infor-title-bg_header">
+        <table style="width: 100%; color: #000; font-size: 13px; text-align: center;">
+            <tr>
+                <td width="10%">区域
+                </td>
+                <td width="30%">经销商
+                </td>
+                <td width="15%">销售数量
+                </td>
+                <td width="15%">上线数量
+                </td>
+                <td width="15%">累计销售
+                </td>
+                <td width="15%">累计上线
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="content" style="width: 100%;">
+    </div>
+</div>

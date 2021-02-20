@@ -1,0 +1,184 @@
+﻿@{
+    ViewBag.Title = "物料库存确认操作";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<script type="text/javascript">
+    $(function () {
+        var ddstr = AjaxGetddinfoyId();
+        var xtstr = '<span style="color:#D2D2D2">未确认</span>'
+        if (ddstr.xtIsq == "1") {
+            xtstr = '<span style="color:#FF5722;">缺料</span>';
+        }
+        if (ddstr.xtIsq == "2") {
+            xtstr = '<span style="color:#009688">料齐</span>';
+        }
+        var quwlstr = '<span style="color:#D2D2D2">未处理</span>'
+        if (ddstr.qtIsq == "1") {
+            quwlstr = '<span style="color:#FF5722;">缺料</span>';
+        }
+        if (ddstr.qtIsq == "2") {
+            quwlstr = '<span style="color:#009688">料齐</span>';
+        }
+        $("#xtiscz").html(xtstr);
+        $("#qtwliscz").html(quwlstr);
+
+    })
+
+    //获取订单信息
+    function AjaxGetddinfoyId() {
+        var json;
+        $.ajax({
+            url: "../DKX_DDtypeinfo/AjaxorderbyId",
+            type: "POST",
+            data: { Id: '@ViewData["Id"]' },
+            dataType: "JSON",
+            async: false,
+            success: function (response) {
+                json = eval(response);
+            },
+            error: function (e) {
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+        return json;
+    }
+
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+
+    function guanbi() {
+        var index = parent.layer.getFrameIndex(window.name);
+        //关闭弹出层
+        parent.layer.close(index);
+    }
+    //物料确认
+    function wlqr(type,caozuo) {
+        @* var type = ""
+        if ('@ViewData["Uname"]' == "jy")//其他物料
+        {
+            type = "1"
+        }
+        if ('@ViewData["Uname"]' == "taoyonggang")//箱体
+        {
+            type = "0";
+        }
+        if (type == "") {
+            layer.alert("当前登录的角色无权操作！", { icon: 2 });
+            return false;
+        }*@
+        var ispermissions=false
+        if (type == "1") {//其他物料确认
+            if ('@ViewData["Uname"]' == "jy" || '@ViewData["Uname"]' == "shengguan")
+            {
+                ispermissions=true
+            }
+        }
+        if (type == "0") {
+            if ('@ViewData["Uname"]' == "taoyonggang" || '@ViewData["Uname"]' == "shengguan")
+            {
+                ispermissions = true
+            }
+        }
+        if (!ispermissions)
+        {
+            layer.alert("当前登录的角色无权操作！", { icon: 2 });
+            return false;
+        }
+        $.ajax({
+            url: "../DKX_DDtypeinfo/WLQRTJEide",
+            type: "POST",
+            data: { Id: '@ViewData["Id"]', type: type, zt: caozuo },
+            dataType: "html",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response == "0") {
+                    layer.alert("提交成功！", { icon: 1 }, function () { location.reload(); });
+                }
+                if (response == "1") {
+                    layer.alert("提交异常！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "2") {
+                    layer.alert("该状态下无需该操作！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "3") {
+                    layer.alert("订单不存在！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "4") {
+                    layer.alert("处理类型参数缺少！", { icon: 2 }, function () { location.reload(); });
+                }
+
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+    }
+</script>
+<style>
+    .btnstyle {
+        height:30px;
+        line-height:30px;
+        padding:0 10px;
+        font-size:12px;
+    }
+</style>
+
+<div style="width: 90%; padding: 20px 20px 0 20px">
+    <table style="width: 100%">
+        <tr>
+            <td width="90px">箱体物料：</td>
+            <td width="65px" id="xtiscz"></td>
+            <td width="65px">操作:</td>
+            <td>
+                <div class="layui-btn-group">
+                    <button type="button" class="btnstyle layui-btn" onclick='wlqr("0","2")'>料齐</button>
+                    <button type="button" class="btnstyle layui-btn layui-btn-danger" onclick='wlqr("0","1")'>缺料</button>
+                </div>
+            </td>
+
+        </tr>
+    </table>
+    <hr class="layui-bg-blue">
+    <table style="width: 100%">
+        <tr>
+            <td width="90px">其他物料：</td>
+            <td width="65px" id="qtwliscz"></td>
+            <td width="65px">操作:</td>
+            <td>
+                <div class="layui-btn-group">
+                    <button type="button" class="btnstyle layui-btn" onclick='wlqr("1","2")'>料齐</button>
+                    <button type="button" class="btnstyle layui-btn layui-btn-danger" onclick='wlqr("1","1")'>缺料</button>
+                </div>
+            </td>
+        </tr>
+    </table>
+
+    <hr class="layui-bg-black">
+@*    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">是否缺料：</label>
+        <div class="layui-input-block" style="width: 300px">
+            <select class="layui-input" id="caozuo" name="caozuo">
+                <option value="1">缺料</option>
+                <option value="2">料齐</option>
+            </select>
+        </div>
+    </div>*@
+    <div class="layui-form-item" style="margin: auto; text-align:center">
+       @* <div class="layui-input-block">*@
+            @*<button class="layui-btn" lay-submit="" lay-filter="demo1" onclick="wlqr()">提交</button>*@
+            <button type="reset" class="layui-btn layui-btn-primary" onclick="guanbi()">关闭</button>
+       @* </div>*@
+    </div>
+</div>

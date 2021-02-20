@@ -1,0 +1,73 @@
+﻿@{
+    ViewBag.Title = "会议原定与会者名单导入";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>testerweimaView</title>
+    <script type="text/javascript">
+
+        $(function () {
+            //生成
+            $('#createBtn').click(function () {
+                createImage();
+            });
+            //解析
+            $('#analysisBtn').click(function () {
+                analysisImage();
+            });
+        });
+
+        //生成二维码
+        function createImage() {
+            var content = $('#content').val();
+            //ajax开始
+            $.post("/publicAPI/GetORImage/",
+                { "content": content },
+                function (data) {
+                    $('#imgDiv').empty();
+                    $('#imgDiv').append('<img id="ORImage" />');
+                    $("#ORImage").attr("src", data);
+                });
+            //ajax结束
+        }
+
+        //解析二维码
+        function analysisImage() {
+            //获取图片名称
+            var imageUrl = $('#ORImage').attr("src");
+            var array = imageUrl.split('/');
+            var imageName = array[array.length - 1]; //如:123.jpg
+
+            //ajax开始
+            $.post("/publicAPI/GetORImageContent/",
+                { "imageName": imageName },
+                function (data) {
+                    $('#ORCodeContent').empty();
+                    $('#ORCodeContent').text(data);
+                });
+            //ajax结束
+        }
+    </script>
+</head>
+<body>
+    <div style="text-align:center;">
+        <div>
+            <textarea style="width:230px;height:120px;" id="content"></textarea>
+            <br />
+            <input id="createBtn" type="button" value="生成二维码" />
+        </div>
+        <div>
+            <textarea style="width:230px;height:120px;" id="ORCodeContent"></textarea>
+            <br />
+            <input id="analysisBtn" type="button" value="解析二维码" />
+        </div>
+        <div style="margin-top:20px;" id="imgDiv">
+        </div>
+    </div>
+</body>
+</html>

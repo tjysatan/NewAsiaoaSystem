@@ -1,0 +1,15 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="NewAsiaOASystem.Web.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="NewAsiaOASystem_Web_Newasia_XYOffer" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://www.chinanewasia.com/offer/XYOffer.asmx</Value>
+    </Setting>
+    <Setting Name="NewAsiaOASystem_Web_WebReference_WebService" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://222.92.203.58/WebAPI/WebService.asmx</Value>
+    </Setting>
+    <Setting Name="NewAsiaOASystem_Web_localhost_WebService" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://localhost:43537/WebAPI/WebService.asmx</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

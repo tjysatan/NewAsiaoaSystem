@@ -1,0 +1,103 @@
+﻿@model NewAsiaOASystem.ViewModel.SysPersonView
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_SysLayout.cshtml"; 
+}
+
+@section HeadContent{
+    <link href="~/Scripts/zTree_v3/css/demo.css" rel="stylesheet" />
+    <link href="~/Scripts/zTree_v3/css/zTreeStyle/zTreeStyle.css" rel="stylesheet" />
+    <script src="~/Scripts/zTree_v3/js/jquery.ztree.core-3.5.min.js"></script>
+    <script src="~/Scripts/zTree_v3/js/jquery.ztree.excheck-3.5.min.js"></script>
+
+}
+
+
+
+@using (Html.BeginForm("Edit", "SysPerson", FormMethod.Post, new { id = "form1" }))
+{  
+    @Html.HiddenFor(m => m.CreateTime);
+    @Html.HiddenFor(m => m.CreatePerson)
+    @Html.HiddenFor(m => m.UpdateTime)
+    @Html.HiddenFor(m => m.UpdatePerson)
+    @Html.HiddenFor(m => m.Id)
+    @Html.Hidden("SelectComm");//用于保存选中的角色id
+    <div class="infor">
+        @*       <div class="h-right-title">您当前的位置：用户管理</div>*@
+        <p id="Ptitle"></p>
+        <div class="system-menu-set">
+            <ul class="infor-c">
+                <li><span class="infor-c-width">用户账号：</span><span class="infor-c-input">
+                    @{
+                              if (!string.IsNullOrEmpty(Model.Id))
+                              { 
+                        @Html.TextBoxFor(m => m.Name, new { @readonly = "readonly" })
+                              }
+                              else
+                              {
+                        @Html.TextBoxFor(m => m.Name)
+                              }
+                    }
+                </span><span style="color: red; font-size: 24px; vertical-align: middle; margin-left: 8px;">*</span><span class="desc w-register">请输入英文字母，如admin</span></li>
+            </ul>
+            <ul class="infor-c">
+                <li><span class="infor-c-width">用户姓名：</span><span class="infor-c-input">@Html.TextBoxFor(m => m.UserName)</span><span style="color: red; font-size: 24px; vertical-align: middle; margin-left: 8px;">*</span><span class="desc w-register">请输入用户姓名，如张艳</span></li>
+            </ul>
+            <ul class="infor-c">
+                <li><span class="infor-c-width">用户密码：</span><span class="infor-c-input"><input type="password"  id="Password" name="Password" value="@ViewBag.PassWd"/>@*@Html.PasswordFor(m => m.Password)*@</span><span style="color: red; font-size: 24px; vertical-align: middle; margin-left: 8px;">*</span><span class="desc w-register">请设置密码，可以是数字、英文。</span></li>
+            </ul>
+            <ul class="infor-c">
+                <li><span class="infor-c-width">确认密码：</span><span class="infor-c-input"><input type="password"  id="txt_CheckPassword" name="RePassword" value="@ViewBag.PassWd"/></span><span style="color: red; font-size: 24px; vertical-align: middle; margin-left: 8px;">*</span><span class="desc w-register">请重新输入密码</span></li>
+            </ul>
+            <ul class="infor-c">
+                <li><span class="infor-c-width">联系方式：</span><span class="infor-c-input">@Html.TextBoxFor(m => m.Tel)</span>请输入联系电话</li>
+            </ul>
+            <ul class="infor-c ">
+                <li><span class="infor-c-width">所在单位：</span>
+                    <span>
+                        @Html.DropDownList("ADListData", ViewData["getADList"] as SelectList, new { @class = "add-function" });
+                    </span><span style="color: red; font-size: 24px; vertical-align: middle; margin-left: 8px;">*</span><span class="desc w-register">请选择所属单位</span></li>
+            </ul>
+            <ul class="infor-c ">
+                <li><span class="infor-c-width">角色：</span>
+                    <span>
+                        <input id="sel_Comm" class="add-function" type="text" readonly="readonly" onclick="showMenu();" />
+                    </span>
+                    <span style="color: red; font-size: 24px; vertical-align: middle; margin-left: 8px;">*</span>
+                    <span class="desc w-register">请选择角色类型</span>
+                </li>
+
+            </ul>
+
+            <ul class="infor-c ">
+                <li><span class="infor-c-width">状态：</span>
+                    <span>
+                        <select class="add-function" name="State">
+                            @{
+                              if ("0".Equals(Convert.ToString(@Model.State)) && null != @Model.Id)
+                              {
+                                @:<option value="1">启用</option>
+                                @:<option value="0" selected="selected">禁用</option>
+                                                }
+                              else
+                              {
+                                @:<option value="1"  selected="selected">启用</option>
+                                @:<option value="0">禁用</option>
+                                                }
+                                                
+                            }
+                        </select></span><span class="desc w-register">是否启用此账户</span></li>
+            </ul>
+        </div>
+        <div class="inquiry-input infor-b">
+            <span>
+                <button onclick="return SavaForm('/SysPerson/List')">保存</button></span><span>
+                    <button onclick="return RedirectUrl('/SysPerson/List')">返回</button></span>
+        </div>
+    </div>
+}
+
+<div id="menuContent" class="menuContent" style="display: none; position: absolute;">
+    <ul id="CommList" class="ztree" style="margin-top: 0; width: 180px; height: 300px;"></ul>
+</div>
+<script src="~/Scripts/NewAsiaOASystem/SysPerson.js"></script>

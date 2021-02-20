@@ -1,0 +1,94 @@
+﻿<?xml version="1.0"  encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="NewAsiaOASystem.DBModel" assembly="NewAsiaOASystem.DBModel">
+  <class name="DKX_DDinfo" table="DKX_DDinfo">
+    <id name="Id" column="Id" type="string" unsaved-value="0">
+      <generator class="uuid.hex"/>
+    </id>
+    <property name="DD_Bianhao" column="DD_Bianhao"  />
+    <property name="BJno" column="BJno"  />
+    <property name="KBomNo" column="KBomNo"  />
+    <property name="xqIsgl" column="xqIsgl"  />
+    <property name="ldIsgl" column="ldIsgl"  />
+    <property name="DD_Type" column="DD_Type"  />
+    <property name="C_time" column="C_time"  />
+    <property name="KHname" column="KHname"  />
+    <property name="Lxname" column="Lxname"  />
+    <property name="Tel" column="Tel"  />
+    <property name="DD_DHType" column="DD_DHType"  />
+    <property name="DD_WLWtype" column="DD_WLWtype"  />
+    <property name="POWER" column="POWER"  />
+    <property name="dw" column="dw"  />
+    <property name="NUM" column="NUM"  />
+    <property name="C_name" column="C_name"  />
+    <property name="Gcs_nameId" column="Gcs_nameId"  />
+    <property name="DD_ZT" column="DD_ZT"  />
+    <property name="REMARK" column="REMARK"  />
+    <property name="REMARK2" column="REMARK2"  />
+    <property name="REMARK3" column="REMARK3"  />
+    <property name="Gscjdtime" column="Gscjdtime"  />
+    <property name="Gstjshtime" column="Gstjshtime"  />
+    <property name="Gscwctime" column="Gscwctime"  />
+    <property name="Scjdtime" column="Scjdtime"  />
+    <property name="Ysdatetime" column="Ysdatetime"  />
+    <property name="Fhdatetime" column="Fhdatetime"  />
+    <property name="Rkdatetime" column="Rkdatetime"  />
+    <property name="Isrk" column="Isrk"  />
+    <property name="UP_datetime" column="UP_datetime"  />
+    <property name="UP_name" column="UP_name" />
+    <property name="Start" column="Start" />
+    <property name="Isxq" column="Isxq" />
+    <property name="Isld" column="Isld" />
+    <property name="Istz" column="Istz" />
+    <property name="Iscx" column="Iscx" />
+    <property name="gcsfh" column="gcsfh" />
+    <property name="gcsfhdatetime" column="gcsfhdatetime" />
+    <property name="scfh" column="scfh" />
+    <property name="scfhdatetime" column="scfhdatetime" />
+    <property name="fhfh" column="fhfh" />
+    <property name="fhfhdatetime" column="fhfhdatetime" />
+    <property name="cpph" column="cpph" />
+    <property name="scczname" column="scczname" />
+    <property name="scDSname" column="scDSname" />
+    <property name="Bnote" column="Bnote" />
+    <property name="Bnote1" column="Bnote1" />
+    <property name="Bnote2" column="Bnote2" />
+    <property name="Bnote3" column="Bnote3" />
+    <property name="xtIsq" column="xtIsq" />
+    <property name="xtqrtime" column="xtqrtime" />
+    <property name="xtdhtime" column="xtdhtime" />
+    <property name="qtIsq" column="qtIsq" />
+    <property name="qtqrtime" column="qtqrtime" />
+    <property name="qtdhtime" column="qtdhtime" />
+    <property name="wlsqtime" column="wlsqtime" />
+    <property name="xtsctime" column="xtsctime" />
+    <property name="dqpbsctime" column="dqpbsctime" />
+    <property name="xtjtsctime" column="xtjtsctime" />
+    <property name="qtsctime" column="qtsctime" />
+    <property name="xttshtime" column="xttshtime" />
+    <property name="qttshtime" column="qttshtime" />
+    <property name="dqpbshuserId" column="dqpbshuserId" />
+    <property name="qtshuserId" column="qtshuserId" />
+    <property name="gnjsstr" column="gnjsstr" />
+    <property name="Iszjsc" column="Iszjsc" />
+    <property name="DXTDJ" column="DXTDJ" />
+    <property name="pbshtime" column="pbshtime" />
+    <property name="pdshuserId" column="pdshuserId" />
+    <property name="pbshzt" column="pbshzt" />
+    <property name="pbshbtgyy" column="pbshbtgyy" />
+    <property name="YJJQtime" column="YJJQtime" />
+    <property name="Isdqsh" column="Isdqsh" />
+    <property name="dqtjshtime" column="dqtjshtime" />
+    <property name="dqshtime" column="dqshtime" />
+    <property name="dqshuserId" column="dqshuserId" />
+    <property name="dqshres" column="dqshres" />
+    <property name="dqshmsg" column="dqshmsg" />
+    
+    <property name="dragstart" column="dragstart" />
+    <property name="draguserId" column="draguserId" />
+    <property name="dragusername" column="dragusername" />
+    <property name="dragtime" column="dragtime" />
+    <property name="dragsm" column="dragsm" />
+
+    <property name="price" column="price" />
+  </class>
+</hibernate-mapping>

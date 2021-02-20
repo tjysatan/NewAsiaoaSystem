@@ -1,0 +1,109 @@
+﻿@{
+    ViewBag.Title = "批量定责";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<style>
+    .table_con
+    {
+        border-collapse: collapse;
+        border: none;
+    }
+
+        .table_con td
+        {
+            border: solid #eae5e5 1px;
+            height: 35px;
+            padding: 0 0 0 5px;
+        }
+
+    .btnspan button
+    {
+        width: 120px;
+        height: 30px;
+        background: #337CA8;
+    }
+</style>
+
+<input type="hidden" id="Id" name="Id" value='@ViewData["Id"]' />
+
+<table class="table_con" style="width: 100%; color: #000; font-size: 13px; margin: auto; margin-top: 10px;">
+    <tr>
+        <td valign="top" width="30%">责任部门：
+        </td>
+        <td>
+            <select id="zrbm" name="zrbm" multiple="multiple" style="border: 0px solid #808080; height: 100px; width: 80px;">
+                <option value="品保部">品保部</option>
+                <option value="电气技术">电气技术</option>
+                <option value="电子技术">电子技术</option>
+                <option value="网络技术">网络技术</option>
+                <option value="电气车间">电气车间</option>
+                <option value="电子车间">电子车间</option>
+                <option value="物流公司">物流公司</option>
+                <option value="供应商">供应商</option>
+                @*<option value="技术部">技术部</option>
+        <option value="制造部">制造部</option>*@
+                <option value="营销部">营销部</option>
+                @*<option value="其他部门">其他部门</option>*@
+                <option value="客户单位">客户单位</option>
+                <option value="仓库">仓库</option>
+                <option value="正常无责">正常无责</option>
+            </select>
+        </td>
+    </tr>
+
+    <tr>
+        <td colspan="2" align="center">
+            <a href="#" class="btna2" style="margin: 0 auto;" onclick="dingzetijiao()">提　　交</a>
+        </td>
+    </tr>
+</table>
+
+<script type="text/javascript">
+    //定责提交
+    function dingzetijiao() {
+        var strbm = String($("#zrbm").val());//责任部门
+        var Id = $("#Id").val();
+        if (strbm == "" || strbm == null) {
+            $.messager.alert("操作提示", '请选择责任部门！', 'error');
+            return false;
+        }
+        $.ajax({
+            url: "/NAReturnList/NewMxPldingzeEide",
+            type: "POST",
+            data: { Id: Id, bm: strbm },
+            dataType: "html",
+            async: false,
+            success: function (response) {
+                if ("0" == response) {
+                    $.messager.alert("操作提示", '提交成功！', 'info', function () {
+                        @* var ParentObj = window.parent;//获取父窗口
+                        window.parent.$('#windowDia').window('close');
+                        window.parent.location = "/NAReturnList/NewdingzeEideView?id=" + '@ViewData["R_Id"]';
+                         return false;*@
+                        Closeiform();
+                    });
+                }
+                if ("1" == response) {
+                    $.messager.alert("操作提示", '提交失败,请重新提交！', 'error');
+                    return false;
+                }
+                if ("2" == response) {
+                    $.messager.alert("操作提示", '该记录为空,请重新提交！', 'error');
+                    return false;
+                }
+            },
+            error: function (e) {
+                $.messager.alert("操作提示", '网络异常,请重新提交！', 'error');
+                return false;
+            }
+        })
+
+    }
+
+    //直接关闭所有弹出框
+    function Closeiform() {
+        var index = parent.layer.getFrameIndex(window.name);
+        parent.layer.close(index);
+    }
+</script>

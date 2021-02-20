@@ -1,0 +1,127 @@
+﻿@model NewAsiaOASystem.ViewModel.PP_ProfitpointinfoView
+@{
+    ViewBag.Title = "支出项目编辑页面";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@using (Html.BeginForm("zcEdit", "PP_Profitpointinfo", FormMethod.Post, new { id = "form1" }))
+{
+    @Html.HiddenFor(m => m.Id);
+    @Html.HiddenFor(m => m.C_name);
+    @Html.HiddenFor(m => m.C_time);
+    @Html.HiddenFor(m => m.Up_name);
+    @Html.HiddenFor(m => m.Up_time);
+    
+    <div class="infor">
+        <div class="system-menu-set">
+            <ul class="infor-c">
+                <li>
+                    <span class="infor-c-width">支出业务：</span>
+                    <span class="infor-c-input">@Html.TextBoxFor(m => m.Rwname)</span>
+                    <span style="color: red; font-size: 24px; vertical-align: middle; margin-left: 8px;">*</span>
+                    <span class="desc w-register"></span>
+                </li>
+            </ul>
+            <ul class="infor-c">
+                <li>
+                    <span class="infor-c-width">业务描述：</span>
+                    <span class="infor-c-input">@Html.TextBoxFor(m => m.Rwms)</span>
+                    <span style="color: red; font-size: 24px; vertical-align: middle; margin-left: 8px;">*</span>
+                    <span class="desc w-register"></span>
+                </li>
+            </ul>
+            <ul class="infor-c">
+                <li>
+                    <span class="infor-c-width">备注：</span>
+                    <span class="infor-c-input">@Html.TextBoxFor(m => m.Rwbz)</span>
+                    <span style="color: red; font-size: 24px; vertical-align: middle; margin-left: 8px;"></span>
+                    <span class="desc w-register"></span>
+                </li>
+            </ul>
+            <ul class="infor-c">
+                <li>
+                    <span class="infor-c-width">支出值：</span>
+                    <span class="infor-c-input">@Html.TextBoxFor(m => m.Rwfz)</span>
+                    <span style="color: red; font-size: 24px; vertical-align: middle; margin-left: 8px;">*</span>
+                    <span class="desc w-register">单位时间内，支出的金额</span>
+                </li>
+            </ul>
+            <ul class="infor-c">
+                <li>
+                    <span class="infor-c-width">单位：</span>
+                    <span class="infor-c-input">@Html.TextBoxFor(m => m.Rwdw)</span>
+                    <span style="color: red; font-size: 24px; vertical-align: middle; margin-left: 8px;">*</span>
+                    <span class="desc w-register">单位：例：件/天</span>
+                </li>
+            </ul>
+            <ul class="infor-c">
+                <li>
+                    <span class="infor-c-width">所属团队：</span>
+                    <span class="infor-c-input">@Html.DropDownList("ADListData", ViewData["teamname"] as SelectList, new { @class = "add-function" });</span>
+                    <span style="color: red; font-size: 24px; vertical-align: middle; margin-left: 8px;"></span>
+                    <span class="desc w-register"></span>
+                </li>
+            </ul>
+            <ul class="infor-c">
+                <li>
+                    <span class="infor-c-width">支出类型：</span>
+                    <span>
+                        <select class="add-function" name="ProType">
+                            @{
+                                   if ("0".Equals(Convert.ToString(@Model.ProType)) && null != @Model.Id)
+                                   {
+                                @:<option value="0" selected="selected">个人支出</option>
+                                @:<option value="1">团队支出</option>
+                                   }
+                                   else
+                                   {
+                                @:<option value="0">个人支出</option>
+                                @:<option value="1" selected="selected">团队支出</option>
+                                   }
+                            }
+                        </select>
+                    </span>
+                    <span class="desc w-register">个人支出为个人一人支出；团队自出设定人员按照比例分摊</span>
+                </li>
+            </ul>
+            <ul class="infor-c">
+                <li>
+                    <span class="infor-c-width">是否启用：</span>
+                    <span>
+                        <select class="add-function" name="state">
+                            @{
+                                   if ("0".Equals(Convert.ToString(@Model.state)) && null != @Model.Id)
+                                   {
+                                @:<option value="0" selected="selected">禁用</option>
+                                @:<option value="1">启用</option>
+                                   }
+                                   else
+                                   {
+                                @:<option value="0">禁用</option>
+                                @:<option value="1" selected="selected">启用</option>
+                                   }
+                            }
+                        </select>
+                    </span>
+                </li>
+            </ul>
+            <ul class="infor-c">
+                <li>
+                    <span class="infor-c-width">排序：</span>
+                    <span class="infor-c-input">@Html.TextBoxFor(m => m.Sort)</span>
+                    <span style="color: red; font-size: 24px; vertical-align: middle; margin-left: 8px;"></span>
+                    <span class="desc w-register">数字越大越靠前，不填默认为“0”</span>
+                </li>
+            </ul>
+
+        </div>
+        <div class="inquiry-input infor-b">
+            <span>
+                <button onclick="return ProfitzhichuSavaForm()">保存</button></span><span>
+                    <button onclick="return RedirectUrl('/PP_Profitpointinfo/zcList')">返回</button>
+                </span>
+        </div>
+    </div>
+}
+
+<script src="~/Scripts/NAjs/PP_pulice.js"></script>

@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="NewAsiaOASystem.DBModel" assembly="NewAsiaOASystem.DBModel">
+  <class name="PP_ProfitSummaryinfo" table="PP_ProfitSummaryinfo">
+    <id name="Id" column="Id" type="string" unsaved-value="0">
+      <generator class="uuid.hex"/>
+    </id>
+    <property name="StafitId" column="StafitId" />
+    <property name="Sat_teamId" column="Sat_teamId" />
+    <property name="Type" column="Type" />
+    <property name="Shouru" column="Shouru" />
+    <property name="zhichu" column="zhichu" />
+    <property name="yingli" column="yingli" />
+    <property name="ljshouru" column="ljshouru" />
+    <property name="ljzhichu" column="ljzhichu" />
+    <property name="ljyingli" column="ljyingli" />
+    <property name="MorY" column="MorY" />
+    <property name="C_time" column="C_time" />
+    <property name="C_name" column="C_name" />
+    <property name="Up_time" column="Up_time" />
+    <property name="Up_name" column="Up_name" />
+  </class>
+</hibernate-mapping>

@@ -1,0 +1,111 @@
+﻿@model NewAsiaOASystem.ViewModel.Wx_configinfoView
+@{
+    ViewBag.Title = "平台微信支付参数";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+
+
+<div style="width: 80%; padding: 20px 20px 0 20px">
+
+    @using (Html.BeginForm("Edit", "Wxconfig", FormMethod.Post, new { id = "form1" }))
+    {
+        @Html.HiddenFor(m => m.Id);
+        @Html.HiddenFor(m => m.Type);
+        @Html.HiddenFor(m => m.C_name);
+        @Html.HiddenFor(m => m.C_datetime);
+        <div class="layui-form-item">
+            <label class="layui-form-label">APPID：</label>
+            <div class="layui-input-block">
+                @* <input type="text" name="title" required lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">*@
+                @Html.TextBoxFor(m => m.APPID, new { placeholder = "绑定支付的APPID", @class = "layui-input" })
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">AppSecret：</label>
+            <div class="layui-input-block">
+                @Html.TextBoxFor(m => m.APPSECRET, new { placeholder = "公众帐号secert", @class = "layui-input" })
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">商户号：</label>
+            <div class="layui-input-block">
+                @Html.TextBoxFor(m => m.MCHID, new { placeholder = "商户号", @class = "layui-input" })
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">KEY：</label>
+            <div class="layui-input-block">
+                @Html.TextBoxFor(m => m.KEYvalue, new { placeholder = "商户支付密钥", @class = "layui-input" })
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">支付回调：</label>
+            <div class="layui-input-block">
+                @Html.TextBoxFor(m => m.NOTIFY_URL, new { placeholder = "支付结果通知回调url", @class = "layui-input" })
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="formDemo" onclick="return weixinAjaxform()">确定</button>
+                 
+            </div>
+        </div>
+    }
+</div>
+<script type="text/javascript">
+    //表单提交
+    function weixinAjaxform() {
+        var APPID = $("#APPID").val();
+        var APPSECRET = $("#APPSECRET").val();
+        var MCHID = $("#MCHID").val();
+        var KEY = $("#KEYvalue").val();
+        var NOTIFY_URL = $("#NOTIFY_URL").val();
+        if (APPID == "") {
+            layer.alert("APPID不为空！", { icon: 2 });
+            return false;
+        }
+        if (APPSECRET == "") {
+            layer.alert("APPSECRET不为空！", { icon: 2 });
+            return false;
+        }
+        if (MCHID == "") {
+            layer.alert("商户号不为空！", { icon: 2 });
+            return false;
+        }
+        if (KEY == "") {
+            layer.alert("商户支付密钥不为空！", { icon: 2 });
+            return false;
+        }
+        if (NOTIFY_URL == "") {
+            layer.alert("支付回调地址不为空！", { icon: 2 });
+            return false;
+        }
+        //表单验证
+        var options = {
+            beforeSubmit: function () {
+                return true;
+            },
+            dataType: "json",//这里是指控制器处理后返回的类型，这里返回json格式。  
+            success: function (context) {
+                if (context.result == "success") {
+                    layer.alert("提交成功！", { icon: 1 }, function () { location.reload(); });
+                }
+
+                if (context.result == "error") {
+                    layer.alert("提交失败！", { icon: 2 }, function () { location.reload(); });
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $.messager.alert("操作提示", '操作失败！', 'error');
+            }
+        }
+        $('#form1').ajaxSubmit(options);
+        return false; //为了不刷新页面,返回false 
+    }
+</script>

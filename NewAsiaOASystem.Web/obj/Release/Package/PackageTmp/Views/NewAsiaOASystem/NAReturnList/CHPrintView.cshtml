@@ -1,0 +1,280 @@
+﻿@{
+    ViewBag.Title = "出货单出货单打印";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<script src="~/Scripts/Printjs/LodopFuncs.js" type="text/javascript"></script>
+
+<script language="javascript" type="text/javascript">
+    var LODOP; //声明为全局变量
+    function myPreview1() {
+        LODOP = getLodop();
+        var strBodyStyle = "<style>" + document.getElementById("style1").innerHTML + "</style>";
+        var strFormHtml = strBodyStyle + "<body>" + document.getElementById("form1").innerHTML + "</body>";
+
+        LODOP.ADD_PRINT_HTM(20, 30, 680, 900, strFormHtml);
+        LODOP.PREVIEW();
+    };
+
+    $(function () {
+        htmlstr();
+    })
+    //html拼接出货单
+    function htmlstr() {
+        var chjson;
+        chjson = eval(jxkhjgck('@ViewData["R_Id"]'));
+        var zsl = 0;
+        if (typeof (chjson) != "undefined") {
+            $("#Htmlcon").html("");
+            var html = "";
+            html = '<table class="table_con" style="width: 100%; color: #000; font-size: 13px; margin: auto;">';
+            html += '<tr>';
+            html += '<td rowspan="2" style="width:6%;">购货单位</td>';
+            html += '<td style="width:14%;">名称</td>';
+            html += '<td style="width:33%;">' + '@ViewData["Cusname"]' + '</td>';
+            html += '<td style="width:15%;">税务登记号</td>';
+            html += '<td></td>';
+            html += '</tr>';
+            html += '<tr>';
+            html += '<td style="width:14%;">地址、电话</td>';
+            html += '<td style="width:33%;">' + '@ViewData["Adress"]' + '@ViewData["Tel"]' + '</td>';
+            html += '<td style="width:15%;">银行开户号</td>';
+            html += '<td></td>';
+            html += '</tr>';
+            html += '</table>';
+            html += '<table class="table_con" style="width: 100%; color: #000; font-size: 13px; margin: auto;">';
+            html += '<tr>';
+            html += '<td align="center" style="width:20%;">货品名称</td>';
+            html += '<td align="center" style="width:15%;">规格</td>';
+            html += '<td align="center" style="width:8%;">单位</td>';
+            html += '<td align="center" style="width:8%;">数量</td>';
+            html += '<td align="center" style="width:8%;">单价</td>';
+            html += '<td align="center" style="width:8%;">货款</td>';
+            html += '<td align="center" style="width:8%;">税率</td>';
+            html += '<td align="center" style="10%">税额</td>';
+            html += '<td align="center" style="15%">备注</td>';
+            html += '</tr>';
+            for (var i = 0, j = chjson.length; i < j; i++) {
+                var Perinfo = GetPerinfobyId(chjson[i].P_Id);
+                zsl = zsl + chjson[i].shuliang;
+                html += '<tr>';
+                html += '<td align="center" style="width:20%;">' + Perinfo.Pname + '</td>';
+                html += '<td align="center" style="width:15%;">' + Perinfo.P_xh + '</td>';
+                if (Perinfo.dw != "" && Perinfo.dw != null) {
+                    html += '<td align="center" style="width:8%">' + Perinfo.dw + '</td>';
+                } else {
+                    html += '<td align="center" style="width:8%">套</td>';
+                }
+                html += '<td align="center" style="width:8%;">' + chjson[i].shuliang + '</td>';
+                html += '<td align="center" style="width:8%;">0.00</td>';
+                html += '<td align="center" style="width:8%;">0.00</td>';
+                html += '<td align="center" style="width:8%;">0%</td>';
+                html += '<td align="center" style="10%">0</td>';
+                if (chjson[i].clfs != "" && chjson[i].clfs != null) {
+                    html += '<td align="center" style="width:15%">' + chjson[i].clfs + '</td>';
+                }
+                else if (chjson[i].Beizhu != "" && chjson[i].Beizhu != null) {
+                    html += '<td style="width:15%" align="center">' + chjson[i].Beizhu + '</td>';
+                }
+                else {
+                    html += '<td align="center" style="width:15%">-</td>';
+                }
+                html += '</tr>';
+            }
+            html += '<tr>';
+            html += '<td align="center" style="width:20%;">合计</td>';
+            html += '<td align="center" style="width:23%;" colspan="2"></td>';
+            html += '<td align="center" style="width:8%;">' + zsl + '</td>';
+            html += '<td align="center" style="width:8%;"></td>';
+            html += '<td align="center" style="width:8%;">0</td>';
+            html += '<td align="center" style="width:8%;"></td>';
+            html += '<td align="center" style="" colspan="2">0.00</td>';
+            html += '</tr>';
+            html += '<tr>';
+            html += '<td align="center" style="width:20%;">价税合计</td>';
+            html += '<td align="center" style="width:39%;" colspan="4"></td>';
+            html += '<td align="center" style="width:41%;" colspan="4">0</td>';
+            html += '</tr>';
+            html += '<tr>';
+            html += '<td align="center" style="width:20%;">摘要</td>';
+            html += '<td align="center"  colspan="8"></td>';
+            html += '</tr>';
+            html += '</table>';
+            html += '<table class="table_con" style="width: 100%; color: #000; font-size: 13px; margin: auto;">';
+            html += '<tr>';
+            html += '<td rowspan="2" style="width:6%;">销货单位</td>';
+            html += '<td style="width:14%;">名称</td>';
+            html += '<td style="width:33%;">苏州新亚科技有限公司</td>';
+            html += '<td style="width:15%;">税务登记号</td>';
+            html += '<td></td>';
+            html += '</tr>';
+            html += '<tr>';
+            html += '<td style="width:14%;">地址、电话</td>';
+            html += '<td style="width:33%;"> </td>';
+            html += '<td style="width:15%;">银行开户号</td>';
+            html += '<td></td>';
+            html += '</tr>';
+            html += '</table>';
+            html += ' <div class="bhcss">';
+            html += ' <table style="width: 100%;">';
+            html += '<tr>';
+            html += '<td style="width:25%;">客户签字：</td>';
+            html += '<td style="width:25%;">仓库员：</td>';
+            html += '<td style="width:25%;">业务员：</td>';
+            html += '<td style="width:25%;">开单人：' + AjaxPerson_Name('@ViewData["kfzy"]').UserName + '</td>';
+            html += '</tr>';
+
+            html += '</table>';
+            html += '</div>';
+        }
+        $("#Htmlcon").html(html);
+    }
+
+    /*根据返退货Id 查找出货明细*/
+    function jxkhjgck(R_Id) {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "/NQ_CHdetailinfo/GetchinfobyRId",
+            data: {
+                R_Id: R_Id
+            },
+            dataType: "json",
+            async: false,
+            success: function (reslut) {
+                json = reslut;
+            },
+            error: function (e) {
+                alert("请求失败");
+            }
+        })
+        return json;
+    }
+
+    /*根据产品Id 查找产品信息*/
+    function GetPerinfobyId(Id) {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "/NQ_CHdetailinfo/GetPreinfobyId",
+            data: { ID: Id },
+            dataType: "json",
+            async: false,
+            success: function (reslut) {
+                json = reslut;
+            },
+            error: function (e) {
+                alert("请求失败！");
+            }
+        })
+        return json;
+    }
+</script>
+
+<style id="style1">
+    .table_con
+    {
+        border-collapse: collapse;
+        border: none;
+    }
+
+        .table_con td
+        {
+            border: solid #000 1px;
+            height: 25px;
+            padding: 0 0 0 5px;
+        }
+
+    .Miantitle
+    {
+        width: 100%;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .hedertitle
+    {
+        width: 100%;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .fontsizetd
+    {
+        font-size: 14px;
+    }
+
+    .bhcss
+    {
+        width: 100%;
+        height: 50px;
+    }
+
+    .xkk
+    {
+        width: 5px;
+        height: 5px;
+        border: 1px solid #000;
+    }
+
+    i
+    {
+        width: 10px;
+        height: 10px;
+        line-height: 24px;
+        vertical-align: top;
+        margin: 4px 2px 0 0;
+        overflow: hidden;
+        border: 1px solid #000;
+        display: inline-block;
+    }
+</style>
+
+<div id="form1">
+    <div class="Miantitle">
+        销售出货单
+    </div>
+    <div class="bhcss">
+        <table style="width: 100%;">
+            <tr>
+                <td style="width: 70%">开单日期：@ViewData["kddate"]</td>
+                <td>单号：@ViewData["bh"]</td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <table style="width: 100%">
+                        <tr>
+                            <td>送货地址：</td>
+                            <td>出货仓：成品仓</td>
+                            <td>收款期限：</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div id="Htmlcon">
+    </div>
+
+</div>
+
+<div style="width: 200px; height: 80px; overflow: hidden">
+    <div class="inquiry-input infor-b">
+        <span>
+            <button onclick="return myPreview1()">打印</button>
+        </span>
+        <span>
+            <button onclick="window.history.go(-1)">返回</button></span>
+    </div>
+</div>
+
+
+<script src="~/Scripts/NAjs/NAReturnList.js"></script>
+

@@ -1,0 +1,66 @@
+﻿@model NewAsiaOASystem.ViewModel.WL_DkxInfoView
+@{
+    ViewBag.Title = "生产录入信息";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@section HeadContent{
+<script type="text/javascript">
+    $(function () {
+        $(WL_SSD).focus();
+    })
+  </script>
+    }
+@using (Html.BeginForm("EditSc", "WL_DkxInfo", FormMethod.Post, new { id = "form1" }))
+{ 
+ <div class="infor">
+      <div class="system-menu-set">
+            <ul class="infor-c">
+                <li>
+                    <span class="infor-c-width">SID：</span>
+                    <span class="infor-c-input">
+                        @Html.TextBoxFor(m=>m.WL_SSD)
+                    </span>
+                </li>
+            </ul>
+      </div>
+
+      <div class="inquiry-input infor-b">
+            <span>
+               <button onclick="return DkxscSavaForm('/WL_DkxInfo/EditPageSc')">确定</button></span><span>
+               <button onclick="return RedirectUrl('/WL_DkxInfo/List')">返回</button></span>
+        </div>
+ </div>
+ }
+
+<script type="text/javascript">
+    //电控初步信息录入 信息表单提交
+    //电控初步信息录入 信息表单提交
+    function DkxscSavaForm(RetUrl) {
+        //表单验证
+        var options = {
+            beforeSubmit: function () {
+                return true;
+            },
+            dataType: "json",//这里是指控制器处理后返回的类型，这里返回json格式。 
+            success: function (context) {
+                if ("success" == context.result) {
+                    //$.messager.alert("操作提示", '操作成功！', 'info', function () {
+                    location.href = RetUrl;
+                    //});
+                }
+                if ("error2" == context.result) {
+                    $.messager.alert("操作提示", '请勿重复扫描！', 'error', function () {
+                        location.href = RetUrl;
+                    });
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $.messager.alert("操作提示", '操作失败！', 'error');
+            }
+        }
+        $('#form1').ajaxSubmit(options);
+        return false; //为了不刷新页面,返回false 
+        //return submitForm('/WL_DkxInfo/List');
+    }
+</script>

@@ -1,0 +1,39 @@
+﻿<?xml version="1.0"  encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="NewAsiaOASystem.DBModel" assembly="NewAsiaOASystem.DBModel">
+  <class name="IQC_JYDDinfo" table="IQC_JYDDinfo">
+    <id name="Id" column="Id" type="string" unsaved-value="0">
+      <generator class="uuid.hex"/>
+    </id>
+    <property name="Jyddno" column="Jyddno" />
+    <property name="MxId" column="MxId" />
+    <property name="Yqjname" column="Yqjname" />
+    <property name="Yqjxh" column="Yqjxh" />
+    <property name="Yqjwl" column="Yqjwl" />
+    <property name="Gysname" column="Gysname" />
+    <property name="Gyswl" column="Gyswl" />
+    <property name="Lltime" column="Lltime" />
+    <property name="Llsum" column="Llsum" />
+    <property name="Cjsum" column="Cjsum" />
+    <property name="Hgesum" column="Hgesum" />
+    <property name="BHgesum" column="BHgesum" />
+    <property name="Jydzt" column="Jydzt" />
+    <property name="Jydjg" column="Jydjg" />
+    <property name="C_time" column="C_time" />
+    <property name="C_name" column="C_name" />
+    <property name="Rdtime" column="Rdtime" />
+    <property name="Rdname" column="Rdname" />
+    <property name="Wctime" column="Wctime" />
+    <property name="Updatetime" column="Updatetime" />
+    <property name="Updatename" column="Updatename" />
+    <property name="JYBZId" column="JYBZId" />
+    <property name="IsDis" column="IsDis" />
+    <property name="beizhu" column="beizhu" />
+    <property name="shname" column="shname" />
+    <property name="shdatime" column="shdatime" />
+    <property name="thyycon" column="thyycon" />
+    <property name="TJtime" column="TJtime" />
+    <property name="LotNO" column="LotNO" />
+    
+    <property name="blmxsm" column="blmxsm" />
+  </class>
+</hibernate-mapping>

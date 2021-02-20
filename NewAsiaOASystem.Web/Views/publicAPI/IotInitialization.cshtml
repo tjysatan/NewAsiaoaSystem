@@ -1,0 +1,97 @@
+﻿@{
+    ViewBag.Title = "SID扫描初始化页面";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<script type="text/javascript">
+    $(function () {
+        $("#sid").focus();
+      
+    })
+
+    
+   
+</script>
+
+
+<div style="width: 70%; margin: auto; margin-top: 40px;">
+    <blockquote class="layui-elem-quote layui-quote-nm" style="font-size: 24px;">SID扫描初始化页面</blockquote>
+    @using (Html.BeginForm("CSHtjEide", "publicAPI", FormMethod.Post, new { id = "form1" }))
+    {
+        <div class="layui-form-item">
+            <label class="layui-form-label">输入SID:</label>
+            <div class="layui-input-block">
+                <input type="text" name="sid" id="sid" required lay-verify="required" placeholder="扫描二维码输入SID" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="formDemo" onclick="return SmThSavaForm()">立即提交</button>
+            </div>
+        </div>
+    }
+    初始化结果
+    <hr>
+    <div id="content">
+
+    </div>
+    <fieldset class="layui-elem-field">
+        <legend>物联网产品退货扫描说明</legend>
+        <div class="layui-field-box" style="color: red">
+            1.在此页面打开的状态下,用扫描枪扫描退货产品上面的二维码<br />
+            2.只正对系统中已经扫码出货的SID<br />
+            3.扫描之后系统会自动改变当前SID状态<br />
+        </div>
+    </fieldset>
+
+</div>
+
+<script type="text/javascript">
+    //提交
+    function SmThSavaForm() {
+        var sid = $("#sid").val();
+        if (sid == "") {
+            alert("SID码不为空！");
+            $(SID).focus();
+            return false;
+        }
+        //表单验证
+        var options = {
+            beforeSubmit: function () {
+                return true;
+            },
+            dataType: "json",//这里是指控制器处理后返回的类型，这里返回json格式。 
+            success: function (context) {
+                if ("true" == context.result) {
+                    location.href = "../publicAPI/IotInitialization";
+                } else if ("wxs" == context.result) {//尚未扫码出货！
+                    $.messager.alert("操作提示", '尚未扫码出货！', 'error', function () {
+                        location.href = "../publicAPI/IotInitialization";
+                    });
+                } else if ("bcz" == context.result) {//不存在该物联网产品！
+                    $.messager.alert("操作提示", '不存在该物联网产品！', 'error', function () {
+                        location.href = "../publicAPI/IotInitialization";
+                    });
+                } else if ("false" == context.result) {
+                    $.messager.alert("操作提示", '初始化失败！', 'error', function () {
+                        location.href = "../publicAPI/IotInitialization";
+                    });
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $.messager.alert("操作提示", '操作失败！', 'error');
+            }
+        }
+        $('#form1').ajaxSubmit(options);
+        return false; //为了不刷新页面,返回false 
+    }
+
+
+    function HtmlGrit(str) {
+        $("#content").html("");
+        var html = "";
+        html += '<span style="color:red">' + str + '</span>';
+        $("#content").html(html);
+    }
+</script>
+

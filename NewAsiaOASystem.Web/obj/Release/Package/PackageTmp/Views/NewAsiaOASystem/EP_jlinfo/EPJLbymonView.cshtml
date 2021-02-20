@@ -1,0 +1,368 @@
+﻿@{
+    ViewBag.Title = "按月打印";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+<script src="~/Scripts/Printjs/LodopFuncs.js" type="text/javascript"></script>
+<script src="~/Scripts/NAjs/Printjs.js"></script>
+<style>
+    .table_con
+    {
+        border-collapse: collapse;
+        border: none;
+    }
+
+        .table_con td
+        {
+            border: solid #eae5e5 1px;
+            height: 35px;
+            padding: 0 0 0 5px;
+        }
+
+    .concss
+    {
+        width: 450px;
+        height: 250px;
+        margin: auto;
+        margin-top: 100px;
+        border: solid #eae5e5 1px;
+        background: #fff;
+        -moz-border-radius: 15px;
+        -webkit-border-radius: 15px;
+        border-radius: 15px;
+    }
+
+    .btncss
+    {
+        width: 100px;
+        height: 30px;
+        -moz-border-radius: 15px;
+        -webkit-border-radius: 15px;
+        border-radius: 15px;
+    }
+</style>
+
+<script type="text/javascript">
+
+    var LODOP; //声明为全局变量
+    function prn3_preview() {
+        LODOP = getLodop();
+        LODOP.PRINT_INIT("打印控件功能演示_Lodop功能_分页输出三");
+        var strBodyStyle = "<style>" + document.getElementById("style1").innerHTML + "</style>";
+        //  LODOP.ADD_PRINT_HTM(88, 150, 450, "100%", document.getElementById("strcon").innerHTML);
+        LODOP.ADD_PRINT_HTM(20, 30, "100%", "94%", strBodyStyle + document.getElementById("strcon").innerHTML);
+        LODOP.PREVIEW();
+    };
+    $(function () {
+        //天数
+        var ts = '@ViewData["daysum"]';
+        //年月
+        var Ym = '@ViewData["Ym"]';
+        for (var i = 0, J = ts; i < J; i++) {
+            var rq = i + 1;
+            var time = Ym + '-' + rq;
+            var strval = AjaxGETepjljsonbyjjtime(time);
+            if (strval != null && strval != null) {
+
+                htmlpj(strval, time);
+            }
+
+        }
+    })
+
+    //获取当月的全部数据
+    function AjaxGETepjljsonbyjjtime(val) {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "/EP_jlinfo/GetEPjlbytime",
+            data: { starttime: val },
+            dataType: "json",
+            async: false,
+            success: function (reslut) {
+                json = eval(reslut);
+            },
+            error: function (e) {
+                alert("网络异常！");
+            }
+        })
+        return json;
+
+    }
+
+    //拼接html
+    function htmlpj(valstr, strtime) {
+        var html = $("#strcon").html();
+        if (valstr != "" || valstr != null) {
+
+            html += '<div class="title">';
+            html += '<div class="title_c"><h1>苏州新亚科技有限公司</h1> </div>';
+            html += '<div class="title_c"><h2>到货情况记录表</h2></div> ';
+
+            html += '<div class="dydata">日期:' + strtime + '</div>';
+            html += '<div class="cov_title">';
+            html += '<table  cellpadding="0" cellspacing="0" class="table_listNew">';
+            html += '<tr>';
+            html += '<td style="width:22%; height:70px; " align="center">客户名称<br /> 货运公司<br />单号';
+            html += '</td>';
+            html += '<td style="width:8%;height:70px;" align="center" >收货人</td>';
+            html += '<td style="width:5%;height:70px;" align="center"> 预计到货日期</td>';
+            html += '<td style="width:20%;height:70px;" align="center">';
+            html += '<div style="width:100%; border-bottom:#000 1px solid; height:20px; font-size:14px;line-height:20px;margin:0;padding:0;">询问到货情况</div>';
+
+            html += '<div style="width:100%; height:50px;">';
+            html += '<table cellpadding="0" cellspacing="0">';
+            html += '<tr>';
+            html += '<td style="width:25%; border-bottom:none; border-left:none; border-top:none  " align="center">询问时间</td>';
+            html += '<td style="width:25%; border-bottom:none; border-left:none; border-top:none  " align="center">询问结果</td>';
+            html += '<td style="width:25%; border-bottom:none; border-left:none; border-top:none  " align="center">询问时间</td>';
+            html += '<td style="width:25%;border:none; height:50px;" align="center">询问结果</td>';
+            html += '</tr>';
+            html += '</table>';
+            html += '</div>';
+
+            html += '</td>';
+            html += '<td style="width:5%;height:70px;border-right:#000 1px solid" align="center" >实际到货日期</td>';
+            html += '<td style="width:5%;height:70px;border-right:#000 1px solid" align="center" > 实际到货数</td>';
+            html += '<td style="width:8%;height:70px;border-right:#000 1px solid" align="center">确认收货人</td>';
+            html += '<td style="width:8%;height:70px;" align="center">经手人</td>';
+            html += '</tr>';
+
+
+
+            //html += '</table>';
+
+            //html += '<div class="cov_c">';
+            for (var i = 0, j = valstr.length; i < j; i++) {
+                //html += '<div class="cov_c_s">';
+                //html += '<table cellpadding="0" cellspacing="0" style="width:100%;" >';
+                html += '<tr>';
+                html += '<td style="width:22%; height:70px; border-right:#000 1px solid" align="center">';
+                html += '<div style="width:100%; border-bottom:#000 1px solid; height:23px; font-size:14px;line-height:23px;">' + GetCusnameby_Id(valstr[i].SjId).Name.substring(13, 0) + '</div>';
+                html += '<div style="width:100%; border-bottom:#000 1px solid; height:23px; font-size:14px;line-height:23px;">' + kdgsname(valstr[i].Kdgs) + '</div>';
+                if (valstr[i].Kd_no != null && valstr[i].Kd_no != "")
+                    html += '<div style="width:100%; height:23px; font-size:14px;line-height:23px;">' + valstr[i].Kd_no + '</div>';
+                else
+                    html += '<div style="width:100%; height:23px; font-size:14px;line-height:23px;">-</div>';
+                html += '</td>';
+                if (valstr[i].Source=="0")
+                    html += '<td style="width:8%;height:70px;border-right:#000 1px solid" align="center" >' + GetCusnameby_Id(valstr[i].SjId).LxrName + '</td>';
+                else
+                    html += '<td style="width:8%;height:70px;border-right:#000 1px solid" align="center" >' + AjaxAddresseeinfobyCustId(valstr[i].SjaddId).Aname + '</td>';
+                html += '<td style="width:5%;height:70px;border-right:#000 1px solid" align="center">' + showDate(valstr[i].DHyjdatetime) + '</td>';
+                html += '<td style="width:20%;height:70px;border-right:#000 1px solid" align="center" >';
+                html += '<table cellpadding="0" cellspacing="0" style="width:100%;">';
+                html += '<tr>';
+                html += '<td style="width:25%;height:70px;border-bottom:none; border-left:none; border-top:none" align="center"></td>';
+                html += '<td style="width:25%;height:70px; border-bottom:none; border-left:none; border-top:none" align="center"></td>';
+                html += '<td style="width:25%;height:70px; border-bottom:none; border-left:none; border-top:none" align="center"></td>';
+                html += '<td style="width:25%;height:70px; border:none;" align="center"></td>';
+                html += '</tr>';
+                html += '</table>';
+                html += '</td>';
+                if (valstr[i].DHsjdatetime != null && valstr[i].DHsjdatetime != "")
+                    html += '<td style="width:5%;height:70px;border-right:#000 1px solid" align="center" >' + showDate(valstr[i].DHsjdatetime) + '</td>';
+                else
+                    html += '<td style="width:5%;height:70px;border-right:#000 1px solid" align="center" >-</td>';
+                if (valstr[i].DHno != null && valstr[i].DHno != "")
+                    html += '<td style="width:5%;height:70px;border-right:#000 1px solid" align="center">' + valstr[i].DHno + '</td>';
+                else
+                    html += '<td style="width:5%;height:70px;border-right:#000 1px solid" align="center">-</td>';
+                html += '<td style="width:8%;height:70px;border-right:#000 1px solid" align="center">' + valstr[i].QRsjName + '</td>';
+                html += '<td style="width:8%;height:70px;" align="center">' + Getjjnameby_Id(valstr[i].JjId) + '</td>';
+                html += '</tr>';
+                //html += '</table>';
+                //html += '</div>';
+            }
+            //html += '</div>';
+            html += '</table>';
+            html += '</div>';
+            html += '</div>';
+            html += '</div>';
+            html += '<p style="page-break-after:always">&nbsp;</p>';
+        }
+        $("#strcon").html(html);
+    }
+
+    //返回客户信息
+    function GetCusnameby_Id(val) {
+        var Cus_info = AjaxCust_Name(val);
+        return Cus_info;
+    }
+
+    function Getjjnameby_Id(val) {
+        var userinfo = AjaxPerson_Name(val);//
+        return userinfo.UserName;
+    }
+
+    //快递公司名称
+    function kdgsname(val) {
+        var kdnam;
+        if (val != "") {
+            if (val == "sh") {
+                kdnam = "盛辉物流";
+            } else if (val == "sf") {
+                kdnam = "顺丰快递";
+            } else if (val == "db") {
+                kdnam = "德邦快递";
+            } else if (val == "zt") {
+                kdnam = "中通快递";
+            } else if (val == "tdhy") {
+                kdnam = "天地华宇";
+            } else if (val == "ycky") {
+                kdnam = "远成快运";
+            }
+            else if (val == "ztky") {
+                kdnam = "中通快运";
+            }
+        }
+        return kdnam;
+    }
+
+    //根据收件人  查找收件人信息 （电商平台）
+    function AjaxAddresseeinfobyCustId(Id) {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "../NA_XSinfo/GetaddresseeInfobyCustId",
+            data: { Id: Id },
+            dataType: "json",
+            async: false,
+            success: function (reslut) {
+                json = eval(reslut);
+            },
+            error: function (e) {
+                alert("请求失败");
+            }
+        })
+        return json;
+    }
+</script>
+
+<style id="style1">
+    .table_listNew
+    {
+        border-collapse: collapse;
+        border: none;
+    }
+
+        .table_listNew td
+        {
+            border: solid #000 1px;
+            height: 30px;
+            padding: 0 0 0 0px;
+        }
+
+    .main
+    {
+        width: 690px;
+        height: 900px;
+        margin: auto;
+        margin-top: 30px;
+    }
+
+    .title
+    {
+        width: 690px;
+        height: 70px;
+        margin: auto;
+    }
+
+    .title_c
+    {
+        width: 690px;
+        height: 40px;
+        margin: auto;
+    }
+
+        .title_c h1
+        {
+            text-align: center;
+            margin: auto;
+            font-size: 25px;
+            font-weight: normal;
+            letter-spacing: 6px;
+        }
+
+        .title_c h2
+        {
+            text-align: center;
+            margin: auto;
+            font-size: 25px;
+            font-weight: normal;
+        }
+
+    .cov
+    {
+        width: 690px;
+        height: auto;
+        margin: auto;
+    }
+
+    .dydata
+    {
+        width: 690px;
+        height: 30px;
+        margin: auto;
+    }
+
+    .cov_title
+    {
+        width: 690px;
+        height: 70px;
+        margin: auto;
+        /*border: #000 1px solid;*/
+    }
+
+    .cov_c
+    {
+        width: 690px;
+        height: auto;
+        margin: auto;
+        border-left: #000 1px solid;
+        border-right: #000 1px solid;
+    }
+
+    .cov_c_s
+    {
+        width: 690px;
+        height: 70px;
+        margin: auto;
+        border-bottom: #000 1px solid;
+    }
+
+    td
+    {
+        font-size: 12px;
+    }
+</style>
+
+<div id="Con" style="" class="concss">
+
+
+
+    <table class="table_con" style="width: 100%; color: #000; margin-top: 20px; font-size: 13px;">
+        <tr>
+
+            <td align="center">打印记录条数：</td>
+        </tr>
+        <tr>
+            <td style="height: 30px;"></td>
+        </tr>
+        <tr>
+            <td align="center">
+                <input type="button" class="btncss" value="打印" onclick="return prn3_preview()" />
+            </td>
+        </tr>
+    </table>
+    <div style="font-size: 14px; color: #f00;">
+        &nbsp; &nbsp;打印说明:<br />
+        <p style="text-indent: 2em">
+            1.按月打印<br />
+        </p>
+        <p style="text-indent: 2em">2.每天打印在一页</p>
+    </div>
+
+</div>
+
+<div id="strcon" style="height:auto;">
+</div>

@@ -1,0 +1,97 @@
+﻿@model NewAsiaOASystem.ViewModel.PagerInfo<NewAsiaOASystem.ViewModel.WX_Message_NewsView>
+@{
+    ViewBag.Title = "图文消息";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+@section HeadContent{
+    <script src="~/Scripts/Sys/SysMenu.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            BindGrid();
+        })
+        function BindGrid() {
+             @{
+                 if (null != Model)
+                 {
+                     string json = Model.GetPagingDataJson;//获取json数据
+                    @: var jsonStr =@Html.Raw(json); 
+                              //  @: $("#dg").datagrid('loadData', jsonStr); 
+                 }
+              }
+            if (typeof(jsonStr)!="undefined") {
+                var html="";
+                html='<table cellpadding="0" cellspacing="0">';
+                for (var i = 0,j=jsonStr.length; i < j; i++) {
+                    if (i%2==0)
+                        html+='<tr class="h-table-content-r1">';
+                    else
+                        html+='<tr class="h-table-content-r">';
+                    html+='<td width="30"><input type="checkbox" name="ContentChecked" value="'+jsonStr[i].N_Id+'"/></td>';
+                    html+='<td width="150">'+jsonStr[i].Title+'</td>';
+                    html+='<td width="100">1'+showDes(jsonStr[i].Description)+'</td>';
+                    html+='<td width="200">'+jsonStr[i].PicUrl+'</td>';
+                    html+='<td width="50">'+jsonStr[i].sort+'</td>';
+                    html+="</tr>";
+                }
+                html+='</table>';
+                $(".h-table-content").append(html);
+            }
+        }
+    </script>
+}
+
+<!--==================================数据列表=============================-->
+<div class="h-right">
+    <div class="h-right-c">
+      @*  <div class="h-right-title">您当前的位置：图文管理</div>*@
+        <div class="inquiry-input" style="margin: 10px 0 10px 10px;">
+            <span class="inquiry-input">
+                <button onclick="addClick('/FirstBack/Newaddpage')">新增图文</button></span>
+            <span class="inquiry-input">
+                <button onclick="del('/FirstBack/NewDelete')">删除</button></span>
+            <span class="inquiry-input">
+                <button onclick="update('/FirstBack/NewsUpdatepage')">编辑</button></span>
+            <span class="inquiry-input">
+                <button onclick="location.href='/FirstBack/Newslist'">刷新</button></span>
+             
+        </div>
+
+        <div class="h-table">
+            <div class="h-table-content">
+                <table cellpadding="0" cellspacing="0" class="h-right-table-title1" style="border: 5px;">
+                    <tr>
+                        <td width="30">
+                            <input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" /></td>
+                        <td width="150">文章标题</td>
+                        <td width="100">简介2</td>
+                        <td width="200">图片URL</td>
+                        <td width="50">排序</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!--==========================输出分页按钮=========================-->
+<div>
+
+    <table style="width: 100%">
+        <tr>
+            <td>@Html.ShowPageNavigate(Model.CurrentPageIndex, Model.PageSize, Model.RecordCount)</td>
+        </tr>
+@* 
+        <tr>
+            <td style="color: red; font-size:14px;">
+                 <div style="padding-left:10px;">注：</div>
+                <div style="padding-left:30px;">1.请先添加所要推送的图文消息，然后勾选信息列表中所要推送的图文消息，最后点击【群发消息】按钮</div>
+                <div style="padding-left:30px;">2.群发消息：将图文消息推送给当前全部已关注本服务号的微信用户 </div>
+                <div style="padding-left:30px;">3.绩效推送时，只可勾选一条消息；同时将绩效信息推送至绑定系统帐号的微信用户</div>
+                <div style="padding-left:30px;">4.补充之处：在页面中显示微信管理员，当月可发送条数（一月四条），已经发送的消息条数，以及剩余发送消息的条数</div>
+            </td>
+        </tr>*@
+    </table>
+
+</div>
+ 

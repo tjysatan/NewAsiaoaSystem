@@ -1,0 +1,81 @@
+﻿
+@{
+    ViewBag.Title = "回复采购交期";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<style>
+    .round {
+     width:530px; height:100px;
+    border:1px solid #dedede;
+    -moz-border-radius: 10px;      /* Gecko browsers */
+    -webkit-border-radius: 10px;   /* Webkit browsers */
+    border-radius:10px;            /* W3C syntax */
+    margin-left:35px;
+}
+</style>
+<div align=center class="round">
+    
+      <table style="width:95%; padding-top:5px;">
+          <tr>
+              <td class="infor-c-input" style="font-size:12px;" align="left">预计交期：<input type="text" id="jqdatetiem" name="jqdatetiem" onclick = "WdatePicker()" /></td>
+            @*  <td class="infor-c-input"style="font-size:12px;">收件人：  @Html.TextBoxFor(m => m.QRsjName)</td>*@
+          </tr>
+      </table>
+
+        <div class="inquiry-input infor-b">
+        <span>
+            <button onclick="return ajaxyqj()">确定</button></span>
+        <span>
+            <button onclick="return  closeUI()">返回</button></span>
+       </div> 
+ </div>
+
+<script type="text/javascript">
+
+    function ajaxyqj() {
+        var jqdatetime = $("#jqdatetiem").val();
+        if (jqdatetime == "") {
+            layer.alert("交期不为空！", { icon: 2 });
+            $("#jqdatetiem").focus();
+            return;
+        }
+      
+            $.ajax({
+                type: "POST",
+                url: "../Flow_Pleasepurchaseinfo/Updatejq",
+                data: { Id: '@ViewData["Id"]', jqdatetime: jqdatetime },
+                dataType: "html",
+                async: false,
+                success: function (reslut) {
+                    json = reslut;
+                    if (json == "0") {
+                        $.messager.alert("操作提示", '操作成功！', 'info', function () {
+                            var ParentObj = window.parent;//获取父窗口
+                            window.parent.$('#windowDia').window('close');
+                            if ('@ViewData["type"]' == "0") {
+                                window.parent.location = "/Flow_Pleasepurchaseinfo/OneList";
+                            } else if ('@ViewData["type"]' == "1") {
+                                window.parent.location = "/Flow_Pleasepurchaseinfo/TweList";
+                            } else {
+                                window.parent.location = "/Flow_Pleasepurchaseinfo/List";
+                            }
+                            
+                            return false;
+                        });
+                    }
+                },
+                error: function (e) {
+                    alert("请求失败");
+                }
+            })
+           
+    }
+
+    //关闭
+    function closeUI() {
+        var ParentObj = window.parent;//获取父窗口
+        window.parent.$('#windowDia').window('close');
+        return false;
+    }
+</script>

@@ -1,0 +1,310 @@
+﻿@model NewAsiaOASystem.ViewModel.PagerInfo<NewAsiaOASystem.ViewModel.K3_wuliaoinfoView>
+@{
+    ViewBag.Title = "同步K3数据列表";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+
+
+@section HeadContent{
+    <script type="text/javascript">
+        $(function () {
+            BindGrid();
+        })
+        function BindGrid() {
+            @{
+                if (null != Model && null != Model.GetPagingDataJson)
+                {
+                    string json = Model.GetPagingDataJson;//获取json数据
+                    @: var jsonStr = @Html.Raw(json);
+                   
+                }
+             }
+            dataGrid(jsonStr);
+        }
+        function dataGrid(jsonStr)
+        {
+            if (typeof (jsonStr) != "undefined") {
+                var html = "";
+                html = '<table class="layui-table">';
+                html += '<thead>';
+                html+='<tr>';
+                html+='<td width="5%"><input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" /></td>';
+                html+='<td width="10%">序号</td>';
+                html+='<td width="20%">物料代码</td>';
+                html+='<td width="15%">名称</td>';
+                html+='<td width="15%">型号</td>';
+                html+='<td width="10%">类型</td>';
+                html+='<td width="10%">单价</td>';
+                html+='<td width="15%">操作</td>';
+                html+='</tr>';
+                html+='</thead>';
+                for (var i = 0, j = jsonStr.length; i < j; i++) {
+                    html+='<tr>';
+                    html += '<td width="5%"><input type="checkbox" name="ContentChecked" value="' + jsonStr[i].Id + '"/></td>';
+                    html += '<td width="10%">' + jsonStr[i].fitem + '</td>';
+                    html+='<td width="20%">'+jsonStr[i].fnumber+'</td>';
+                    html+='<td width="15%">'+jsonStr[i].fname+'</td>';
+                    html+='<td width="15%">'+jsonStr[i].fmodel+'</td>';
+                    html+='<td width="10%">'+ztshow(jsonStr[i].Type)+'</td>';
+                    html+='<td width="10%">'+jsonStr[i].forderprice+'</td>';
+                    html += '<td width="15%">'+ showczbtn(jsonStr[i].fnumber)+'</td>';
+                    html+='</tr>';
+                }
+                html += '</table>';
+                $("#content").html(html);
+            }
+        }
+
+        //pageIndex当前页
+        function SerchList(pageIndex)
+        {
+            $("input[name='pageIndex']").val(pageIndex);
+            var options = {
+                beforeSubmit: function () {
+                    return true;
+                },
+                dataType: "json",
+                success: function (context) {
+                    var data=eval(context.result);
+                    dataGrid(data);
+                    $(".pagin").html(context.PageN);//输出分页按钮
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $.messager.alert("操作提示", '查询失败请重试！', 'error');
+                }
+            }
+            $('#form1').ajaxSubmit(options);
+            return false;
+        }
+
+        //状态显示
+        function ztshow(val)
+        {
+            if(val=="0")
+            {
+                return "电器原料";
+            }
+            if(val=="1")
+            {
+                return "电子原料";
+            }
+            if(val=="2")
+            {
+                return "辅料";
+            }
+            if(val=="3")
+            {
+                return "温控器";
+            }
+            if(val=="4")
+            {
+                return "电控箱";
+            }
+            if(val=="5")
+            {
+                return "温控半成品";
+            }
+            if(val=="6")
+            {
+                return "软件";
+            }
+            else
+            {
+                return "其他项目";
+            }
+        }
+
+        //本地批量修改产品数据型号
+        function updatecpname() {
+            layer.open({
+                type: 2,
+                title: ['批量修改产品型号', 'font-size:14px;'],
+                area: ['550px', '350px'],
+                offset: '10px',
+                fixed: false, //不固定
+                maxmin: true,
+                content: '../K3Basicdata/BatcupdateprodectinfoxhbyfnumberView',
+                //end: function () {
+                //    location.reload();
+                //}
+            })
+        }
+        //操作按钮
+        function showczbtn(val) {
+            var fnumber = "'" + val + "'";
+            var z = '<a class="layui-btn layui-btn-primary layui-btn-small" onclick="updatebasicdatainfo(' + fnumber + ')">更新</a>';
+            return z;
+        }
+
+        //根据物料编号更新数据的型号
+        function updatebasicdatainfo(val) {
+            $.ajax({
+                url: "../K3Basicdata/updatek3databyfnumber",
+                type: "POST",
+                data: { fnumber: val },
+                dataType: "json",
+                async: true,
+                beforeSend: function () {
+                    ddchen();
+                },
+
+                success: function (response) {
+                    disLoading();
+                    if (response.result == "success") { layer.alert(response.res, { icon: 1 }, function () { location.reload(); }); }
+                    else {
+                        layer.alert(response.res, { icon: 2 }, function () { location.reload(); });
+                    }
+
+                },
+                error: function (e) {
+                    disLoading();
+                    layer.alert("操作失败！", { icon: 2 });
+                }
+             })
+            }
+    </script>
+}
+
+<!--==================================数据列表=============================-->
+<div class="h-right">
+    <div class="h-right-c">
+        @*   <div class="h-right-title">您当前的位置：免疫点管理</div>*@
+        <!--查询条件-->
+        @using (Html.BeginForm("SearchList", "K3Basicdata", FormMethod.Post, new { id = "form1" }))
+        {
+            @Html.Hidden("pageIndex");
+            <div class="inquiry1">
+                <fieldset>
+                    <legend>查询条件：</legend>
+                    <ul>
+                        <li>
+                            <span>物料代码：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="fnumber" />
+                            </span>
+                        </li>
+                        <li>
+                            <span>名称：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="fname" />
+                            </span>
+                        </li>
+                        <li>
+                            <span>型号：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="fmodel" />
+                            </span>
+                        </li>
+                        <li>
+                            <span>类型：</span>
+                            <span>
+                                <select id="type" name="type" class="add-function">
+                                    <option value="">全部</option>
+                                    <option value="0">电器原料</option>
+                                    <option value="1">电子原料</option>
+                                    <option value="2">辅料</option>
+                                    <option value="3">温控器</option>
+                                    <option value="4">电控箱</option>
+                                    <option value="5">温控器（半成品)</option>
+                                    <option value="6">软件</option>
+                                    <option value="7">其他项目</option>
+                                </select>
+                            </span>
+                        </li>
+                        <li style="*width: 100%; *margin: -10px 0 5px 90px;">
+                            <span class="inquiry-input">
+                                <button class="layui-btn" onclick="return SerchList(1)"><i class="layui-icon">&#xe615;</i> 查询</button>
+                            </span>
+                        </li>
+                        <li>
+
+                            <span class="inquiry-input">
+                                <button class="layui-btn" onclick="tjUpdatedate();return  false;"><i class="layui-icon">&#xe63d;</i> 更新</button>
+                            </span>
+                            <span class="inquiry-input">
+                                <button class="layui-btn" onclick="test();return  false;"><i class="layui-icon">&#xe63d;</i> 测试</button>
+                            </span>
+                            <span class="inquiry-input">
+                                <button class="layui-btn" onclick="return addClick('/K3Basicdata/TBk3wuliaoView')"><i class="layui-icon">&#x1002;</i> 刷新</button>
+                            </span>
+                            <span class="inquiry-input">
+                                <button class="layui-btn" onclick="updatecpname(); return false;"><i class="layui-icon">&#xe642;</i>批量修改型号</button>
+                            </span>
+                        </li>
+                    </ul>
+                </fieldset>
+            </div>
+        }
+        <div class="h-table">
+            <div class="h-table-content">
+                <div id="content"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!--==========================输出分页按钮=========================-->
+<div class="pagin">
+    @if (ViewBag.PageNavigate == null)
+    {
+        @Html.ShowPageNavigate(Model.CurrentPageIndex, Model.PageSize, Model.RecordCount);
+    }
+</div>
+
+
+
+<script type="text/javascript">
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+
+    function tjUpdatedate() {
+        $.ajax({
+            url: "../K3Basicdata/Getk3ajaxjson",
+            type: "POST",
+            dataType: "html",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                layer.alert("本次更新：" + response + "条数据", { icon: 1 });
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+    }
+
+    //测试
+    function test()
+    {
+        $.ajax({
+            url: "../K3Basicdata/datazhengli",
+            type: "POST",
+            dataType: "html",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                layer.alert("本次更新：" + response + "条数据", { icon: 1 });
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+    }
+</script>

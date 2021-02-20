@@ -1,0 +1,131 @@
+﻿@model NewAsiaOASystem.ViewModel.DKX_DDtypeinfoView
+@{
+    ViewBag.Title = "电控箱类型的编辑页面";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<div style="width: 80%; padding: 20px 20px 0 20px">
+    @using (Html.BeginForm("Edit", "DKX_DDtypeinfo", FormMethod.Post, new { id = "form1" }))
+    {
+        @Html.HiddenFor(m => m.Id);
+        @Html.HiddenFor(m => m.C_time);
+        @Html.HiddenFor(m => m.C_name);
+        @Html.HiddenFor(m => m.Up_time);
+        @Html.HiddenFor(m => m.Up_name);
+        <div class="layui-form-item">
+            <label class="layui-form-label">类型名称：</label>
+            <div class="layui-input-block">
+                @Html.TextBoxFor(m => m.Name, new { placeholder = "类型名称", @class = "layui-input" })
+            </div>
+        </div>
+        
+        <div class="layui-form-item">
+            <label class="layui-form-label">类型代码：</label>
+            <div class="layui-input-block">
+                @Html.TextBoxFor(m => m.Type, new { placeholder = "类型代码 0小系统 1大系统 2物联网", @class = "layui-input" })
+            </div>
+        </div>
+        
+        <div class="layui-form-item">
+            <label class="layui-form-label">排序：</label>
+            <div class="layui-input-block">
+                @Html.TextBoxFor(m => m.Sort, new { placeholder = "排序 越小越空前", @class = "layui-input" })
+            </div>
+        </div>
+        <div class="layui-form-item">
+             <label class="layui-form-label">是否审核：</label>
+            <div class="layui-input-block">
+                <select class="layui-input" name="Issh" style="width:200px;" >
+                    @{
+        if ("0".Equals(Convert.ToString(@Model.Issh)) && null != @Model.Id)
+        {
+                @:<option value="1">需要</option>
+                        @:<option value="0" selected="selected">否</option>
+        }
+        else
+        {
+              @:<option value="0" >否</option>
+                        @:<option value="1"  selected="selected">需要</option>
+        }
+                        }
+                    </select>
+            </div>
+        </div>
+        
+        <div class="layui-form-item">
+            <label class="layui-form-label">备注：</label>
+            <div class="layui-input-block" style="width:200px;">
+                @Html.TextBoxFor(m => m.Beizhu, new { placeholder = "备注", @class = "layui-input" })
+            </div>
+        </div>
+        
+        <div class="layui-form-item">
+            <label class="layui-form-label">是否启用：</label>
+            <div class="layui-input-block">
+                <select class="layui-input" name="Start" style="width:200px;">
+                    @{
+        if ("0".Equals(Convert.ToString(@Model.Start)) && null != @Model.Id)
+        {
+                        @:<option value="1">禁用</option>
+                        @:<option value="0" selected="selected">启用</option>
+                                                }
+        else
+        {
+                        @:<option value="0"  selected="selected">启用</option>
+                        @:<option value="1">禁用</option>
+                                                }
+                                                
+                    }
+                </select>
+            </div>
+        </div>
+        
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="formDemo" onclick="return weixinAjaxform()">确定</button>
+
+            </div>
+        </div>
+    }
+</div>
+
+<script type="text/javascript">
+    //表单提交
+    function weixinAjaxform() {
+        var Name = $("#Name").val();
+        var Type = $("#Type").val();
+        var Sort = $("#Sort").val();
+        var KEY = $("#KEYvalue").val();
+        var NOTIFY_URL = $("#NOTIFY_URL").val();
+        if (Name == "") {
+            layer.alert("类型名称不为空！", { icon: 2 });
+            return false;
+        }
+        if (Type == "") {
+            layer.alert("排序不为空！", { icon: 2 });
+            return false;
+        }
+       
+        //表单验证
+        var options = {
+            beforeSubmit: function () {
+                return true;
+            },
+            dataType: "json",//这里是指控制器处理后返回的类型，这里返回json格式。  
+            success: function (context) {
+                if (context.result == "success") {
+                    layer.alert("提交成功！", { icon: 1 }, function () { window.location.href = "/DKX_DDtypeinfo/DKXtypelist"; });
+                }
+
+                if (context.result == "error") {
+                    layer.alert("提交失败！", { icon: 2 }, function () { location.reload(); });
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $.messager.alert("操作提示", '操作失败！', 'error');
+            }
+        }
+        $('#form1').ajaxSubmit(options);
+        return false; //为了不刷新页面,返回false 
+    }
+</script>

@@ -1,0 +1,114 @@
+﻿@{
+    ViewBag.Title = "团队收入项（不固定分配）的明细修改";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<style type="text/css">
+    .input_textcss
+    {
+        border: 1px solid #bbb3b3;
+        height: 30px;
+        width: 90%;
+    }
+</style>
+
+<script type="text/javascript">
+
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+
+    //编辑提交
+    function TTtwemsEide() {
+        var wctime = $("#wctime").val();
+        var sum = $("#sum").val();
+        var Id = $("#Id").val();
+        if (wctime == "")
+        {
+            layer.alert("完成时间不为空！", { icon: 2 });
+            return false;
+        }
+        if (sum == "") {
+            layer.alert("数量不为空！", { icon: 2 });
+            return false;
+        }
+        if (isNaN(sum)) {
+            layer.alert("数量请填写纯数字！", { icon: 2 });
+            return false;
+        }
+        $.ajax({
+            type: "POST",
+            url: "/PP_Staffinfo/UPdatettmxtweEide",
+            data: { "Id":Id,"wctime":wctime,"sl":sum},
+            dataType: "json",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (context) {
+                disLoading();
+                if (context == "0") {
+                    layer.alert("编辑成功！", { icon: 1 }, function () { Closeiform() });
+                    return false;
+                }
+                if (context == "0") {
+                    layer.alert("编辑失败！", { icon: 2 });
+                    return false;
+                }
+            },
+            error: function (e) {
+                disLoading();
+                alert("网络链接失败,请稍等再试！");
+            }
+        })
+    }
+
+    //直接关闭所有弹出框
+    function Closeiform() {
+        var index = parent.layer.getFrameIndex(window.name);
+        parent.layer.close(index);
+    }
+</script>
+
+<input type="hidden" id="Id" name="Id" value='@ViewData["Id"]' />
+<div class="h-table">
+
+    <div class="h-table-content">
+        <div id="content">
+            <table class="layui-table" style="">
+
+                <tr>
+                    <td>当前完成时间：</td>
+                    <td>@ViewData["wctime"]</td>
+                </tr>
+                <tr>
+                    <td>当前数量：</td>
+                    <td>@ViewData["Sum"]</td>
+                </tr>
+                <tr>
+                    <td width="30%">完成时间：</td>
+                    <td align="left">
+                        <input type="text" id="wctime" name="wctime" class="input_textcss" placeholder="请选择时间" onclick="WdatePicker()" /></td>
+                </tr>
+                <tr>
+                    <td width="30%">数量：</td>
+                    <td align="left">
+                        <input type="text" id="sum" name="sum" class="input_textcss" placeholder="填写完成的数量" />
+                    </td>
+                </tr>
+
+            </table>
+        </div>
+        <div style="text-align: center; width: 100%;">
+            <a href="javascript:void(0)" class="layui-btn layui-btn-primary" onclick="TTtwemsEide()">修改提交</a>
+        </div>
+        <div style="text-align: center; width: 100%;">
+            注：团队收入明细修改（不固定分配）,只能修改数量和收入完成的时候。如果该明细已经分配过,修改后原来分配的数据会自动删除,需要重新分配。
+        </div>
+    </div>
+</div>

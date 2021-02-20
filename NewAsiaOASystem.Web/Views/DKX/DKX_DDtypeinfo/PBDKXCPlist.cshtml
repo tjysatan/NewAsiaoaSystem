@@ -1,0 +1,276 @@
+﻿@model NewAsiaOASystem.ViewModel.PagerInfo<NewAsiaOASystem.ViewModel.DKX_CPInfoView>
+@{
+    ViewBag.Title = "品保方案库列表";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+
+@section HeadContent{
+    <script type="text/javascript">
+        $(function () {
+            BindGrid();
+        })
+        function BindGrid() {
+            @{
+                if (null != Model && null != Model.GetPagingDataJson)
+                {
+                    string json = Model.GetPagingDataJson;//获取json数据
+                    @: var jsonStr = @Html.Raw(json);
+                }
+             }
+            dataGrid(jsonStr);
+        }
+
+        function dataGrid(jsonStr){
+            if (typeof (jsonStr) != "undefined") {
+                var html = "";
+                html = '<table class="layui-table">';
+                html += '<thead>';
+                html+='<tr style="font-weight:bold;color:#000000">';
+                html += '<td width="2%"> <input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" /></td></td>';
+                html+='<td width="15%">型号名称</td>';
+                html+='<td width="5%">功率</td>';
+                html+='<td width="8%">类型</td>';
+                html+='<td width="8%">工程</td>';
+                html+='<td width="10%">入库时间</td>';
+                html+='<td width="10%">状态</td>';
+                html+='<td width="15%">功能简述</td>';
+                html+='<td width="15%">操作</td>';
+                html+='</tr>';
+                html+='</thead>';
+                for (var i = 0, j = jsonStr.length; i < j; i++)
+                {
+                    //工程师信息
+                    var gcsstr=AjaxGcsinfo(jsonStr[i].Gcs_name)
+                    var gcsnamestr="";
+                    if(gcsstr!=null&&gcsstr!="")
+                    {
+                        gcsnamestr=gcsstr.Name;
+                    }
+                    html+='<tr style="color:#000000">';
+                    html += '<td width="2%"><input type="checkbox" name="ContentChecked" value="' + jsonStr[i].Id + '"/></td>';
+                    html+='<td width="15%">'+jsonStr[i].Cpname+'</td>';
+                    html+='<td width="5%">'+jsonStr[i].Power+'/'+jsonStr[i].DW+'</td>';
+                    html+='<td width="8%">'+showddtype(jsonStr[i].Type,jsonStr[i].Isft)+'</td>';
+                    html+='<td width="8%">'+gcsnamestr+'</td>';
+                    html+='<td width="10%">'+jsonStr[i].RK_time+'</td>';
+                    html+='<td width="10%">'+showcpzt(jsonStr[i].IsDis,jsonStr[i].zgyy)+'</td>';
+                    if(jsonStr[i].cpgnjs!=null&&jsonStr[i].cpgnjs)
+                        html+='<td width="10%">'+jsonStr[i].cpgnjs+'</td>';
+                    else
+                        html+='<td width="10%">-</td>';
+                    html+='<td width="15%"><div class="layui-btn-group">'+czbtnshow(jsonStr[i].Id)+'</div></td>';
+                    html+='</tr>';
+                }
+                html += '</table>';
+                $("#content").html(html);
+            }
+        }
+
+        function SerchList(pageIndex)
+        {
+            $("input[name='pageIndex']").val(pageIndex);
+            var options = {
+                beforeSubmit: function () {
+                    return true;
+                },
+                dataType: "json",
+                success: function (context) {
+                    var data=eval(context.result);
+                    dataGrid(data);
+                    $(".pagin").html(context.PageN);//输出分页按钮
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $.messager.alert("操作提示", '查询失败请重试！', 'error');
+                }
+            }
+            $('#form1').ajaxSubmit(options);
+            return false;
+        }
+
+         //产品状态显示
+        function showcpzt(val,ycyy)
+        {
+            var str;
+            if(val=="0")
+            {
+                str="正常";
+            }
+            if(val=="1")
+            {
+                str='<span style="color:red">异常 ('+ycyy+')</span>'
+            }
+            if(val=="2")
+            {
+                str='<span style="color:#00ff21">待审核</span>';
+            }
+            if(val=="3")
+            {
+                str='<span style="color:red">未提交 </span>'
+            }
+            return str;
+        }
+
+        //操作按钮显示
+        function czbtnshow(val)
+        {
+            var Id="'"+val+"'";
+            var t = '<a class="layui-btn layui-btn-primary layui-btn-small" onclick="ZGDZURL('+Id +')">整改</a>';
+            var z='<a class="layui-btn layui-btn-primary layui-btn-small" onclick="ziliaochakan('+Id+')">资料查看</a>';
+            return t+z;
+        }
+
+        //整改页面
+        function ZGDZURL(val)
+        {
+            layer.open({
+                type: 2,
+                title: ['整改提交', 'font-size:14px;'],
+                area: ['500px', '350px'],
+                offset: '10px',
+                fixed: false, //不固定
+                maxmin: true,
+                content: '../DKX_DDtypeinfo/PBDKXCPZGView?Id='+val,
+                //end: function () {
+                //    location.reload();
+                //}
+            })
+        }
+
+        //资料查看
+        function ziliaochakan(val)
+        {
+            layer.open({
+                type: 2,
+                title: ['资料查看', 'font-size:14px;'],
+                area: ['900px', '450px'],
+                offset: '10px',
+                fixed: false, //不固定
+                maxmin: true,
+                content: '../DKX_DDtypeinfo/FAKzlckView?Id='+val,
+                //end: function () {
+                //    location.reload();
+                //}
+            })
+        }
+
+        //电控箱类型显示
+        function showddtype(val,val2){
+            var jsonstr=@Html.Raw(ViewBag.MyJson);
+            var str;
+            if(jsonstr!=null){
+                for (var i = 0;i <jsonstr.length; i++) {
+                    if(jsonstr[i].Type==val)
+                    {
+                        str=jsonstr[i].Name;
+                        return str;
+                    }
+                }
+            }
+        }
+    </script>
+}
+
+
+
+<div class="h-right">
+    <div class="h-right-c">
+        <!--查询条件-->
+        <div class="inquiry1">
+            <fieldset>
+                <legend>查询条件：</legend>
+                @using (Html.BeginForm("DkxcpSearchList", "DKX_DDtypeinfo", FormMethod.Post, new { id = "form1" }))
+                {
+                    @Html.Hidden("pageIndex");
+                    <ul>
+                        <li>
+                            <span>产品型号：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txtcpname" id="txtcpname" />
+                            </span>
+                        </li>
+                        <li>
+                            <span>功率：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txtgl" id="txtgl" />
+                            </span>
+                        </li>
+                        <li>
+                            <span>功率单位：</span>
+                            <span class="inquiry-input">
+                                <select id="txtdw" name="txtdw">
+                                    <option value="">全部</option>
+                                    <option value="KW">KW</option>
+                                    <option value="P">P</option>
+                                </select>
+                            </span>
+                        </li>
+                        <li>
+                           @* <span>产品类型：</span>
+                            <span class="inquiry-input">
+                                <select id="txtType" name="txtType">
+                                    <option value="">全部</option>
+                                    <option value="0">小系统</option>
+                                    <option value="1">大系统</option>
+                                    <option value="2">物联网</option>
+                                    <option value="3">大系统（拼接柜）</option>
+                                </select>
+                            </span>*@
+                             <span>产品类型：</span>
+                            <span class="inquiry-input">
+                                @Html.DropDownList("txtType", ViewData["aDTlist"] as SelectList)
+                            </span>
+                        </li>
+                        <li>
+                            <span>是否分体：</span>
+                            <span class="inquiry-input">
+                                <select id="txtft" name="txtft">
+                                    <option value="">全部</option>
+                                    <option value="0">一体</option>
+                                    <option value="1">分体</option>
+                                </select>
+                            </span>
+                        </li>
+                        <li>
+                            <span>工程师：</span>
+                            <span class="inquiry-input">
+                                @Html.DropDownList("txtGcs_name", ViewData["GCSDATA"] as SelectList)
+                            </span>
+                        </li>
+                        <li>
+                            <span>功能简述：</span>
+                            <span class="inquiry-input">
+                                <input type="text" name="txtgnjs" id="txtgnjs" />
+                            </span>
+                        </li>
+
+                        <li style="*width: 100%; *margin: -10px 0 5px 90px;">
+                            <span class="inquiry-input">
+                                <button name="btnSerch" class="layui-btn" onclick="return SerchList(1)"><i class="layui-icon">&#xe615;</i>查询</button>
+                                <button class="layui-btn" onclick="return addClick('/DKX_DDtypeinfo/PBDKXCPlist')"><i class="layui-icon">&#x1002;</i>刷新</button> 
+                                <button onclick="return del('/DKX_DDtypeinfo/Delete')">删除</button>
+                                 
+                            </span>
+                        </li>
+                    </ul>
+                }
+            </fieldset>
+        </div>
+
+        <div class="h-table">
+            <div class="h-table-content" style="color: #9d9999;">
+                <div id="content"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--==========================输出分页按钮=========================-->
+<div class="pagin">
+    @if (ViewBag.PageNavigate == null)
+    {
+        @Html.ShowPageNavigate(Model.CurrentPageIndex, Model.PageSize, Model.RecordCount);
+    }
+</div>
+
+<script src="~/Scripts/NAjs/DKXpulice.js"></script>

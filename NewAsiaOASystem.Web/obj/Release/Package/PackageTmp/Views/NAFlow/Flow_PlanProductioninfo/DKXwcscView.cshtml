@@ -1,0 +1,220 @@
+﻿@{
+    ViewBag.Title = "常规电控箱生产完成";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<script src="~/Scripts/NAjs/layui.js"></script>
+<script type="text/javascript">
+
+    $(function () {
+        var str = AJAXGetTonowtime();
+        $("#wctime").val(str);
+    })
+
+    //完成生产
+    function DKXwcscajax(val) {
+        var gw1 = $("#gw1").val();
+        var gw2 = $("#gw2").val();
+        var gw3 = $("#gw3").val();
+        var gw4 = $("#gw4").val();
+        var gw5 = $("#gw5").val();
+        var gw6 = $("#gw6").val();
+        var gw7 = $("#gw7").val();
+        var gw8 = $("#gw8").val();
+        var gw9 = $("#gw9").val();
+        var gw10 = $("#gw10").val();
+        var wctime = $("#wctime").val();
+        if (gw1 == "") {
+            layer.alert("请填写工段1的责任人！", { icon: 2 });
+            return false;
+        }
+        if (gw2 == "") {
+            layer.alert("请填写工段2的责任人！", { icon: 2 });
+            return false;
+        }
+        if (gw3 == "") {
+            layer.alert("请填写工段3的责任人！", { icon: 2 });
+            return false;
+        }
+        if (gw4 == "") {
+            layer.alert("请填写工段4的责任人！", { icon: 2 });
+            return false;
+        }
+        if (gw5 == "") {
+            layer.alert("请填写工段5的责任人！", { icon: 2 });
+            return false;
+        }
+        if (gw6 == "") {
+            layer.alert("请填写工段6的责任人！", { icon: 2 });
+            return false;
+        }
+        if (gw7 == "") {
+            layer.alert("请填写工段7的责任人！", { icon: 2 });
+            return false;
+        }
+        if (gw8 == "") {
+            layer.alert("请填写工段8的责任人！", { icon: 2 });
+            return false;
+        }
+        if (gw9 == "") {
+            layer.alert("请填写工段9的责任人！", { icon: 2 });
+            return false;
+        }
+        if (gw10 == "") {
+            layer.alert("请填写工段10的责任人！", { icon: 2 });
+            return false;
+        }
+        if (wctime == "")
+        {
+            layer.alert("完成时间不为空！", { icon: 2 });
+            return false;
+        }
+        $.ajax({
+            url: "../Flow_RoutineStockinfo/DKXwcscEide",
+            type: "POST",
+            data: { Id: val, gw1: gw1, gw2: gw2, gw3: gw3, gw4: gw4, gw5: gw5, gw6: gw6, gw7: gw7, gw8: gw8, gw9: gw9, gw10: gw10, wctime: wctime },
+            dataType: "html",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response == "2") {
+                    layer.alert("提交成功！", { icon: 1 }, function () { guanbi(); });
+                }
+                if (response == "0") {
+                    layer.alert("提交异常！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "1") {
+                    layer.alert("生产计划单不存在！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "3") {
+                    layer.alert("完成时间不可以小于下单时间！", { icon: 2 }, function () { location.reload(); });
+                }
+
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+    }
+
+    //获取当前服务的时间
+    function AJAXGetTonowtime()
+    {
+        var json;
+        $.ajax({
+            url: "../Flow_PlanProductioninfo/GetNewdatetimejson",
+            type: "POST",
+            dataType: "html",
+            async: false,
+            success: function (response) {
+                json = response;
+            },
+            error: function (e) {
+                
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+        return json;
+    }
+
+
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+
+    function guanbi() {
+        var index = parent.layer.getFrameIndex(window.name);
+        //关闭弹出层
+        parent.layer.close(index);
+    }
+</script>
+
+<div style="width: 90%; padding: 20px 20px 0 20px">
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">工序1</label>
+            <div class="layui-input-inline">
+                <input type="text" name="gw1" id="gw1" placeholder="领料、拆包打底板" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">工序6</label>
+            <div class="layui-input-inline">
+                <input type="text" name="gw6" id="gw6" placeholder="底板装箱" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">工序2</label>
+            <div class="layui-input-inline">
+                <input type="text" name="gw2" id="gw2" placeholder="接控制线" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">工序7</label>
+            <div class="layui-input-inline">
+                <input type="text" name="gw7" id="gw7" placeholder="接温控线" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">工序3</label>
+            <div class="layui-input-inline">
+                <input type="text" name="gw3" id="gw3" placeholder="接主线" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">工序8</label>
+            <div class="layui-input-inline">
+                <input type="text" name="gw8" id="gw8" placeholder="焊灯" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">工序4</label>
+            <div class="layui-input-inline">
+                <input type="text" name="gw4" id="gw4" placeholder="上温控线、绕绕线" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">工序9</label>
+            <div class="layui-input-inline">
+                <input type="text" name="gw9" id="gw9" placeholder="调式" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">工序5</label>
+            <div class="layui-input-inline">
+                <input type="text" name="gw5" id="gw5" placeholder="面板装箱" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">工序10</label>
+            <div class="layui-input-inline">
+                <input type="text" name="gw10" id="gw10" placeholder="打包入库" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+
+    <hr class="layui-bg-blue">
+    <div class="layui-form-item">
+        <div class="layui-inline">
+             <label class="layui-form-label">工序10</label>
+            <div class="layui-input-inline">
+                <input type="text" name="wctime" id="wctime" class="layui-input" onclick="WdatePicker()" />
+            </div>
+        </div>
+    </div>
+    <hr class="layui-bg-blue">
+    <div class="layui-form-item" style="margin: auto">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit="" lay-filter="demo1" onclick="DKXwcscajax('@ViewData["Id"]')">完成生产</button>
+        </div>
+    </div>
+</div>

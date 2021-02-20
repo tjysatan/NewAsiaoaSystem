@@ -1,0 +1,79 @@
+﻿@model NewAsiaOASystem.ViewModel.Flow_NonSProductinfoView
+@{
+    ViewBag.Title = "试产产品编辑";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@using (Html.BeginForm("Edit", "Flow_NonSProductinfo", FormMethod.Post, new { id = "form1" }))
+{
+    @Html.HiddenFor(m => m.A_Sum);
+    @Html.HiddenFor(m => m.Id);
+    @Html.HiddenFor(m => m.C_time)
+    <div class="infor">
+        <p id="Ptitle"></p>
+        <div class="system-menu-set">
+            <ul class="infor-c">
+                <li>
+                    <span class="infor-c-width">物料代码：</span>
+                    <span class="infor-c-input">@Html.TextBoxFor(m => m.Pbianma)</span>
+                    <span style="color: red; font-size: 24px; vertical-align: middle; margin-left: 8px;">*</span>
+                    <span class="desc w-register">物料代码</span>
+                </li>
+            </ul>
+            <ul class="infor-c ">
+                <li>
+                    <span class="infor-c-width">产品名称：</span>
+                    <span class="infor-c-input">
+                        @Html.TextBoxFor(m => m.Pname)
+                    </span>
+                    <span class="desc w-register">产品名称</span>
+                </li>
+            </ul>
+            <ul class="infor-c ">
+                <li>
+                    <span class="infor-c-width">产品型号：</span>
+                    <span class="infor-c-input">
+                        @Html.TextBoxFor(m => m.Pmodel)
+                    </span>
+                    <span class="desc w-register">型号</span>
+                </li>
+            </ul>
+
+
+            <ul class="infor-c ">
+                <li><span class="infor-c-width">类型：</span>
+                    <span>
+                        <select class="add-function" name="Category">
+                            @{
+                              if ("0".Equals(Convert.ToString(@Model.Category)) && null != @Model.Id)
+                              {
+                                @:<option value="1" selected="selected">工程产品</option>
+                                @:<option value="0" >销售产品</option>
+                                @:<option value="2">试产产品</option>
+                              }
+                              else if ("1".Equals(Convert.ToString(@Model.Category)) && null != @Model.Id)
+                              {
+                                @:<option value="1" >工程产品</option>
+                                @:<option value="0"  selected="selected">销售产品</option>
+                                @:<option value="2">试产产品</option>
+                                                }
+                                                else
+                                                {
+                                @:<option value="1" >工程产品</option>
+                                @:<option value="0" >销售产品</option>
+                                @:<option value="2" selected="selected">试产产品</option>
+                              }
+                                                
+                            }
+                        </select></span> </li>
+            </ul>
+        </div>
+        <div class="inquiry-input infor-b">
+            <span>
+                <button onclick="return SCSavaForm()">保存</button></span><span>
+                    <button onclick="return RedirectUrl('/Flow_NonSProductinfo/BatchProductionView')">返回</button></span>
+        </div>
+    </div>
+}
+
+<script src="~/Scripts/Flow/Flow_NonSProductinfo.js"></script>
