@@ -43,3 +43,12 @@ C:\Users\96297\source\repos\NewRepo\NewAsiaOASystem\NewAsiaOASystem.ViewModel\ob
 C:\Users\96297\source\repos\NewRepo\NewAsiaOASystem\NewAsiaOASystem.ViewModel\obj\Release\NewAsiaOASystem.ViewModel.dll
 C:\Users\96297\source\repos\NewRepo\NewAsiaOASystem\NewAsiaOASystem.ViewModel\obj\Release\NewAsiaOASystem.ViewModel.pdb
 C:\Users\96297\source\repos\NewRepo\NewAsiaOASystem\NewAsiaOASystem.ViewModel\obj\Release\NewAsiaOASystem.ViewModel.csproj.CoreCompileInputs.cache
+D:\object\NewAsiaOASystem.ViewModel\bin\Release\NewAsiaOASystem.ViewModel.dll
+D:\object\NewAsiaOASystem.ViewModel\bin\Release\NewAsiaOASystem.ViewModel.pdb
+D:\object\NewAsiaOASystem.ViewModel\bin\Release\NewAsiaOASystem.DBModel.dll
+D:\object\NewAsiaOASystem.ViewModel\bin\Release\NewAsiaOASystem.DBModel.pdb
+D:\object\NewAsiaOASystem.ViewModel\obj\Release\NewAsiaOASystem.ViewModel.csprojAssemblyReference.cache
+D:\object\NewAsiaOASystem.ViewModel\obj\Release\NewAsiaOASystem.ViewModel.csproj.CoreCompileInputs.cache
+D:\object\NewAsiaOASystem.ViewModel\obj\Release\NewAsiaOASystem.ViewModel.csproj.CopyComplete
+D:\object\NewAsiaOASystem.ViewModel\obj\Release\NewAsiaOASystem.ViewModel.dll
+D:\object\NewAsiaOASystem.ViewModel\obj\Release\NewAsiaOASystem.ViewModel.pdb

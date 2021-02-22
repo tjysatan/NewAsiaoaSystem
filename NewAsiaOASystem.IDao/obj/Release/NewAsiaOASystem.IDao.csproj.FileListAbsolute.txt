@@ -55,3 +55,14 @@ C:\Users\96297\source\repos\NewRepo\NewAsiaOASystem\NewAsiaOASystem.IDao\obj\Rel
 C:\Users\96297\source\repos\NewRepo\NewAsiaOASystem\NewAsiaOASystem.IDao\obj\Release\NewAsiaOASystem.IDao.dll
 C:\Users\96297\source\repos\NewRepo\NewAsiaOASystem\NewAsiaOASystem.IDao\obj\Release\NewAsiaOASystem.IDao.pdb
 C:\Users\96297\source\repos\NewRepo\NewAsiaOASystem\NewAsiaOASystem.IDao\obj\Release\NewAsiaOASystem.IDao.csproj.CoreCompileInputs.cache
+D:\object\NewAsiaOASystem.IDao\bin\Release\NewAsiaOASystem.IDao.dll
+D:\object\NewAsiaOASystem.IDao\bin\Release\NewAsiaOASystem.IDao.pdb
+D:\object\NewAsiaOASystem.IDao\bin\Release\NewAsiaOASystem.DBModel.dll
+D:\object\NewAsiaOASystem.IDao\bin\Release\NewAsiaOASystem.ViewModel.dll
+D:\object\NewAsiaOASystem.IDao\bin\Release\NewAsiaOASystem.DBModel.pdb
+D:\object\NewAsiaOASystem.IDao\bin\Release\NewAsiaOASystem.ViewModel.pdb
+D:\object\NewAsiaOASystem.IDao\obj\Release\NewAsiaOASystem.IDao.csprojAssemblyReference.cache
+D:\object\NewAsiaOASystem.IDao\obj\Release\NewAsiaOASystem.IDao.csproj.CoreCompileInputs.cache
+D:\object\NewAsiaOASystem.IDao\obj\Release\NewAsiaOASystem.IDao.csproj.CopyComplete
+D:\object\NewAsiaOASystem.IDao\obj\Release\NewAsiaOASystem.IDao.dll
+D:\object\NewAsiaOASystem.IDao\obj\Release\NewAsiaOASystem.IDao.pdb

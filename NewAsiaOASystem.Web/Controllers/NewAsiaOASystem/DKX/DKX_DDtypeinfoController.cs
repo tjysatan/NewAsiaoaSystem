@@ -1624,10 +1624,11 @@ namespace NewAsiaOASystem.Web.Controllers
             row1.CreateCell(4).SetCellValue("关联号");
             row1.CreateCell(5).SetCellValue("单位售价");
             row1.CreateCell(6).SetCellValue("数量");
-            row1.CreateCell(7).SetCellValue("下单人");
-            row1.CreateCell(8).SetCellValue("下单时间");
-            row1.CreateCell(9).SetCellValue("工程师");
-            row1.CreateCell(10).SetCellValue("客户名称");
+            row1.CreateCell(7).SetCellValue("总价");
+            row1.CreateCell(8).SetCellValue("下单人");
+            row1.CreateCell(9).SetCellValue("下单时间");
+            row1.CreateCell(10).SetCellValue("工程师");
+            row1.CreateCell(11).SetCellValue("客户名称");
             if (modellist != null)
             {
                 int n = 0;
@@ -1645,10 +1646,11 @@ namespace NewAsiaOASystem.Web.Controllers
                     rowtemp.CreateCell(4).SetCellValue(modellist[i].KBomNo);//关联号
                     rowtemp.CreateCell(5).SetCellValue(modellist[i].price+"元/台");//单位售价
                     rowtemp.CreateCell(6).SetCellValue(modellist[i].NUM.ToString());//数量
-                    rowtemp.CreateCell(7).SetCellValue(xduser.UserName);
-                    rowtemp.CreateCell(8).SetCellValue(modellist[i].C_time.ToString());
-                    rowtemp.CreateCell(9).SetCellValue(gcsname.Name);
-                    rowtemp.CreateCell(10).SetCellValue(modellist[i].KHname);//客户名称
+                    rowtemp.CreateCell(7).SetCellValue((modellist[i].price* modellist[i].NUM).ToString());
+                    rowtemp.CreateCell(8).SetCellValue(xduser.UserName);
+                    rowtemp.CreateCell(9).SetCellValue(modellist[i].C_time.ToString());
+                    rowtemp.CreateCell(10).SetCellValue(gcsname.Name);
+                    rowtemp.CreateCell(11).SetCellValue(modellist[i].KHname);//客户名称
                 }
             } 
             System.IO.MemoryStream ms = new System.IO.MemoryStream();

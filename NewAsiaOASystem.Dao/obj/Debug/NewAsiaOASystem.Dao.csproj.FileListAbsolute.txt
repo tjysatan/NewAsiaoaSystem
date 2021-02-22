@@ -211,6 +211,11 @@ D:\object\NewAsiaOASystem.Dao\bin\Debug\Microsoft.Data.OData.dll
 D:\object\NewAsiaOASystem.Dao\bin\Debug\NewAsiaOASystem.DBModel.pdb
 D:\object\NewAsiaOASystem.Dao\bin\Debug\NewAsiaOASystem.IDao.pdb
 D:\object\NewAsiaOASystem.Dao\bin\Debug\NewAsiaOASystem.ViewModel.pdb
+D:\object\NewAsiaOASystem.Dao\obj\Debug\NewAsiaOASystem.Dao.csprojAssemblyReference.cache
+D:\object\NewAsiaOASystem.Dao\obj\Debug\NewAsiaOASystem.Dao.csproj.CoreCompileInputs.cache
+D:\object\NewAsiaOASystem.Dao\obj\Debug\NewAsiaOASystem.Dao.csproj.CopyComplete
+D:\object\NewAsiaOASystem.Dao\obj\Debug\NewAsiaOASystem.Dao.dll
+D:\object\NewAsiaOASystem.Dao\obj\Debug\NewAsiaOASystem.Dao.pdb
 D:\object\NewAsiaOASystem.Dao\bin\Debug\Microsoft.Web.Infrastructure.xml
 D:\object\NewAsiaOASystem.Dao\bin\Debug\System.Net.Http.Formatting.xml
 D:\object\NewAsiaOASystem.Dao\bin\Debug\System.Spatial.xml
@@ -230,8 +235,3 @@ D:\object\NewAsiaOASystem.Dao\bin\Debug\zh-Hans\System.Web.Razor.resources.dll
 D:\object\NewAsiaOASystem.Dao\bin\Debug\zh-Hans\System.Web.WebPages.resources.dll
 D:\object\NewAsiaOASystem.Dao\bin\Debug\zh-Hans\System.Web.WebPages.Deployment.resources.dll
 D:\object\NewAsiaOASystem.Dao\bin\Debug\zh-Hans\System.Web.WebPages.Razor.resources.dll
-D:\object\NewAsiaOASystem.Dao\obj\Debug\NewAsiaOASystem.Dao.csprojAssemblyReference.cache
-D:\object\NewAsiaOASystem.Dao\obj\Debug\NewAsiaOASystem.Dao.csproj.CoreCompileInputs.cache
-D:\object\NewAsiaOASystem.Dao\obj\Debug\NewAsiaOASystem.Dao.csproj.CopyComplete
-D:\object\NewAsiaOASystem.Dao\obj\Debug\NewAsiaOASystem.Dao.dll
-D:\object\NewAsiaOASystem.Dao\obj\Debug\NewAsiaOASystem.Dao.pdb
