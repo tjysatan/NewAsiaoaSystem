@@ -162,7 +162,7 @@ namespace NewAsiaOASystem.Web.Controllers
             Flow_PlanProductioninfoView planmodel = new Flow_PlanProductioninfoView();
             planmodel.C_name = user.Id;//创建人
             planmodel.C_time = DateTime.Now;//创建时间
-            planmodel.Isprint =1;//默认打印过了
+            planmodel.Isprint =0;//默认没有打印
             planmodel.P_CPId = model.Id;//产品Id
             planmodel.P_CPname = model.Pname;//产品名称
             planmodel.P_Issc = 4;//待技术确认
@@ -224,8 +224,6 @@ namespace NewAsiaOASystem.Web.Controllers
                 model.Yhxz = Convert.ToInt32(yhxz);
                 model.Kfname = user.RName;
                 model.Kfdatetime= DateTime.Now;
-
-
                 model.kfBeizhu = kfbeizhu;
                 flay = _IFlow_PlanPPrintinfoDao.Ninsert(model);
                 if (flay)

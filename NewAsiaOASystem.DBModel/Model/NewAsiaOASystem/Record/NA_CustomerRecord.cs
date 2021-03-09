@@ -40,7 +40,7 @@ namespace NewAsiaOASystem.DBModel
         /// <summary>
         /// 客户类型
         /// </summary>
-        public virtual string Rtyle { get; set; }
+        public virtual int? Rtyle { get; set; }
 
         /// <summary>
         /// 产品类型

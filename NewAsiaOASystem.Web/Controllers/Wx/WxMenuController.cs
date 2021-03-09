@@ -19,15 +19,15 @@ namespace NewAsiaOASystem.Web.Controllers
         //
         // GET: /WxMenu/
         IWX_MenusDao _IWX_MenusDao = ContextRegistry.GetContext().GetObject("WX_MenusDao") as IWX_MenusDao;
-        public ActionResult Index(int? pageIndex)
+        public ActionResult Index()
         {
-            int CurrentPageIndex = Convert.ToInt32(pageIndex);
-            if (CurrentPageIndex == 0)
-                CurrentPageIndex = 1;
-            _IWX_MenusDao.SetPagerPageIndex(CurrentPageIndex);
-            _IWX_MenusDao.SetPagerPageSize(20);
-            PagerInfo<WX_MenusView> listmodel = _IWX_MenusDao.GetWx_MenusList();
-            return View(listmodel);
+            //int CurrentPageIndex = Convert.ToInt32(pageIndex);
+            //if (CurrentPageIndex == 0)
+            //    CurrentPageIndex = 1;
+            //_IWX_MenusDao.SetPagerPageIndex(CurrentPageIndex);
+            //_IWX_MenusDao.SetPagerPageSize(20);
+            //PagerInfo<WX_MenusView> listmodel = _IWX_MenusDao.GetWx_MenusList();
+            return View();
         }
 
         #region //查询自定义菜单的树形结构数据
@@ -178,7 +178,6 @@ namespace NewAsiaOASystem.Web.Controllers
                 return Json(new { result = "error" });
             }
         }
-
 
         public JsonResult DeleteWx_Menu()
         {

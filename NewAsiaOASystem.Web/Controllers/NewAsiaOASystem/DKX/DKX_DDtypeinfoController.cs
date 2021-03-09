@@ -1632,6 +1632,8 @@ namespace NewAsiaOASystem.Web.Controllers
             if (modellist != null)
             {
                 int n = 0;
+                decimal? Totelsum = 0;
+                decimal? totelprice = 0;
                 for (int i = 0; i < modellist.Count; i++)
                 {
                     n = n + 1;
@@ -1639,6 +1641,11 @@ namespace NewAsiaOASystem.Web.Controllers
                     DKX_DDtypeinfoView ddtype = _IDKX_DDtypeinfoDao.Getdkxtypebytype(modellist[i].DD_Type.ToString());
                     SysPersonView xduser = _ISysPersonDao.NGetModelById(modellist[i].C_name);
                     DKX_GCSinfoView gcsname = _IDKX_GCSinfoDao.NGetModelById(modellist[i].Gcs_nameId);
+                   
+                    Totelsum = Totelsum + modellist[i].NUM;
+                    if (modellist[i].price!=null) { 
+                    totelprice = totelprice + (Math.Round(Convert.ToDecimal(modellist[i].price * modellist[i].NUM), 2));
+                    }
                     rowtemp.CreateCell(0).SetCellValue(n);//序号
                     rowtemp.CreateCell(1).SetCellValue(modellist[i].DD_Bianhao.ToString());//订单编号
                     rowtemp.CreateCell(2).SetCellValue(ddtype.Name);//订单类型
@@ -1646,12 +1653,16 @@ namespace NewAsiaOASystem.Web.Controllers
                     rowtemp.CreateCell(4).SetCellValue(modellist[i].KBomNo);//关联号
                     rowtemp.CreateCell(5).SetCellValue(modellist[i].price+"元/台");//单位售价
                     rowtemp.CreateCell(6).SetCellValue(modellist[i].NUM.ToString());//数量
-                    rowtemp.CreateCell(7).SetCellValue((modellist[i].price* modellist[i].NUM).ToString());
+                    rowtemp.CreateCell(7).SetCellValue(Math.Round(Convert.ToDecimal(modellist[i].price* modellist[i].NUM),2).ToString());
                     rowtemp.CreateCell(8).SetCellValue(xduser.UserName);
                     rowtemp.CreateCell(9).SetCellValue(modellist[i].C_time.ToString());
                     rowtemp.CreateCell(10).SetCellValue(gcsname.Name);
                     rowtemp.CreateCell(11).SetCellValue(modellist[i].KHname);//客户名称
                 }
+                NPOI.SS.UserModel.IRow rowtemp1 = sheet1.CreateRow(n);
+                rowtemp1.CreateCell(0).SetCellValue("合计：");//合计
+                rowtemp1.CreateCell(6).SetCellValue(Totelsum.ToString());//数量合计
+                rowtemp1.CreateCell(7).SetCellValue(totelprice.ToString());//总价合计
             } 
             System.IO.MemoryStream ms = new System.IO.MemoryStream();
             book.Write(ms);

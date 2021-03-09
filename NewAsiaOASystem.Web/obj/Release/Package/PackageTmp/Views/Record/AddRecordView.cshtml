@@ -1,0 +1,92 @@
+﻿@model NewAsiaOASystem.ViewModel.NA_CustomerRecordView
+    @{
+        ViewBag.Title = "备案客户新增编辑";
+        Layout = "~/Views/Shared/_SysLayout.cshtml";
+    }
+
+<div style="padding-top:10px">
+    <div class="layui-fluid">
+        @using (Html.BeginForm("Edit", "SysMenu", FormMethod.Post, new { id = "form1" })) {
+         <div class="layui-form-item">
+                <label class="layui-form-label">备案企业</label>
+                <div class="layui-input-block">
+                @Html.TextBoxFor(m => m.Rcusname, new { @class = "layui-input", @placeholder = "请输入企业名称" })
+                </div>
+         </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">企业法人</label>
+            <div class="layui-input-block">
+                @Html.TextBoxFor(m => m.Rlegalperson, new { @class = "layui-input", @placeholder = "请输入企业法人" })
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">企业电话</label>
+            <div class="layui-input-block">
+                @Html.TextBoxFor(m => m.Rlptel, new { @class = "layui-input", @placeholder = "请输入企业电话" })
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">采购姓名</label>
+            <div class="layui-input-block">
+                @Html.TextBoxFor(m => m.Rpurchasename, new { @class = "layui-input", @placeholder = "请输入采购姓名" })
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">采购电话</label>
+            <div class="layui-input-block">
+                @Html.TextBoxFor(m => m.RPTel, new { @class = "layui-input", @placeholder = "请输入采购电话" })
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">客户类型</label>
+            <div class="layui-input-block">
+                <select name="Rcptyle" class="layui-input">
+            @{
+                if ("0".Equals(Convert.ToString(@Model.Rcptyle)) && null != @Model.Id)
+                {
+                    @:<option value="1">工程商</option>
+                    @:<option value="0" selected="selected">销售商</option>
+                }
+                else
+                {
+                    @:<option value="" selected="selected">请选择</option>
+                    @:<option value="1">工程商</option>
+                    @:<option value="0">销售商</option>  
+                }
+            }
+           </select>
+
+              
+
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">产品类型</label>
+            <div class="layui-input-block">
+
+            </div>
+
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">工程师</label>
+            <div class="layui-input-block">
+                @Html.TextBoxFor(m => m.Rengineer, new { @class = "layui-input", @placeholder = "请输入工程师" })
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">工程师电话</label>
+            <div class="layui-input-block">
+                @Html.TextBoxFor(m => m.RengneerTel, new { @class = "layui-input", @placeholder = "请输入工程师电话" })
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">预计年用量</label>
+            <div class="layui-input-block">
+                @Html.TextBoxFor(m => m.RYearnum, new { @class = "layui-input", @placeholder = "请输入预计年用量" })
+            </div>
+        </div>
+                        }
+    </div>
+</div>
+

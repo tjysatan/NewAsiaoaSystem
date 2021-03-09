@@ -39,7 +39,8 @@
                     html += '<td width="10%">'+jsonStr[i].P_Pianhao + '</td>';
                     html += '<td width="5%">'+jsonStr[i].P_SCnumber + '</td>';
                     html += '<td width="10%">'+showsczt(jsonStr[i].P_Issc) + '</td>';
-                    html += '<td width="10%">'+showDate(jsonStr[i].C_time) + '</td>';
+                    html += '<td width="10%">' + showDate(jsonStr[i].C_time) + '</td>';
+                  
                     if(jsonStr[i].P_type=="0")
                         html += '<td width="5%">常规</td>';
                     else if(jsonStr[i].P_type=="1")
@@ -57,8 +58,13 @@
                     if(jsonStr[i].wcdatetime!=""&&jsonStr[i].wcdatetime!=null)
                         html+= '<td width="10%">'+showDate(jsonStr[i].wcdatetime) + '</td>';
                     else
-                        html+= '<td width="10%">--</td>';
-                    html+='<td width="25%">'+sccz(jsonStr[i].Id,jsonStr[i].P_Pianhao,jsonStr[i].P_SCnumber,jsonStr[i].Isprint)+'</td>';
+                        html += '<td width="10%">--</td>';
+                    if (jsonStr[i].Isprint == "" || jsonStr[i].Isprint == null)
+                        html += '<td width="5%" style="color:red">未打印</td>';
+                    else
+                        html += '<td width="5%">已打印</td>';
+                  
+                    html += '<td width="25%">' + sccz(jsonStr[i].Id, jsonStr[i].P_Pianhao, jsonStr[i].P_SCnumber, jsonStr[i].Isprint, jsonStr[i].P_type)+'</td>';
                     html+='</tr>';
                 }
                 html += '</table>';
@@ -103,15 +109,16 @@
         }
 
         //返回操作
-        function sccz(val,val2,val3,val4)
+        function sccz(val,val2,val3,val4,val5)
         {
             var Id="'"+val+"'";
             var wl_bh="'"+val2+"'";//物料编码
             var scsl="'"+val3+"'";//生产数量
-            var Isprint="'"+val4+"'";//是否被打印
+            var Isprint = "'" + val4 + "'";//是否被打印
+            var P_type = "'" + val5 + "'";//生产订单的类型
             var f = '<a href="#" onclick="GetBomkc('+Id+","+wl_bh+","+scsl+')">料单</a>&nbsp;&nbsp;'
             var t = '<a href="#" onclick="CompleteSC('+Id+')">完成</a>&nbsp;&nbsp;';
-            var s='<a href="#" onclick="PrintPlanSC('+Id+","+Isprint+')">打印</a>&nbsp;&nbsp;';
+            var s = '<a href="#" onclick="PrintPlanSC(' + Id + "," + Isprint + "," + P_type+')">打印</a>&nbsp;&nbsp;';
             var z='<a href="#" onclick="GetEditzt('+Id+')">编辑</a>&nbsp;&nbsp;';
             return t+f+s+z;
         }
@@ -143,35 +150,85 @@
             });
         }
 
-        //打印生产通知单页面  val2 记录是否打印 val1 生产计划单Id
-        function PrintPlanSC(val1,val2)
+        //打印生产通知单页面  val2 记录是否打印 val1 生产计划单Id . 记录  val3 订单类型
+        function PrintPlanSC(val1,val2,val3)
         {
-            if(val2=="1")
+            if(val2=="1")//确实已经打印的
             {
-                $.messager.confirm("操作提示", '生产通知单已经打印过了，您还需要再次打印吗？', function (data) {
-                    if(data){
-                        $('#windowDia').html("<iframe src=../Flow_PlanProductioninfo/PlanPrint?Id=" + val1 + "&&  style='border:0px;' width='650px' height='500px'></iframe>");
-                        $("#windowDia").window({
-                            title: '生产通知单打印',
-                            modal: true,
-                            closed: false,
-                            width: 700,
-                            height: 500,
-                            top:0
-                        });
+                //$.messager.confirm("操作提示", '生产通知单已经打印过了，您还需要再次打印吗？', function (data) {
+                //    if(data){
+                //        $('#windowDia').html("<iframe src=../Flow_PlanProductioninfo/PlanPrint?Id=" + val1 + "&&  style='border:0px;' width='650px' height='500px'></iframe>");
+                //        $("#windowDia").window({
+                //            title: '生产通知单打印',
+                //            modal: true,
+                //            closed: false,
+                //            width: 700,
+                //            height: 500,
+                //            top:0
+                //        });
+                //    }
+                //})
+                layer.open({
+                    type: 1,
+                    offset: 1 //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
+                    , id: 'layerDemo' + 1 //防止重复弹出
+                    , content: '<div style="padding: 20px 100px;">生产通知单已经打印过了，您还需要再次打印吗？</div>'
+                    , btn: ['打印', '关闭']
+                    , btnAlign: 'c' //按钮居中
+                    , shade: 0 //不显示遮罩
+                    , yes: function () {
+                        layer.open({
+                            type: 2,
+                            title: ['生产通知单打印', 'font-size:14px;'],
+                            area: ['700px', '500px'],
+                            offset: '10px',
+                            fixed: false, //不固定
+                            maxmin: true,
+                            content: '../Flow_PlanProductioninfo/PlanPrint?Id=' + val1,
+                            end: function () {
+                                location.reload();
+                            }
+                        })
                     }
                 })
-            }else
+            }else//打印状态 为未打印的
             {
-                $('#windowDia').html("<iframe src=../Flow_PlanProductioninfo/PrintPlanView?Id=" + val1 + "&&  style='border:0px;' width='650px' height='500px'></iframe>");
-                $("#windowDia").window({
-                    title: '生产通知单打印',
-                    modal: true,
-                    closed: false,
-                    width: 700,
-                    height: 500,
-                    top:0
-                });
+                //$('#windowDia').html("<iframe src=../Flow_PlanProductioninfo/PrintPlanView?Id=" + val1 + "&&  style='border:0px;' width='650px' height='500px'></iframe>");
+                //$("#windowDia").window({
+                //    title: '生产通知单打印',
+                //    modal: true,
+                //    closed: false,
+                //    width: 700,
+                //    height: 500,
+                //    top:0
+                //});
+                if (val3 == "0") {//常规
+                    layer.open({
+                        type: 2,
+                        title: ['生产通知单打印', 'font-size:14px;'],
+                        area: ['700px', '500px'],
+                        offset: '10px',
+                        fixed: false, //不固定
+                        maxmin: true,
+                        content: '../Flow_PlanProductioninfo/PrintPlanView?Id=' + val1,
+                        end: function () {
+                            location.reload();
+                        }
+                    })
+                } else {//非常规订单
+                    layer.open({
+                        type: 2,
+                        title: ['生产通知单打印', 'font-size:14px;'],
+                        area: ['700px', '500px'],
+                        offset: '10px',
+                        fixed: false, //不固定
+                        maxmin: true,
+                        content: '../Flow_PlanProductioninfo/PlanPrint?Id=' + val1,
+                        end: function () {
+                            location.reload();
+                        }
+                    })
+                }
             }
         }
 
@@ -291,6 +348,7 @@
                         <td width="5%">类别</td>
                         <td width="10%">预计完成</td>
                         <td width="10%">实际完成</td>
+                        <td width="5%">打印</td>
                         <td width="25%">操作</td>
                     </tr>
                 </table>

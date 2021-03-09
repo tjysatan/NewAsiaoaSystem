@@ -192,7 +192,7 @@ namespace NewAsiaOASystem.ViewModel
         }
 
         /// <summary>
-        /// 机会运费
+        /// 寄回运费
         /// </summary>
         public virtual decimal? R_Jhyf
         {

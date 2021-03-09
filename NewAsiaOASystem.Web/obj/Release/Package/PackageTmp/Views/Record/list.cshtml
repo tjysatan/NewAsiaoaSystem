@@ -4,3 +4,52 @@
 }
 
 
+@section HeadContent{
+    <script type="text/javascript">
+
+        //新增备案客户信息
+        function openaddView() {
+            layer.open({
+                type: 2,
+                title: ['备案客户', 'font-size:14px;'],
+                area: ['50vw', '95vh'],
+                offset: '10px',
+                fixed: false, //不固定
+                maxmin: true,
+                content: '../Record/AddRecordView',
+                end: function () {
+                    location.reload();
+                }
+            })
+        }
+    </script>
+    }
+    <div style="height:calc(100vh - 10px);background:#eee;padding-top:10px;">
+        <div class="layui-fluid">
+            <div class="layui-card">
+                <div class="layui-form layui-card-header layuiadmin-card-header-auto">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">客户名称</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="id" placeholder="请输入" autocomplete="off" class="layui-input"> 
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <button class="layui-btn layuiadmin-btn-list" lay-submit lay-filter="LAY-app-contlist-search">
+                                <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-card-body">
+                    <div style="padding-bottom: 10px;">
+                        <button class="layui-btn layuiadmin-btn-forum-list" onclick="openaddView()">新增备案</button>
+                        <button class="layui-btn layuiadmin-btn-forum-list" data-type="batchdel">删除</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+

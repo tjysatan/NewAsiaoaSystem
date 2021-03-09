@@ -1,0 +1,6 @@
+2021-03-05 15:57:18,628 [14] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2021-03-05 15:57:18,628 [14] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2021-03-05 15:57:18,628 [14] ERROR ApplicationInfoLog [(null)] <(null)< - Only one 'model' statement is allowed in a file.
+
+2021-03-05 15:57:18,628 [14] ERROR ApplicationInfoLog [(null)] <(null)< - Void EnsureGeneratedCode()
+2021-03-05 15:57:18,628 [14] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================

@@ -29,7 +29,7 @@ namespace NewAsiaOASystem.Web.Controllers
           #region //分页列表页面
           public ActionResult List(int? pageIndex)
           {
-              PagerInfo<Flow_PlanProductioninfoView> listmodel = GetListPager(pageIndex,null,null,"2",null,null,"0,1,2");
+              PagerInfo<Flow_PlanProductioninfoView> listmodel = GetListPager(pageIndex,null,null,"2",null,null,"0,1,2,3");
               return View(listmodel);
           }
           #endregion
@@ -252,9 +252,9 @@ namespace NewAsiaOASystem.Web.Controllers
                   model.Jsname = jsqr;//技术确认
                   model.Jsdatetime = DateTime.Now;
                   flay = _IFlow_PlanPPrintinfoDao.Ninsert(model);
-                  Flow_PlanProductioninfoView Planmodel = _IFlow_PlanProductioninfoDao.NGetModelById(Plan_Id);
-                  Planmodel.Isprint = 1;
-                  _IFlow_PlanProductioninfoDao.NUpdate(Planmodel);
+                  //Flow_PlanProductioninfoView Planmodel = _IFlow_PlanProductioninfoDao.NGetModelById(Plan_Id);
+                  //Planmodel.Isprint = 1;
+                  //_IFlow_PlanProductioninfoDao.NUpdate(Planmodel);
                   return "1";
               }
               catch
@@ -263,10 +263,25 @@ namespace NewAsiaOASystem.Web.Controllers
               }
           }
           
-          //打印数据显示页面
+          //打印数据显示页面（）
+          /// <summary>
+          /// 
+          /// </summary>
+          /// <param name="Id">生产计划Id</param>
+         
+          /// <returns></returns>
           public ActionResult PlanPrint(string Id)
           {
-              Flow_PlanPPrintinfoView model = _IFlow_PlanPPrintinfoDao.GetFlow_PlanprinmodelbypId(Id);
+           
+            Flow_PlanProductioninfoView Planmodel = _IFlow_PlanProductioninfoDao.NGetModelById(Id);
+            if (Planmodel.Isprint != 1)
+            {
+                Planmodel.Isprint = 1;
+                _IFlow_PlanProductioninfoDao.NUpdate(Planmodel);
+            }
+
+            Flow_PlanPPrintinfoView model = _IFlow_PlanPPrintinfoDao.GetFlow_PlanprinmodelbypId(Id);
+             
               ViewData["scpj"] = model.Scph;//生产批号
               ViewData["yhsl"] = model.Scsl;//要货数量
               ViewData["Cusname"] = model.Cusname;//客户名称

@@ -18,7 +18,7 @@ namespace NewAsiaOASystem.ViewModel
         public virtual string Rcusname { get; set; }
 
         /// <summary>
-        /// 备案企业法人
+        /// 备案企业法人 
         /// </summary>
         public virtual string Rlegalperson { get; set; }
 
@@ -40,10 +40,10 @@ namespace NewAsiaOASystem.ViewModel
         /// <summary>
         /// 客户类型
         /// </summary>
-        public virtual string Rtyle { get; set; }
+        public virtual int? Rtyle { get; set; }
 
         /// <summary>
-        /// 产品类型
+        /// 产品类型 
         /// </summary>
         public virtual string Rcptyle { get; set; }
 

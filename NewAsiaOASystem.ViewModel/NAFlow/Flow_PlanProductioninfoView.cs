@@ -68,7 +68,7 @@ namespace NewAsiaOASystem.ViewModel
         public virtual int? Status { get; set; }
 
         /// <summary>
-        /// 生产通知单是否 打印
+        /// 生产通知单是否 打印 '' 未打印  0 未打印 1 已打印
         /// </summary>
         public virtual int? Isprint { get; set; }
 

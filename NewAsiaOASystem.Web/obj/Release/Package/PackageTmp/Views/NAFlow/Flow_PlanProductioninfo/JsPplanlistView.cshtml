@@ -116,31 +116,44 @@
                 layer.alert("请先完成技术确认！", { icon: 2 });
                 return;
             }
-            if (val2 == "1") {
-                $.messager.confirm("操作提示", '生产通知单已经打印过了，您还需要再次打印吗？', function (data) {
-                    if (data) {
-                        $('#windowDia').html("<iframe src=../Flow_PlanProductioninfo/PlanPrint?Id=" + val1 + "&&  style='border:0px;' width='650px' height='500px'></iframe>");
-                        $("#windowDia").window({
-                            title: '生产通知单打印',
-                            modal: true,
-                            closed: false,
-                            width: 700,
-                            height: 500,
-                            top: 0
-                        });
-                    }
-                })
-            } else {
-                $('#windowDia').html("<iframe src=../Flow_PlanProductioninfo/PrintPlanView?Id=" + val1 + "&&  style='border:0px;' width='650px' height='500px'></iframe>");
-                $("#windowDia").window({
-                    title: '生产通知单打印',
-                    modal: true,
-                    closed: false,
-                    width: 700,
-                    height: 500,
-                    top: 0
-                });
-            }
+            layer.open({
+                type: 2,
+                title: ['生产通知单打印', 'font-size:14px;'],
+                area: ['550px', '350px'],
+                offset: '10px',
+                fixed: false, //不固定
+                maxmin: true,
+                content: '../Flow_PlanProductioninfo/PlanPrint?Id=' + val1+"&ly=1",
+                end: function () {
+                    location.reload();
+                }
+            })
+            //if (val2 == "1") {
+                //$.messager.confirm("操作提示", '生产通知单已经打印过了，您还需要再次打印吗？', function (data) {
+                //    if (data) {
+                //        $('#windowDia').html("<iframe src=../Flow_PlanProductioninfo/PlanPrint?Id=" + val1 + "&&  style='border:0px;' width='650px' height='500px'></iframe>");
+                //        $("#windowDia").window({
+                //            title: '生产通知单打印',
+                //            modal: true,
+                //            closed: false,
+                //            width: 700,
+                //            height: 500,
+                //            top: 0
+                //        });
+                //    }
+                //})
+   
+            //} else {
+            //    $('#windowDia').html("<iframe src=../Flow_PlanProductioninfo/PrintPlanView?Id=" + val1 + "&&  style='border:0px;' width='650px' height='500px'></iframe>");
+            //    $("#windowDia").window({
+            //        title: '生产通知单打印',
+            //        modal: true,
+            //        closed: false,
+            //        width: 700,
+            //        height: 500,
+            //        top: 0
+            //    });
+            //}
         }
 
         //BOM表查看
