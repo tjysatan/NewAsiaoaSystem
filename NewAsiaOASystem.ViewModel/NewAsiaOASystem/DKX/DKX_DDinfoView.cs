@@ -101,7 +101,8 @@ namespace NewAsiaOASystem.ViewModel
 
         /// <summary>
         /// 订单状态 -1 未提交 0已提交 1 待制图 2 制图中 
-        /// （-1 未提交 0已提交 1 待制图 2 制图中  -2 待审核 3 待生产） 3 待生产(待发料)  4生产中 5 缺料 6 待发货 7 完成  ( 4 可生产  5 缺料 6 生产中 -3 待品审  7 待发货 8 完成 )
+        /// （-1 未提交 0已提交 1 待制图 2 制图中  -2 待审核 3 待生产） 3 待生产(待发料)  4生产中 5 缺料 6 待发货 7 完成 
+        ///  (3 未发料  4 可生产  5 缺料（去掉） 6 生产中 -3 待品审  7 待发货 8 完成 )
         /// </summary>
         public virtual int DD_ZT { get; set; }
 
@@ -436,5 +437,15 @@ namespace NewAsiaOASystem.ViewModel
         /// 合同的单位售价
         /// </summary>
         public virtual decimal? price { get; set; }
+
+        /// <summary>
+        /// 是否生产退单 0 否 1是（主要用于生产退单之后工程师修改相关资料 发送推送消息给仓库和生产作为一个提醒）
+        /// </summary>
+        public virtual int? IsPdrefund { get; set; }
+
+        /// <summary>
+        /// 发料状态 0 物料待确认  5 待发料  10 缺料 15 完成发料
+        /// </summary>
+        public virtual int? Flzt { get; set; }
     }
 }

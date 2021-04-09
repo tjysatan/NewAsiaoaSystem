@@ -81,14 +81,14 @@
     <property name="dqshtime" column="dqshtime" />
     <property name="dqshuserId" column="dqshuserId" />
     <property name="dqshres" column="dqshres" />
-    <property name="dqshmsg" column="dqshmsg" />
-    
+    <property name="dqshmsg" column="dqshmsg" />   
     <property name="dragstart" column="dragstart" />
     <property name="draguserId" column="draguserId" />
     <property name="dragusername" column="dragusername" />
     <property name="dragtime" column="dragtime" />
     <property name="dragsm" column="dragsm" />
-
     <property name="price" column="price" />
+    <property name="IsPdrefund" column="IsPdrefund" />
+    <property name="Flzt" column="Flzt" />
   </class>
 </hibernate-mapping>

@@ -325,6 +325,7 @@
     <Compile Include="Helper\DynamicXml.cs" />
     <Compile Include="Helper\ExcelBase.cs" />
     <Compile Include="Helper\ExpressinterfaceHelper.cs" />
+    <Compile Include="Helper\gwjHelper.cs" />
     <Compile Include="Helper\HelpermyTimer.cs" />
     <Compile Include="Helper\K3Helper.cs" />
     <Compile Include="Helper\MassManager.cs" />

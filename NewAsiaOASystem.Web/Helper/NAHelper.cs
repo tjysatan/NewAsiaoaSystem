@@ -60,6 +60,22 @@ namespace NewAsiaOASystem.Web
             return "1";
         }
 
+        #region //插入 非标订单生产退单之后工程师和客服的操作记录
+        public static string InsertIsPdrefundczjltew(string jlId, string czcon, string czId)
+        {
+            IDKX_LCCZJLinfoDao _IDKX_LCCZJLinfoDao = ContextRegistry.GetContext().GetObject("DKX_LCCZJLinfoDao") as IDKX_LCCZJLinfoDao;
+            DKX_LCCZJLinfoView model = new DKX_LCCZJLinfoView();
+            model.dd_Id = jlId;
+            model.caozuo = czcon;
+            model.c_name = czId;
+            model.c_time = DateTime.Now;
+            model.caozuotype = -1;//-1其他订单操作 
+            model.IsPdrefund = 1;//生产退单的工程师和客服的操作记录
+            _IDKX_LCCZJLinfoDao.Ninsert(model);
+            return "1";
+        }
+        #endregion
+
         #region //查询生产退单原因下拉数据
         public static IList<NewChargebackReasonView> GetSCCBRDATA()
         {

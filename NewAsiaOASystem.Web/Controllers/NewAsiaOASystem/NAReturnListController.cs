@@ -1277,9 +1277,9 @@ namespace NewAsiaOASystem.Web.Controllers
             model.TH_SCdate = model.TH_SCdate;//生产日期
             model.TH_Ph = model.TH_Ph;//生产批号
             model.TH_YQJname = Request.Form["yjid"];//元器件ID
-            model.TH_BLXXX = Request.Form["SelectedxxxData"];//不良现象
-            model.TH_BLXX = Request.Form["SelectedxxData"];//不良原因1
-            model.TH_BLYY = Request.Form["SelectedyyData"];//不良原因2
+            //model.TH_BLXXX = Request.Form["SelectedxxxData"];//不良现象
+            //model.TH_BLXX = Request.Form["SelectedxxData"];//不良原因1
+            //model.TH_BLYY = Request.Form["SelectedyyData"];//不良原因2
             model.Iscl = 1;
             model.wx_time = DateTime.Now;
             model.Isdz = 0;//未定责
@@ -1657,6 +1657,25 @@ namespace NewAsiaOASystem.Web.Controllers
             string json = _INQ_BlxxinfoDao.BLXXAlbumDropdown(null);
             return Json(new { result = json }, "text/html");
         }
+
+        #region //不良原因父级数据
+        public JsonResult Allblyyjsondata()
+        {
+            string json = JsonConvert.SerializeObject(_INQ_BlinfoDao.GetlistisPar());
+            return Json(new { result = json }, "text/html");
+        }
+
+        /// <summary>
+        /// 通过父级Id查询下级不良原因数据
+        /// </summary>
+        /// <param name="Pid"></param>
+        /// <returns></returns>
+        public JsonResult AllblyyChiljsondata(string Pid)
+        {
+            string json = JsonConvert.SerializeObject(_INQ_BlinfoDao.Getlistreason_byPid(Pid));
+            return Json(new { result = json }, "text/html");
+        }
+        #endregion
 
         //不良原因
         public void AlblyyDropdown(string SelectedPID)
@@ -2903,9 +2922,9 @@ namespace NewAsiaOASystem.Web.Controllers
                 string TH_SCdate = Request.Form["TH_SCdate"];//生产日期
                 string TH_Ph = Request.Form["TH_Ph"];//批号
                 string TH_YQJname = Request.Form["yjid"];//元器件Id
-                string TH_BLXXX = Request.Form["SelectedxxxData"];//不良现象
-                string TH_BLXX = Request.Form["SelectedxxData"];//不良原因1
-                string TH_BLYY = Request.Form["SelectedyyData"];//不良原因2
+                string TH_BLXXX = Request.Form["Sel_blxx"];//不良现象
+                string TH_BLXX = Request.Form["Sel_blyy"];//不良原因1
+                string TH_BLYY = Request.Form["Sel_blyyc"];//不良原因2
                 string TH_bz = Request.Form["TH_bz"];//处理方式
                 string TH_bz2 = Request.Form["TH_bz2"];//备注
                 string Analyst = Request.Form["Analyst"];//分析人
@@ -3694,6 +3713,8 @@ namespace NewAsiaOASystem.Web.Controllers
             }
         }
         #endregion
+
+
 
     }
 }

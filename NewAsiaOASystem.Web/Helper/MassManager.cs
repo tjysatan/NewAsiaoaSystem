@@ -40,6 +40,7 @@ namespace NewAsiaOASystem.Web
         public static IWx_openIdinfoDao _IWx_openIdinfoDao = ContextRegistry.GetContext().GetObject("Wx_openIdinfoDao") as IWx_openIdinfoDao;
 
         public static IYCnoticeinfoDao _IYCnoticeinfoDao = ContextRegistry.GetContext().GetObject("YCnoticeinfoDao") as IYCnoticeinfoDao;
+        public static IDKX_LCCZJLinfoDao _IDKX_LCCZJLinfoDao = ContextRegistry.GetContext().GetObject("DKX_LCCZJLinfoDao") as IDKX_LCCZJLinfoDao;
 
 
         /// <summary>
@@ -48,7 +49,7 @@ namespace NewAsiaOASystem.Web
         /// <param name="Id">图文的Id</param>
         /// <param name="filpath">程序存放的物理路径</param>
         /// <returns></returns>
-        
+
         #region //获取图文缩略图Id
         public static string GetDataForJs(string Id, string filpath)
         {
@@ -997,11 +998,42 @@ namespace NewAsiaOASystem.Web
             }
             if (type == "1")
             {
-                bicon = "工程师已经上传了箱体图纸！订单号：" + model.DD_Bianhao + ";客户：" + model.KHname;
+                if (model.IsPdrefund != 1)
+                {
+                    bicon = "工程师已经上传了箱体图纸！订单号：" + model.DD_Bianhao + ";客户：" + model.KHname;
+                }
+                else
+                {
+                    bicon = "工程师已经上传了箱体图纸！订单号：" + model.DD_Bianhao + "(该订单为生产退单);客户：" + model.KHname;
+                }
+                
             }
             if (type == "2")
             {
-                bicon = "工程师已经完成图纸绘制！订单号:" + model.DD_Bianhao + ";客户：" + model.KHname;
+                if (model.IsPdrefund != 1)
+                {
+                    bicon = "工程师已经完成图纸绘制！订单号:" + model.DD_Bianhao + ";客户：" + model.KHname;
+                }
+                else
+                {
+                    //查询生产退单之后的操作记录
+                    IList<DKX_LCCZJLinfoView> czjllist = _IDKX_LCCZJLinfoDao.GetIsPdrefunddata(model.Id);
+                    string czjlstr = "";
+                    if (czjllist != null)
+                    {
+                        foreach (var item in czjllist)
+                        {
+                            czjlstr = czjlstr + "/" + item.caozuo;
+                        }
+                        bicon = "工程师已经完成图纸绘制！订单号:" + model.DD_Bianhao + "(该订单为生产退单-修改了："+czjlstr+");客户：" + model.KHname;
+                    }
+                    else
+                    {
+                        bicon = "工程师已经完成图纸绘制！订单号:" + model.DD_Bianhao + "(该订单为生产退单);客户：" + model.KHname;
+                    }
+                    
+                }
+                   
             }
             if (type == "3")
             {

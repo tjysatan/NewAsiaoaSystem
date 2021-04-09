@@ -487,6 +487,11 @@
 
 <input type="hidden" id="ddId" name="ddId" />
 <input type="hidden" id="K3LDBH" name="K3LDBH" />
+<blockquote class="layui-elem-quote">
+    <span style="color:red;">
+        注：1.上传图纸资料的时候,没有PDF的文件图纸请再上传一份PDF或者其他图片格式的文件。2.线号表请上传一份excl表格
+    </span>
+</blockquote>
 <div style="width: 90%; padding: 20px 20px 0 20px">
     <table style="width: 100%">
         <tr>
@@ -509,9 +514,11 @@
         <input type="hidden" name="Id" value='@ViewData["Id"]' />
         <table>
             <tr>
-                <td width="120px">箱体图：</td>
+                <td width="120px">
+                箱体图
+                (<span style="color:red">多一份pdf格式</span>)：</td>
                 <td width="270px">
-                    <input type="file" name="image3" id="image3" class="layui-btn layui-btn-normal" style="width: 150px">
+                    <input type="file" name="image3" id="image3" multiple = "multiple" class="layui-btn layui-btn-normal" style="width: 150px">
                     <button type="button" class="layui-btn" onclick='RjCXtuzhishangchuanSavaForm("form3")'>开始上传</button>
                 </td>
                 <td id="tuzhicon"></td>
@@ -524,9 +531,9 @@
         <input type="hidden" name="Id" value='@ViewData["Id"]' />
         <table>
             <tr>
-                <td width="120px">电器排布图：</td>
+                <td width="120px">电器排布图(<span style="color:red">多一份pdf格式</span>)：</td>
                 <td width="270px">
-                    <input type="file" name="image5" id="image5" class="layui-btn layui-btn-normal" style="width: 150px">
+                    <input type="file" name="image5" id="image5" multiple = "multiple" class="layui-btn layui-btn-normal" style="width: 150px">
                     <button type="button" class="layui-btn" onclick='RjCXtuzhishangchuanSavaForm("form5")'>开始上传</button>
                 </td>
                 <td id="dqpbtuzhi"></td>
@@ -541,10 +548,10 @@
         <input type="hidden" name="Id" value='@ViewData["Id"]' />
         <table>
             <tr>
-                <td width="120px">电器原理图：</td>
+                <td width="120px">电器原理图(<span style="color:red">多一份pdf格式</span>)：</td>
                 <!--原其他图名称修改成电器原理图-->
                 <td width="270px">
-                    <input type="file" name="image4" id="image4" class="layui-btn layui-btn-normal" style="width: 150px">
+                    <input type="file" name="image4" id="image4" multiple = "multiple" class="layui-btn layui-btn-normal" style="width: 150px">
                     <button type="button" class="layui-btn" onclick='RjCXtuzhishangchuanSavaForm("form4")'>开始上传</button>
                 </td>
                 <td id="qttuzhicon"></td>
@@ -557,9 +564,9 @@
         <input type="hidden" name="Id" value='@ViewData["Id"]' />
         <table>
             <tr>
-                <td width="120px">线号表：</td>
+                <td width="120px">线号表(<span style="color:red">多一份excl格式</span>)：</td>
                 <td width="270px">
-                    <input type="file" name="image6" id="image6" class="layui-btn layui-btn-normal" style="width: 150px">
+                    <input type="file" name="image6" id="image6" multiple = "multiple" class="layui-btn layui-btn-normal" style="width: 150px">
                     <button type="button" class="layui-btn" onclick='RjCXtuzhishangchuanSavaForm("form6")'>开始上传</button>
                 </td>
                 <td id="xtjtcon"></td>
@@ -575,7 +582,7 @@
             <tr>
                 <td width="120px">烧录程序：</td>
                 <td width="270px">
-                    <input type="file" name="image7" id="image7" class="layui-btn layui-btn-normal" style="width: 150px">
+                    <input type="file" name="image7" id="image7" multiple = "multiple" class="layui-btn layui-btn-normal" style="width: 150px">
                     <button type="button" class="layui-btn" onclick='RjCXtuzhishangchuanSavaForm("form7")'>开始上传</button>
                 </td>
                 <td id="rjxctcon"></td>
@@ -585,12 +592,12 @@
     @using (Html.BeginForm("RjycxuploadEide", "DKX_DDtypeinfo", FormMethod.Post, new { id = "form9", enctype = "multipart/form-data" }))
     {
         <hr class="layui-bg-blue">
-        <input type="hidden" name="Id" value='@ViewData["Id"]' />
+        <input type="hidden" name="Id" value='@ViewData["Id"]' /> 
         <table>
             <tr>
                 <td width="120px">源程序：</td>
                 <td width="270px">
-                    <input type="file" name="image9" id="image9" class="layui-btn layui-btn-normal" style="width: 150px">
+                    <input type="file" name="image9" id="image9"  multiple = "multiple" class="layui-btn layui-btn-normal" style="width: 150px">
                     <button type="button" class="layui-btn" onclick='RjCXtuzhishangchuanSavaForm("form9")'>开始上传</button>
                 </td>
                 <td id="rjycxtcon"></td>
@@ -606,7 +613,7 @@
             <tr>
                 <td width="120px">操作手册：</td>
                 <td width="270px">
-                    <input type="file" name="image8" id="image8" class="layui-btn layui-btn-normal" style="width: 150px">
+                    <input type="file" name="image8" id="image8"  multiple = "multiple" class="layui-btn layui-btn-normal" style="width: 150px">
                     <button type="button" class="layui-btn" onclick='RjCXtuzhishangchuanSavaForm("form8")'>开始上传</button>
                 </td>
                 <td id="czsctcon"></td>

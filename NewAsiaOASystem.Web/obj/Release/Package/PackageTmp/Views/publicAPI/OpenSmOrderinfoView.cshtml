@@ -204,9 +204,9 @@
 }
 
 
-<div style="width:800px; margin: auto;">
+<div style="width:100vw; margin: auto;">
 
-    <div style="width:99%; height:auto; margin-top:10px; border:1px solid #808080; padding-left:2px; padding-right:2px;">
+    <div style="width:100vw; height:auto; margin-top:10px; border:1px solid #808080; padding-left:2px; padding-right:2px;">
         <blockquote class="layui-elem-quote">
             <span style="font-size:20px;"> 
             <button type="button" class="layui-btn" onclick="Updatesmsum()"><i class="layui-icon"></i>修改扫码数量</button> 
@@ -217,7 +217,7 @@
             <label id="fhsl" style="font-size:30px" value="11"></label> <span style="font-size:20px;"> 件<br /></span>
            
         </blockquote>
-        <div style="width:450px; height:400px; margin:auto; margin-top:30px; text-align:center">
+        <div style="width:55vw; height:400px; margin:auto; margin-top:30px;">
 
             @using (Html.BeginForm("SmEditch", "publicAPI", FormMethod.Post, new { id = "form1" }))
             {
@@ -226,27 +226,18 @@
                 <input type="hidden" id="zsl" name="zsl" />
                 <input type="hidden" id="orderId" name="orderId" />
                 <span>
-                    SID: <input type="text" name="SID" id="SID" style="width:350px; height:200px; border:1px solid #000000;" />
+                    SID: <input type="text" name="SID" id="SID" style="width: 50vw; height: 120px; border: 1px solid #000000; " />
                 </span>
-                <div class="inquiry-input infor-b">
-                    <span>
-                        <button onclick="return smfhSavaForm()">保存</button>
-                    </span>
+
+                <div style="width: 50vw; padding-top:20px; padding-left:15vw">
+                    <button onclick="return smfhSavaForm()" class="layui-btn   layui-btn-sm">手动提交</button>
                 </div>
-                @*<div class="layui-form-item">
-                <label class="layui-form-label">SID：</label>
-                <div class="layui-input-block">
-                    <input type="text" name="SID" id="SID" style="width:350px; height:200px; border:1px solid #000000;" />
+                <div style="width: 50vw; padding-top:20px; padding-left:15vw">
+                    <button onclick="return closewancheng()" class="layui-btn layui-btn-sm layui-btn-danger">确认完成</button>
                 </div>
-            </div>
-            <div class="layui-form-item">
-                <button type="button" class="layui-btn layui-btn-fluid infor-b" style="width: 200px;" onclick="return smfhSavaForm()">确认提交</button>
-                <div class="inquiry-input infor-b">
-                    <span>
-                        <button onclick="return smfhSavaForm()">保存</button>
-                    </span>
+                <div style="width: 50vw; padding-top:20px; padding-left:15vw">
+                    <button onclick="return closeguanbi()" class="layui-btn layui-btn-sm layui-btn-danger">确认关闭</button>
                 </div>
-            </div>*@
 
             }
         </div>
@@ -328,11 +319,11 @@
     }
 
           /*需要扫码数量为*/
-        function Updatesmsum() {
+     function Updatesmsum() {
             layer.open({
                 type: 2,
                 title: ['扫码条数修改', 'font-size:14px;'],
-                area: ['700px', '350px'],
+                area: ['90vw', '50vh'],
                 offset: '40px',
                 fixed: false, //不固定
                 maxmin: true,
@@ -342,5 +333,22 @@
                 }
             })
         }
+
+    //关闭
+    function closeguanbi() {
+        window.location = "/publicAPI/OpenSmSelectOrder";
+        return false;
+    }
+    //完成
+    function closewancheng() {
+        var flay = UpdateordersmztbyorderId();
+        if (flay == "true") {
+            window.location = "/publicAPI/OpenSmSelectOrder";
+            return false;
+        } else {
+            alert("未出货完成！");
+            return false;
+        }
+    }
 </script>
 

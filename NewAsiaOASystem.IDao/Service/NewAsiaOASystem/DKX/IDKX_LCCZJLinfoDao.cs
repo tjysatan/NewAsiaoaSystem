@@ -36,6 +36,11 @@ namespace NewAsiaOASystem.IDao
         IList<DKX_LCCZJLinfoView> Getzllistdata();
         #endregion
 
+        
+        #region //查询订单标记为生产退单之后工程和客服操作的记录
+        IList<DKX_LCCZJLinfoView> GetIsPdrefunddata(string ddid); 
+        #endregion
+
 
     }
 }

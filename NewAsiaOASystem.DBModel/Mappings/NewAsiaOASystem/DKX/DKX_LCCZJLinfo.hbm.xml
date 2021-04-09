@@ -14,5 +14,6 @@
     <property name="CBRId" column="CBRId"  />
     <property name="CBRName" column="CBRName"  />
     <property name="CBRRemarks" column="CBRRemarks"  />
+    <property name="IsPdrefund" column="IsPdrefund"  />
   </class>
 </hibernate-mapping>

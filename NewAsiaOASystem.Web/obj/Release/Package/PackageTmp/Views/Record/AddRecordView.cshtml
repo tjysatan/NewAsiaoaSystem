@@ -1,92 +1,178 @@
 ﻿@model NewAsiaOASystem.ViewModel.NA_CustomerRecordView
-    @{
-        ViewBag.Title = "备案客户新增编辑";
-        Layout = "~/Views/Shared/_SysLayout.cshtml";
-    }
+@{
+    ViewBag.Title = "备案客户新增编辑";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
 
-<div style="padding-top:10px">
-    <div class="layui-fluid">
-        @using (Html.BeginForm("Edit", "SysMenu", FormMethod.Post, new { id = "form1" })) {
-         <div class="layui-form-item">
+
+@section HeadContent{
+    <script type="text/javascript">
+        function Getdragcount() {
+            var Rcusname = $("#Rcusname").val();//备案的企业
+            var Rlegalperson = $("#Rlegalperson").val();//企业法人
+            var Rlptel = $("#Rlptel").val();//企业电话
+            var Rpurchasename = $("#Rpurchasename").val();//采购
+            var RPTel = $("#RPTel").val();//采购电话
+            var Rtyle = $("#Rtyle").val();//客户类型
+            var Rcptyle = $("#Rcptyle").val();//产品类型
+            var Rengineer = $("#Rengineer").val();//工程师
+            var RengneerTel = $("#RengneerTel").val();//工程师电话
+            var RYearnum = $("#RYearnum").val();//预计年用量
+            if (Rcusname == "") {
+                layer.alert("备案的企业名称不为空！", { icon: 2 });
+                $("#Rcusname").focus();
+                return;
+            }
+            if (Rlegalperson == '') {
+                layer.alert("企业法人不为空！", { icon: 2 });
+                $("#Rcusname").focus();
+                return;
+            }
+            if (Rlptel == "") {
+                layer.alert("采购电话不为空！", { icon: 2 });
+                $("#Rlptel").focus();
+                return;
+            }
+            if (Rtyle == "") {
+                layer.alert("客户类型不为空！", { icon: 2 });
+                $("#Rlptel").focus();
+                return;
+            }
+            var json;
+            $.ajax({
+                url: "../Record/Edit",
+                type: "POST",
+                data: {
+                    Rcusname: Rcusname,
+                    Rlegalperson: Rlegalperson,
+                    Rlptel: Rlptel,
+                    Rpurchasename: Rpurchasename,
+                    RPTel: RPTel,
+                    Rtyle: Rtyle,
+                    Rcptyle: Rcptyle,
+                    Rengineer: Rengineer,
+                    RengneerTel: RengneerTel,
+                    RYearnum: RYearnum,
+                    Id: $("#Id").val(),
+                    c_time: $("#c_time").val(),
+                    Rdatatime:$("#Rdatatime").val(),
+
+                },
+                dataType: "json",
+                async: true,
+                success: function (response) {
+                    json = response;
+                    if (json.resule == "success") {
+                        layer.alert(json.msg, { icon: 1 });
+                    } else {
+                        layer.alert(json.msg, { icon: 2 });
+                    }
+                },
+                error: function (e) {
+                    layer.alert("操作失败！", { icon: 2 });
+                }
+            })
+            return json;
+        }
+    </script>
+    }
+    <div style="padding-top:10px">
+        <div class="layui-fluid">
+            @*@using (Html.BeginForm("Edit", "Record", FormMethod.Post, new { id = "form1" }))
+        {*@
+            @Html.HiddenFor(m => m.c_time)
+            @Html.HiddenFor(m => m.Rdatatime)
+            @Html.HiddenFor(m => m.Rexpiredatetime)
+            @Html.HiddenFor(m => m.Roverdue)
+            @Html.HiddenFor(m => m.Rname)
+            @Html.HiddenFor(m => m.RnameId)
+            @Html.HiddenFor(m=>m.Rdeal)
+            @Html.HiddenFor(m => m.Id)
+            <div class="layui-form-item">
                 <label class="layui-form-label">备案企业</label>
                 <div class="layui-input-block">
-                @Html.TextBoxFor(m => m.Rcusname, new { @class = "layui-input", @placeholder = "请输入企业名称" })
+                    @Html.TextBoxFor(m => m.Rcusname, new { @class = "layui-input", @placeholder = "请输入企业名称" })
                 </div>
-         </div>
-
-        <div class="layui-form-item">
-            <label class="layui-form-label">企业法人</label>
-            <div class="layui-input-block">
-                @Html.TextBoxFor(m => m.Rlegalperson, new { @class = "layui-input", @placeholder = "请输入企业法人" })
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">企业电话</label>
-            <div class="layui-input-block">
-                @Html.TextBoxFor(m => m.Rlptel, new { @class = "layui-input", @placeholder = "请输入企业电话" })
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">采购姓名</label>
-            <div class="layui-input-block">
-                @Html.TextBoxFor(m => m.Rpurchasename, new { @class = "layui-input", @placeholder = "请输入采购姓名" })
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">采购电话</label>
-            <div class="layui-input-block">
-                @Html.TextBoxFor(m => m.RPTel, new { @class = "layui-input", @placeholder = "请输入采购电话" })
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">客户类型</label>
-            <div class="layui-input-block">
-                <select name="Rcptyle" class="layui-input">
-            @{
-                if ("0".Equals(Convert.ToString(@Model.Rcptyle)) && null != @Model.Id)
-                {
-                    @:<option value="1">工程商</option>
-                    @:<option value="0" selected="selected">销售商</option>
-                }
-                else
-                {
-                    @:<option value="" selected="selected">请选择</option>
-                    @:<option value="1">工程商</option>
-                    @:<option value="0">销售商</option>  
-                }
-            }
-           </select>
-
-              
-
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">产品类型</label>
-            <div class="layui-input-block">
-
             </div>
 
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">工程师</label>
-            <div class="layui-input-block">
-                @Html.TextBoxFor(m => m.Rengineer, new { @class = "layui-input", @placeholder = "请输入工程师" })
+            <div class="layui-form-item">
+                <label class="layui-form-label">企业法人</label>
+                <div class="layui-input-block">
+                    @Html.TextBoxFor(m => m.Rlegalperson, new { @class = "layui-input", @placeholder = "请输入企业法人" })
+                </div>
             </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">工程师电话</label>
-            <div class="layui-input-block">
-                @Html.TextBoxFor(m => m.RengneerTel, new { @class = "layui-input", @placeholder = "请输入工程师电话" })
+            <div class="layui-form-item">
+                <label class="layui-form-label">企业电话</label>
+                <div class="layui-input-block">
+                    @Html.TextBoxFor(m => m.Rlptel, new { @class = "layui-input", @placeholder = "请输入企业电话" })
+                </div>
             </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">预计年用量</label>
-            <div class="layui-input-block">
-                @Html.TextBoxFor(m => m.RYearnum, new { @class = "layui-input", @placeholder = "请输入预计年用量" })
+            <div class="layui-form-item">
+                <label class="layui-form-label">采购姓名</label>
+                <div class="layui-input-block">
+                    @Html.TextBoxFor(m => m.Rpurchasename, new { @class = "layui-input", @placeholder = "请输入采购姓名" })
+                </div>
             </div>
-        </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">采购电话</label>
+                <div class="layui-input-block">
+                    @Html.TextBoxFor(m => m.RPTel, new { @class = "layui-input", @placeholder = "请输入采购电话" })
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">客户类型</label>
+                <div class="layui-input-block">
+                    <select name="Rtyle" class="layui-input">
+                        @{
+                            if ("0".Equals(Convert.ToString(@Model.Rtyle)) && null != @Model.Id)
+                            {
+                                @:<option value="1">工程商</option>
+                                @:<option value="0" selected="selected">销售商</option>
+                            }
+                            else
+                            {
+                                @:<option value="" selected="selected">请选择</option>
+                                @:<option value="1">工程商</option>
+                                @:<option value="0">销售商</option>
+                            }
                         }
+                    </select>
+
+
+
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">产品类型</label>
+                <div class="layui-input-block">
+                    @Html.TextBoxFor(m => m.Rcptyle, new { @class = "layui-input", @placeholder = "请输入工程师" })
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">工程师</label>
+                <div class="layui-input-block">
+                    @Html.TextBoxFor(m => m.Rengineer, new { @class = "layui-input", @placeholder = "请输入工程师" })
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">工程师电话</label>
+                <div class="layui-input-block">
+                    @Html.TextBoxFor(m => m.RengneerTel, new { @class = "layui-input", @placeholder = "请输入工程师电话" })
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">预计年用量</label>
+                <div class="layui-input-block">
+                    @Html.TextBoxFor(m => m.RYearnum, new { @class = "layui-input", @placeholder = "请输入预计年用量" })
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1" onclick="Getdragcount()">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+
+        </div>
     </div>
-</div>
 

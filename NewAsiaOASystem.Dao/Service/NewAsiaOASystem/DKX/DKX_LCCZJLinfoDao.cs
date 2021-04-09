@@ -197,5 +197,18 @@ namespace NewAsiaOASystem.Dao
 
         }
         #endregion
+
+        #region //查询订单标记为生产退单之后工程和客服操作的记录
+        public IList<DKX_LCCZJLinfoView> GetIsPdrefunddata(string ddid)
+        {
+            string Hqlstr = string.Format("from DKX_LCCZJLinfo where IsPdrefund='1' and dd_Id = '{0}'",ddid);
+            List<DKX_LCCZJLinfo> list = HibernateTemplate.Find<DKX_LCCZJLinfo>(Hqlstr) as List<DKX_LCCZJLinfo>;
+            IList<DKX_LCCZJLinfoView> listmodel = GetViewlist(list);
+            if (listmodel != null)
+                return listmodel;
+            else
+                return null;
+        }
+        #endregion
     }
 }

@@ -70,7 +70,7 @@
         LODOP = getLodop();
         var strBodyStyle = "<style>" + document.getElementById("style1").innerHTML + "</style>";
         var strFormHtml = strBodyStyle + "<body>" + document.getElementById("form1").innerHTML + "</body>";
-        //LODOP.PRINT_INIT("打印控件功能演示_Lodop功能_样式风格");	
+        //LODOP.PRINT_INIT("打印控件功能演示_Lodop功能_样式风格");
         //LODOP.ADD_PRINT_TEXT(50,50,260,39,"打印与显示样式一致：");
         //第一个参数是距顶部的距离/2 距左边的距离 /3 宽度 /4 高度
         LODOP.ADD_PRINT_HTM(25, 50, 680, 1110, strFormHtml);
@@ -81,6 +81,7 @@
     $(function () {
         var str = AJaxGetliaodandata();
         Khtml(str);
+        createImage('@Model.DD_Bianhao');
     })
 
 
@@ -152,7 +153,7 @@
                                 }
                             }
                         }
-                        
+
                     }
                 }
                 html += '<tr>';
@@ -223,10 +224,10 @@
         }
     }
 
-    function CloseWin() //这个不会提示是否关闭浏览器    
+    function CloseWin() //这个不会提示是否关闭浏览器
     {
         window.opener = null;
-        //window.opener=top;    
+        //window.opener=top;
         window.open("", "_self");
         window.close();
     }
@@ -267,20 +268,39 @@
         }
         return false
     }
+
+    //生成二维码
+    function createImage(val) {
+        var content = val;
+        //ajax开始
+        $.post("/publicAPI/GetORImage/",
+            { "content": content },
+            function (data) {
+                $('#imgDiv').empty();
+                $('#imgDiv').append('<img id="ORImage" />');
+                $("#ORImage").attr("src", data);
+            });
+        //ajax结束
+    }
 </script>
 
 <div id="form1">
     <div id="Mcon" style="width: 100%; margin: auto">
+        <div >
+            <div style="" id="imgDiv">
+            </div>
+        </div>
         <table class="table_con" style="width: 98%; color: #000; font-size: 13px; margin: auto;" id="table_con">
         </table>
     </div>
 </div>
 <div style="width: 200px; height: 80px; overflow: hidden">
-    <div class="inquiry-input infor-b" >
+    <div class="inquiry-input infor-b">
         <span>
             <button onclick="return myPreview1()">打印</button>
         </span>
         <span>
-            <button onclick="return CloseWin()">关闭</button></span>
+            <button onclick="return CloseWin()">关闭</button>
+        </span>
     </div>
 </div>

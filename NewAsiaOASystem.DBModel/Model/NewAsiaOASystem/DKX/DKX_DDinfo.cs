@@ -434,5 +434,15 @@ namespace NewAsiaOASystem.DBModel
         /// 合同的单位售价
         /// </summary>
         public virtual decimal? price { get; set; }
+
+        /// <summary>
+        /// 是否生产退单 0 否 1是（主要用于生产退单之后工程师修改相关资料 发送推送消息给仓库和生产作为一个提醒）
+        /// </summary>
+        public virtual int? IsPdrefund { get; set; }
+
+        /// <summary>
+        /// 发料状态 0 物料待确认  5 待发料  10 缺料 15 完成发料
+        /// </summary>
+        public virtual int? Flzt { get; set; }
     }
 }

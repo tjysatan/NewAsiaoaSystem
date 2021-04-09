@@ -17,8 +17,19 @@
             $("#txt_startctime").val('@ViewData["startctime"]');
             $("#txt_endctiome").val('@ViewData["endctiome"]');
             $("#txt_DHtype").val('@ViewData["DHtype"]');
-            BindGrid();
+            //BindGrid();
         })
+
+        //初始化table数据
+        function Gettabledata() {
+            layui.use('table', function () {
+                var table = layui.table;
+                table.render({
+                    elem: '#tabledata',
+                    url: '/DKX_DDtypeinfo/Getdkxorderlist',
+                })
+            })
+        }
 
         function BindGrid() {
             @{
@@ -195,8 +206,9 @@
             var t = '<a class="layui-btn layui-btn-primary layui-btn-small" onclick="ziliaochakan('+id +','+zt+')">查看</a>';
             var a='<a class="layui-btn layui-btn-primary layui-btn-small" onclick="wlreajax('+id +')">物料确认</a>';
             var z='<a class="layui-btn layui-btn-primary layui-btn-small" onclick="SCyanshou('+id +','+zt+')">验收</a>';
-            var j='<a class="layui-btn layui-btn-primary layui-btn-small" onclick="SCDDprint('+id +')">打印</a>';
-            return t+a+z+j;
+            var j = '<a class="layui-btn layui-btn-primary layui-btn-small" onclick="SCDDprint(' + id + ')">打印</a>';
+            var q = '<a class="layui-btn layui-btn-primary layui-btn-small" onclick="TBgwj(' + id + ')">同步测试</a>';
+            return t + a + z + j + q;
         }
 
         //未关联显示
@@ -624,13 +636,49 @@
           
         }
 
+        //生产订单资料同步工位机平台
+        function TBgwj(Id) {
+            $.ajax({
+                url: "../DKX_DDtypeinfo/InsterGWJ",
+                type: "POST",
+                data: { Id: Id },
+                dataType: "html",
+                async: true,
+                beforeSend: function () {
+                    ddchen();
+                },
+                success: function (response) {
+                    disLoading();
+                    var resstr = eval('(' + response + ')'); 
+                    if (response == "1") {
+                        layer.alert("同步成功！", { icon: 2 }, function () { location.reload(); });
+                    } else {
+                        layer.alert("操作失败！" + response, { icon: 2 });
+                    }
+                    
+                },
+                error: function (e) {
+                    disLoading();
+                    layer.alert("操作失败！", { icon: 2 });
+                }
+            })
+        }
     </script>
 }
 
-<div class="h-right">
-    <div class="h-right-c">
+<div class="inquiry1">
+    <fieldset>
+        <legend>查询条件：</legend>
+    </fieldset>
+</div>
+
+<div style="padding:0 20px 0 20px">
+    <table class="layui-hide" id="tabledata" lay-filter="tabledata"></table>
+</div>
+<!--<div class="h-right">
+    <div class="h-right-c">-->
         <!--查询条件-->
-        <div class="inquiry1">
+        <!--<div class="inquiry1">
             <fieldset>
                 <legend>查询条件：</legend>
                 @using (Html.BeginForm("DKXddscSearchList", "DKX_DDtypeinfo", FormMethod.Post, new { id = "form1" }))
@@ -740,14 +788,14 @@
             </div>
         </div>
     </div>
-</div>
+</div>-->
 
 <!--==========================输出分页按钮=========================-->
-<div class="pagin">
+<!--<div class="pagin">
     @if (ViewBag.PageNavigate == null)
     {
         @Html.ShowPageNavigate(Model.CurrentPageIndex, Model.PageSize, Model.RecordCount);
     }
-</div>
+</div>-->
 
 <script src="~/Scripts/NAjs/DKXpulice.js"></script>

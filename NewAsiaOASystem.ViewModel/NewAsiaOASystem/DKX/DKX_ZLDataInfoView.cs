@@ -41,6 +41,7 @@ namespace NewAsiaOASystem.ViewModel
         /// 9 操作手册 （仅仅plc 项目有）
         /// 10 线号表 （可以不填）
         /// 11软件程序-源程序（仅仅plc 项目有）
+        ///
         /// </summary>
         /// </summary>
         public virtual int? Zl_type { get; set; }
@@ -56,7 +57,7 @@ namespace NewAsiaOASystem.ViewModel
         public virtual DateTime? C_Datetime { get; set; }
 
         /// <summary>
-        /// 删除人
+        /// 删除人  
         /// </summary>
         public virtual string D_name { get; set; }
 

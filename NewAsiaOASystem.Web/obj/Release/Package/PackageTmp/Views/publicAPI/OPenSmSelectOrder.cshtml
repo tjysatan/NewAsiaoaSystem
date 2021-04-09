@@ -2,6 +2,7 @@
  @{
     ViewBag.Title = "扫描查找订单";
     Layout = "~/Views/Shared/_SysLayout.cshtml";
+
 }
 
 @section HeadContent{
@@ -19,19 +20,29 @@
                  return false;
              }
          }
+
+         //刷新
+         function reload() {
+             location.reload();
+         }
      </script>
     }
 
-<div style="width:400px; height:300px; margin:auto; margin-top:30px;">
-   <form id="form1" name="form1">
-    <input type="text" name="orderID" id="orderID" style="width:200px; height:120px; border:1px solid #000000" />
-         <div class="inquiry-input infor-b">
-            <span>
-                <button onclick="return smfhSavaForm()">保存</button></span>
-         </div>
-   </form>
+
+<div style="width: 100vw; height: 300px; margin: auto; margin-top: 30px;padding-left:35vw">
+    
+    <form id="form1" name="form1" style="margin: auto;">
+        <input type="text" name="orderID" id="orderID" style="width:50vw; height:120px; border:1px solid #000000;" />
+        <div style="width: 50vw; padding-top:20px; padding-left:15vw">
+            <button onclick="return smfhSavaForm()" class="layui-btn   layui-btn-sm">手动提交</button>
+        </div>
+
+        <div style="width: 50vw; padding-top:20px; padding-left:15vw">
+            <button onclick="return reload()" class="layui-btn layui-btn-sm layui-btn-primary">刷新页面</button>
+        </div>
+    </form>
 </div>
 
-<div id="windowDia" class="easyui-window" closed="true" style="width:855px; height:250px; padding:10px;"></div>
 
- 
+
+

@@ -683,7 +683,7 @@ namespace NewAsiaOASystem.Web.Controllers
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="typeCom">快递公司代号</param>
+        /// <param name="typeCom">快递公司代号</param>  
         /// <param name="nu">单号</param>
         /// <returns></returns>
         

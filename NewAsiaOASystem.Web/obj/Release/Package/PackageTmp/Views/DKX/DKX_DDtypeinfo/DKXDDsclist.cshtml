@@ -195,8 +195,9 @@
             var t = '<a class="layui-btn layui-btn-primary layui-btn-small" onclick="ziliaochakan('+id +','+zt+')">查看</a>';
             var a='<a class="layui-btn layui-btn-primary layui-btn-small" onclick="wlreajax('+id +')">物料确认</a>';
             var z='<a class="layui-btn layui-btn-primary layui-btn-small" onclick="SCyanshou('+id +','+zt+')">验收</a>';
-            var j='<a class="layui-btn layui-btn-primary layui-btn-small" onclick="SCDDprint('+id +')">打印</a>';
-            return t+a+z+j;
+            var j = '<a class="layui-btn layui-btn-primary layui-btn-small" onclick="SCDDprint(' + id + ')">打印</a>';
+            var q = '<a class="layui-btn layui-btn-primary layui-btn-small" onclick="TBgwj(' + id + ')">同步测试</a>';
+            return t + a + z + j + q;
         }
 
         //未关联显示
@@ -624,6 +625,34 @@
           
         }
 
+        //生产订单资料同步工位机平台
+        function TBgwj(Id) {
+            $.ajax({
+                url: "../DKX_DDtypeinfo/InsterGWJ",
+                type: "POST",
+                data: { Id: Id },
+                dataType: "html",
+                async: true,
+                beforeSend: function () {
+                    ddchen();
+                },
+                success: function (response) {
+                    disLoading();
+                    var resstr = eval('(' + response + ')'); 
+                    console.log("111111",resstr.code)
+                    if (response == "1") {
+                        layer.alert("同步成功！", { icon: 2 }, function () { location.reload(); });
+                    } else {
+                        layer.alert("操作失败！" + response, { icon: 2 });
+                    }
+                    
+                },
+                error: function (e) {
+                    disLoading();
+                    layer.alert("操作失败！", { icon: 2 });
+                }
+            })
+        }
     </script>
 }
 

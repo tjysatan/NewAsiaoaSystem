@@ -41,7 +41,6 @@ namespace NewAsiaOASystem.Web.Controllers
         IDKX_pjgdbinfoDao _IDKX_pjgdbinfoDao = ContextRegistry.GetContext().GetObject("DKX_pjgdbinfoDao") as IDKX_pjgdbinfoDao;
         
 
-
         #region //电控箱类型管理
 
         #region //电控箱类型的列表
@@ -799,6 +798,7 @@ namespace NewAsiaOASystem.Web.Controllers
                 model.gnjsstr = gnjsstr;
                 model.xtIsq = 0;
                 model.qtIsq = 0;
+                model.IsPdrefund = 0;//不是生产退单
                 if (yjjqtime != "")
                 {
                     model.YJJQtime = Convert.ToDateTime(yjjqtime);
@@ -1516,8 +1516,8 @@ namespace NewAsiaOASystem.Web.Controllers
             ViewData["Uname"] = Suser.UserName;
             //判定是否有审核的权限
             ViewData["SHQX"] = Getzlshqx();
-            PagerInfo<DKX_DDinfoView> listmodel = Getdkxddgcslistpage(pageIndex, null, null, null, null, null, null, "1,2,3", null, null, "0", null, null, null, null, null);
-            return View(listmodel);
+            //PagerInfo<DKX_DDinfoView> listmodel = Getdkxddgcslistpage(pageIndex, null, null, null, null, null, null, "1,2,3", null, null, "0", null, null, null, null, null);
+            return View();
         }
         #endregion
 
@@ -1859,37 +1859,48 @@ namespace NewAsiaOASystem.Web.Controllers
 
         #region //图纸上传(箱体图)
         [HttpPost]
-        public JsonResult tuziuploadEide(FormContext form, HttpPostedFileBase image3)
+        public JsonResult tuziuploadEide(FormContext form, IEnumerable<HttpPostedFileBase> image3 )
         {
             SessionUser Suser = Session[SessionHelper.User] as SessionUser;
             bool flay = false;
             string Id = Request.Form["Id"];
-            DKX_ZLDataInfoView model = new DKX_ZLDataInfoView();
-            if (image3 != null)
+            foreach (var file in image3)
             {
-                string fileName = DateTime.Now.ToString("yyyymmddhhmmss") + "-" + Path.GetFileName(image3.FileName);
-                string filePath = Path.Combine(Server.MapPath("~/Content/upload/tuzhi"), fileName);
-                image3.SaveAs(filePath);
-                model.url = "/Content/upload/tuzhi/" + fileName;
-                model.wjName = Path.GetFileName(image3.FileName);
+                DKX_ZLDataInfoView model = new DKX_ZLDataInfoView();
+                if (file != null && file.ContentLength > 0)
+                {
+                    string fileName = DateTime.Now.ToString("yyyymmddhhmmss") + "-" + Path.GetFileName(file.FileName);
+                    string filePath = Path.Combine(Server.MapPath("~/Content/upload/tuzhi"), fileName);
+                    file.SaveAs(filePath);
+                    model.url = "/Content/upload/tuzhi/" + fileName;
+                    model.wjName = Path.GetFileName(file.FileName);
+                    model.Zl_type = 2;//图纸（箱体图）
+                    model.dd_Id = Id;
+                    model.Start = 0;
+                    model.Isgl = 0;
+                    model.C_name = Suser.Id;
+                    model.C_Datetime = DateTime.Now;
+                    flay = _IDKX_ZLDataInfoDao.Ninsert(model);
+                }
+                else
+                {
+                    return Json(new { result = "error1" });
+                }
             }
-            else
-            {
-                return Json(new { result = "error1" });
-            }
-            model.Zl_type = 2;//图纸（箱体图）
-            model.dd_Id = Id;
-            model.Start = 0;
-            model.Isgl = 0;
-            model.C_name = Suser.Id;
-            model.C_Datetime = DateTime.Now;
-            flay = _IDKX_ZLDataInfoDao.Ninsert(model);
             //查询订单信息
             DKX_DDinfoView ddmodel = _IDKX_DDinfoDao.NGetModelById(Id);
             ddmodel.Bnote = "1";//已经存在
             ddmodel.xtsctime = DateTime.Now;//箱体上传的最新时间
             _IDKX_DDinfoDao.NUpdate(ddmodel);
-            NAHelper.Insertczjl(Id, "上传图纸(箱体图)资料", Suser.Id);
+            if (ddmodel.IsPdrefund != 1)//非生产退单
+            {
+                NAHelper.Insertczjl(Id, "上传图纸(箱体图)资料", Suser.Id);
+            }
+            else//有生产退单标记的
+            {
+                NAHelper.InsertIsPdrefundczjltew(Id, "上传图纸(箱体图)资料", Suser.Id);
+            }
+            
             if (flay)
             {
                 //工程师上传了箱体图-生产 （通知生产（生产主管/箱体确认/其他物料确认））
@@ -1902,7 +1913,7 @@ namespace NewAsiaOASystem.Web.Controllers
                         MassManager.FMB_FBDKXNotice(list[i].UserId, Id, "1");
                     }
                    //通知下单客服
-                    MassManager.FMB_FBDKXNotice(model.C_name, Id, "1");
+                    MassManager.FMB_FBDKXNotice(ddmodel.C_name, Id, "1");
                 }
                 return Json(new { result = "success" });
             }
@@ -1915,43 +1926,74 @@ namespace NewAsiaOASystem.Web.Controllers
 
         #region //其他图纸上传（电器原理图）
         [HttpPost]
-        public JsonResult QTtuzhiuploadEide(FormContext form, HttpPostedFileBase image4)
+        public JsonResult QTtuzhiuploadEide(FormContext form, IEnumerable<HttpPostedFileBase> image4)
         {
             SessionUser Suser = Session[SessionHelper.User] as SessionUser;
             bool flay = false;
             string Id = Request.Form["Id"];
-            DKX_ZLDataInfoView model = new DKX_ZLDataInfoView();
-            if (image4 != null)
+            foreach (var file in image4)
             {
-                string fileName = DateTime.Now.ToString("yyyymmddhhmmss") + "-" + Path.GetFileName(image4.FileName);
-                string filePath = Path.Combine(Server.MapPath("~/Content/upload/QTtuzhi"), fileName);
-                image4.SaveAs(filePath);
-                model.url = "/Content/upload/QTtuzhi/" + fileName;
-                model.wjName = Path.GetFileName(image4.FileName);
+                DKX_ZLDataInfoView model = new DKX_ZLDataInfoView();
+                if (file != null && file.ContentLength > 0)
+                {
+                    string fileName = DateTime.Now.ToString("yyyymmddhhmmss") + "-" + Path.GetFileName(file.FileName);
+                    string filePath = Path.Combine(Server.MapPath("~/Content/upload/QTtuzhi"), fileName);
+                    file.SaveAs(filePath);
+                    model.url = "/Content/upload/QTtuzhi/" + fileName;
+                    model.wjName = Path.GetFileName(file.FileName);
+                    model.Zl_type = 5;//其他图纸
+                    model.dd_Id = Id;
+                    model.Start = 0;
+                    model.Isgl = 0;
+                    model.C_name = Suser.Id;
+                    model.C_Datetime = DateTime.Now;
+                    flay = _IDKX_ZLDataInfoDao.Ninsert(model);
+                }
+                else
+                {
+                    return Json(new { result = "error1" });
+                }
             }
-            else
-            {
-                return Json(new { result = "error1" });
-            }
-            model.Zl_type = 5;//其他图纸
-            model.dd_Id = Id;
-            model.Start = 0;
-            model.Isgl = 0;
-            model.C_name = Suser.Id;
-            model.C_Datetime = DateTime.Now;
-            flay = _IDKX_ZLDataInfoDao.Ninsert(model);
-            //查询订单信息
-            DKX_DDinfoView ddmodel = _IDKX_DDinfoDao.NGetModelById(Id);
+                //DKX_ZLDataInfoView model = new DKX_ZLDataInfoView();
+                //if (image4 != null)
+                //{
+                //    string fileName = DateTime.Now.ToString("yyyymmddhhmmss") + "-" + Path.GetFileName(image4.FileName);
+                //    string filePath = Path.Combine(Server.MapPath("~/Content/upload/QTtuzhi"), fileName);
+                //    image4.SaveAs(filePath);
+                //    model.url = "/Content/upload/QTtuzhi/" + fileName;
+                //    model.wjName = Path.GetFileName(image4.FileName);
+                //}
+                //else
+                //{
+                //    return Json(new { result = "error1" });
+                //}
+                //model.Zl_type = 5;//其他图纸
+                //model.dd_Id = Id;
+                //model.Start = 0;
+                //model.Isgl = 0;
+                //model.C_name = Suser.Id;
+                //model.C_Datetime = DateTime.Now;
+                //flay = _IDKX_ZLDataInfoDao.Ninsert(model);
+                //查询订单信息
+                DKX_DDinfoView ddmodel = _IDKX_DDinfoDao.NGetModelById(Id);
             ddmodel.Bnote1 = "1";//待审核
             ddmodel.qtsctime = DateTime.Now;
             _IDKX_DDinfoDao.NUpdate(ddmodel);
-            NAHelper.Insertczjl(Id, "上传图纸(其他图纸)资料", Suser.Id);
+            if (ddmodel.IsPdrefund != 1)//非生产退单
+            {
+                NAHelper.Insertczjl(Id, "上传图纸(其他图纸)资料", Suser.Id);
+            }
+            else
+            {
+                NAHelper.InsertIsPdrefundczjltew(Id, "上传图纸(箱体图)资料", Suser.Id);
+            }   
             if (flay)
             {
                 ////工程师上传了电器排布图-（通知主管工程师审核）
                 //IList<Wx_FTUserbdopenIdinfoView> list = _IWx_FTUserbdopenIdinfoDao.GetwxftbmopenIdbybmtype("13");
                 //if (list != null)
                 //{
+
                 //    for (int i = 0, j = list.Count; i < j; i++)
                 //    {
                 //        MassManager.FMB_FBDKXNotice(list[i].UserId, Id, "9");
@@ -1968,37 +2010,50 @@ namespace NewAsiaOASystem.Web.Controllers
 
         #region //电器排布图
         [HttpPost]
-        public JsonResult DQPBtuzhiEide(FormContext form, HttpPostedFileBase image5)
+        public JsonResult DQPBtuzhiEide(FormContext form, IEnumerable<HttpPostedFileBase> image5)
         {
             SessionUser Suser = Session[SessionHelper.User] as SessionUser;
             bool flay = false;
             string Id = Request.Form["Id"];
-            DKX_ZLDataInfoView model = new DKX_ZLDataInfoView();
-            if (image5 != null)
+            foreach (var file in image5)
             {
-                string fileName = DateTime.Now.ToString("yyyymmddhhmmss") + "-" + Path.GetFileName(image5.FileName);
-                string filePath = Path.Combine(Server.MapPath("~/Content/upload/DQPBtuzhi"), fileName);
-                image5.SaveAs(filePath);
-                model.url = "/Content/upload/DQPBtuzhi/" + fileName;
-                model.wjName = Path.GetFileName(image5.FileName);
+                DKX_ZLDataInfoView model = new DKX_ZLDataInfoView();
+                if (file != null && file.ContentLength > 0)
+                {
+                    string fileName = DateTime.Now.ToString("yyyymmddhhmmss") + "-" + Path.GetFileName(file.FileName);
+                    string filePath = Path.Combine(Server.MapPath("~/Content/upload/DQPBtuzhi"), fileName);
+                    file.SaveAs(filePath);
+                    model.url = "/Content/upload/DQPBtuzhi/" + fileName;
+                    model.wjName = Path.GetFileName(file.FileName);
+                    model.Zl_type = 6;//电器排布图
+                    model.dd_Id = Id;
+                    model.Start = 0;
+                    model.Isgl = 0;//附件
+                    model.C_name = Suser.Id;
+                    model.C_Datetime = DateTime.Now;
+                    flay = _IDKX_ZLDataInfoDao.Ninsert(model);
+                }
+                else
+                {
+                    return Json(new { result = "error1" });
+                }
+
             }
-            else
-            {
-                return Json(new { result = "error1" });
-            }
-            model.Zl_type = 6;//电器排布图
-            model.dd_Id = Id;
-            model.Start = 0;
-            model.Isgl = 0;//附件
-            model.C_name = Suser.Id;
-            model.C_Datetime = DateTime.Now;
-            flay = _IDKX_ZLDataInfoDao.Ninsert(model);
+ 
             //查询订单信息
             DKX_DDinfoView ddmodel = _IDKX_DDinfoDao.NGetModelById(Id);
             ddmodel.Bnote2 = "1";//待审核
             ddmodel.dqpbsctime = DateTime.Now;//电器分布图最新上传时间
             _IDKX_DDinfoDao.NUpdate(ddmodel);
-            NAHelper.Insertczjl(Id, "上传图纸(电器排布图)资料",Suser.Id);
+            if (ddmodel.IsPdrefund != 1)//非生产退单
+            {
+                NAHelper.Insertczjl(Id, "上传图纸(电器排布图)资料", Suser.Id);
+            }
+            else
+            {
+                NAHelper.InsertIsPdrefundczjltew(Id, "上传图纸(电器排布图)资料", Suser.Id);
+            }
+
             if (flay)
             {
                 ////工程师上传了电器排布图-（通知主管工程师审核）
@@ -2022,37 +2077,48 @@ namespace NewAsiaOASystem.Web.Controllers
 
         #region //线号表（）
         [HttpPost]
-        public JsonResult XTJTtuzhiEide(FormCollection form, HttpPostedFileBase image6)
+        public JsonResult XTJTtuzhiEide(FormCollection form, IEnumerable<HttpPostedFileBase> image6)
         {
             SessionUser Suser = Session[SessionHelper.User] as SessionUser;
             bool flay = false;
             string Id = Request.Form["Id"];
-            DKX_ZLDataInfoView model = new DKX_ZLDataInfoView();
-            if (image6 != null)
+            foreach (var file in image6)
             {
-                string fileName = DateTime.Now.ToString("yyyymmddhhmmss") + "-" + Path.GetFileName(image6.FileName);
-                string filePath = Path.Combine(Server.MapPath("~/Content/upload/XTJTtuzhi"), fileName);
-                image6.SaveAs(filePath);
-                model.url = "/Content/upload/XTJTtuzhi/" + fileName;
-                model.wjName = Path.GetFileName(image6.FileName);
+                DKX_ZLDataInfoView model = new DKX_ZLDataInfoView();
+                if (file != null && file.ContentLength > 0)
+                {
+                    string fileName = DateTime.Now.ToString("yyyymmddhhmmss") + "-" + Path.GetFileName(file.FileName);
+                    string filePath = Path.Combine(Server.MapPath("~/Content/upload/XTJTtuzhi"), fileName);
+                    file.SaveAs(filePath);
+                    model.url = "/Content/upload/XTJTtuzhi/" + fileName;
+                    model.wjName = Path.GetFileName(file.FileName);
+                    model.Zl_type = 10;//线号表
+                    model.dd_Id = Id;
+                    model.Start = 0;
+                    model.Isgl = 0;//附件
+                    model.C_name = Suser.Id;
+                    model.C_Datetime = DateTime.Now;
+                    flay = _IDKX_ZLDataInfoDao.Ninsert(model);
+                }
+                else
+                {
+                    return Json(new { result = "error1" });
+                }
             }
-            else
-            {
-                return Json(new { result = "error1" });
-            }
-            model.Zl_type = 10;//线号表
-            model.dd_Id = Id;
-            model.Start = 0;
-            model.Isgl = 0;//附件
-            model.C_name = Suser.Id;
-            model.C_Datetime = DateTime.Now;
-            flay = _IDKX_ZLDataInfoDao.Ninsert(model);
-            //查询订单信息
-            DKX_DDinfoView ddmodel = _IDKX_DDinfoDao.NGetModelById(Id);
+       
+                //查询订单信息
+                DKX_DDinfoView ddmodel = _IDKX_DDinfoDao.NGetModelById(Id);
             ddmodel.Bnote3 = "1";
             ddmodel.xtjtsctime = DateTime.Now;//系统简图
             _IDKX_DDinfoDao.NUpdate(ddmodel);
-            NAHelper.Insertczjl(Id, "上传图纸（线号表）资料", Suser.Id);
+            if (ddmodel.IsPdrefund != 1)//非生产退单
+            {
+                NAHelper.Insertczjl(Id, "上传图纸（线号表）资料", Suser.Id);
+            }
+            else
+            {
+                NAHelper.InsertIsPdrefundczjltew(Id, "上传图纸（线号表）资料", Suser.Id);
+            } 
             if (flay)
             {
                 return Json(new { result = "success" });
@@ -2066,32 +2132,56 @@ namespace NewAsiaOASystem.Web.Controllers
 
         #region //软件程序上传（烧录软件）
         [HttpPost]
-        public JsonResult RjcxuploadEide(FormContext form, HttpPostedFileBase image7)
+        public JsonResult RjcxuploadEide(FormContext form, IEnumerable<HttpPostedFileBase> image7)
         {
             SessionUser Suser = Session[SessionHelper.User] as SessionUser;
             bool flay = false;
             string Id=Request.Form["Id"];
-            DKX_ZLDataInfoView model = new DKX_ZLDataInfoView();
-            if (image7 != null)
+            foreach (var file in image7)
             {
-                string fileName = DateTime.Now.ToString("yyyymmddhhmmss") + "-" + Path.GetFileName(image7.FileName);
-                string filePath = Path.Combine(Server.MapPath("~/Content/upload/rjcxtuzhi"), fileName);
-                image7.SaveAs(filePath);
-                model.url = "/Content/upload/rjcxtuzhi/" + fileName;
-                model.wjName = Path.GetFileName(image7.FileName);
+                DKX_ZLDataInfoView model = new DKX_ZLDataInfoView();
+                if (file != null && file.ContentLength > 0)
+                {
+                    string fileName = DateTime.Now.ToString("yyyymmddhhmmss") + "-" + Path.GetFileName(file.FileName);
+                    string filePath = Path.Combine(Server.MapPath("~/Content/upload/rjcxtuzhi"), fileName);
+                    file.SaveAs(filePath);
+                    model.url = "/Content/upload/rjcxtuzhi/" + fileName;
+                    model.wjName = Path.GetFileName(file.FileName);
+                    model.Zl_type = 8;//烧录软件
+                    model.dd_Id = Id;
+                    model.Start = 0;
+                    model.Isgl = 0;//附件
+                    model.C_name = Suser.Id;
+                    model.C_Datetime = DateTime.Now;
+                    flay = _IDKX_ZLDataInfoDao.Ninsert(model);
+                }
+                else
+                {
+                    return Json(new { result = "error1" });
+                }
             }
-            else
-            {
-                return Json(new { result = "error1" });
-            }
-            model.Zl_type = 8;//烧录软件
-            model.dd_Id = Id;
-            model.Start = 0;
-            model.Isgl = 0;//附件
-            model.C_name = Suser.Id;
-            model.C_Datetime = DateTime.Now;
-            flay = _IDKX_ZLDataInfoDao.Ninsert(model);
-            NAHelper.Insertczjl(Id, "上传软件程序资料(烧录软件)", Suser.Id);
+                //DKX_ZLDataInfoView model = new DKX_ZLDataInfoView();
+                //if (image7 != null)
+                //{
+                //    string fileName = DateTime.Now.ToString("yyyymmddhhmmss") + "-" + Path.GetFileName(image7.FileName);
+                //    string filePath = Path.Combine(Server.MapPath("~/Content/upload/rjcxtuzhi"), fileName);
+                //    image7.SaveAs(filePath);
+                //    model.url = "/Content/upload/rjcxtuzhi/" + fileName;
+                //    model.wjName = Path.GetFileName(image7.FileName);
+                //}
+                //else
+                //{
+                //    return Json(new { result = "error1" });
+                //}
+                //model.Zl_type = 8;//烧录软件
+                //model.dd_Id = Id;
+                //model.Start = 0;
+                //model.Isgl = 0;//附件
+                //model.C_name = Suser.Id;
+                //model.C_Datetime = DateTime.Now;
+                //flay = _IDKX_ZLDataInfoDao.Ninsert(model);
+
+                NAHelper.Insertczjl(Id, "上传软件程序资料(烧录软件)", Suser.Id);
             if (flay)
             {
                 return Json(new { result = "success" });
@@ -2102,34 +2192,58 @@ namespace NewAsiaOASystem.Web.Controllers
             }
         }
         #endregion
+
         #region //软件程序上传（源程序）
         [HttpPost]
-        public JsonResult RjycxuploadEide(FormContext form, HttpPostedFileBase image9)
+        public JsonResult RjycxuploadEide(FormContext form, IEnumerable<HttpPostedFileBase> image9)
         {
             SessionUser Suser = Session[SessionHelper.User] as SessionUser;
             bool flay = false;
             string Id = Request.Form["Id"];
-            DKX_ZLDataInfoView model = new DKX_ZLDataInfoView();
-            if (image9 != null)
+            foreach (var file in image9)
             {
-                string fileName = DateTime.Now.ToString("yyyymmddhhmmss") + "-" + Path.GetFileName(image9.FileName);
-                string filePath = Path.Combine(Server.MapPath("~/Content/upload/rjcxtuzhi"), fileName);
-                image9.SaveAs(filePath);
-                model.url = "/Content/upload/rjcxtuzhi/" + fileName;
-                model.wjName = Path.GetFileName(image9.FileName);
+                DKX_ZLDataInfoView model = new DKX_ZLDataInfoView();
+                if (file != null && file.ContentLength > 0)
+                {
+                    string fileName = DateTime.Now.ToString("yyyymmddhhmmss") + "-" + Path.GetFileName(file.FileName);
+                    string filePath = Path.Combine(Server.MapPath("~/Content/upload/rjcxtuzhi"), fileName);
+                    file.SaveAs(filePath);
+                    model.url = "/Content/upload/rjcxtuzhi/" + fileName;
+                    model.wjName = Path.GetFileName(file.FileName);
+                    model.Zl_type = 11;//软件程序-源程序（仅仅plc 项目有）
+                    model.dd_Id = Id;
+                    model.Start = 0;
+                    model.Isgl = 0;//附件
+                    model.C_name = Suser.Id;
+                    model.C_Datetime = DateTime.Now;
+                    flay = _IDKX_ZLDataInfoDao.Ninsert(model);
+                }
+                else
+                {
+                    return Json(new { result = "error1" });
+                }
             }
-            else
-            {
-                return Json(new { result = "error1" });
-            }
-            model.Zl_type = 11;//软件程序-源程序（仅仅plc 项目有）
-            model.dd_Id = Id;
-            model.Start = 0;
-            model.Isgl = 0;//附件
-            model.C_name = Suser.Id;
-            model.C_Datetime = DateTime.Now;
-            flay = _IDKX_ZLDataInfoDao.Ninsert(model);
-            NAHelper.Insertczjl(Id, "上传软件程序资料(源程序)", Suser.Id);
+                //DKX_ZLDataInfoView model = new DKX_ZLDataInfoView();
+                //if (image9 != null)
+                //{
+                //    string fileName = DateTime.Now.ToString("yyyymmddhhmmss") + "-" + Path.GetFileName(image9.FileName);
+                //    string filePath = Path.Combine(Server.MapPath("~/Content/upload/rjcxtuzhi"), fileName);
+                //    image9.SaveAs(filePath);
+                //    model.url = "/Content/upload/rjcxtuzhi/" + fileName;
+                //    model.wjName = Path.GetFileName(image9.FileName);
+                //}
+                //else
+                //{
+                //    return Json(new { result = "error1" });
+                //}
+                //model.Zl_type = 11;//软件程序-源程序（仅仅plc 项目有）
+                //model.dd_Id = Id;
+                //model.Start = 0;
+                //model.Isgl = 0;//附件
+                //model.C_name = Suser.Id;
+                //model.C_Datetime = DateTime.Now;
+                //flay = _IDKX_ZLDataInfoDao.Ninsert(model);
+                NAHelper.Insertczjl(Id, "上传软件程序资料(源程序)", Suser.Id);
             if (flay)
             {
                 return Json(new { result = "success" });
@@ -2143,32 +2257,37 @@ namespace NewAsiaOASystem.Web.Controllers
 
         #region //操作手册
         [HttpPost]
-        public JsonResult czscuploadEide(FormContext form, HttpPostedFileBase image8)
+        public JsonResult czscuploadEide(FormContext form, IEnumerable<HttpPostedFileBase> image8)
         {
             SessionUser Suser = Session[SessionHelper.User] as SessionUser;
             bool flay = false;
             string Id = Request.Form["Id"];
-            DKX_ZLDataInfoView model = new DKX_ZLDataInfoView();
-            if (image8 != null)
+            foreach (var file in image8)
             {
-                string fileName = DateTime.Now.ToString("yyyymmddhhmmss") + "-" + Path.GetFileName(image8.FileName);
-                string filePath = Path.Combine(Server.MapPath("~/Content/upload/czshouce"), fileName);
-                image8.SaveAs(filePath);
-                model.url = "/Content/upload/czshouce/" + fileName;
-                model.wjName = Path.GetFileName(image8.FileName);
+                DKX_ZLDataInfoView model = new DKX_ZLDataInfoView();
+                if (file != null && file.ContentLength > 0)
+                {
+                    string fileName = DateTime.Now.ToString("yyyymmddhhmmss") + "-" + Path.GetFileName(file.FileName);
+                    string filePath = Path.Combine(Server.MapPath("~/Content/upload/czshouce"), fileName);
+                    file.SaveAs(filePath);
+                    model.url = "/Content/upload/czshouce/" + fileName;
+                    model.wjName = Path.GetFileName(file.FileName);
+                    model.Zl_type = 9;//操作手册
+                    model.dd_Id = Id;
+                    model.Start = 0;
+                    model.Isgl = 0;//附件
+                    model.C_name = Suser.Id;
+                    model.C_Datetime = DateTime.Now;
+                    flay = _IDKX_ZLDataInfoDao.Ninsert(model);
+
+                }
+                else
+                {
+                    return Json(new { result = "error1" });
+                }
             }
-            else
-            {
-                return Json(new { result = "error1" });
-            }
-            model.Zl_type = 9;//操作手册
-            model.dd_Id = Id;
-            model.Start = 0;
-            model.Isgl = 0;//附件
-            model.C_name = Suser.Id;
-            model.C_Datetime = DateTime.Now;
-            flay = _IDKX_ZLDataInfoDao.Ninsert(model);
-            NAHelper.Insertczjl(Id, "上传操作手册资料", Suser.Id);
+  
+                NAHelper.Insertczjl(Id, "上传操作手册资料", Suser.Id);
             if (flay)
             {
                 return Json(new { result = "success" });
@@ -2239,7 +2358,7 @@ namespace NewAsiaOASystem.Web.Controllers
                         }
                         else if (model.xtIsq == 2 && model.qtIsq == 2)
                         {//俩个物料都齐
-                            model.DD_ZT = 4;//待生产
+                            model.DD_ZT = 4;//可生产
                         }
                         else
                         {
@@ -2317,6 +2436,7 @@ namespace NewAsiaOASystem.Web.Controllers
         {
             try
             {
+                SessionUser Suser = Session[SessionHelper.User] as SessionUser;
                 string FnumberBomstr = FnumberBom.Replace("+", "%2B");
                 string url;
                 url = "http://222.92.203.58:83//Baseitem.asmx/getBomBodyByFBomnumber?fbomnumber=" + FnumberBomstr;
@@ -2344,6 +2464,16 @@ namespace NewAsiaOASystem.Web.Controllers
                     model.C_time = DateTime.Now;
                     model.Beizhu = a.FNote;//备注
                     _IDKX_k3BominfoDao.Ninsert(model);
+                }
+                //查询订单信息
+                DKX_DDinfoView ddmodel = _IDKX_DDinfoDao.NGetModelById(ddId);
+                if (ddmodel.IsPdrefund != 1)//非生产退单
+                {
+                    NAHelper.Insertczjl(ddId, "更新K3料单", Suser.Id);
+                }
+                else//有生产退单标记的
+                {
+                    NAHelper.InsertIsPdrefundczjltew(ddId, "更新K3料单", Suser.Id);
                 }
                 return "2";
             }
@@ -2419,31 +2549,9 @@ namespace NewAsiaOASystem.Web.Controllers
                         model.Gscwctime = DateTime.Now;
                         model.scfh = "";
                         model.dragstart = 1;//待助力检查
-                        //if (model.xtIsq == 0 && model.qtIsq == 0)
-                        //{ //俩个料单都没有确认
-                        //    model.DD_ZT = 3;//待生产
-                        //}
-                        //else if (model.xtIsq == 2 && model.qtIsq == 2)
-                        //{//俩个物料都齐
-                        //    model.DD_ZT = 4;//待生产
-                        //}
-                        //else
-                        //{
-                        //    model.DD_ZT = 5;//缺料
-                        //}
                         model.gnjsstr = gnjsstr;
                         if (_IDKX_DDinfoDao.NUpdate(model))
                         {
-                            //IList<Wx_FTUserbdopenIdinfoView> list = _IWx_FTUserbdopenIdinfoDao.GetwxftbmopenIdbybmtype("7");
-                            //if (list != null)
-                            //{
-                            //    for (int i = 0, j = list.Count; i < j; i++)
-                            //    {
-                            //        MassManager.FMB_FBDKXNotice(list[i].UserId, Id, "2");
-                            //    }
-                            //}
-                            ////通知下单客服
-                            //MassManager.FMB_FBDKXNotice(model.C_name, Id, "2");
                             return "0";//提交成功
                         }
                         else
@@ -2806,15 +2914,18 @@ namespace NewAsiaOASystem.Web.Controllers
                         model.dragstart = 2;
                         if (model.xtIsq == 0 && model.qtIsq == 0)
                         { //俩个料单都没有确认
-                            model.DD_ZT = 3;//待生产
+                            model.DD_ZT = 3;//未发料
+                            model.Flzt = 0;//物料待确认
                         }
                         else if (model.xtIsq == 2 && model.qtIsq == 2)
                         {//俩个物料都齐
-                            model.DD_ZT = 4;//待生产
+                            model.DD_ZT = 3;//未发料
+                            model.Flzt = 5;//待发料
                         }
                         else
                         {
-                            model.DD_ZT = 5;//缺料
+                            model.DD_ZT = 3;//未发料
+                            model.Flzt = 10;//待发料
                         }
                     }
                     else
@@ -2825,9 +2936,9 @@ namespace NewAsiaOASystem.Web.Controllers
                         model.dragtime = DateTime.Now;
                     }
                     if (_IDKX_DDinfoDao.NUpdate(model)) {
-                        if(type == "0")
+                        if(type == "0")//通过检查之后上传提交
                         {
-                            IList<Wx_FTUserbdopenIdinfoView> list = _IWx_FTUserbdopenIdinfoDao.GetwxftbmopenIdbybmtype("7");
+                            IList<Wx_FTUserbdopenIdinfoView> list = _IWx_FTUserbdopenIdinfoDao.GetwxftbmopenIdbybmtype("7");//通知生产 仓库
                             if (list != null)
                             {
                                 for (int i = 0, j = list.Count; i < j; i++)
@@ -2872,8 +2983,6 @@ namespace NewAsiaOASystem.Web.Controllers
             return View(listmodel);
         }
         #endregion
-
-      
 
         #region //条件查询
         public JsonResult DKXdddqshSearchList()
@@ -3153,6 +3262,7 @@ namespace NewAsiaOASystem.Web.Controllers
                             NAHelper.Insertczjl(Id, "生产接单-生产中", Suser.Id);
                             //生产接单-生产中通知客服
                             MassManager.FMB_FBDKXNotice(model.C_name,Id,"5");
+                            gwjHelper.synchronizationorderandzl(model.Id, model.DD_Bianhao, model.KHname, model.NUM.ToString(), model.KBomNo);//同步工位机平板的订单资料
                             return "3";//提交成功
                         }
                         else
@@ -3217,6 +3327,7 @@ namespace NewAsiaOASystem.Web.Controllers
                     model.dqshuserId = "";
                     model.dragsm = "";
                     model.dragusername = "";
+                    model.IsPdrefund = 1;//标记生产退单
                     if (model.Isdqsh == 1)
                     {
                         model.dqshres = 3;
@@ -3457,7 +3568,6 @@ namespace NewAsiaOASystem.Web.Controllers
         }
         #endregion
         #endregion
-
 
 
         #region //料单库存
@@ -6768,6 +6878,28 @@ namespace NewAsiaOASystem.Web.Controllers
         #endregion
         #endregion
 
+        #region //20210409生产订单分页数据
+        public ActionResult Getdkxorderdatalist(int? page, int limit, string DD_Bianhao, string KBomNo, string DD_Type, string KHname, string Lxname, string Tel,
+    string DD_ZT, string startctime, string endctiome, string start, string GCSId, string DHtype, string YQtype, string Isdqpb, string Isqttz)
+        {
+            SessionUser Suser = Session[SessionHelper.User] as SessionUser;
+            int CurrentPageIndex = Convert.ToInt32(page);
+            if (CurrentPageIndex == 0)
+                CurrentPageIndex = 1;
+            _IDKX_DDinfoDao.SetPagerPageIndex(CurrentPageIndex);
+            _IDKX_DDinfoDao.SetPagerPageSize(limit);
+            PagerInfo<DKX_DDinfoView> listmodel = _IDKX_DDinfoDao.GetdkxlistpageGCS(DD_Bianhao, KBomNo, DD_Type, KHname, Lxname, Tel, DD_ZT, startctime, endctiome, start, GCSId, DHtype, YQtype, Isdqpb, Isqttz, Suser);
+
+            var result = new
+            {
+                code = 0,
+                msg = "",
+                count = listmodel.RecordCount,
+                data = listmodel.DataList,
+            };
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+        #endregion
 
         #region //查询全部的电控箱类型的数据
         public string getjsonalldkxtypedata()
@@ -7175,6 +7307,24 @@ namespace NewAsiaOASystem.Web.Controllers
         }
         #endregion
 
+        #region //插入平板工位机的订单资料
+        public string InsterGWJ(string Id)
+        {
+            try
+            {
+                //查询订单
+                DKX_DDinfoView model = new DKX_DDinfoView();
+                model = _IDKX_DDinfoDao.NGetModelById(Id);
+                string res= gwjHelper.synchronizationorderandzl(Id, model.DD_Bianhao, model.KHname, model.NUM.ToString(), model.KBomNo);
+                return res;
+            }
+            catch
+            {
+                return "1";
+            }
+        }
+        #endregion
+
         #region //批量插入订单编号和工程师数据
         public void plInsterbianhaoandgcsname()
         {
@@ -7192,5 +7342,8 @@ namespace NewAsiaOASystem.Web.Controllers
 
         }
         #endregion
+
+
+
     }
 }

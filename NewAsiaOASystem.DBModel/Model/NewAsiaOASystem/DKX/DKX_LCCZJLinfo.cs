@@ -61,5 +61,10 @@ namespace NewAsiaOASystem.DBModel
         /// 退单原因备注
         /// </summary>
         public virtual string CBRRemarks { get; set; }
+
+        /// <summary>
+        /// 生产退单之后操作的 1
+        /// </summary>
+        public virtual int? IsPdrefund { get; set; }
     }
 }

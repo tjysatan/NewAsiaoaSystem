@@ -206,7 +206,7 @@ namespace NewAsiaOASystem.Dao
         #region //查找全部工程师的数据
         public IList<DKX_GCSinfoView> GetALLgcsDATA()
         {
-            string Hqlstr = string.Format(" from DKX_GCSinfo order by Sort asc");
+            string Hqlstr = string.Format(" from DKX_GCSinfo where  Start='0' order by Sort asc");
             List<DKX_GCSinfo> list = HibernateTemplate.Find<DKX_GCSinfo>(Hqlstr) as List<DKX_GCSinfo>;
             IList<DKX_GCSinfoView> listmodel = GetViewlist(list);
             return listmodel;

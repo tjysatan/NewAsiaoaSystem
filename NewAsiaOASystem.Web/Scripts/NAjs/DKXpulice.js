@@ -114,7 +114,7 @@ function showddzt(val,val2,val3,val4,val5,val6)
         return '<span style="color:red">待品审</span>';
     }
     if (val == "3") {
-        return "待发料";
+        return "未发料";
     }
     if (val == "4") {
         return "可生产";
@@ -168,18 +168,23 @@ function showwlwtype(val)
 
 //layui 数据列中时间字段的转换
 function layui_dateToStr(date) {
-    var time = new Date(parseInt(date.replace("/Date(", "").replace(")/", ""), 10));
-    var y = time.getFullYear();
-    var M = time.getMonth() + 1;
-    M = M < 10 ? ("0" + M) : M;
-    var d = time.getDate();
-    d = d < 10 ? ("0" + d) : d;
-    var h = time.getHours();
-    h = h < 10 ? ("0" + h) : h;
-    var m = time.getMinutes();
-    m = m < 10 ? ("0" + m) : m;
-    var s = time.getSeconds();
-    s = s < 10 ? ("0" + s) : s;
-    var str = y + "-" + M + "-" + d + " " + h + ":" + m + ":" + s;
-    return str;
+    if (date) {
+
+        var time = new Date(parseInt(date.replace("/Date(", "").replace(")/", ""), 10));
+        var y = time.getFullYear();
+        var M = time.getMonth() + 1;
+        M = M < 10 ? ("0" + M) : M;
+        var d = time.getDate();
+        d = d < 10 ? ("0" + d) : d;
+        var h = time.getHours();
+        h = h < 10 ? ("0" + h) : h;
+        var m = time.getMinutes();
+        m = m < 10 ? ("0" + m) : m;
+        var s = time.getSeconds();
+        s = s < 10 ? ("0" + s) : s;
+        var str = y + "-" + M + "-" + d + " " + h + ":" + m + ":" + s;
+        return str;
+    } else {
+        return "";
+    }
 }
