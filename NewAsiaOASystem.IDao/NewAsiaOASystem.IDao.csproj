@@ -74,6 +74,8 @@
     <Compile Include="Service\NewAsiaOASystem\DKX\IDKX_PleasepurchaseinfoDao.cs" />
     <Compile Include="Service\NewAsiaOASystem\DKX\IDKX_RKZLDataInfoDao.cs" />
     <Compile Include="Service\NewAsiaOASystem\DKX\IDKX_ZLDataInfoDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\DKX\INA_MRPdetailedDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\DKX\INA_MRPmainDao.cs" />
     <Compile Include="Service\NewAsiaOASystem\DKX\INewChargebackReasonDao.cs" />
     <Compile Include="Service\NewAsiaOASystem\IAct_SignNamelistinfoDao.cs" />
     <Compile Include="Service\NewAsiaOASystem\ICG_infoDao.cs" />

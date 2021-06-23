@@ -1,0 +1,303 @@
+﻿@model NewAsiaOASystem.ViewModel.DKX_DDinfoView
+@{
+    ViewBag.Title = "非标同步普实的销售订单（可以多个非标订单）";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<script type="text/javascript">
+    $(function () {
+        //BindGrid();
+        Gettabledata()
+    })
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+    //初始化订单明细的数据表格
+    function Gettabledata() {
+        layui.use('table', function () {
+            var table = layui.table;
+            table.render({
+                elem: '#test',
+                url: '/DKX_DDtypeinfo/GetallmxbyPs_orderno',
+                where: {
+                    Ps_orderno: '@Model.Ps_orderno'
+                },
+                cols: [[
+                    { field: 'Id', width: 80, title: 'ID', sort: true, },
+                    { field: 'DD_Bianhao', width: 130, title: '生产批号', fixed: 'left' },
+                    { field: 'Ps_wlBomNO', width: 130, title: '物料号' },
+                    { field: 'KBomNo', width: 130, title: 'Bom编号' },
+                    { field: 'price', width: 130, title: '单价' },
+                    { field: 'NUM', width: 130, title: '数量' },
+                    { field: '', title: '操作', width: 160, fixed: 'right', toolbar: "#bar" }
+                ]],
+                cellMinWidth: 80, //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                page: false,
+
+            });
+            table.on('tool(test)', function (obj) {
+                var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+                var data = obj.data; //获得当前行 tr 的 DOM 对象（如果有的话）
+                if (layEvent === 'del') { //查看
+                    delordermx(data.Id);
+                }
+                if (layEvent === 'Eide') { //查看
+                    eideFordermxView(data.Id);
+                }
+            })
+        })
+    }
+
+    //添加其他非标生成订单
+    function addForderView() {
+        layer.open({
+            type: 2,
+            title: ['选择其他非标订单', 'font-size:14px;'],
+            area: ['850px', '450px'],
+            offset: '10px',
+            fixed: false, //不固定
+            maxmin: true,
+            content: '../DKX_DDtypeinfo/SelectForderView?Id=' + '@Model.Id',
+            end: function () {
+              Gettabledata();
+             }
+        })
+    }
+
+        //更新code
+    function updatek3code() {
+
+
+        var khkecode = $("#khkecode").val();
+         
+     
+        if (khkecode == "" || khkecode == null) {
+            layer.alert("请填写K3客户的code", { icon: 2 });
+            return false;
+        }
+       $.ajax({
+           url: "../DKX_DDtypeinfo/updateorderk3code",
+           type: "POST",
+           data: { Id: '@Model.Id', k3code: khkecode },
+            dataType: "json",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+
+                disLoading();
+                if (response.result == "success") {
+                    layer.alert(response.msg, { icon: 1 }, function () { location.reload(); });
+                }
+                if (response.result == "error") {
+                    layer.alert(response.msg, { icon: 2 }, function () { location.reload(); });
+                }
+            }
+        })
+    }
+
+    //剔除销售订单明细
+    function delordermx(id) {
+
+        $.ajax({
+            url: "../DKX_DDtypeinfo/delForderbyId",
+            type: "POST",
+            data: { Id: id },
+            dataType: "json",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+
+                disLoading();
+                if (response.result == "success") {
+                    var aler = layer.alert(response.msg, { icon: 1 }, function () { Gettabledata(); layer.close(aler); });
+
+                }
+                if (response.result == "error") {
+                    layer.alert(response.msg, { icon: 2 });
+                }
+            }
+        })
+    }
+
+    //编辑明细
+    function eideFordermxView(Id) {
+        layer.open({
+            type: 2,
+            title: ['编辑销售明细订单', 'font-size:14px;'],
+            area: ['850px', '450px'],
+            offset: '10px',
+            fixed: false, //不固定
+            maxmin: true,
+            content: '../DKX_DDtypeinfo/FordermxbianjiView?Id=' + Id,
+            end: function () {
+                Gettabledata();
+            }
+        })
+    }
+
+    //同步普实的销售订单
+    function confirm_tbxxwork() {
+        var Z_JHQX = $("#Z_JHQX").val();//交货日期
+        var Z_JHDD = $("#Z_JHDD").val();//交货地点
+        var Z_YSFS = $("#Z_YSFS").val();//运输方式
+        var yfprice = $("#yfprice").val();//运费
+        var dsprice = $("#dsprice").val();//调式费
+        if (Z_JHQX == "") {
+            layer.alert("请填写交货日期", { icon: 2 });
+            return false;
+        }
+        if (yfprice != "") {
+            if (isNaN(yfprice)) {
+                layer.alert("运费请填写数字！", { icon: 2 });
+                return false;
+            }
+            else {
+                if (yfprice == 0) {
+                    layer.alert("运费不能填写0", { icon: 2 });
+                    return false;
+                }
+            }
+        }
+        if (dsprice != "") {
+            if (isNaN(yfprice)) {
+                layer.alert("调式费请填写数字！", { icon: 2 });
+                return false;
+            }
+            else {
+                if (yfprice == 0) {
+                    layer.alert("调式费不能填写0", { icon: 2 });
+                    return false;
+                }
+            }
+        }
+       $.ajax({
+           url: "../DKX_DDtypeinfo/Ps_InsterForderNew",
+            type: "POST",
+            data: { Id: '@Model.Id', Z_JHQX: Z_JHQX, Z_JHDD: Z_JHDD, Z_YSFS: Z_YSFS, yfprice: yfprice, dsprice: dsprice},
+            dataType: "json",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+
+                disLoading();
+                if (response.result == "success") {
+                    layer.alert(response.msg, { icon: 1 }, function () { location.reload(); });
+                }
+                if (response.result == "error") {
+                    layer.alert(response.msg, { icon: 2 }, function () { location.reload(); });
+                }
+            }
+        })
+    }
+</script>
+
+<script type="text/html" id="bar">
+
+
+    <div class="layui-btn-group">
+        <button type="button" class="layui-btn layui-btn-xs layui-btn-warm" lay-event="Eide" title="信息修改">
+            <i class="layui-icon">&#xe642;</i>
+        </button>
+        <button type="button" class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del" title="删除">
+            <i class="layui-icon">&#xe640;</i>
+        </button>
+    </div>
+</script>
+
+<div style="width: 97.5%;padding: 10px 10px 0px 10px;">
+    <div class="layui-card">
+        @{
+            if (Model.Ps_orderDocEntry != null && Model.Ps_orderDocEntry != "")
+            {
+                <span>普实单号：</span>@Model.Ps_orderDocEntry
+            }
+            else
+            {
+                <span>普实单号：未同步</span>
+            }
+        }
+
+    </div>
+    <div class="layui-form" action="">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">客户：</label>
+                <div class="layui-input-block" style="width: 200px;">
+                    <input type="text" name="KHname" required lay-verify="required" value="@Model.KHname" placeholder="客户" readonly="readonly" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">K3CODE：</label>
+                <div class="layui-input-inline" style="width: 200px;">
+                    <input type="text" name="khkecode" id="khkecode" required lay-verify="required" value="@Model.khkecode" placeholder="K3CODE必填" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">
+                    <button class="layui-btn" onclick="updatek3code()">修改K3CODE</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">交货日期：</label>
+                <div class="layui-input-block" style="width: 120px;">
+                    <input type="text" name="Z_JHQX" id="Z_JHQX" onclick="WdatePicker()" placeholder="交货日期必填" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">交货地点：</label>
+                <div class="layui-input-block" style="width: 120px;">
+                    <input type="text" name="Z_JHDD" id="Z_JHDD" placeholder="交货地点" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">运输方式：</label>
+                <div class="layui-input-block" style="width: 120px;">
+                    <input type="text" name="Z_YSFS" id="Z_YSFS" placeholder="运输方式" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">运费：</label>
+                <div class="layui-input-block" style="width: 120px;">
+                    <input type="text" name="yfprice" id="yfprice" placeholder="运费，不填写默认没有" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">调试费：</label>
+                <div class="layui-input-block" style="width: 120px;">
+                    <input type="text" name="dsprice" id="dsprice" placeholder="调试费，不填写默认没有" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-card">
+        <div class="layui-card-header">
+            产品明细
+            <button type="button" class="layui-btn" onclick="addForderView()">
+                <i class="layui-icon">&#xe608;</i> 添加
+            </button>
+        </div>
+        <div class="layui-card-body">
+            <table class="layui-hide" id="test" lay-filter="test"></table>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block" style="float:right; padding-right:40px">
+            <button class="layui-btn" onclick="confirm_tbxxwork()">同步普实</button>
+        </div>
+    </div>
+</div>

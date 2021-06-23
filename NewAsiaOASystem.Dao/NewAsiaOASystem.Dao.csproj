@@ -182,6 +182,8 @@
     <Compile Include="Service\NewAsiaOASystem\DKX\DKX_PleasepurchaseinfoDao.cs" />
     <Compile Include="Service\NewAsiaOASystem\DKX\DKX_RKZLDataInfoDao.cs" />
     <Compile Include="Service\NewAsiaOASystem\DKX\DKX_ZLDataInfoDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\DKX\NA_MRPdetailedDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\DKX\NA_MRPmainDao.cs" />
     <Compile Include="Service\NewAsiaOASystem\DKX\NewChargebackReasonDao.cs" />
     <Compile Include="Service\NewAsiaOASystem\EP_jlinfoDao.cs" />
     <Compile Include="Service\NewAsiaOASystem\K3\K3_wuliaoinfoDao.cs" />

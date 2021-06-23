@@ -149,15 +149,49 @@ namespace NewAsiaOASystem.Dao
            PagerInfo<NACustomerinfoView> list = Search();
            return list;
        }
+        #region //维护过K3CODE的客户信息
+        /// <summary>
+        /// 维护过K3CODE的客户信息
+        /// </summary>
+        /// <param name="Name"></param>
+        /// <param name="lxrname"></param>
+        /// <param name="isjxs"></param>
+        /// <param name="Isjy"></param>
+        /// <param name="Tel"></param>
+        /// <param name="Isds"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public PagerInfo<NACustomerinfoView> GetCinfokecodeList(string Name, string lxrname, string isjxs, string Isjy, string Tel, string Isds, SessionUser user)
+        {
+            TempList = new List<string>();
+            TempHql = new StringBuilder();
+            if (!string.IsNullOrEmpty(Name))
+                TempHql.AppendFormat(" and u.Name like '%{0}%' ", Name);
+            if (!string.IsNullOrEmpty(lxrname))
+                TempHql.AppendFormat(" and u.LxrName like '%{0}%' ", lxrname);
+            if (!string.IsNullOrEmpty(isjxs))
+                TempHql.AppendFormat(" and u.isjxs='{0}'", isjxs);
+            if (!string.IsNullOrEmpty(Isjy))
+                TempHql.AppendFormat(" and u.Status='{0}'", Isjy);
+            if (!string.IsNullOrEmpty(Tel))
+                TempHql.AppendFormat(" and u.Tel like '%{0}%'", Tel);
+            if (!string.IsNullOrEmpty(Isds))
+                TempHql.AppendFormat(" and u.Isds='{0}'", Isds);
+            TempHql.AppendFormat(" and K3CODE IS NOT NULL");
+            TempHql.AppendFormat(" order by u.dycs desc,CreateTime desc");
+            PagerInfo<NACustomerinfoView> list = Search();
+            return list;
+        } 
+        #endregion
 
-       #region //物联网经销权的客户分页列表
-       /// <summary>
-       /// 物联网经销权的客户分页列表
-       /// </summary>
-       /// <param name="name">公司名称</param>
-       /// <param name="lxrname">联系人</param>
-       /// <returns></returns>
-       public PagerInfo<NACustomerinfoView> GetJXQcinfoList(string name, string lxrname)
+        #region //物联网经销权的客户分页列表
+        /// <summary>
+        /// 物联网经销权的客户分页列表
+        /// </summary>
+        /// <param name="name">公司名称</param>
+        /// <param name="lxrname">联系人</param>
+        /// <returns></returns>
+        public PagerInfo<NACustomerinfoView> GetJXQcinfoList(string name, string lxrname)
        {
            TempList = new List<string>();
            TempHql = new StringBuilder();
@@ -250,16 +284,29 @@ namespace NewAsiaOASystem.Dao
            else
                return null;
        }
-       #endregion
+        #endregion
 
-       #region //根据省份ID查询该省份下的经销商
-       /// <summary>
-       /// 
-       /// </summary>
-       /// <param name="sfId">省份ID</param>
-       /// <param name="type">1 物联网经销商  2 只参加买一送一</param>
-       /// <returns></returns>
-       public IList<NACustomerinfoView> GetKhinfobysfIf(string sfId, string type)
+        #region //根据公司名称模糊查询客户信息K3CODE不为空
+        public NACustomerinfoView GetCusinfok3codebylikekhname(string khname)
+        {
+            string Hqlstr = string.Format("from NACustomerinfo where Name like '%{0}%' and K3CODE is not null order by dycs desc", khname);
+            List<NACustomerinfo> list = HibernateTemplate.Find<NACustomerinfo>(Hqlstr) as List<NACustomerinfo>;
+            IList<NACustomerinfoView> listmodel = GetViewlist(list);
+            if (listmodel != null)
+                return listmodel[0];
+            else
+                return null;
+        }
+        #endregion
+
+        #region //根据省份ID查询该省份下的经销商
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sfId">省份ID</param>
+        /// <param name="type">1 物联网经销商  2 只参加买一送一</param>
+        /// <returns></returns>
+        public IList<NACustomerinfoView> GetKhinfobysfIf(string sfId, string type)
        {
            List<NACustomerinfo> list = HibernateTemplate.Find<NACustomerinfo>("from NACustomerinfo where qyId = '" + sfId + "' and isjxs='" + type + "' ") as List<NACustomerinfo>;
            IList<NACustomerinfoView> listmodel = GetViewlist(list);

@@ -185,6 +185,8 @@ C:\Users\96297\source\repos\NewRepo\NewAsiaOASystem\NewAsiaOASystem.Dao\obj\Debu
 C:\Users\96297\source\repos\NewRepo\NewAsiaOASystem\NewAsiaOASystem.Dao\obj\Debug\NewAsiaOASystem.Dao.csproj.CopyComplete
 C:\Users\96297\source\repos\NewRepo\NewAsiaOASystem\NewAsiaOASystem.Dao\obj\Debug\NewAsiaOASystem.Dao.dll
 C:\Users\96297\source\repos\NewRepo\NewAsiaOASystem\NewAsiaOASystem.Dao\obj\Debug\NewAsiaOASystem.Dao.pdb
+D:\object\NewAsiaOASystem.Dao\obj\Debug\NewAsiaOASystem.Dao.csprojAssemblyReference.cache
+D:\object\NewAsiaOASystem.Dao\obj\Debug\NewAsiaOASystem.Dao.csproj.CoreCompileInputs.cache
 D:\object\NewAsiaOASystem.Dao\bin\Debug\NewAsiaOASystem.Dao.dll
 D:\object\NewAsiaOASystem.Dao\bin\Debug\NewAsiaOASystem.Dao.pdb
 D:\object\NewAsiaOASystem.Dao\bin\Debug\LitJSON.dll
@@ -211,8 +213,6 @@ D:\object\NewAsiaOASystem.Dao\bin\Debug\Microsoft.Data.OData.dll
 D:\object\NewAsiaOASystem.Dao\bin\Debug\NewAsiaOASystem.DBModel.pdb
 D:\object\NewAsiaOASystem.Dao\bin\Debug\NewAsiaOASystem.IDao.pdb
 D:\object\NewAsiaOASystem.Dao\bin\Debug\NewAsiaOASystem.ViewModel.pdb
-D:\object\NewAsiaOASystem.Dao\obj\Debug\NewAsiaOASystem.Dao.csprojAssemblyReference.cache
-D:\object\NewAsiaOASystem.Dao\obj\Debug\NewAsiaOASystem.Dao.csproj.CoreCompileInputs.cache
 D:\object\NewAsiaOASystem.Dao\obj\Debug\NewAsiaOASystem.Dao.csproj.CopyComplete
 D:\object\NewAsiaOASystem.Dao\obj\Debug\NewAsiaOASystem.Dao.dll
 D:\object\NewAsiaOASystem.Dao\obj\Debug\NewAsiaOASystem.Dao.pdb

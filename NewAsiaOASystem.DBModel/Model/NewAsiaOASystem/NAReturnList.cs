@@ -540,5 +540,17 @@ namespace NewAsiaOASystem.DBModel
             set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual string Ps_DocEntry
+        {
+            get; set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual string Ps_DocNu { get; set; }
     } 
 }

@@ -84,7 +84,7 @@ namespace NewAsiaOASystem.Web
                 }
                 return "0";
             }
-            catch
+            catch(Exception x)
             {
                 return "3";
             }

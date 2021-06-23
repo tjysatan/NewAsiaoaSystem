@@ -41,5 +41,12 @@ namespace NewAsiaOASystem.ViewModel
         /// 创建时间
         /// </summary>
         public virtual DateTime? C_time { get; set; }
+
+        /// <summary>
+        /// 物料编号
+        /// </summary>
+        public virtual string Bomno { get; set; }
+
+
     }
 }

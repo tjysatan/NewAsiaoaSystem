@@ -206,6 +206,7 @@
             $("#czsctcon").html('<span style="color:red">暂无操作手册</span>');
         }
     }
+
     //获取订单信息
     function AjaxGetddinfoyId() {
         var json;
@@ -263,13 +264,6 @@
         return json;
     }
 
-
-
-
-
-
-
-
     //资料上传
     function RjCXtuzhishangchuanSavaForm(fromname) {
         //表单验证
@@ -296,7 +290,6 @@
         $('#'+fromname).ajaxSubmit(options);
         return false; //为了不刷新页面,返回false
     }
-
 
 
     //

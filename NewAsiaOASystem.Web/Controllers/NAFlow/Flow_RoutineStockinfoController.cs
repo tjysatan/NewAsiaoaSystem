@@ -9,6 +9,7 @@ using Spring.Context.Support;
 using System.Text;
 using Newtonsoft.Json;
 using System.Data;
+using System.IO;
 
 namespace NewAsiaOASystem.Web.Controllers
 {
@@ -23,6 +24,8 @@ namespace NewAsiaOASystem.Web.Controllers
         //料单采购通知
         IFlow_ProductionNoticeinfoDao _IFlow_ProductionNoticeinfoDao = ContextRegistry.GetContext().GetObject("Flow_ProductionNoticeinfoDao") as IFlow_ProductionNoticeinfoDao;
         IK3_wuliaoinfoDao _IK3_wuliaoinfoDao = ContextRegistry.GetContext().GetObject("K3_wuliaoinfoDao") as IK3_wuliaoinfoDao;
+        IDKX_RKZLDataInfoDao _iIDKX_RKZLDataInfoDao = ContextRegistry.GetContext().GetObject("DKX_RKZLDataInfoDao") as IDKX_RKZLDataInfoDao;
+
 
         public ActionResult Index()
         {
@@ -39,6 +42,23 @@ namespace NewAsiaOASystem.Web.Controllers
         {
             return View();
         }
+
+
+        #region //常规温控 管理ESOP
+        public ActionResult wkcplist()
+        {
+            return View();
+        }
+
+        #region //温控图纸资料
+        public ActionResult wkgxtzView(string Id)
+        {
+            Flow_RoutineStockinfoView model = _IFlow_RoutineStockinfoDao.NGetModelById(Id);
+            return View(model);
+        }
+        #endregion
+
+        #endregion
 
         #region 保存文本的处理方法
         /// <summary>
@@ -162,7 +182,16 @@ namespace NewAsiaOASystem.Web.Controllers
             DataTable dt = Dsmodel.GetKuCun(Wldm, Key);
             return dt;
         }
-        
+
+        public DataTable GetK3BOM(string P_bianhao)
+        {
+            Newasia.XYOffer Dsmodel = new Newasia.XYOffer();
+            string Wldm = P_bianhao;//物料代码
+            string Key = "00BE974F-C52D-434D-AB99-4D9E3796CD81";
+            DataTable dt = Dsmodel.GetBom(Wldm, Key);
+            return dt;
+        }
+
         #endregion
 
         //用量修改
@@ -201,9 +230,11 @@ namespace NewAsiaOASystem.Web.Controllers
             model.P_SCnumber = Convert.ToDecimal(scsl);//计划生产的数量
             model.P_Issc = 2;//待生产中  0生产中  1缺料中 2 待生产 3 完成
             model.C_time = DateTime.Now;//记录创建时间
+            model.Nc_time = DateTime.Now;
             model.C_name = user.Id;//
             model.Status = 0;//记录状态
             model.P_type = 0;//常规
+            model.scbianhao = Getwkorderbianhao();
             if (_IFlow_PlanProductioninfoDao.Ninsert(model))
             {
                 locCp(CpId, 0, scsl);//锁定产品（保存实际生产的数量）
@@ -213,6 +244,25 @@ namespace NewAsiaOASystem.Web.Controllers
             {
                 return "1";//插入失败
             }
+        }
+        #endregion
+
+        #region //生产温控的生产批号
+        public string Getwkorderbianhao()
+        {
+            string Newdatestr = DateTime.Now.ToString("yyyyMMdd");
+            string str;
+            int sum = _IFlow_PlanProductioninfoDao.Getwkcount() + 1;
+            if (sum < 10)
+            {
+                str = "0" + sum.ToString();
+            }
+            else
+            {
+                str = sum.ToString();
+            }
+            string bianhao = Newdatestr + str;
+            return bianhao;
         }
         #endregion
 
@@ -309,6 +359,81 @@ namespace NewAsiaOASystem.Web.Controllers
 
 
         #region //常规电控箱
+
+        #region //常规电控箱列表 工程管理ESOP
+        public ActionResult gcblist()
+        {
+            return View();
+        }
+
+        #region //工程查询常规电控箱(温控的)的分页数据（2021-05-14）
+        public ActionResult Getcgdkxpage(int? page, int limit, string cpname, string wlno, string type,string category)
+        {
+            int CurrentPageIndex = Convert.ToInt32(page);
+            if (CurrentPageIndex == 0)
+                CurrentPageIndex = 1;
+            _IFlow_RoutineStockinfoDao.SetPagerPageIndex(CurrentPageIndex);
+            _IFlow_RoutineStockinfoDao.SetPagerPageSize(limit);
+            PagerInfo<Flow_RoutineStockinfoView> listmodel = _IFlow_RoutineStockinfoDao.Getcgdiankongpagerlist(cpname, wlno,type, category);
+            var result = new
+            {
+                code = 0,
+                msg = "",
+                count = listmodel.RecordCount,
+                data = listmodel.DataList,
+            };
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+        #endregion
+
+        #region //工序图纸编辑页面(NAW)
+        public ActionResult gxtzView(string Id,string Iswlw)
+        {
+            Flow_RoutineStockinfoView model = _IFlow_RoutineStockinfoDao.NGetModelById(Id);
+            ViewData["Iswlw"] = Iswlw;
+            return View(model);
+        }
+        #endregion
+
+ 
+
+        #region //工序图纸传
+        [HttpPost]
+        public JsonResult ziliaouploadEide(FormContext form, IEnumerable<HttpPostedFileBase> image)
+        {
+            SessionUser Suser = Session[SessionHelper.User] as SessionUser;
+            bool flay = false;
+            string Id = Request.Form["wlno"];
+            string zl_type = Request.Form["gx"];
+            foreach (var file in image)
+            {
+                DKX_RKZLDataInfoView model = new DKX_RKZLDataInfoView();
+                if (file != null && file.ContentLength > 0)
+                {
+                    string fileName = DateTime.Now.ToString("yyyymmddhhmmss") + "-" + Path.GetFileName(file.FileName);
+                    string filePath = Path.Combine(Server.MapPath("~/Content/upload/ESOP"), fileName);
+                    file.SaveAs(filePath);
+                    model.wjurl = "/Content/upload/ESOP/" + fileName;
+                    model.wjName = Path.GetFileName(file.FileName);
+                    model.Zl_type = Convert.ToInt32(zl_type);
+                    model.cpId = Id;
+                    model.Start = 0;
+                    model.Isgl = 0;
+                    flay = _iIDKX_RKZLDataInfoDao.Ninsert(model);
+                }
+                else
+                {
+                    return Json(new { result = "error1" });
+                }
+            }
+            
+            if (flay)
+                return Json(new { result = "success" });
+            else
+                return Json(new { result = "error" });
+        }
+        #endregion
+        #endregion
 
         //管理页面
         public ActionResult dkxlist()
@@ -441,27 +566,81 @@ namespace NewAsiaOASystem.Web.Controllers
                 _IFlow_RoutineStockinfoDao.NUpdate(model);
             }
             return "";
-        } 
+        }
+        #endregion
+
+        #region //常规电控的数据整理
+        public JsonResult DKXdatezl()
+        {
+            try {
+                IList<Flow_RoutineStockinfoView> listmodel = _IFlow_RoutineStockinfoDao.NGetList();
+                foreach (var item in listmodel)
+                {
+                    K3_wuliaoinfoView cpmodel = _IK3_wuliaoinfoDao.Getwuliaobyfnumber(item.P_Bianhao);
+                    if(cpmodel!=null)
+                    { 
+                    item.Iswlw = cpmodel.str2;
+                    }
+                    item.Bomno = k3bomnobywl(item.P_Bianhao);
+                    _IFlow_RoutineStockinfoDao.NUpdate(item);
+                }
+                return Json(new { result = "success" });
+            }
+            catch
+            {
+                return Json(new { result = "error" });
+            }
+
+        }
         #endregion
 
         #region //根据物料代理查询单个产品的库存
         public string k3kuncunbywl(string wl)
         {
-            string kc = "-";
-            wl = "'" + wl + "'";
-            DataTable dt = GetKcsum(wl);
-            if (dt != null)
+            try
             {
-                decimal count = Convert.ToDecimal(dt.Rows[0]["count"]);//库存
-                kc = count.ToString();
+                string kc = "-";
+                wl = "'" + wl + "'";
+                DataTable dt = GetKcsum(wl);
+                if (dt != null)
+                {
+                    decimal count = Convert.ToDecimal(dt.Rows[0]["count"]);//库存
+                    kc = count.ToString();
+                }
+                return kc;
             }
-            return kc;
+            catch
+            {
+                return "";
+            }
+
+        }
+        #endregion
+
+        #region //根据物料号查询产品的BOM号
+        public string k3bomnobywl(string wl)
+        {
+            try
+            {
+
+                DataTable dt = GetK3BOM(wl);
+                if (dt != null)
+                {
+                    string BOMNO = dt.Rows[0]["BOM编号"].ToString();//库存
+                    return BOMNO;
+                }
+                return "";
+            }
+            catch
+            {
+                return "";
+            }
         }
         #endregion
 
         #region //电控箱生产计划制定模块
 
-       
+
         /// <summary>
         ///  //电控生产计划页面
         /// </summary>
@@ -577,6 +756,7 @@ namespace NewAsiaOASystem.Web.Controllers
             }
         }
         #endregion
+
         #endregion
 
     }

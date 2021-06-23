@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using NewAsiaOASystem.ViewModel;
+using NewAsiaOASystem.DBModel;
  
 using NewAsiaOASystem.IDao;
 using Spring.Context.Support;
@@ -51,9 +52,11 @@ namespace NewAsiaOASystem.Web.Controllers
         IDKX_RKZLDataInfoDao _IDKX_RKZLDataInfoDao = ContextRegistry.GetContext().GetObject("DKX_RKZLDataInfoDao") as IDKX_RKZLDataInfoDao;
         IDKX_k3BominfoDao _IDKX_k3BominfoDao = ContextRegistry.GetContext().GetObject("DKX_k3BominfoDao") as IDKX_k3BominfoDao;
         IDKX_LCCZJLinfoDao _IDKX_LCCZJLinfoDao = ContextRegistry.GetContext().GetObject("DKX_LCCZJLinfoDao") as IDKX_LCCZJLinfoDao;
+        
 
         INA_QyinfoDao _INA_QyinfoDao = ContextRegistry.GetContext().GetObject("NA_QyinfoDao") as INA_QyinfoDao;
         IEP_jlinfoDao _IEP_jlinfoDao = ContextRegistry.GetContext().GetObject("EP_jlinfoDao") as IEP_jlinfoDao;
+        IWx_FTUserbdopenIdinfoDao _IWx_FTUserbdopenIdinfoDao= ContextRegistry.GetContext().GetObject("Wx_FTUserbdopenIdinfoDao") as IWx_FTUserbdopenIdinfoDao;
 
         //远程监控 供应商信息 接口
         /// <summary>
@@ -184,6 +187,7 @@ namespace NewAsiaOASystem.Web.Controllers
                 string Province = dt.Rows[a]["Province"].ToString();//省
                 string City = dt.Rows[a]["City"].ToString();//地级市
                 string Area = dt.Rows[a]["Area"].ToString();//区县
+                string beizhu = dt.Rows[a]["OrderRemark"].ToString();//备注
                 if (_INA_XSinfoDao.jccfbySc_Id(OrderCode))
                 { //检测是否存在重复的订单
                     NA_XSinfoView Ordermodel = new NA_XSinfoView();
@@ -200,15 +204,7 @@ namespace NewAsiaOASystem.Web.Controllers
                         Ordermodel.Fk_type = 0;//付款方式 支付宝
                     }
                     NACustomerinfoView Custmodel = new NACustomerinfoView();//实例化 
-                  //  Custmodel = _INACustomerinfoDao.GetKHinfobykhname(userName, ShipName);//查询客户信息
-                    //if (company != null && company != "")
-                    //{//如果客户公司名称不为空就用公司名称查询 否则就用登录名称查询
-                    //    Custmodel = _INACustomerinfoDao.GetKHinfobyname(company);
-                    //}
-                    //else
-                    //{
-                    //    Custmodel = _INACustomerinfoDao.GetKHinfobyname(userName);
-                    //}
+                  
                     Custmodel = _INACustomerinfoDao.GetCustomerbyUId(userid);
                     if (Custmodel != null)//存在该客户信息
                     {
@@ -293,6 +289,8 @@ namespace NewAsiaOASystem.Web.Controllers
                     Ordermxmodel.xsId = OrderId;//销售订单Id
                     Ordermxmodel.Je = Convert.ToDecimal(Quantity) * Convert.ToDecimal(AdjustedPrice);//明细价格
                     Ordermxmodel.SL = Convert.ToInt32(Quantity);//产品数量
+                    Ordermxmodel.cpbianmao = sku;
+                    Ordermxmodel.beizhu = beizhu;
                     NQ_productinfoView SPmodel = new NQ_productinfoView();
                     SPmodel = _INQ_productinfoDao.GetProinfobyname(sku);//根据产品名称查询产品信息
                     if (SPmodel != null)
@@ -337,6 +335,8 @@ namespace NewAsiaOASystem.Web.Controllers
                     Ordermxmodel.xsId = Ordermodel.Id;//订单Id
                     Ordermxmodel.Je = Convert.ToDecimal(Quantity) * Convert.ToDecimal(AdjustedPrice);//明细价格
                     Ordermxmodel.SL = Convert.ToInt32(Quantity);//产品数量
+                    Ordermxmodel.cpbianmao = sku;
+                    Ordermxmodel.beizhu = beizhu;
                     NQ_productinfoView SPmodel = new NQ_productinfoView();
                     SPmodel = _INQ_productinfoDao.GetProinfobyname(sku);//根据产品名称查询产品信息
                     if (SPmodel != null)
@@ -1280,8 +1280,8 @@ namespace NewAsiaOASystem.Web.Controllers
             allDKXtypeDropdown(null);//电控箱类型的下来数据
             ViewBag.MyJson = getjsonalldkxtypedata();
             AlGCSdataDropdown(null);
-            PagerInfo<DKX_DDinfoView> listmodel = GetDKXDDlistpage(pageIndex, null, null, null, null, null, null, null, null, null, null, "0", null, null, null, null, null, null, null, null, null, null);
-            return View("DKXhzlist", listmodel);
+            //PagerInfo<DKX_DDinfoView> listmodel = GetDKXDDlistpage(pageIndex, null, null, null, null, null, null, null, null, null, null, "0", null, null, null, null, null, null, null, null, null, null,null);
+            return View("DKXhzlist");
             //string IP = GetIP();
             //if (IP == "222.92.203.58")
             //{
@@ -1325,7 +1325,7 @@ namespace NewAsiaOASystem.Web.Controllers
             if (!string.IsNullOrEmpty(Request.Form["pageIndex"]))
                 pageIndex = Convert.ToInt32(Request.Form["pageIndex"]);
             PagerInfo<DKX_DDinfoView> listmodel = GetDKXDDlistpage(pageIndex, DD_Bianhao, BJno, DD_Type, KHname, Lxname, Tel, Gcs_nameId, DD_ZT, startctime, endctiome, "0",
-                DHtype, cpph, beizhu1, beizhu2, YQtype, Isdqpb, Isqtt, gnjs, wcysstartctime, wcysendctiome);
+                DHtype, cpph, beizhu1, beizhu2, YQtype, Isdqpb, Isqtt, gnjs, wcysstartctime, wcysendctiome,null);
             string PageNavigate = HtmlHelperComm.OutPutPageNavigate(listmodel.CurrentPageIndex, listmodel.PageSize, listmodel.RecordCount);
             if (listmodel != null)
                 return Json(new { result = listmodel.GetPagingDataJson, PageN = PageNavigate });
@@ -1353,7 +1353,7 @@ namespace NewAsiaOASystem.Web.Controllers
         /// <returns></returns>
         private PagerInfo<DKX_DDinfoView> GetDKXDDlistpage(int? pageIndex, string DD_Bianhao, string BJno, string DD_Type, string KHname, string Lxname, string Tel, string Gcs_nameId,
             string DD_ZT, string startctime, string endctiome, string start, string DHtype, string cpph, string beizhu1, string beizhu2, string YQtype, string Isdqpb, string Isqttz,string gnjs,
-             string wcstarttime, string wcendtime)
+             string wcstarttime, string wcendtime,string POWER)
         {
             
             int CurrentPageIndex = Convert.ToInt32(pageIndex);
@@ -1361,8 +1361,31 @@ namespace NewAsiaOASystem.Web.Controllers
                 CurrentPageIndex = 1;
             _IDKX_DDinfoDao.SetPagerPageIndex(CurrentPageIndex);
             _IDKX_DDinfoDao.SetPagerPageSize(10);
-            PagerInfo<DKX_DDinfoView> listmodel = _IDKX_DDinfoDao.Getdkxhzlistpage(DD_Bianhao,BJno,DD_Type,KHname,Lxname,Tel,Gcs_nameId,DD_ZT,startctime,endctiome,start,DHtype,cpph,beizhu1,beizhu2,YQtype,Isdqpb,Isqttz,gnjs,wcstarttime,wcendtime);
+            PagerInfo<DKX_DDinfoView> listmodel = _IDKX_DDinfoDao.Getdkxhzlistpage(DD_Bianhao,BJno,DD_Type,KHname,Lxname,Tel,Gcs_nameId,DD_ZT,startctime,endctiome,start,DHtype,cpph,beizhu1,beizhu2,YQtype,Isdqpb,Isqttz,gnjs,wcstarttime,wcendtime, POWER);
             return listmodel;
+        }
+        #endregion
+
+        #region //电控箱查询生产订单分页数据-20210621
+        public ActionResult Getdkxorderlist_Publicservice(int? page, int limit, string DD_Bianhao, string BJno, string DD_Type, string KHname, string Lxname, string Tel, string Gcs_nameId,
+            string DD_ZT, string startctime, string endctiome, string start, string DHtype, string cpph, string beizhu1, string beizhu2, string YQtype, string Isdqpb, string Isqttz, string gnjs,
+             string wcstarttime, string wcendtime, string POWER)
+        {
+            SessionUser Suser = Session[SessionHelper.User] as SessionUser;
+            int CurrentPageIndex = Convert.ToInt32(page);
+            if (CurrentPageIndex == 0)
+                CurrentPageIndex = 1;
+            _IDKX_DDinfoDao.SetPagerPageIndex(CurrentPageIndex);
+            _IDKX_DDinfoDao.SetPagerPageSize(limit);
+            PagerInfo<DKX_DDinfoView> listmodel = _IDKX_DDinfoDao.Getdkxhzlistpage(DD_Bianhao, BJno, DD_Type, KHname, Lxname, Tel, Gcs_nameId, DD_ZT, startctime, endctiome, start, DHtype, cpph, beizhu1, beizhu2, YQtype, Isdqpb, Isqttz, gnjs, wcstarttime, wcendtime, POWER);
+            var result = new
+            {
+                code = 0,
+                msg = "",
+                count = listmodel.RecordCount,
+                data = listmodel.DataList,
+            };
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
         #endregion
 
@@ -2004,5 +2027,331 @@ namespace NewAsiaOASystem.Web.Controllers
             //K3Helper.InsertBianhaoandengineer("DKX123211", "");
             //return "";
         }
+
+
+        #region //PDA扫码页面
+        #region //仓库扫码
+        #region //登录页面
+        /// <summary>
+        /// pad 的登录页面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult PDAlogin()
+        {
+            return View();
+        }
+
+      
+        public JsonResult PDAloginE(string userId, string passwd,string cztype)
+        {
+            try
+            {
+                //判断是否是ajax请求，如果不是的话直接返回登录页面
+                if (!Request.IsAjaxRequest())
+                {
+                    Response.Redirect("./publicAPI/PDAlogin");
+                    return Json(new { result = "error", msg = "不是ajax！" });
+                }
+                if (!"".Equals(userId) && !"".Equals(passwd))
+                {
+                    if (!"".Equals(cztype))
+                    {
+                        SysPerson model = _ISysPersonDao.GetModelByLogin(userId);
+                        if (model != null)//存在
+                        {
+                            if (NAHelper.MD5Encrypt(model.Password, new UTF8Encoding()) == passwd)
+                            {
+                                Session[SessionHelper.PDAUser] = _ISysPersonDao.GetSessionuser(userId);
+                                return Json(new { result = "success", msg = "登录成功" }); ;
+                            }
+                            else
+                            {
+                                return Json(new { result = "error", msg = "账号或密码不对！" });
+                            }
+                        }
+                        else
+                        {
+                            return Json(new { result = "error", msg = "账号不存！" });
+                        }
+                    }
+                    else
+                    {
+                        return Json(new { result = "error", msg = "请选择操作页面！" });
+                    }
+                }
+                else {
+                    return Json(new { result = "error", msg = "账号密码不为空！" });
+                }
+               
+            }
+            catch
+            {
+                return Json(new { result = "error",msg="登录异常,请重新登录！" });
+            }
+        }
+        #endregion
+
+        #region //仓库发料的扫码的页面
+        public ActionResult PDAWarehouse_FLView()
+        {
+            return View();
+            //SessionUser user = Session[SessionHelper.PDAUser] as SessionUser;
+            //if (user != null)
+            //{
+            //    return View();
+            //}
+            //else
+            //{
+            //    return View("../publicAPI/PDAlogin");
+            //}
+
+        }
+        #endregion
+
+        #region //仓库发料的扫码详情页面
+        public ActionResult PDAWarehouse_FLinfoView(string orderno)
+        {
+            //SessionUser user = Session[SessionHelper.PDAUser] as SessionUser;
+            //if (user != null)
+            //{
+                DKX_DDinfoView model = new DKX_DDinfoView();
+                model = _IDKX_DDinfoDao.GetDDmodelbyorderno(orderno);
+                //ViewData["name"] = user.RName;
+                //ViewData["Uname"] = user.UserName;
+                return View(model);
+            //}
+            //else
+            //{
+            //    return View("../publicAPI/PDAlogin");
+            //}
+        }
+        #endregion
+
+        #region //物料确认提交
+        /// <summary>
+        /// 物料确认提交
+        /// </summary>
+        /// <param name="Id">订单Id</param>
+        /// <param name="type">物料类型 0 箱体 1其他物料</param>
+        /// <param name="zt">当前状态 0 未确认 1 缺 2 齐</param>
+        /// <returns></returns>
+        public string WLQRTJEide(string Id, string type, string zt)
+        {
+            SessionUser Suser = Session[SessionHelper.PDAUser] as SessionUser;
+            DKX_DDinfoView model = _IDKX_DDinfoDao.NGetModelById(Id);
+            if (model != null)
+            {
+                //只有在未发料的状态下可以出来
+                if (model.DD_ZT == 3)
+                {
+                    //箱体处理
+                    if (type == "0")
+                    {
+                        if (zt == "1")//缺料
+                        {
+                            model.xtIsq = 1;//箱体缺
+                            model.xtqrtime = DateTime.Now;//相同库存确认时间
+                            //model.DD_ZT = 5;//订单缺料
+                            model.DD_ZT = 3;//未发料状态
+                            model.Flzt = 10;//缺料
+                            NAHelper.Insertczjl(Id, "箱体库存-缺", Suser.Id);
+                            _IDKX_DDinfoDao.NUpdate(model);
+                            IList<Wx_FTUserbdopenIdinfoView> list = _IWx_FTUserbdopenIdinfoDao.GetwxftbmopenIdbybmtype("7");
+                            if (list != null)
+                            {
+                                for (int i = 0, j = list.Count; i < j; i++)
+                                {
+                                    MassManager.FMB_FBDKXNotice(list[i].UserId, Id, "4");
+                                }
+                            }
+                            //通知下单客服
+                            MassManager.FMB_FBDKXNotice(model.C_name, Id, "4");
+                            return "0";//提交成功
+                        }
+                        if (zt == "2")//料齐
+                        {
+                            model.xtIsq = 2;//箱体齐
+                            model.xtdhtime = DateTime.Now;
+                            if (model.qtIsq == 2)//如果其他料也齐 就变成 可生产
+                            {
+                                //model.DD_ZT = 4;//可生产
+                                model.Flzt = 5;//待发料状态
+                                model.wlsqtime = DateTime.Now;//物料双齐的时间
+                            }
+                            else//如果其他物料未确认或者缺料怎么变成 缺料
+                            {
+                                // model.DD_ZT = 5;//订单缺料
+                            }
+                            NAHelper.Insertczjl(Id, "箱体库存-齐", Suser.Id);
+                            _IDKX_DDinfoDao.NUpdate(model);
+                            IList<Wx_FTUserbdopenIdinfoView> list = _IWx_FTUserbdopenIdinfoDao.GetwxftbmopenIdbybmtype("7");
+                            if (list != null)
+                            {
+                                for (int i = 0, j = list.Count; i < j; i++)
+                                {
+                                    MassManager.FMB_FBDKXNotice(list[i].UserId, Id, "7");
+                                }
+                            }
+                            //通知下单客服
+                            MassManager.FMB_FBDKXNotice(model.C_name, Id, "7");
+                            return "0";//提交成功
+                        }
+                        return "1";//提交异常
+                    }
+                    if (type == "1")//其他物料确认
+                    {
+                        if (zt == "1")//缺料
+                        {
+                            model.qtIsq = 1;//其他物料缺
+                            model.qtqrtime = DateTime.Now;//确认时间
+                            model.DD_ZT = 3;//未发料状态
+                            model.Flzt = 10;//缺料
+                            NAHelper.Insertczjl(Id, "其他物料库存-缺", Suser.Id);
+                            _IDKX_DDinfoDao.NUpdate(model);
+                            IList<Wx_FTUserbdopenIdinfoView> list = _IWx_FTUserbdopenIdinfoDao.GetwxftbmopenIdbybmtype("7");
+                            if (list != null)
+                            {
+                                for (int i = 0, j = list.Count; i < j; i++)
+                                {
+                                    MassManager.FMB_FBDKXNotice(list[i].UserId, Id, "4");
+                                }
+                            }
+                            //通知下单客服
+                            MassManager.FMB_FBDKXNotice(model.C_name, Id, "4");
+                            return "0";//提交成功
+                        }
+                        if (zt == "2")
+                        {
+                            model.qtIsq = 2;//其他物料齐
+                            model.qtdhtime = DateTime.Now;
+                            if (model.xtIsq == 2)//如果相同不缺 就变成 可生产
+                            {
+                                //model.DD_ZT = 4;
+                                model.Flzt = 5;//待发料状态
+                                model.wlsqtime = DateTime.Now;//物料双齐的时间
+                            }
+                            //else {
+                            //    model.DD_ZT = 5;
+                            //}
+                            NAHelper.Insertczjl(Id, "其他物料库存-齐", Suser.Id);
+                            _IDKX_DDinfoDao.NUpdate(model);
+                            IList<Wx_FTUserbdopenIdinfoView> list = _IWx_FTUserbdopenIdinfoDao.GetwxftbmopenIdbybmtype("7");
+                            if (list != null)
+                            {
+                                for (int i = 0, j = list.Count; i < j; i++)
+                                {
+                                    MassManager.FMB_FBDKXNotice(list[i].UserId, Id, "7");
+                                }
+                            }
+                            //通知下单客服
+                            MassManager.FMB_FBDKXNotice(model.C_name, Id, "7");
+                            return "0";//提交成功
+                        }
+                        return "1";//提交异常
+                    }
+                    return "4";//处理类型参数缺少
+                }
+                else
+                {
+                    return "2";//当前状态不可以处理
+                }
+            }
+            else
+            {
+                return "3";//订单为空
+            }
+        }
+        #endregion
+
+        #region //发料确认
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="orderno">订单号</param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult FLconfirmEide(string orderno)
+        {
+            //SessionUser Suser = Session[SessionHelper.PDAUser] as SessionUser;
+            //DKX_DDinfoView model = _IDKX_DDinfoDao.NGetModelById(Id);
+            DKX_DDinfoView model = new DKX_DDinfoView();
+            model = _IDKX_DDinfoDao.GetDDmodelbyorderno(orderno);
+            if (model != null)
+            {
+                if (model.DD_ZT == 3)//只有在未发料的状态下可以确认完成发料
+                {
+                    if (model.xtIsq != 0 && model.qtIsq != 0)
+                    {
+                        if (model.Flzt == 5)
+                        {//待发料的情况
+                            model.Flzt = 15;//完成发料
+                            NAHelper.Insertczjl(model.Id, "完成发料", null);
+                        }
+                        if (model.Flzt == 10)
+                        {//缺料的情况下
+                            model.Flzt = 20;//部分发料
+                            NAHelper.Insertczjl(model.Id, "部分发料", null);
+                        }
+                        model.Flwxtime = DateTime.Now;//完成发料的时间-可以生产的时间
+                        model.DD_ZT = 4;//可以生产
+                      
+                        _IDKX_DDinfoDao.NUpdate(model);
+                      //  gwjHelper.synchronizationorderandzl(model.Id, model.DD_Bianhao, model.KHname, model.NUM.ToString(), model.KBomNo);//同步工位机平板的订单资料
+                        IList<Wx_FTUserbdopenIdinfoView> list = _IWx_FTUserbdopenIdinfoDao.GetwxftbmopenIdbybmtype("7");
+                        if (list != null)
+                        {
+                            for (int i = 0, j = list.Count; i < j; i++)
+                            {
+                                MassManager.FMB_FBDKXNotice(list[i].UserId, model.Id, "16");
+                            }
+                        }
+                        return Json(new { resule = "success", msg = "操作成功。" });
+                    }
+                    else
+                    {
+                        return Json(new { resule = "error", msg = "尚未确认物料是否齐全,无法去发料操作。" });
+                    }
+
+                }
+                else
+                {
+                    return Json(new { resule = "error", msg = "当前状态下无法进行该操作。" });
+                }
+            }
+            else
+            {
+                return Json(new { resule = "error", msg = "该订单不存在。" });
+            }
+        }
+        #endregion
+        #region //查询当日发料完成的数量
+        [HttpPost]
+        public string GetTodayFLWCOordersum()
+        {
+            int smflcount = _IDKX_DDinfoDao.GetTodayFLWCordercunot();
+            return "{\"status\":\"" + smflcount + "\"}";//添加成功
+        }
+        #endregion
+        #endregion
+        #endregion
+
+
+        #region //K3接口测试
+
+        public string K3test()
+        {
+            ICMOSysmodel model = new ICMOSysmodel();
+            model.FCustName = "重庆长江";
+            model.FNumber = "05.013.0009";
+            model.FQty = 1;
+            model.FDeptNumber = "001.07";
+            model.FBOMNumber = "210402  冷库/0210D03：PLC做风冷一库双机，压机10.5KW,电化霜，温湿度传感器客户提供，NAK162PLC1.0";
+            model.FBatchNo = "DKX20210402测试";
+            model.FPlanCommitDate = DateTime.Now;
+            model.FPlanFinishDate = DateTime.Now;
+            string ss = K3Helper.InsertICMOSys(model);
+            return ss;
+        }
+        #endregion
     }
 }

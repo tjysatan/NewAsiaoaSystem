@@ -322,6 +322,21 @@
         //关闭弹出层
         parent.layer.close(index);
     }
+    //标记工程资料异常
+    function ModifyGczlyc(id) {
+        layer.open({
+            type: 2,
+            title: ['工程资料异常', 'font-size:14px;'],
+            area: ['600px', '250px'],
+            offset: '10px',
+            fixed: false, //不固定
+            maxmin: true,
+            content: '../DKX_DD/GczlycView?Id=' + id,
+            end: function () {
+                location.reload();
+            }
+        })
+    }
 </script>
 
 
@@ -400,6 +415,8 @@
     <div class="layui-form-item" style="margin: auto">
         <div class="layui-input-block">
             <button class="layui-btn" lay-submit="" lay-filter="demo1" onclick="scwcscys('@ViewData["Id"]')">完成生产验收</button>
+
+            <button type="button" class="layui-btn layui-btn-danger" onclick="ModifyGczlyc('@ViewData["Id"]')">资料异常</button>
         </div>
     </div>
 </div>

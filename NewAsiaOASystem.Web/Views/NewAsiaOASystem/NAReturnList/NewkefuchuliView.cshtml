@@ -260,7 +260,7 @@
         <table class="table_con" style="width: 100%; color: #000; font-size: 13px; margin-top: 10px;">
             <tr>
                 <td style="width: 40%">返退产品：@Html.DropDownList("PerListData", ViewData["perList"] as SelectList, new { @class = "add-function" })</td>
-                <td style="width: 30%">返退时间: @Html.TextBoxFor(m => m.R_FTdate, new { onclick = "WdatePicker()", @class = "txtboxcss" })</td>
+                <td style="width: 30%">返退时间: @Html.TextBoxFor(m => m.R_FTdate, new { onclick = "WdatePicker()", @class = "txtboxcss", @autocomplete = "off" })</td>
                 <td style="width: 30%">返退数量: @Model.R_Number   套/件</td>
             </tr>
             <tr>

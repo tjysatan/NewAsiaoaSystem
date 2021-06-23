@@ -195,5 +195,16 @@ namespace NewAsiaOASystem.ViewModel
             get;
             set;
         }
+
+
+        /// <summary>
+        /// pushsoft 单据的单据号
+        /// </summary>
+        public virtual string Ps_DocEntry { get; set; }
+
+        /// <summary>
+        /// pushsoft 单据的凭证编号
+        /// </summary>
+        public virtual string Ps_DocNu { get; set; }
     }
 }

@@ -61,6 +61,8 @@
     <property name="ckqr" column="ckqr"/>
     <property name="ckchdatetime" column="ckchdatetime"/>
     <property name="beizhu" column="beizhu"/>
-    <property name="fthbianhao" column="fthbianhao"/> 
+    <property name="fthbianhao" column="fthbianhao"/>
+    <property name="Ps_DocEntry" column="Ps_DocEntry"/>
+    <property name="Ps_DocNu" column="Ps_DocNu"/>
   </class>
 </hibernate-mapping>

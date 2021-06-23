@@ -32,13 +32,66 @@
             }
         })
     }
+    //
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+
+    function guanbi() {
+        var index = parent.layer.getFrameIndex(window.name);
+        //关闭弹出层
+        parent.layer.close(index);
+    }
+
+    //生产提交
+    function TongbuGWJ() {
+        $.ajax({
+            url: "../Flow_PlanProductioninfo/InsterGWJ",
+            type: "POST",
+            data: { Id: '@ViewData["Id"]',},
+            dataType: "html",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response == "1") {
+                    layer.alert("操作出错！", { icon: 2 }, function () { location.reload(); });
+                }
+ 
+                else if (response == "0-1") {
+                    layer.alert("没有图纸资料！", { icon: 2 }, function () { location.reload(); });
+                }
+                else if (response == "1-1") {
+                    layer.alert("生成订单不存在！", { icon: 2 }, function () { location.reload(); });
+                }
+                else if (response == "1-2") {
+                    layer.alert("该产品关闭！", { icon: 2 }, function () { location.reload(); });
+                } else {
+                    layer.alert("操作成功！" + response, { icon: 1 }, function () { location.reload(); });
+                }
+
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+    }
+
    //html拼接
     function htmlpj(str)
     {
         var strjson = str;
         var html = "";
         if (str != "" && str != null) {
-            if (strjson.gwy != null && strjson.gwy != "")  
+            if (strjson.gwy != null && strjson.gwy != "")
                 html += '<table style="width: 100%"><tr><td>领料、拆包打底板:' + strjson.gwy + '</td></tr></table>';
             else
                 html += '<table style="width: 100%"><tr><td>领料、拆包打底板:-</td></tr></table>';
@@ -102,8 +155,13 @@
     function disLoading() {
         layer.close(loadi);
     }
- </script>
+</script>
 
-<div style="width: 90%; padding: 20px 20px 0 20px" id="constr">
+<div style="width: 90%; padding: 20px 20px 0 20px" >
+    <button type="button" class="layui-btn" onclick="TongbuGWJ()">
+        同步工位机
+    </button>
+    <div style="width: 100%; padding: 20px 0px 10px 0px" id="constr">
 
+    </div>
 </div>

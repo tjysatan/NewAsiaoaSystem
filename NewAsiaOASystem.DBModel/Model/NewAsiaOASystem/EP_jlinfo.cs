@@ -105,7 +105,7 @@ namespace NewAsiaOASystem.DBModel
         public virtual int? IsDis { get; set; }
 
         /// <summary>
-        /// 0 推送成功  1推送失败 (中通快递/德邦快递) 2 下单取消 （德邦快递） 
+        /// 0 推送成功  1推送失败 (中通快递/德邦快递/顺丰快递) 2 下单取消 （德邦快递/顺丰快递） 
         /// </summary>
         public virtual int? Istscg { get; set; }
 
@@ -120,7 +120,7 @@ namespace NewAsiaOASystem.DBModel
         public virtual DateTime? fhtime { get; set; }
 
         /// <summary>
-        /// 0 已经打印  1 未打印  该字段只有德邦云下单
+        /// 0 已经打印  1 未打印  该字段只有德邦云下单 和顺丰快递下单
         /// </summary>
         public virtual int? isdy { get; set; }
 

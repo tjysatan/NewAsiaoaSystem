@@ -169,6 +169,22 @@
         })
         return json;
     }
+
+            //同步普实订单
+        function opentbpsView() {
+            layer.open({
+                type: 2,
+                title: ['销售订单同步普实', 'font-size:14px;'],
+                area: ['800px', '500px'],
+                offset: '10px',
+                fixed: false, //不固定
+                maxmin: true,
+                content: '../NAReturnList/TBPsfthorderView?Id=' + '@ViewData["R_Id"]',
+                //end: function () {
+                //    location.reload();
+                //}
+            })
+        }
 </script>
 
 <style id="style1">
@@ -265,16 +281,24 @@
 
 </div>
 
-<div style="width: 200px; height: 80px; overflow: hidden">
+<div style="width: 350px; height: 80px; overflow: hidden">
     <div class="inquiry-input infor-b">
+
         <span>
             <button onclick="return myPreview1()">打印</button>
         </span>
         <span>
-            <button onclick="window.history.go(-1)">返回</button></span>
+            <button onclick="window.history.go(-1)">返回</button>
+        </span>
+        <span>
+            <button onclick="return opentbpsView()">同步普实</button>
+        </span>
+    </div>
+    <div class="inquiry-input infor-b">
+
     </div>
 </div>
 
 
-<script src="~/Scripts/NAjs/NAReturnList.js"></script>
+    <script src="~/Scripts/NAjs/NAReturnList.js"></script>
 

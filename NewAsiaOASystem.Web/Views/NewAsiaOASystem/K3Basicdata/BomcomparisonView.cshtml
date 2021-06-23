@@ -1,0 +1,246 @@
+﻿@model NewAsiaOASystem.ViewModel.K3_wuliaoinfoView
+@{
+    ViewBag.Title = "K3和普实BOM的对照";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<script type="text/javascript">
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+
+    //K3bom
+    var datak3bom;
+    var datepushibom;
+
+    //KEBOM
+    function K3BOM(VAL) {
+        GETK3BOMbywlno(VAL);
+        Getpushbombywlno(VAL);
+    }
+
+    //查询K3BOM
+    function GETK3BOMbywlno(val) {
+
+        $.ajax({
+            url: "../K3Basicdata/Getk3bombywlno",
+            type: "POST",
+            data: { wlno: val },
+            dataType: "JSON",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                datak3bom = response;
+                K3BOMHTML(response);
+                //layer.alert("本次更新：" + response + "条数据", { icon: 1 });
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+
+    }
+
+    //查询普实BOM
+    function Getpushbombywlno(val) {
+        $.ajax({
+            url: "../K3Basicdata/Getpushbywlno",
+            type: "POST",
+            data: { wlno: val },
+            dataType: "JSON",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                datepushibom = response;
+                pushHTML(response);
+                //layer.alert("本次更新：" + response + "条数据", { icon: 1 });
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+Idd            }
+        })
+    }
+
+    //K3pungj
+    function K3BOMHTML(strjson) {
+        console.log(strjson)
+        var xh;
+        var html = "";
+        html += '<tr>';
+        html += '<td>序号</td>';
+        html += '<td>物料代码</td>';
+        html += '<td>产品名称</td>';
+        html += '<td>规格型号</td>';
+        html += '<td>数量</td>';
+        html += '</tr>';
+        if (strjson != "" && strjson != null) {
+            for (var i = 0, j = strjson.length; i < j; i++) {
+                xh = i + 1;
+                html += '<tr>';
+                html += '<td>' + xh + '</td>';
+                html += '<td>' + strjson[i]["子项物料代码"] + '</td>';
+                html += '<td>' + strjson[i]["子项物料名称"] + '</td>';
+                html += '<td>' + strjson[i]["子物料型号"] + '</td>';
+                html += '<td>' + strjson[i]["单位用量"] + '</td>';
+                html += '</tr>';
+            }
+        }
+        $("#table_con").html(html);
+    }
+
+    //push拼接
+    function pushHTML(strjson) {
+
+        var xh;
+        var html = "";
+        html += '<tr>';
+        html += '<td>序号</td>';
+        html += '<td>物料代码</td>';
+        html += '<td>产品名称</td>';
+        html += '<td>规格型号</td>';
+        html += '<td>数量</td>';
+        html += '</tr>';
+        if (strjson != "" && strjson != null) {
+            $("#DocEntry").val(strjson[0]["DocEntry"]);
+            $("#updatepushi").show();
+            for (var i = 0, j = strjson.length; i < j; i++) {
+                xh = i + 1;
+                html += '<tr>';
+                html += '<td>' + strjson[i]["LineNum"] + '</td>';
+                html += '<td>' + strjson[i]["ItmID"] + '</td>';
+                html += '<td>' + strjson[i]["ItmName"] + '</td>';
+                html += '<td>' + strjson[i]["ItmSpec"] + '</td>';
+                html += '<td>' + strjson[i]["NetQty"] + '</td>';
+                html += '</tr>';
+            }
+        }
+        $("#table_con2").html(html);
+    }
+
+    //比对
+    function BDBOM() {
+        var xh;
+        var html = "";
+        html += '<tr>';
+        html += '<td>序号</td>';
+        html += '<td>物料代码</td>';
+        html += '<td>产品名称</td>';
+        html += '<td>规格型号</td>';
+        html += '<td>数量</td>';
+        html += '</tr>';
+        if (datak3bom != "" && datak3bom != null) {
+            for (var i = 0, j = datak3bom.length; i < j; i++) {
+                xh = i + 1;
+                html += '<tr>';
+                html += '<td>' + xh + '</td>';
+                html += '<td>' + strjson[i]["子项物料代码"] + '</td>';
+                html += '<td>' + strjson[i]["子项物料名称"] + '</td>';
+                html += '<td>' + strjson[i]["子物料型号"] + '</td>';
+                html += '<td>' + strjson[i]["单位用量"] + '</td>';
+                html += '</tr>';
+            }
+        }
+        $("#table_con").html(html);
+    }
+
+    //插入普实的BOM
+    function InstallpushiBOM() {
+        $.ajax({
+            url: "../K3Basicdata/Ps_InstarBom",
+            type: "POST",
+            data: { Id: '@Model.Id' },
+            dataType: "JSON",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response.result == "success") { layer.alert(response.msg, { icon: 1 }, function () { location.reload(); }); }
+                else {
+                    layer.alert(response.msg, { icon: 2 }, function () { location.reload(); });
+                }
+                //layer.alert("本次更新：" + response + "条数据", { icon: 1 });
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+    }
+
+    //更新普实BOM的明细
+    function updatepushiBOM(val) {
+        var DocEntry = $("#DocEntry").val();
+        if (DocEntry == "" || DocEntry == null) {
+            layer.alert("普实没有查出BOM的主表DocEntry", { icon: 2 });
+            return false;
+        }
+            $.ajax({
+            url: "../K3Basicdata/updatePSbommx",
+            type: "POST",
+            data: { wlno: val, DocEntry: DocEntry },
+            dataType: "JSON",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response.result == "success") { layer.alert(response.msg, { icon: 1 }, function () { location.reload(); }); }
+                else {
+                    layer.alert(response.msg, { icon: 2 }, function () { location.reload(); });
+                }
+                //layer.alert("本次更新：" + response + "条数据", { icon: 1 });
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+    }
+</script>
+
+<input type="hidden" id="DocEntry" name="DocEntry" />
+<div class="layui-bg-gray" style="padding: 30px;">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md6">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    K3BOM
+                    <button type="button" class="layui-btn" onclick="K3BOM('@Model.fnumber')">默认按钮</button>
+                    <button type="button" class="layui-btn" onclick="InstallpushiBOM()">插入普实</button>
+                </div>
+                <div class="layui-card-body">
+                    <table class="table_con" style="width: 98%; color: #000; font-size: 13px; margin: auto;" id="table_con">
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md6">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    普实BOM
+                    <button type="button" class="layui-btn" onclick="updatepushiBOM('@Model.fnumber')" id="updatepushi" style="display:none">更新普实BOM明细</button>
+                </div>
+                <div class="layui-card-body">
+                    <table class="table_con" style="width: 98%; color: #000; font-size: 13px; margin: auto;" id="table_con2">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 

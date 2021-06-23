@@ -149,6 +149,21 @@ namespace NewAsiaOASystem.DBModel
         /// </summary>
         public virtual IList<Flow_Pleasepurchaseinfo> Ppurchaselist { get; set; }
 
+        /// <summary>
+        /// 是否生产任务单是否同步K3 0未同步 1 同步过
+        /// </summary>
+        public virtual int? Istbwork { get; set; }
+
+        /// <summary>
+        /// 同步时间
+        /// </summary>
+        public virtual DateTime? tbworktime { get; set; }
+
+        /// <summary>
+        /// 具体的排单日期 默认是创建日期
+        /// </summary>
+        public virtual DateTime? Nc_time { get; set; }
+
 
     }
 }

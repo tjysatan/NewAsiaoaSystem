@@ -22,6 +22,8 @@ namespace NewAsiaOASystem.ViewModel
 
         /// <summary>
         /// 最初的订单
+        /// 
+        /// 常规产品的数据 绑定的是物料编号
         /// </summary>
         public virtual string cpId { get; set; }
 
@@ -36,7 +38,7 @@ namespace NewAsiaOASystem.ViewModel
         public virtual string wjurl { get; set; }
 
         /// <summary>
-       
+
         /// 资料类型 0 需求 (客户需求)
         /// 1 料单 （料单（BOM）） 
         /// 2 图纸 (箱体图)
@@ -50,6 +52,9 @@ namespace NewAsiaOASystem.ViewModel
         /// 10 线号表 （可以不填）
         /// 11软件程序-源程序（仅仅plc 项目有）
         /// </summary>
+        /// 常规产品的数据(物联网)2 底板装配一  3 底板装配二 4接控制线一 5 接控制线二 6 接主回路线 7 上温控线绕管 8 面板装箱 9 底板装箱 10 调式  11 包装
+        /// 常规产品的数据(NAK)   2 底板装配一  3 接控制线一 4接主回路线 5 上温控线绕管 6 面板装箱 7 底板装箱 8 接温控线 9 焊灯 10 调式  11 包装
+        /// 温控产品数据  2 SMT   3 插件  4 焊接  5 洗板 6 看板 7 烧录 8 初检 9 灌胶 10 老化 11 防潮 12 装配 13 总检 14 包装
         public virtual int? Zl_type { get; set; }
 
         /// <summary>

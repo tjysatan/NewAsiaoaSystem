@@ -47,6 +47,8 @@ namespace NewAsiaOASystem.DBModel
         /// 8 软件程序 （仅仅plc 项目有）
         /// 9 操作手册 （仅仅plc 项目有）
         /// </summary>
+        /// 常规产品的数据   2 底板装配一  3 底板装配二 4接控制线一 5 接控制线二 6 接主回路线 7 接传感器 8 面板装箱 9 底板装箱 10 调式  11 包装
+        /// 温控产品数据  2 SMT   3 插件  4 焊接  5 洗板 6 看板 7 烧录 8 初检 9 灌胶 10 老化 11防潮 12 装配 13 总检 14 包装
         public virtual int? Zl_type { get; set; }
 
         /// <summary>

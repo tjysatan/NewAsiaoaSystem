@@ -20,9 +20,9 @@
 
 <script type="text/javascript">
     function FZ() {
-        $("#scph1").val('@ViewData["Newdatetime"]');//生产批号前一部分
-        var sp2 = Getscp2();
-        $("#scph2").val(sp2)
+        @*$("#scph1").val('@ViewData["Newdatetime"]');//生产批号前一部分*@
+        //var sp2 = Getscp2();
+        //$("#scph2").val(sp2)
         $("#cpname").val('@ViewData["pname"]');//产品名称
         $("#DYdy").val('@ViewData["pmodel"]');
     }
@@ -37,26 +37,26 @@
     })
 
     //获取批号顺序
-    function Getscp2() {
-        var sp2;
-        $.ajax({
-            type: "POST",
-            url: "/Flow_PlanProductioninfo/GetcountPproduction",
-            dataType: "html",
-            async: false,
-            success: function (reslut) {
-                sp2 = reslut;
-            },
-            error: function (e) {
-                alert("请求失败");
-            }
-        })
-        return sp2;
-    }
+    //function Getscp2() {
+    //    var sp2;
+    //    $.ajax({
+    //        type: "POST",
+    //        url: "/Flow_PlanProductioninfo/GetcountPproduction",
+    //        dataType: "html",
+    //        async: false,
+    //        success: function (reslut) {
+    //            sp2 = reslut;
+    //        },
+    //        error: function (e) {
+    //            alert("请求失败");
+    //        }
+    //    })
+    //    return sp2;
+    //}
 
     function PlanPprintSavaForm() {
-        var scph1 = $("#scph1").val();//批号前面
-        var scph2 = $("#scph2").val();//批号后面
+        //var scph1 = $("#scph1").val();//批号前面
+        //var scph2 = $("#scph2").val();//批号后面
         var yhsl = $("#yhsl").val();//要货数量
         var Cusname = $("#Cusname").val();//客户名称
         var yhdatetime = $("#yhdatetime").val();//要货时间
@@ -71,11 +71,11 @@
             p_type = 2;
         }
 
-        if (scph1 == "" || scph2 == "") {
-            layer.alert("生产批号不为空！", { icon: 2 });
-            $("#scph1").focus();
-            return;
-        }
+        //if (scph1 == "" || scph2 == "") {
+        //    layer.alert("生产批号不为空！", { icon: 2 });
+        //    $("#scph1").focus();
+        //    return;
+        //}
         if (yhsl == "") {
             layer.alert("要货数量不为空！", { icon: 2 });
             $("#scph1").focus();
@@ -94,7 +94,7 @@
         $.ajax({
             url: "../Flow_NonSProductinfo/PrintPlanDATa",
             type: "POST",
-            data: { pId: '@ViewData["Id"]', scph1: scph1, scph2: scph2, yhsl: yhsl, Cusname: Cusname, yhdatetime: yhdatetime, cpname: cpname, DYdy: DYdy, yhxz: yhxz, p_type: p_type, kfbeizhu: kfbeizhu },
+            data: { pId: '@ViewData["Id"]',yhsl: yhsl, Cusname: Cusname, yhdatetime: yhdatetime, cpname: cpname, DYdy: DYdy, yhxz: yhxz, p_type: p_type, kfbeizhu: kfbeizhu },
             dataType: "html",
             async: false,
             success: function (response) {
@@ -136,25 +136,26 @@
                 <tr>
                     <td>生产批号：
                          <span class="infor-c-input">
-                             <input type="text" id="scph1" name="scph1" />-
-                              <input type="text" style="width: 20px;" id="scph2" name="scph2" />
+                             @*<input type="text" id="scph1" name="scph1" />-
+                              <input type="text" style="width: 20px;" id="scph2" name="scph2" />*@
+                             提交之后系统自动生产
                          </span>
                     </td>
                     <td>要货数量：
                             <span class="infor-c-input">
-                                <input type="text" id="yhsl" name="yhsl" />
+                                <input type="text" id="yhsl" name="yhsl" autocomplete="off"  />
                             </span>
                     </td>
                 </tr>
                 <tr>
                     <td>客户名称：
                          <span class="infor-c-input">
-                             <input type="text" id="Cusname" name="Cusname" />
+                             <input type="text" id="Cusname" name="Cusname" autocomplete="off"  />
                          </span>
                     </td>
                     <td>要货日期：
                             <span class="infor-c-input">
-                                <input type="text" id="yhdatetime" name="yhdatetime" onclick="WdatePicker()" />
+                                <input type="text" id="yhdatetime" name="yhdatetime" onclick="WdatePicker()" autocomplete="off"  />
                             </span>
                     </td>
                 </tr>

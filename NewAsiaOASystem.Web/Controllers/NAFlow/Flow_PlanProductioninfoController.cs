@@ -20,6 +20,8 @@ namespace NewAsiaOASystem.Web.Controllers
           IFlow_PleasepurchaseinfoDao _IFlow_PleasepurchaseinfoDao = ContextRegistry.GetContext().GetObject("Flow_PleasepurchaseinfoDao") as IFlow_PleasepurchaseinfoDao;
           IFlow_PlanPPrintinfoDao _IFlow_PlanPPrintinfoDao = ContextRegistry.GetContext().GetObject("Flow_PlanPPrintinfoDao") as IFlow_PlanPPrintinfoDao;
           IFlow_DKXPlanPPrintinfoDao _IFlow_DKXPlanPPrintinfoDao = ContextRegistry.GetContext().GetObject("Flow_DKXPlanPPrintinfoDao") as IFlow_DKXPlanPPrintinfoDao;
+          IFlow_RoutineStockinfoDao _IFlow_RoutineStockinfoDao = ContextRegistry.GetContext().GetObject("Flow_RoutineStockinfoDao") as IFlow_RoutineStockinfoDao;
+        IFlow_NonSProductinfoDao _IFlow_NonSProductinfoDao = ContextRegistry.GetContext().GetObject("Flow_NonSProductinfoDao") as IFlow_NonSProductinfoDao;
         //name:生产计划controller
         //author:tjy_satan
         // GET: /Flow_PlanProductioninfo/
@@ -27,7 +29,7 @@ namespace NewAsiaOASystem.Web.Controllers
           //分页列表页面
           #region //列表以及查询页面
           #region //分页列表页面
-          public ActionResult List(int? pageIndex)
+        public ActionResult List(int? pageIndex)
           {
               PagerInfo<Flow_PlanProductioninfoView> listmodel = GetListPager(pageIndex,null,null,"2",null,null,"0,1,2,3");
               return View(listmodel);
@@ -68,6 +70,7 @@ namespace NewAsiaOASystem.Web.Controllers
           }
           #endregion
           #endregion
+
           #region //查看BOM料单以及库存信息
 
           //调用产品BOM以及库存
@@ -207,9 +210,11 @@ namespace NewAsiaOASystem.Web.Controllers
               Flow_PlanProductioninfoView model = _IFlow_PlanProductioninfoDao.NGetModelById(Id);
               ViewData["Yhsl"] = model.P_SCnumber;
               ViewData["Cpname"] = model.P_CPname;
+              ViewData["scph"] = model.scbianhao;
               return View();
           }
-
+          
+          
           /// <summary>
           /// 
           /// </summary>
@@ -225,15 +230,16 @@ namespace NewAsiaOASystem.Web.Controllers
           /// <param name="PL">配料</param>
           /// <param name="GY">生产工艺</param>
           /// <returns></returns>
-          public string PrintPlanDATa(string Plan_Id, string scph1, string scph2, string yhsl, string Cusname, string yhdatetime, string cpname, string DYdy, string yhxz, string kfqr, string PL, string GY,string jsqr)
+          public string PrintPlanDATa(string Plan_Id,  string yhsl, string Cusname, string yhdatetime, string cpname, string DYdy, string yhxz, string kfqr, string PL, string GY,string jsqr)
           {
               try
               {
                   bool flay = false;
                   Flow_PlanPPrintinfoView model = new Flow_PlanPPrintinfoView();
                   model.Plan_Id = Plan_Id;
-                  scph2 = GetcountPproduction();
-                  model.Scph = scph1 + scph2;//生产批号
+                Flow_PlanProductioninfoView jhmodel = _IFlow_PlanProductioninfoDao.NGetModelById(Plan_Id);
+                //scph2 = GetcountPproduction();
+                  model.Scph = jhmodel.scbianhao;//生产批号
                   model.Scsl = yhsl;//要货数量
                   model.Cusname = Cusname;//客户名称
                   model.Yhdate = Convert.ToDateTime(yhdatetime);//要货时间
@@ -699,8 +705,244 @@ namespace NewAsiaOASystem.Web.Controllers
                  return null;
              }
          }
-        
+
         #endregion
+        #endregion
+
+        #region //同步工位机（常规电控）
+        public string InsterGWJ(string Id)
+        {
+            try
+            {
+                //查询订单
+                Flow_PlanProductioninfoView model = _IFlow_PlanProductioninfoDao.NGetModelById(Id);
+                if (model == null)
+                    return "1-1";
+                    //查询产品
+                 Flow_RoutineStockinfoView cpmodel = _IFlow_RoutineStockinfoDao.Getmodelinfobyp_bianhao(model.P_Pianhao);
+                if (cpmodel == null)
+                    return "1-2";
+                string type = "1";
+                if (cpmodel.Iswlw == "NAW")
+                    type = "0";
+                string res = gwjHelper.ESOP_CGDKX(type,model.scbianhao,null,model.P_SCnumber.ToString(),cpmodel.Bomno,cpmodel.P_Bianhao,"40002");
+                return res;
+            }
+            catch
+            {
+                return "1";
+            }
+        }
+        #endregion
+
+        #region //同步工位机
+        public string WKInsterGWJ(string Id)
+        {
+            try
+            {
+                //查询订单
+                Flow_PlanProductioninfoView model = _IFlow_PlanProductioninfoDao.NGetModelById(Id);
+                if (model == null)
+                    return "1-1";
+                if (model.P_type == 0)
+                {
+                    //查询产品
+                    Flow_RoutineStockinfoView cpmodel = _IFlow_RoutineStockinfoDao.Getmodelinfobyp_bianhao(model.P_Pianhao);
+                    if (cpmodel == null)
+                        return "1-2";
+                    string res = gwjHelper.ESOP_WK(model.scbianhao, null, model.P_SCnumber.ToString(), cpmodel.Bomno, cpmodel.P_Bianhao, "40007");
+                    return res;
+                }
+                else
+                {
+                    //查询非标产品
+                    Flow_NonSProductinfoView Fcpmodel = _IFlow_NonSProductinfoDao.Getmodelbywldm(model.P_Pianhao);
+                    if (Fcpmodel == null)
+                        return "1-2";
+                    string res = gwjHelper.ESOP_WK(model.scbianhao, null, model.P_SCnumber.ToString(), Fcpmodel.Bomno, Fcpmodel.Pbianma, "40007");
+                    return res;
+                }
+
+            }
+            catch
+            {
+                return "1";
+            }
+        }
+        #endregion
+
+        #region //生成任务单同步K3
+        public ActionResult TBCGK3SCworkView(string Id)
+        {
+            Flow_PlanProductioninfoView model = _IFlow_PlanProductioninfoDao.NGetModelById(Id);
+            return View(model);
+            
+        }
+        public JsonResult TBcgK3SCworkEide(string Id,  string Sel_sj, string Sel_sctype, string starttime, string endtime)
+        {
+            try
+            {
+                //通过订单Id查询订单
+                Flow_PlanProductioninfoView model = _IFlow_PlanProductioninfoDao.NGetModelById(Id);
+                if (model == null)
+                    return Json(new { result = "error", msg = "订单不存在！" });
+                //查询生产通知单
+                Flow_PlanPPrintinfoView tzdmodel = _IFlow_PlanPPrintinfoDao.GetFlow_PlanprinmodelbypId(Id);
+                //if(tzdmodel==null)
+                //    return Json(new { result = "error", msg = "生产通知单不存在！" });
+                //查询产品
+                string bomno = "";
+                if (model.P_type == 0)
+                { //常规温控
+                    Flow_RoutineStockinfoView cgcpmodel = _IFlow_RoutineStockinfoDao.Getmodelinfobyp_bianhao(model.P_Pianhao);
+                    bomno = cgcpmodel.Bomno;
+                }
+                else
+                {//非标
+                    Flow_NonSProductinfoView nocpmodel = _IFlow_NonSProductinfoDao.Getmodelbywldm(model.P_Pianhao);
+                    bomno = nocpmodel.Bomno;
+                }
+                ICMOSysmodel TBmodel = new ICMOSysmodel();
+                TBmodel.FBatchNo = model.scbianhao;//批号
+                TBmodel.FBOMNumber = bomno;//BOM编号
+                if (tzdmodel != null)
+                {
+                    TBmodel.FCustName = tzdmodel.Cusname;//客户名称
+                }
+                else
+                {
+                    TBmodel.FCustName = "";//客户名称
+                }
+                
+                TBmodel.FNumber = model.P_Pianhao;//产品BOM编号
+                TBmodel.FDeptNumber = Sel_sj;
+                if (starttime == "")
+                {//开工数量
+                    TBmodel.FPlanCommitDate = DateTime.Now;
+                    TBmodel.FPlanFinishDate = DateTime.Now;
+                }
+                else
+                {//完成时间
+                    TBmodel.FPlanCommitDate = Convert.ToDateTime(starttime);
+                    TBmodel.FPlanFinishDate = Convert.ToDateTime(endtime);
+                }
+                TBmodel.FQty = Convert.ToInt32(model.P_SCnumber);//生产数量
+                TBmodel.FWorktypeName = Sel_sctype;//生产类型
+                                                   //string ss = "";
+                string ss = K3Helper.InsertICMOSys(TBmodel);
+                if (ss == null)
+                    return Json(new { result = "error", msg = "接口调用失败！" });
+                else
+                {
+                    K3FHmodel fhmodel = new K3FHmodel();
+                    //fhmodel = JsonConvert.DeserializeObject(ss) as K3FHmodel;
+                    fhmodel = JsonConvert.DeserializeObject<K3FHmodel>(ss);
+                    if (fhmodel.FStatus == "S")
+                    {
+                        model.Istbwork = 1;
+                        model.tbworktime = DateTime.Now;
+                        _IFlow_PlanProductioninfoDao.NUpdate(model);
+                        return Json(new { result = "success", msg = fhmodel.FMessage });
+                    }
+                    else
+                    {
+                        return Json(new { result = "error", msg = fhmodel.FMessage });
+                    }
+                }
+            }
+            catch
+            {
+                return Json(new { result = "error", msg = "同步写入失败！" });
+            }
+        }
+
+        #region //重新生产生产批号
+        public JsonResult workphupdate(string Id)
+        {
+            //通过订单Id查询订单
+            Flow_PlanProductioninfoView model = _IFlow_PlanProductioninfoDao.NGetModelById(Id);
+            if (model == null)
+                return Json(new { result = "error", msg = "订单不存在！" });
+            if(model.Istbwork==1)
+                return Json(new { result = "error", msg = "已经同步K3生产任务单，不可以更新生产批号！" });
+            model.scbianhao = Getwkorderbianhao();
+            model.Nc_time = DateTime.Now;
+            if (_IFlow_PlanProductioninfoDao.NUpdate(model))
+                return Json(new { result = "success", msg = "更新成功" });
+            else
+                return Json(new { result = "error", msg = "操作失败！" });
+        }
+        #endregion
+
+        #region //修改生产数量
+        public JsonResult worksumupdate(string Id,string sum)
+        {
+            //通过订单Id查询订单
+            Flow_PlanProductioninfoView model = _IFlow_PlanProductioninfoDao.NGetModelById(Id);
+            if (model == null)
+                return Json(new { result = "error", msg = "订单不存在！" });
+            if (model.Istbwork == 1)
+                return Json(new { result = "error", msg = "已经同步K3生产任务单，不可以修改数量！" }); 
+            model.P_SCnumber = Convert.ToDecimal(sum);
+            if (_IFlow_PlanProductioninfoDao.NUpdate(model))
+                return Json(new { result = "success", msg = "更新成功" });
+            else
+                return Json(new { result = "error", msg = "操作失败！" });
+        }
+        #endregion
+
+        #region //手动修改批号
+        public JsonResult workscphSDupdate(string Id, string scph)
+        {
+
+            //通过订单Id查询订单
+            Flow_PlanProductioninfoView model = _IFlow_PlanProductioninfoDao.NGetModelById(Id);
+            if (model == null)
+                return Json(new { result = "error", msg = "订单不存在！" });
+            if (model.Istbwork == 1)
+                return Json(new { result = "error", msg = "已经同步K3生产任务单，不可以更新生产批号！" });
+            model.scbianhao = scph;
+            model.Nc_time = DateTime.Now;
+            if (_IFlow_PlanProductioninfoDao.NUpdate(model))
+                return Json(new { result = "success", msg = "更新成功" });
+            else
+                return Json(new { result = "error", msg = "操作失败！" });
+        }
+        #endregion
+
+        #region //生产温控的生产批号
+        public string Getwkorderbianhao()
+        {
+            string Newdatestr = DateTime.Now.ToString("yyyyMMdd");
+            string str;
+            int sum = _IFlow_PlanProductioninfoDao.Getwkcount() + 1;
+            if (sum < 10)
+            {
+                str = "0" + sum.ToString();
+            }
+            else
+            {
+                str = sum.ToString();
+            }
+            string bianhao = Newdatestr + str;
+            return bianhao;
+        }
+        #endregion
+
+        //接口返回的参数
+        public class K3FHmodel
+        {
+
+            /// <summary>
+            /// 接口调用状态 S: 成功、F: 失败
+            /// </summary>
+            public string FStatus { get; set; }
+
+            /// <summary>
+            /// 处理消息
+            /// </summary>
+            public string FMessage { get; set; }
+        }
         #endregion
 
     }

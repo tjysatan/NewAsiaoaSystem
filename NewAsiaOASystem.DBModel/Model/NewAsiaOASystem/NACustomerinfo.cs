@@ -159,5 +159,10 @@ namespace NewAsiaOASystem.DBModel
        /// 区县名称
        /// </summary>
        public virtual string qyqxname { get; set; }
+
+        /// <summary>
+        /// K3 CODE
+        /// </summary>
+       public virtual string K3CODE { get; set; }
     }
 }

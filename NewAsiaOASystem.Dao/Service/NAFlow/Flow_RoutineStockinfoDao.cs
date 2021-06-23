@@ -295,7 +295,35 @@ namespace NewAsiaOASystem.Dao
             IList<Flow_RoutineStockinfoView> listmodel = GetViewlist(list);
             return listmodel;
         }
-        
+
+        #endregion
+
+        #region //常规电控箱的分页数据
+        /// <summary>
+        /// 常规电控温控的分页数据
+        /// </summary>
+        /// <param name="cpname">产品名称</param>
+        /// <param name="wlno">物料号</param>
+        /// <param name="type">类型 0 温控 1电控</param>
+        /// <returns></returns>
+        public PagerInfo<Flow_RoutineStockinfoView> Getcgdiankongpagerlist(string cpname, string wlno, string type,string category)
+        {
+            TempList = new List<string>();
+            TempHql = new StringBuilder();
+            if (!string.IsNullOrEmpty(cpname))
+                TempHql.AppendFormat(" and P_Name like '%{0}%'", cpname);
+            if (!string.IsNullOrEmpty(wlno))
+                TempHql.AppendFormat(" and P_Bianhao like '%{0}%'", wlno);
+            if (!string.IsNullOrEmpty(category))
+                TempHql.AppendFormat(" and Category='{0}'", category);
+            TempHql.AppendFormat(" and type='{0}'", type);
+            string HQLstr = string.Format("from DKX_DDinfo u where 1=1 {0}", TempHql.ToString());
+            TempHql.AppendFormat("order by A_Sum DESC");
+            PagerInfo<Flow_RoutineStockinfoView> list = Search();
+            return list;
+
+
+        }
         #endregion
 
 

@@ -27,6 +27,8 @@ namespace NewAsiaOASystem.Web.Controllers
         INQ_productinfoDao _INQ_productinfoDao = ContextRegistry.GetContext().GetObject("NQ_productinfoDao") as INQ_productinfoDao;
         INQ_YJinfoDao _INQ_YJinfoDao = ContextRegistry.GetContext().GetObject("NQ_YJinfoDao") as INQ_YJinfoDao;
         IIQC_SopInfoDao _IIQC_SopInfoDao = ContextRegistry.GetContext().GetObject("IQC_SopInfoDao") as IIQC_SopInfoDao;
+        IFlow_RoutineStockinfoDao _IFlow_RoutineStockinfoDao = ContextRegistry.GetContext().GetObject("Flow_RoutineStockinfoDao") as IFlow_RoutineStockinfoDao;
+        IFlow_NonSProductinfoDao _IFlow_NonSProductinfoDao = ContextRegistry.GetContext().GetObject("Flow_NonSProductinfoDao") as IFlow_NonSProductinfoDao;
         public ActionResult Index()
         {
             return View();
@@ -449,10 +451,26 @@ namespace NewAsiaOASystem.Web.Controllers
                     IQC_SopInfoView IQCmodel = _IIQC_SopInfoDao.Getsopinfobyyqjwlno(fnumber);
                     if (IQCmodel != null)
                     {
-                       
+                        
                         IQCmodel.Yqjname= k3model.fname;//产品名称
                         IQCmodel.Yqjxh = k3model.fmodel;//产品型号
                         _IIQC_SopInfoDao.NUpdate(IQCmodel);
+                    }
+                    //查询常规电控温控产品
+                    Flow_RoutineStockinfoView cgcpmodel = _IFlow_RoutineStockinfoDao.Getmodelinfobyp_bianhao(fnumber);
+                    if (cgcpmodel != null)
+                    {
+                        cgcpmodel.P_Model= k3model.fmodel;//产品型号
+                        cgcpmodel.P_Name= k3model.fname;//产品名称
+                        _IFlow_RoutineStockinfoDao.NUpdate(cgcpmodel);
+                    }
+                    //查询非标电控温控产品
+                    Flow_NonSProductinfoView fbcpmodel = _IFlow_NonSProductinfoDao.Getmodelbywldm(fnumber);
+                    if (fbcpmodel != null)
+                    {
+                        fbcpmodel.Pname= k3model.fname;//产品名称
+                        fbcpmodel.Pmodel= k3model.fmodel;//产品型号
+                        _IFlow_NonSProductinfoDao.NUpdate(fbcpmodel);
                     }
                     return Json(new { result = "success",res="操作完成" });
                 }
@@ -723,6 +741,426 @@ namespace NewAsiaOASystem.Web.Controllers
             }
 
         }
+        #endregion
+
+        #region //同步普实物料
+        public JsonResult TBwlpushi(string fnumber)
+        {
+            try
+            {
+                K3_wuliaoinfoView k3model = new K3_wuliaoinfoView();
+                k3model = _IK3_wuliaoinfoDao.Getwuliaobyfnumber(fnumber);
+                if (k3model != null)
+                {
+                    Ps_fbcpmodel pscpmodel = new Ps_fbcpmodel();
+                    pscpmodel.ItmID = k3model.fnumber;
+                    pscpmodel.ItmSpec = k3model.fname;
+                    pscpmodel.Z_ItmID = k3model.fnumber;
+                    pscpmodel.Z_Price = k3model.forderprice.ToString();
+                    string res = pushsoftHelper.Instercpinfo(pscpmodel);
+                    if (res == "" || res == null) { return Json(new { result = "error", msg = "同步接口返回空" }); }
+                    else
+                    {
+                        pushsoftErrmodel errmodel = new pushsoftErrmodel();
+                        errmodel = JsonConvert.DeserializeObject<pushsoftErrmodel>(res);
+                        if (errmodel.ErrCode == "0")
+                        {
+                            return Json(new { result = "success", msg = errmodel.ErrMsg });
+                        }
+                        else
+                        {
+                            return Json(new { result = "error", msg = errmodel.ErrMsg });
+                        }
+                    }
+                }
+                else
+                {
+                    return Json(new { result = "error", res = "数据不存在！" });
+                }
+            }
+            catch
+            {
+                return Json(new { result = "error", res = "操作异常！" });
+            }
+        }
+        #endregion
+
+        #region //查询比对K3料单和普实料单
+        public ActionResult BomcomparisonView(string Id)
+        {
+            K3_wuliaoinfoView model = _IK3_wuliaoinfoDao.NGetModelById(Id);
+            return View(model);  
+        }
+
+
+        #region //查询K3的BOM明细
+        public string Getk3bombywlno(string wlno)
+        {
+            string strjson = K3Helper.GetBombywlno(wlno);
+            List<k3bommode> timemodel = getObjectByJson<k3bommode>(strjson);
+            return strjson;
+        }
+        #endregion
+
+        #region //插入普实BOM
+        //插入普实BOM
+        public JsonResult Ps_InstarBom(string Id)
+        {
+            try
+            {
+                K3_wuliaoinfoView model = _IK3_wuliaoinfoDao.NGetModelById(Id);
+                if (model != null)
+                {
+                    Ps_Bommodel PsBomnodel = new Ps_Bommodel();
+                    PsBomnodel.BomID = model.fnumber;
+                    PsBomnodel.BomName = model.fname;
+                    PsBomnodel.ItmID = model.fnumber;
+                    PsBomnodel.VerNum = "V 1.0";
+                    PsBomnodel.RouID = DateTime.Now.ToString();
+                    if (model.Type == 3 || model.Type == 5)
+                    {
+                        PsBomnodel.Procedures = Getwxgongxu();
+                    }
+                    else if (model.Type == 4)
+                    {
+                        PsBomnodel.Procedures = Getgongxu();
+                    }
+                    else
+                    {
+                        return Json(new { result = "error", msg = "原材料不需要同步BOM" });
+                    }
+                
+                    PsBomnodel.Items = Getyongliao(model.fnumber);
+                    if (PsBomnodel.Items == null)
+                    {
+                        return Json(new { result = "error", msg = "没有获取到K3的BOM" });
+                    }
+                    string res = pushsoftHelper.InstaerBominfo(PsBomnodel);
+                    if (res == "" || res == null) { return Json(new { result = "error", msg = "同步接口返回空" }); }
+                    else
+                    {
+                        pushsoftErrmodel errmodel = new pushsoftErrmodel();
+                        errmodel = JsonConvert.DeserializeObject<pushsoftErrmodel>(res);
+                        if (errmodel.ErrCode == "0")
+                        {
+                           
+                            return Json(new { result = "success", msg = errmodel.ErrMsg });
+                        }
+                        else
+                        {
+                            return Json(new { result = "error", msg = errmodel.ErrMsg });
+                        }
+                    }
+                }
+                else
+                {
+                    return Json(new { result = "error", msg = "物料不存在" });
+                }
+            }
+            catch
+            {
+                return Json(new { result = "error", msg = "同步失败" });
+            }
+        }
+
+        public class k3bommode
+        {
+            public string 子项物料代码 { get; set; }
+
+            public string 子项物料名称 { get; set; }
+
+            public string 子物料型号 { get; set; }
+
+            public string 单位用量 { get; set; }
+
+
+        }
+
+        #region //用料
+        public IList<Itemsmodel> Getyongliao(string wlno)
+        {
+            string strjson = K3Helper.GetBombywlno(wlno);
+            if (strjson != "[]")
+            {
+                List<k3bommode> timemodel = getObjectByJson<k3bommode>(strjson);
+                List<Itemsmodel> wuliaolist = new List<Itemsmodel>();
+                if (timemodel != null)
+                {
+
+                    foreach (var item in timemodel)
+                    {
+                        Itemsmodel wlmodel = new Itemsmodel();
+                        wlmodel.ItmID = item.子项物料代码;
+                        wlmodel.NetQty = Convert.ToDecimal(item.单位用量);
+                        wlmodel.ScrapRate = "0";
+                        wlmodel.LineType = "P";
+                        wlmodel.OperationLine = "10";
+                        wlmodel.Position = "1";
+                        wuliaolist.Add(wlmodel);
+                    }
+                }
+                return wuliaolist;
+            }
+            else
+            {
+                return null;
+            }
+        }
+        #endregion
+
+        #region //电控箱的工序
+        //工序 常规电控的工序
+        public IList<Proceduresmodel> Getgongxu()
+        {
+            List<Proceduresmodel> gxmxlist = new List<Proceduresmodel>();
+            Proceduresmodel gongx = new Proceduresmodel();
+            gongx.LineNum = "10";
+            gongx.PrcID = "DQ01";
+            gongx.PrcName = "底板装配";
+            gongx.WcnID = "001";
+            gongx.WcnName = "电气车间";
+            gongx.PreLineNum = "0";
+            gxmxlist.Add(gongx);
+            gongx = new Proceduresmodel();
+            gongx.LineNum = "20";
+            gongx.PrcID = "DQ02";
+            gongx.PrcName = "接控制线";
+            gongx.WcnID = "001";
+            gongx.WcnName = "电气车间";
+            gongx.PreLineNum = "10";
+            gxmxlist.Add(gongx);
+            gongx = new Proceduresmodel();
+            gongx.LineNum = "30";
+            gongx.PrcID = "DQ03";
+            gongx.PrcName = "接主回路线";
+            gongx.WcnID = "001";
+            gongx.WcnName = "电气车间";
+            gongx.PreLineNum = "20";
+            gxmxlist.Add(gongx);
+            gongx = new Proceduresmodel();
+            gongx.LineNum = "40";
+            gongx.PrcID = "DQ04";
+            gongx.PrcName = "上温控线绕管";
+            gongx.WcnID = "001";
+            gongx.WcnName = "电气车间";
+            gongx.PreLineNum = "30";
+            gxmxlist.Add(gongx);
+            gongx = new Proceduresmodel();
+            gongx.LineNum = "50";
+            gongx.PrcID = "DQ05";
+            gongx.PrcName = "面板装箱";
+            gongx.WcnID = "001";
+            gongx.WcnName = "电气车间";
+            gongx.PreLineNum = "40";
+            gxmxlist.Add(gongx);
+            gongx = new Proceduresmodel();
+            gongx.LineNum = "60";
+            gongx.PrcID = "DQ06";
+            gongx.PrcName = "底板装箱";
+            gongx.WcnID = "001";
+            gongx.WcnName = "电气车间";
+            gongx.PreLineNum = "50";
+            gxmxlist.Add(gongx);
+            gongx = new Proceduresmodel();
+            gongx.LineNum = "70";
+            gongx.PrcID = "DQ07";
+            gongx.PrcName = "接温控线";
+            gongx.WcnID = "001";
+            gongx.WcnName = "电气车间";
+            gongx.PreLineNum = "60";
+            gxmxlist.Add(gongx);
+            gongx = new Proceduresmodel();
+            gongx.LineNum = "80";
+            gongx.PrcID = "DQ08";
+            gongx.PrcName = "焊灯";
+            gongx.WcnID = "001";
+            gongx.WcnName = "电气车间";
+            gongx.PreLineNum = "70";
+            gxmxlist.Add(gongx);
+            gongx = new Proceduresmodel();
+            gongx.LineNum = "90";
+            gongx.PrcID = "DQ09";
+            gongx.PrcName = "调试";
+            gongx.WcnID = "001";
+            gongx.WcnName = "电气车间";
+            gongx.PreLineNum = "80";
+            gxmxlist.Add(gongx);
+            gongx = new Proceduresmodel();
+            gongx.LineNum = "100";
+            gongx.PrcID = "DQ10";
+            gongx.PrcName = "打包";
+            gongx.WcnID = "001";
+            gongx.WcnName = "电气车间";
+            gongx.PreLineNum = "90";
+            gxmxlist.Add(gongx);
+            return gxmxlist;
+        }
+
+        //工序 温控的工序
+        public IList<Proceduresmodel> Getwxgongxu()
+        {
+            List<Proceduresmodel> gxmxlist = new List<Proceduresmodel>();
+            Proceduresmodel gongx = new Proceduresmodel();
+            gongx.LineNum = "10";
+            gongx.PrcID = "DZ01";
+            gongx.PrcName = "SMT";
+            gongx.WcnID = "002";
+            gongx.WcnName = "电子车间";
+            gongx.PreLineNum = "0";
+            gxmxlist.Add(gongx);
+            gongx = new Proceduresmodel();
+            gongx.LineNum = "20";
+            gongx.PrcID = "DZ02";
+            gongx.PrcName = "插件";
+            gongx.WcnID = "002";
+            gongx.WcnName = "电子车间";
+            gongx.PreLineNum = "10";
+            gxmxlist.Add(gongx);
+            gongx = new Proceduresmodel();
+            gongx.LineNum = "30";
+            gongx.PrcID = "DZ03";
+            gongx.PrcName = "焊接";
+            gongx.WcnID = "002";
+            gongx.WcnName = "电子车间";
+            gongx.PreLineNum = "20";
+            gxmxlist.Add(gongx);
+            gongx = new Proceduresmodel();
+            gongx.LineNum = "40";
+            gongx.PrcID = "DZ04";
+            gongx.PrcName = "洗板";
+            gongx.WcnID = "002";
+            gongx.WcnName = "电子车间";
+            gongx.PreLineNum = "30";
+            gxmxlist.Add(gongx);
+            gongx = new Proceduresmodel();
+            gongx.LineNum = "50";
+            gongx.PrcID = "DZ05";
+            gongx.PrcName = "看板";
+            gongx.WcnID = "002";
+            gongx.WcnName = "电子车间";
+            gongx.PreLineNum = "40";
+            gxmxlist.Add(gongx);
+            gongx = new Proceduresmodel();
+            gongx.LineNum = "60";
+            gongx.PrcID = "DZ06";
+            gongx.PrcName = "烧录";
+            gongx.WcnID = "002";
+            gongx.WcnName = "电子车间";
+            gongx.PreLineNum = "50";
+            gxmxlist.Add(gongx);
+            gongx = new Proceduresmodel();
+            gongx.LineNum = "70";
+            gongx.PrcID = "DZ07";
+            gongx.PrcName = "初检";
+            gongx.WcnID = "002";
+            gongx.WcnName = "电子车间";
+            gongx.PreLineNum = "60";
+            gxmxlist.Add(gongx);
+            gongx = new Proceduresmodel();
+            gongx.LineNum = "80";
+            gongx.PrcID = "DZ13";
+            gongx.PrcName = "灌胶";
+            gongx.WcnID = "002";
+            gongx.WcnName = "电子车间";
+            gongx.PreLineNum = "70";
+            gxmxlist.Add(gongx);
+            gongx = new Proceduresmodel();
+            gongx.LineNum = "90";
+            gongx.PrcID = "DQ09";
+            gongx.PrcName = "调试";
+            gongx.WcnID = "002";
+            gongx.WcnName = "电子车间";
+            gongx.PreLineNum = "80";
+            gxmxlist.Add(gongx);
+            gongx = new Proceduresmodel();
+            gongx.LineNum = "100";
+            gongx.PrcID = "DZ08";
+            gongx.PrcName = "老化";
+            gongx.WcnID = "002";
+            gongx.WcnName = "电子车间";
+            gongx.PreLineNum = "90";
+            gxmxlist.Add(gongx);
+            gongx = new Proceduresmodel();
+            gongx.LineNum = "110";
+            gongx.PrcID = "DZ09";
+            gongx.PrcName = "防潮";
+            gongx.WcnID = "002";
+            gongx.WcnName = "电子车间";
+            gongx.PreLineNum = "100";
+            gxmxlist.Add(gongx);
+            gongx = new Proceduresmodel();
+            gongx.LineNum = "120";
+            gongx.PrcID = "DZ10";
+            gongx.PrcName = "装配";
+            gongx.WcnID = "002";
+            gongx.WcnName = "电子车间";
+            gongx.PreLineNum = "110";
+            gxmxlist.Add(gongx);
+            gongx = new Proceduresmodel();
+            gongx.LineNum = "130";
+            gongx.PrcID = "DZ11";
+            gongx.PrcName = "总检";
+            gongx.WcnID = "002";
+            gongx.WcnName = "电子车间";
+            gongx.PreLineNum = "120";
+            gxmxlist.Add(gongx);
+            gongx = new Proceduresmodel();
+            gongx.LineNum = "140";
+            gongx.PrcID = "DZ12";
+            gongx.PrcName = "包装";
+            gongx.WcnID = "002";
+            gongx.WcnName = "电子车间";
+            gongx.PreLineNum = "130";
+            gxmxlist.Add(gongx);
+            return gxmxlist;
+        }
+        #endregion
+        #endregion
+
+        #region //查询普实的BOM明细
+        public string Getpushbywlno(string wlno)
+        {
+            string strjson = zypushsoftHelper.GetBombywlno(wlno);
+            return strjson;
+        }
+        #endregion
+
+        #region //更新BOM明细
+        public JsonResult updatePSbommx(string wlno, string DocEntry)
+        {
+            string strjson = K3Helper.GetBombywlno(wlno);//查询K3
+            if (strjson != "[]")
+            {
+                List<k3bommode> timemodel = getObjectByJson<k3bommode>(strjson);
+                //S删除普实BOM细表
+                string delres = zypushsoftHelper.DelBomA(DocEntry);
+                //循环插入明细表
+                int iLineNum = 0;
+                int IOrderNum = 10;
+                foreach (var item in timemodel)
+                {
+
+                    iLineNum++;
+                    FInstaerMDBomA mxmodel = new FInstaerMDBomA();
+                    mxmodel.DocEntry = DocEntry;
+                    mxmodel.ItmID = item.子项物料代码;
+                    mxmodel.LineNum = iLineNum.ToString();
+                    mxmodel.NetQty = Convert.ToDecimal(item.单位用量);
+                    mxmodel.OrderNum = IOrderNum;
+                    IOrderNum = IOrderNum + 10;
+                    string datejson = JsonConvert.SerializeObject(mxmodel);
+                    datejson = "[" + datejson + "]";
+                    string INSRES = zypushsoftHelper.UpdateBomA(datejson);
+
+                }
+                return Json(new { result = "success", msg = "操作成功" });
+            }
+            else
+            {
+                return Json(new { result = "error", msg ="K3bom接口异常" });
+            }
+        }
+        #endregion
         #endregion
 
 

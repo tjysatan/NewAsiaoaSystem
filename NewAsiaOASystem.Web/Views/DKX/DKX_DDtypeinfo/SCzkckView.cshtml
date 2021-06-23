@@ -7,16 +7,39 @@
     //
     $(function () {
         var ddstr = AjaxGetddinfoyId();
+        if (ddstr.Ps_wlBomNO == "" || ddstr.Ps_wlBomNO == null) {
+            $("#cpwlno").html(" 普实物料：尚未同步")
+        } else {
+            $("#cpwlno").html(ddstr.Ps_wlBomNO)
+        }
+
+        if (ddstr.Ps_BomNO == "" || ddstr.Ps_BomNO == null) {
+            $("#bomno").html(" 普实BOM：尚未同步")
+        } else {
+            $("#bomno").html(ddstr.Ps_BomNO)
+        }
+        if (ddstr.Ps_orderDocEntryNUM == "" || ddstr.Ps_orderDocEntryNUM== null)
+    {
+            $("#ps_xsorderno").html("销售订单号:销售订单尚未同步")
+    }else
+    {
+        $("#ps_xsorderno").html(ddstr.Ps_orderDocEntryNUM)
+    }
+
+        if (ddstr.gczl_Isyc == "1") {
+            $("#cybiaoj").show();
+        } else {
+            $("#cybiaoj").hide();
+        }
         //操作员调试员赋值
         $("#czystr").html(ddstr.scczname);
         $("#dsystr").html(ddstr.scDSname);
          //获取生产订单的生产资料
         var ziliaostr = AJaxziliaojson(ddstr.Id);
-        console.log('ziliaostr',ziliaostr)
         pjziliaohtml(ziliaostr, ddstr);
     })
 
-    
+
     // 拼接资料html
     function pjziliaohtml(strjson, ddstr) {
         if (strjson != null && strjson != "") {
@@ -328,7 +351,7 @@
                     layer.alert("提交失败！", { icon: 2 }, function () { location.reload(); });
                 }
                 if (response == "4") {
-                    layer.alert("该状态下无需该操作！", { icon: 2 }, function () { location.reload(); });
+                    layer.alert("该状态下无法进行该操作！", { icon: 2 }, function () { location.reload(); });
                 }
 
             },
@@ -395,125 +418,395 @@
         }
     }
 
+    //物料确认
+    function wlreajax(val) {
+        layer.open({
+            type: 2,
+            title: ['物料库存确认', 'font-size:14px;'],
+            area: ['600px', '250px'],
+            offset: '10px',
+            fixed: false, //不固定
+            maxmin: true,
+            content: '../DKX_DDtypeinfo/WLQRView?Id=' + val,
+            end: function () {
+                location.reload();
+            }
+        })
+    }
+
+    //生产订单资料同步工位机平台
+    function TBgwj(Id) {
+        $.ajax({
+            url: "../DKX_DDtypeinfo/InsterGWJ",
+            type: "POST",
+            data: { Id: Id },
+            dataType: "html",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                var resstr = eval('(' + response + ')');
+                if (response == "1") {
+                    layer.alert("同步成功！", { icon: 2 }, function () { location.reload(); });
+                } else {
+                    layer.alert("操作失败！" + response, { icon: 2 });
+                }
+
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+    }
+
+    //确认完成发料
+    function confirm_wcfl(Id) {
+        $.ajax({
+            url: "../DKX_DDtypeinfo/FLconfirmEide",
+            type: "POST",
+            data: { Id: Id },
+            dataType: "json",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response.resule == "success") {
+                    layer.alert(response.msg, { icon: 1 }, function () { location.reload(); });
+                }
+                if (response.resule == "error") {
+                    layer.alert(response.msg, { icon: 2 }, function () { location.reload(); });
+                }
+            }
+        })
+    }
+
+    //生产单打印页面
+    function SCDDprint(val) {
+        layer.open({
+            type: 2,
+            title: ['生产单打印', 'font-size:14px;'],
+            area: ['760px', '460px'],
+            offset: '10px',
+            fixed: false, //不固定
+            maxmin: true,
+            content: '../DKX_DDtypeinfo/DKXSCPrintView?Id=' + val,
+            //end: function () {
+            //    location.reload();
+            //}
+        })
+    }
+    //打开生产过程跟踪单打印
+    function SCGCfromprint(Id,type) {
+        layer.open({
+            type: 2,
+            title: ['生产过程跟踪单打印', 'font-size:14px;'],
+            area: ['760px', '460px'],
+            offset: '10px',
+            fixed: false, //不固定
+            maxmin: true,
+            content: '../DKX_DDtypeinfo/DKXSCGCCPrintView?Id=' + Id + "&type=" + type,
+            //end: function () {
+            //    location.reload();
+            //}
+        })
+    }
+
+    //打开生产任务单同步K3数据
+    function openscwork(Id) {
+        layer.open({
+            type: 2,
+            title: ['生产任务单同步K3', 'font-size:14px;'],
+            area: ['760px', '460px'],
+            offset: '10px',
+            fixed: false, //不固定
+            maxmin: true,
+            content: '../DKX_DDtypeinfo/TBK3SCworkView?Id=' + Id ,
+            //end: function () {
+            //    location.reload();
+            //}
+        })
+    }
+
+      //同步普实BOM
+    function TBpushsofeBom() {
+         //同步K3生产任务单
+        $.ajax({
+            url: "../DKX_DDtypeinfo/Ps_InstarBom",
+            type: "POST",
+            data: {
+                Id: '@ViewData["Id"]'
+            },
+            dataType: "json",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+
+                disLoading();
+                if (response.result == "success") {
+                    layer.alert(response.msg, { icon: 1 }, function () { location.reload(); });
+                }
+                if (response.result == "error") {
+                    layer.alert(response.msg, { icon: 2 }, function () { location.reload(); });
+                }
+            }
+        })
+
+    }
+
+    //同步普实产品
+    function TBPscpOpen(val) {
+        layer.open({
+            type: 2,
+            title: ['普实非标产品同步', 'font-size:14px;'],
+            area: ['500px', '450px'],
+            offset: '10px',
+            fixed: false, //不固定
+            maxmin: true,
+            content: '../DKX_DDtypeinfo/TBPsCPView?Id=' + val,
+            end: function () {
+                location.reload();
+            }
+        })
+    }
+
+    //手动调整工艺路线同步工位机
+    function TBwgjOpne(val) {
+        layer.open({
+            type: 2,
+            title: ['调正工艺路线同步工位机', 'font-size:14px;'],
+            area: ['500px', '450px'],
+            offset: '10px',
+            fixed: false, //不固定
+            maxmin: true,
+            content: '../DKX_DDtypeinfo/TB_GWJ_gylxView?Id=' + val,
+            //end: function () {
+            //    location.reload();
+            //}
+        })
+    }
+
+     //通过BOM查询产品的物料编号
+    function xiugaiwlno(id) {
+         
+        $.ajax({
+            url: "../DKX_DDtypeinfo/GetFNumberbyFBOMNumber",
+            type: "POST",
+            data: { Id: id },
+            dataType: "json",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response.result == "success") {
+                    layer.alert(response.msg, { icon: 1 }, function () { location.reload(); });
+                }
+                if (response.result == "error") {
+                    layer.alert(response.msg, { icon: 2 });
+                }
+            }
+        })
+    }
+
+    //标记工程资料异常
+    function ModifyGczlyc(id) {
+        layer.open({
+            type: 2,
+            title: ['工程资料异常', 'font-size:14px;'],
+            area: ['600px', '250px'],
+            offset: '10px',
+            fixed: false, //不固定
+            maxmin: true,
+            content: '../DKX_DD/GczlycView?Id=' + id,
+            end: function () {
+                location.reload();
+            }
+        })
+        //var type;
+        //layer.open({
+        //    type: 1,
+        //    offset: type //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
+        //    , id: 'layerDemo' + type //防止重复弹出
+        //    , content: '<div style="padding: 20px 100px;">确定要标记工程数据异常吗</div>'
+        //    , btn: ['确定', '关闭']
+        //    , btnAlign: 'c' //按钮居中
+        //    , shade: 0 //不显示遮罩
+        //    , yes: function () {
+        //        $.ajax({
+        //            url: "../DKX_DD/ModifyGczlycbyorderId",
+        //            type: "POST",
+        //            data: { Id: id },
+        //            dataType: "json",
+        //            async: true,
+        //            beforeSend: function () {
+        //                ddchen();
+        //            },
+        //            success: function (response) {
+        //                disLoading();
+        //                if (response.result == "success") {
+        //                    layer.alert(response.msg, { icon: 1 }, function () { location.reload(); });
+        //                }
+        //                if (response.result == "error") {
+        //                    layer.alert(response.msg, { icon: 2 });
+        //                }
+        //            }
+        //        })
+        //        layer.closeAll();
+        //    }
+        //});
+    }
 </script>
 
 <div style="width: 90%; margin:auto; padding: 20px 0px 0px 0px">
+    <div class="layui-btn-container">
+        <span class="layui-badge" id="cybiaoj">已标记异常</span>
+    </div>
     <div class="layui-btn-container" align="right">
+        
         <button type="button" class="layui-btn" onclick="sctijiao('@ViewData["Id"]','0')">
             接单生产
         </button>
-        <button type="button" class="layui-btn  layui-btn-warm" onclick="sctijiao('@ViewData["Id"]','1')">
-            缺料标记
-        </button>
+
         <button type="button" class="layui-btn  layui-btn-danger" onclick="OpenSCCBRView('@ViewData["Id"]')">
             生产退单
         </button>
+        <button type="button" class="layui-btn layui-btn-danger" onclick="ModifyGczlyc('@ViewData["Id"]')">资料异常</button>
+        <button type="button" class="layui-btn" onclick="wlreajax('@ViewData["Id"]')">物料确认</button>
+        <button type="button" class="layui-btn layui-btn-primary layui-btn-small" onclick="confirm_wcfl('@ViewData["Id"]')">确认发料</button>
+        <button type="button" class="layui-btn layui-btn-primary layui-btn-small" onclick="TBgwj('@ViewData["Id"]')">默认工艺路线同步</button>
+        <button type="button" class="layui-btn layui-btn-primary layui-btn-small" onclick="TBwgjOpne('@ViewData["Id"]')">选择工艺路线同步</button>
     </div>
-    <div class="layui-row layui-col-space15">
-        <div class="layui-col-xs6">
-            <fieldset class="layui-elem-field">
-                <legend style="font-size:12px">需求</legend>
-                <div class="layui-field-box" id="xuqiucon">
-                </div>
-            </fieldset>
-        </div>
-        <div class="layui-col-xs6">
-            <fieldset class="layui-elem-field">
-                <legend style="font-size:12px">料单</legend>
-                <div class="layui-field-box" id="liaodancon">
-                </div>
-            </fieldset>
-        </div>
-    </div>
-    <div class="layui-row layui-col-space15">
-        <div class="layui-col-xs6">
-            <fieldset class="layui-elem-field">
-                <legend style="font-size:12px">箱体图</legend>
-                <div class="layui-field-box" id="tuzhicon">
-                </div>
-            </fieldset>
-        </div>
-        <div class="layui-col-xs6">
-            <fieldset class="layui-elem-field">
-                <legend style="font-size:12px">电器排布图</legend>
-                <div class="layui-field-box" id="dqpbtuzhi">
-                </div>
-            </fieldset>
-        </div>
-    </div>
+    <div class="layui-btn-container" align="right">
+        <button type="button" class="layui-btn layui-btn-primary layui-btn-small" onclick="SCDDprint('@ViewData["Id"]')">生产任务单打印</button>
+        @*<button type="button" class="layui-btn layui-btn-primary layui-btn-small">生产料单单打印</button>*@
+        <button type="button" class="layui-btn layui-btn-primary layui-btn-small" onclick="SCGCfromprint('@ViewData["Id"]','0')">过程跟踪单打印(非标线)</button>
+        <button type="button" class="layui-btn layui-btn-primary layui-btn-small" onclick="SCGCfromprint('@ViewData["Id"]','5')">过程跟踪单打印(常规标线)</button>
 
-    <div class="layui-row layui-col-space15">
-        <div class="layui-col-xs6">
-            <fieldset class="layui-elem-field">
-                <legend style="font-size:12px">电器原理图</legend>
-                <div class="layui-field-box" id="qttuzhicon">
-                </div>
-            </fieldset>
-        </div>
-        <div class="layui-col-xs6">
-            <fieldset class="layui-elem-field">
-                <legend style="font-size:12px">线号表</legend>
-                <div class="layui-field-box" id="xhbtuzhicon">
-                </div>
-            </fieldset>
-        </div>
+        <button type="button" class="layui-btn layui-btn-primary layui-btn-small" onclick="openscwork('@ViewData["Id"]')">同步K3生产任务单</button>
     </div>
+    <div class="layui-btn-container" align="right">
+        <button class="layui-btn" onclick="xiugaiwlno('@ViewData["Id"]')">常规产品获取料号</button>
+        <button class="layui-btn" onclick="TBPscpOpen('@ViewData["Id"]')">同步普实非标产品</button>
+        普实物料：<span id="cpwlno" style="font-size:12px"></span>
+        <button class="layui-btn" onclick="TBpushsofeBom()">同步普实BOM</button>
+        普实BOM：<span id="bomno" style="font-size:12px;padding-right:10px"></span>
 
-    <div class="layui-row layui-col-space15" id="rjcon">
-        <div class="layui-col-xs6">
-            <fieldset class="layui-elem-field">
-                <legend style="font-size:12px">烧录软件</legend>
-                <div class="layui-field-box" id="rjcxcon">
-                </div>
-            </fieldset>
+        销售订单号:
+        <span id="ps_xsorderno" name="ps_xsorderno" style="font-size:12px"></span>
+    </div>
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs6">
+                <fieldset class="layui-elem-field">
+                    <legend style="font-size:12px">需求</legend>
+                    <div class="layui-field-box" id="xuqiucon">
+                    </div>
+                </fieldset>
+            </div>
+            <div class="layui-col-xs6">
+                <fieldset class="layui-elem-field">
+                    <legend style="font-size:12px">料单</legend>
+                    <div class="layui-field-box" id="liaodancon">
+                    </div>
+                </fieldset>
+            </div>
         </div>
-        <div class="layui-col-xs6">
-            <fieldset class="layui-elem-field">
-                <legend style="font-size:12px">源程序</legend>
-                <div class="layui-field-box" id="rjycxcon">
-                </div>
-            </fieldset>
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs6">
+                <fieldset class="layui-elem-field">
+                    <legend style="font-size:12px">箱体图</legend>
+                    <div class="layui-field-box" id="tuzhicon">
+                    </div>
+                </fieldset>
+            </div>
+            <div class="layui-col-xs6">
+                <fieldset class="layui-elem-field">
+                    <legend style="font-size:12px">电器排布图</legend>
+                    <div class="layui-field-box" id="dqpbtuzhi">
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs6">
+                <fieldset class="layui-elem-field">
+                    <legend style="font-size:12px">电器原理图</legend>
+                    <div class="layui-field-box" id="qttuzhicon">
+                    </div>
+                </fieldset>
+            </div>
+            <div class="layui-col-xs6">
+                <fieldset class="layui-elem-field">
+                    <legend style="font-size:12px">线号表</legend>
+                    <div class="layui-field-box" id="xhbtuzhicon">
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+
+        <div class="layui-row layui-col-space15" id="rjcon">
+            <div class="layui-col-xs6">
+                <fieldset class="layui-elem-field">
+                    <legend style="font-size:12px">烧录软件</legend>
+                    <div class="layui-field-box" id="rjcxcon">
+                    </div>
+                </fieldset>
+            </div>
+            <div class="layui-col-xs6">
+                <fieldset class="layui-elem-field">
+                    <legend style="font-size:12px">源程序</legend>
+                    <div class="layui-field-box" id="rjycxcon">
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs6">
+                <fieldset class="layui-elem-field">
+                    <legend style="font-size:12px">调试单</legend>
+                    <div class="layui-field-box" id="yanshoudancon">
+                    </div>
+                </fieldset>
+            </div>
+            <div class="layui-col-xs6">
+                <fieldset class="layui-elem-field">
+                    <legend style="font-size:12px">照片</legend>
+                    <div class="layui-field-box" id="zhaoiancon">
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+        <div class="layui-row layui-col-space15" id="czsccon">
+            <div class="layui-col-xs12">
+                <fieldset class="layui-elem-field">
+                    <legend style="font-size:12px">操作手册</legend>
+                    <div class="layui-field-box" id="czsctuzhicon">
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs6">
+                <fieldset class="layui-elem-field">
+                    <legend style="font-size:12px">操作员</legend>
+                    <div class="layui-field-box" id="czystr">
+                    </div>
+                </fieldset>
+            </div>
+            <div class="layui-col-xs6">
+                <fieldset class="layui-elem-field">
+                    <legend style="font-size:12px">调式员</legend>
+                    <div class="layui-field-box" id="dsystr">
+                    </div>
+                </fieldset>
+            </div>
         </div>
     </div>
-    <div class="layui-row layui-col-space15">
-        <div class="layui-col-xs6">
-            <fieldset class="layui-elem-field">
-                <legend style="font-size:12px">调试单</legend>
-                <div class="layui-field-box" id="yanshoudancon">
-                </div>
-            </fieldset>
-        </div>
-        <div class="layui-col-xs6">
-            <fieldset class="layui-elem-field">
-                <legend style="font-size:12px">照片</legend>
-                <div class="layui-field-box" id="zhaoiancon">
-                </div>
-            </fieldset>
-        </div>
-    </div>
-    <div class="layui-row layui-col-space15" id="czsccon">
-        <div class="layui-col-xs12">
-            <fieldset class="layui-elem-field">
-                <legend style="font-size:12px">操作手册</legend>
-                <div class="layui-field-box" id="czsctuzhicon">
-                </div>
-            </fieldset>
-        </div>
-    </div>
-    <div class="layui-row layui-col-space15">
-        <div class="layui-col-xs6">
-            <fieldset class="layui-elem-field">
-                <legend style="font-size:12px">操作员</legend>
-                <div class="layui-field-box" id="czystr">
-                </div>
-            </fieldset>
-        </div>
-        <div class="layui-col-xs6">
-            <fieldset class="layui-elem-field">
-                <legend style="font-size:12px">调式员</legend>
-                <div class="layui-field-box" id="dsystr">
-                </div>
-            </fieldset>
-        </div>
-    </div>
-</div>

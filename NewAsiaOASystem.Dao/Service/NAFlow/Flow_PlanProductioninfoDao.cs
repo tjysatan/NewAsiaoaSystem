@@ -242,6 +242,24 @@ namespace NewAsiaOASystem.Dao
         #endregion
 
 
+
+        #region //返回当天温控的生产下单数量
+        public int Getwkcount()
+        {
+            try
+            {
+                string temHql = string.Format(" from Flow_PlanProductioninfo where DateDiff(dd,Nc_time,getdate())=0 and P_type!='4'");
+                IQuery queryCount = Session.CreateQuery(string.Format("select count(*)  {0} ", temHql));
+                int count = Convert.ToInt32(queryCount.UniqueResult());
+                return count;
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+        #endregion
+
         #region //返回当天的常规电控箱的下单数量
         /// <summary>
         /// 返回当天的电控箱的下单数量

@@ -248,9 +248,39 @@ namespace NewAsiaOASystem.Dao
             List<DKX_CPInfo> list = HibernateTemplate.Find<DKX_CPInfo>(Hqlstr) as List<DKX_CPInfo>;
             IList<DKX_CPInfoView> listmodel = GetViewlist(list);
             return listmodel;
-        } 
+        }
         #endregion
-         
+
+        #region //查询同一个大类中的产品数据
+        /// <summary>
+        /// 查询同一个大类的产品数据
+        /// </summary>
+        /// <param name="sanduanno">查询同一个大类的产品数据</param>
+        /// <returns></returns>
+        public int Getdaleichanpincount(string sanduanno)
+        {
+            string Hqlstr = string.Format(" from DKX_CPInfo where Ps_sanduanno='{0}'  ", sanduanno);
+            IQuery queryCount = Session.CreateQuery(string.Format("select count(*)  {0} ", Hqlstr));
+            int count = Convert.ToInt32(queryCount.UniqueResult());
+            return count;
+        }
+        #endregion
+
+        #region //通过工程师查询全部的电控箱方案库数据
+        /// <summary>
+        /// 通过工程师查询全部的电控箱方案库数据
+        /// </summary>
+        /// <param name="Gcs_name">工程师</param>
+        /// <returns></returns>
+        public IList<DKX_CPInfoView> GetalldkxcpbygcsId(string Gcs_name)
+        {
+            string Hqlstr = string.Format("from DKX_CPInfo where Gcs_name='{0}'",Gcs_name);
+            List<DKX_CPInfo> list = HibernateTemplate.Find<DKX_CPInfo>(Hqlstr) as List<DKX_CPInfo>;
+            IList<DKX_CPInfoView> listmodel = GetViewlist(list);
+            return listmodel;
+        }
+        #endregion
+
 
     }
 }

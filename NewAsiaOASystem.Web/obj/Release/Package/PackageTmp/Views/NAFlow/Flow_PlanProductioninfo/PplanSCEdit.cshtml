@@ -70,41 +70,98 @@
         window.location = "/Flow_PlanProductioninfo/list";
         return false;
     }
+
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+
+    //生产订单资料同步工位机平台
+    function TBgwj(Id) {
+        $.ajax({
+            url: "../Flow_PlanProductioninfo/WKInsterGWJ",
+            type: "POST",
+            data: { Id: Id },
+            dataType: "html",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response == "1") {
+                    layer.alert("操作出错！", { icon: 2 }, function () { location.reload(); });
+                }
+
+                else if (response == "0-1") {
+                    layer.alert("没有图纸资料！", { icon: 2 }, function () { location.reload(); });
+                }
+                else if (response == "1-1") {
+                    layer.alert("生成订单不存在！", { icon: 2 }, function () { location.reload(); });
+                }
+                else if (response == "1-2") {
+                    layer.alert("该产品关闭！", { icon: 2 }, function () { location.reload(); });
+                } else {
+                    layer.alert("操作成功！" + response, { icon: 1 }, function () { location.reload(); });
+                }
+
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+    }
+
 </script>
 
 <div class="infor">
-    <p id="Ptitle">生产订单状态编辑</p>
-    <div class="system-menu-set">
-        @using (Html.BeginForm("PplanSCEditUPdate", "Flow_PlanProductioninfo", FormMethod.Post, new { id = "form1" }))
-        {
-            <table style="width: 100%; color: #000; font-size: 13px;">
-                <tr>
-                    <td>生产状态：
-                    <span class="inquiry-input">
-                        <select name="P_type" id="P_type">
-                            <option value="0">生产中</option>
-                            <option value="1">缺料</option>
-                        </select>
-                    </span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>预计完成：
-                  <span class="infor-c-input">
-                      <input type="text" id="yjdatetime" name="yjdatetime" onclick="WdatePicker()" />
-                  </span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="inquiry-input infor-b" style="width:100px;">
-                            <span>
-                                <button>确认提交</button></span>
-                        </div>
-                    </td>
-                </tr>
-            </table>
-                           
-        }
+    <div class="layui-btn-container" align="right" style="margin-top:10px;">
+        <button type="button" class="layui-btn" onclick="TBgwj('@ViewData["Id"]')">
+            同步工位机
+        </button>
     </div>
-</div>
+
+
+
+    <div class="system-menu-set">
+            @using (Html.BeginForm("PplanSCEditUPdate", "Flow_PlanProductioninfo", FormMethod.Post, new { id = "form1" }))
+            {
+                <table style="width: 100%; color: #000; font-size: 13px;">
+                    <tr>
+                        <td>
+                            生产状态：
+                            <span class="inquiry-input">
+                                <select name="P_type" id="P_type">
+                                    <option value="0">生产中</option>
+                                    <option value="1">缺料</option>
+                                </select>
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            预计完成：
+                            <span class="infor-c-input">
+                                <input type="text" id="yjdatetime" name="yjdatetime" onclick="WdatePicker()" />
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="inquiry-input infor-b" style="width:100px;">
+                                <span>
+                                    <button>确认提交</button>
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+
+            }
+    </div>
+    </div>

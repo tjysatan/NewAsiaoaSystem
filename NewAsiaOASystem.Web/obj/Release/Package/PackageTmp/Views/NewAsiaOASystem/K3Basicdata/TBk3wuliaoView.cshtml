@@ -47,8 +47,8 @@
                     html+='<td width="15%">'+jsonStr[i].fname+'</td>';
                     html+='<td width="15%">'+jsonStr[i].fmodel+'</td>';
                     html+='<td width="10%">'+ztshow(jsonStr[i].Type)+'</td>';
-                    html+='<td width="10%">'+jsonStr[i].forderprice+'</td>';
-                    html += '<td width="15%">'+ showczbtn(jsonStr[i].fnumber)+'</td>';
+                    html += '<td width="10%">' + jsonStr[i].forderprice + '</td>';
+                    html += '<td width="15%">' + showczbtn(jsonStr[i].fnumber, jsonStr[i].Id) + '</td>';
                     html+='</tr>';
                 }
                 html += '</table>';
@@ -130,11 +130,14 @@
                 //}
             })
         }
+        //
         //操作按钮
-        function showczbtn(val) {
+        function showczbtn(val,val2) {
             var fnumber = "'" + val + "'";
+            var Id = "'" + val2 + "'";
             var z = '<a class="layui-btn layui-btn-primary layui-btn-small" onclick="updatebasicdatainfo(' + fnumber + ')">更新</a>';
-            return z;
+            var a = '<a class="layui-btn layui-btn-primary layui-btn-small" onclick="open_BOM_BD(' + Id + ')">BOM</a>';
+            return z+a;
         }
 
         //根据物料编号更新数据的型号
@@ -162,7 +165,50 @@
                     layer.alert("操作失败！", { icon: 2 });
                 }
              })
-            }
+        }
+
+        //同步普实
+        function TBpushiwl(val) {
+            $.ajax({
+                url: "../K3Basicdata/TBwlpushi",
+                type: "POST",
+                data: { fnumber: val },
+                dataType: "json",
+                async: true,
+                beforeSend: function () {
+                    ddchen();
+                },
+
+                success: function (response) {
+                    disLoading();
+                    if (response.result == "success") { layer.alert(response.msg, { icon: 1 }, function () { location.reload(); }); }
+                    else {
+                        layer.alert(response.msg, { icon: 2 }, function () { location.reload(); });
+                    }
+
+                },
+                error: function (e) {
+                    disLoading();
+                    layer.alert("操作失败！", { icon: 2 });
+                }
+            })
+        }
+
+        //BOM比对
+        function open_BOM_BD(val) {
+            layer.open({
+                type: 2,
+                title: ['bom比对', 'font-size:14px;'],
+                area: ['100vw', '550px'],
+                offset: '10px',
+                fixed: false, //不固定
+                maxmin: true,
+                content: '../K3Basicdata/BomcomparisonView?id=' + val,
+                //end: function () {
+                //    location.reload();
+                //}
+            })
+        }
     </script>
 }
 

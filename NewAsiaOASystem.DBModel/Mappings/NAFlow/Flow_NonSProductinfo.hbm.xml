@@ -10,5 +10,6 @@
     <property name="A_Sum" column="A_Sum" />
     <property name="Category" column="Category" />
     <property name="C_time" column="C_time" />
+    <property name="Bomno" column="Bomno" />
   </class>
 </hibernate-mapping>

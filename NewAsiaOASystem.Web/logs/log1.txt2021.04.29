@@ -1,0 +1,14 @@
+2021-04-29 16:35:24,931 [56] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2021-04-29 16:35:24,931 [56] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2021-04-29 16:35:24,931 [56] ERROR ApplicationInfoLog [(null)] <(null)< - 未将对象引用设置到对象的实例。
+2021-04-29 16:35:24,931 [56] ERROR ApplicationInfoLog [(null)] <(null)< - System.String InsEPModel(System.String, System.String)
+2021-04-29 16:35:24,931 [56] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================
+2021-04-29 16:35:26,992 [10] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2021-04-29 16:35:26,992 [10] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2021-04-29 16:35:26,992 [10] ERROR ApplicationInfoLog [(null)] <(null)< - 未将对象引用设置到对象的实例。
+2021-04-29 16:35:26,992 [10] ERROR ApplicationInfoLog [(null)] <(null)< - System.String InsEPModel(System.String, System.String)
+2021-04-29 16:35:26,992 [10] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================
+2021-04-29 16:35:41,405 [77] ERROR ApplicationInfoLog [(null)] <(null)< - 保持返回订单号e87ac9d3e5e24f92a255cfb438a945c9
+2021-04-29 16:36:11,319 [56] ERROR ApplicationInfoLog [(null)] <(null)< - 保持返回订单号1f4998ef8d984bbda7cd44b380ae7ce1
+2021-04-29 16:37:11,103 [103] ERROR ApplicationInfoLog [(null)] <(null)< - 保持返回订单号c7115e1f355847449f869c11208efb52
+2021-04-29 16:38:06,405 [10] ERROR ApplicationInfoLog [(null)] <(null)< - 保持返回订单号fd8eee20418049a5b1c4bd86c4d5449c

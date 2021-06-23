@@ -84,8 +84,6 @@ namespace NewAsiaOASystem.Web.Controllers
                     return Json(new { result = "error" }, "text/html");
                 }
 
-
-
                 model.DisImmuneCenter = Request.Form["ADListData"];
                 model.Role = Request.Form["SelectComm"];//获取选中的角色
                 model.Sort = 0;

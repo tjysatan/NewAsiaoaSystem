@@ -17,7 +17,7 @@
                 {
                     string json = Model.GetPagingDataJson;//获取json数据
                     @:var pageIndex=@Html.Raw(Model.CurrentPageIndex);
-                                                                     @: var jsonStr = @Html.Raw(json);
+                    @: var jsonStr = @Html.Raw(json);
                 }
              }
             dataGrid(jsonStr,pageIndex);
@@ -35,12 +35,17 @@
                     else
                         html += '<tr class="h-table-content-r"  id="'+jsonStr[i].Id+'">';
                     html += '<td width="5%"><input type="checkbox" name="ContentChecked" value="' + jsonStr[i].Id + '"/></td>';
+                    if (jsonStr[i].scbianhao == null) {
+                        html += '<td width="10%">-</td>';
+                    }
+                    else {
+                        html += '<td width="10%">' + jsonStr[i].scbianhao + '</td>';
+                    }
                     html += '<td width="10%">'+jsonStr[i].P_CPname + '</td>';
                     html += '<td width="10%">'+jsonStr[i].P_Pianhao + '</td>';
                     html += '<td width="5%">'+jsonStr[i].P_SCnumber + '</td>';
-                    html += '<td width="10%">'+showsczt(jsonStr[i].P_Issc) + '</td>';
+                    html += '<td width="5%">'+showsczt(jsonStr[i].P_Issc) + '</td>';
                     html += '<td width="10%">' + showDate(jsonStr[i].C_time) + '</td>';
-                  
                     if(jsonStr[i].P_type=="0")
                         html += '<td width="5%">常规</td>';
                     else if(jsonStr[i].P_type=="1")
@@ -64,7 +69,7 @@
                     else
                         html += '<td width="5%">已打印</td>';
                   
-                    html += '<td width="25%">' + sccz(jsonStr[i].Id, jsonStr[i].P_Pianhao, jsonStr[i].P_SCnumber, jsonStr[i].Isprint, jsonStr[i].P_type)+'</td>';
+                    html += '<td width="20%">' + sccz(jsonStr[i].Id, jsonStr[i].P_Pianhao, jsonStr[i].P_SCnumber, jsonStr[i].Isprint, jsonStr[i].P_type)+'</td>';
                     html+='</tr>';
                 }
                 html += '</table>';
@@ -119,8 +124,9 @@
             var f = '<a href="#" onclick="GetBomkc('+Id+","+wl_bh+","+scsl+')">料单</a>&nbsp;&nbsp;'
             var t = '<a href="#" onclick="CompleteSC('+Id+')">完成</a>&nbsp;&nbsp;';
             var s = '<a href="#" onclick="PrintPlanSC(' + Id + "," + Isprint + "," + P_type+')">打印</a>&nbsp;&nbsp;';
-            var z='<a href="#" onclick="GetEditzt('+Id+')">编辑</a>&nbsp;&nbsp;';
-            return t+f+s+z;
+            var z = '<a href="#" onclick="GetEditzt(' + Id + ')">编辑</a>&nbsp;&nbsp;';
+            var a = '<a href="#" onclick="openwoke(' + Id + ')">生产任务单同步</a>&nbsp;&nbsp;';
+            return t+f+s+z+a;
         }
 
         //BOM表查看
@@ -139,15 +145,27 @@
 
         //订单状态以及交期编辑
         function GetEditzt(val){
-            $('#windowDia').html("<iframe src=../Flow_PlanProductioninfo/PplanSCEdit?Id=" + val + "&&  style='border:0px;' width='400px' height='200px'></iframe>");
-            $("#windowDia").window({
-                title: '状态编辑',
-                modal: true,
-                closed: false,
-                width: 440,
-                height: 320,
-                top:0
-            });
+            //$('#windowDia').html("<iframe src=../Flow_PlanProductioninfo/PplanSCEdit?Id=" + val + "&&  style='border:0px;' width='400px' height='200px'></iframe>");
+            //$("#windowDia").window({
+            //    title: '状态编辑',
+            //    modal: true,
+            //    closed: false,
+            //    width: 440,
+            //    height: 320,
+            //    top:0
+            //});
+            layer.open({
+                type: 2,
+                title: ['编辑页面', 'font-size:14px;'],
+                area: ['700px', '500px'],
+                offset: '10px',
+                fixed: false, //不固定
+                maxmin: true,
+                content: '../Flow_PlanProductioninfo/PplanSCEdit?Id=' + val,
+                end: function () {
+                    location.reload();
+                }
+            })
         }
 
         //打印生产通知单页面  val2 记录是否打印 val1 生产计划单Id . 记录  val3 订单类型
@@ -270,6 +288,22 @@
             return json;
         }
 
+
+        //打卡同步K3生产任务单
+        function openwoke(val1) {
+            layer.open({
+                type: 2,
+                title: ['同步K3生产任务单', 'font-size:14px;'],
+                area: ['700px', '500px'],
+                offset: '10px',
+                fixed: false, //不固定
+                maxmin: true,
+                content: '../Flow_PlanProductioninfo/TBCGK3SCworkView?Id=' + val1,
+                //end: function () {
+                //    location.reload();
+                //}
+            })
+        }
     </script>
 }
 
@@ -339,17 +373,19 @@
                 <table cellpadding="0" cellspacing="0" class="h-right-table-title1" style="border: none; width: 100%;">
                     <tr>
                         <td width="5%">
-                            <input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" /></td>
+                            <input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" />
+                        </td>
+                        <td width="10%">生产批号</td>
                         <td width="10%">产品名称</td>
                         <td width="10%">代码</td>
                         <td width="5%">生产数量</td>
-                        <td width="10%">状态</td>
+                        <td width="5%">状态</td>
                         <td width="10%">创建时间</td>
                         <td width="5%">类别</td>
                         <td width="10%">预计完成</td>
                         <td width="10%">实际完成</td>
                         <td width="5%">打印</td>
-                        <td width="25%">操作</td>
+                        <td width="20%">操作</td>
                     </tr>
                 </table>
                 <div id="content"></div>

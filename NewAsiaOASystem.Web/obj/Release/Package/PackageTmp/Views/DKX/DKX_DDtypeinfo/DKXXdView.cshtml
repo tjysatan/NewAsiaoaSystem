@@ -9,6 +9,7 @@
         zdfz();
     })
 
+
     function oninputajax() {
         var khname = $("#khname").val();
 
@@ -16,11 +17,13 @@
         var json = AjaxGetCusinfo(khname);
         if (json == "" || json == null) {
             $("#lxrname").val("");
-            $("#tel").val("")
+            $("#tel").val("");
+            $("#K3CODE").val("");
         }
         else {
             $("#lxrname").val(json.LxrName);
-            $("#tel").val(json.Tel)
+            $("#tel").val(json.Tel);
+            $("#K3CODE").val(json.K3CODE);
         }
     }
 
@@ -32,6 +35,7 @@
             $("#gnjsstr").val('@Model.gnjsstr')
             $("#dw").val('@Model.dw');//单位
             $("#dkxtype").val('@Model.DD_Type');//电控箱类型
+            $("#Ps_sanduanno").val('@Model.Ps_sanduanno');
             $("#txt_startctime").val('@Model.YJJQtime');
             $("#price").val('@Model.price');//合同单位售价
             if ('@Model.DD_Type' == "2") {
@@ -51,7 +55,11 @@
                 $("#wlwtyep").css('display', 'none');
             }
 
-            if ('@Model.DD_Type' == "1") {
+            if ('@Model.Ps_sanduanno' == "0") {
+                $("#htdjhtml").css('display', 'none');
+            }
+
+            @*if ('@Model.DD_Type' == "1") {
                 $("#dxtdj").css('display', 'block');
                 var html;
                 html = '<label class="layui-form-label">系统单价：</label>';
@@ -63,7 +71,7 @@
             }
             else {
                 $("#dxtdj").css('display', 'none');
-            }
+            }*@
             var gcsstr = AjaxGetgcsjson('@Model.DD_Type');
             if (gcsstr != "" && gcsstr != null) {
                 $("#gcscon").css('display', 'block');
@@ -89,7 +97,7 @@
         var json;
         $.ajax({
             type: "POST",
-            url: "/DKX_DDtypeinfo/GetCusinfobykhname",
+            url: "/DKX_DDtypeinfo/GetCusinfokecodebykhname",
             data: { khname: khname },
             dataType: "json",
             async: false,
@@ -106,18 +114,18 @@
     //订单类型选择
     function ddtypechange() {
         var dkxtype = $("#dkxtype").val();
-        if (dkxtype == "1") {
-            $("#dxtdj").css('display', 'block');
-            var html;
-            html = '<label class="layui-form-label">系统单价：</label>';
-            html += '<div class="layui-input-block">';
-            html += ' <input class="layui-input" id="dj" name="dj" placeholder="单价" type="text" style="width: 200px;" />';
-            html += '</div>';
-            $("#dxtdj").html(html);
-        }
-        else {
-            $("#dxtdj").css('display', 'none');
-        }
+        //if (dkxtype == "1") {
+        //    $("#dxtdj").css('display', 'block');
+        //    var html;
+        //    html = '<label class="layui-form-label">系统单价：</label>';
+        //    html += '<div class="layui-input-block">';
+        //    html += ' <input class="layui-input" id="dj" name="dj" placeholder="单价" type="text" style="width: 200px;" />';
+        //    html += '</div>';
+        //    $("#dxtdj").html(html);
+        //}
+        //else {
+        //    $("#dxtdj").css('display', 'none');
+        //}
         if (dkxtype == "2") {
             $("#wlwtyep").css('display', 'block');
             var html;
@@ -133,8 +141,6 @@
         else {
             $("#wlwtyep").css('display', 'none');
         }
-
-
         var gcsstr = AjaxGetgcsjson(dkxtype);
         if (gcsstr != "" && gcsstr != null) {
             $("#gcscon").css('display', 'block');
@@ -148,6 +154,15 @@
             html += '</section>';
             html += '</div>';
             $("#gcscon").html(html);
+        }
+    }
+    //产品类型选择
+    function cptypechange() {
+        var Ps_sanduanno = $("#Ps_sanduanno").val();
+        if (Ps_sanduanno == "0") {
+            $("#htdjhtml").css('display', 'none');
+        } else {
+            $("#htdjhtml").css('display', 'block');
         }
     }
 
@@ -172,7 +187,7 @@
 
     //产品选择
     function CPZX() {
- 
+
         layer.open({
             type: 2,
             title: ['选择型号', 'font-size:14px;'],
@@ -192,14 +207,33 @@
     @using (Html.BeginForm("DKXXDEide", "DKX_DDtypeinfo", FormMethod.Post, new { id = "form1" }))
     {
         <input type="hidden" id="Id" name="Id" value='@Model.Id' />
+
         <div class="layui-form-item">
             <label class="layui-form-label">产品型号：</label>
             <div class="layui-input-inline">
                 <input class="layui-input" id="ddxh" name="ddxh" placeholder="产品型号" type="text" style="width: 200px" />
-               
+
             </div>
             <div class="layui-input-inline" style="width: 100px;">
                 <button class="layui-btn" lay-submit lay-filter="formDemo" onclick=" CPZX();return false">选择产品</button>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">产品类型：</label>
+            <div class="layui-input-block" style="width: 200px;">
+                <select id="Ps_sanduanno" name="Ps_sanduanno" class="layui-input" onchange = "cptypechange()" >
+                    <option value=''>请选择</option>
+                    <option value='05.013.0001'>订做电控箱</option>
+                    <option value='05.013.0002'>涡旋机组控制箱</option>
+                    <option value='05.013.0003'>活塞机组控制箱</option>
+                    <option value='05.013.0004'>螺杆机组控制箱</option>
+                    <option value='05.013.0005'>螺杆冷水机组控制箱</option>
+                    <option value='05.013.0006'>食用菌机组控制箱</option>
+                    <option value='05.013.0007'>医药机组控制箱</option>
+                    <option value='05.013.0009'>PLC1.0订做电控箱</option>
+                    <option value='05.013.NAW0008'>物联网订做电控箱</option>
+                    <option value='0'>常规定制</option>
+                </select>
             </div>
         </div>
         <div class="layui-form-item">
@@ -217,7 +251,7 @@
                 </select>
             </div>
         </div>
-        <div class="layui-form-item">
+        <div class="layui-form-item" id="htdjhtml">
             <label class="layui-form-label">合同售价：</label>
             <div class="layui-input-inline">
                 <input class="layui-input" id="price" name="price" placeholder="请填写合同的单位售价" type="text" style="width: 200px;" />
@@ -238,7 +272,7 @@
         </div>
         <div class="layui-form-item" id="gcscon" style="display: none">
         </div>
-        
+
         <div class="layui-form-item" id="dxtdj" style="display: none">
         </div>
 
@@ -260,23 +294,29 @@
                 <textarea placeholder="功能简述" id="gnjsstr" name="gnjsstr" class="layui-textarea"></textarea>
             </div>
         </div>
-        
+
         <div class="layui-form-item">
             <label class="layui-form-label">客户名称：</label>
             <div class="layui-input-block">
-                <input class="layui-input" id="khname" name="khname" placeholder="客户名称" type="text" oninput="oninputajax()" />
+                <input class="layui-input" id="khname" name="khname" placeholder="客户名称" type="text" autocomplete="off"  oninput="oninputajax()" />
             </div>
         </div>
-        <div class="layui-form-item">
+        <div class="layui-form-item" style="display:none">
             <label class="layui-form-label">联系人：</label>
             <div class="layui-input-block">
                 <input class="layui-input" id="lxrname" name="lxrname" placeholder="客户联系人" type="text" />
             </div>
         </div>
-        <div class="layui-form-item">
+        <div class="layui-form-item" style="display:none">
             <label class="layui-form-label">电话：</label>
             <div class="layui-input-block">
                 <input class="layui-input" id="tel" name="tel" placeholder="联系电话" type="text" />
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">K3CODE：</label>
+            <div class="layui-input-block">readonly
+                <input class="layui-input" id="K3CODE" name="K3CODE" placeholder="K3CODE" type="text" readonly="readonly" />
             </div>
         </div>
         <div class="layui-form-item">
@@ -288,12 +328,12 @@
                 </select>
             </div>
         </div>
-         <div class="layui-form-item">
-               <label class="layui-form-label">承若交期：</label>
-               <div class="layui-input-block">
-             <input type="text" name="txt_startctime" id="txt_startctime" onclick="WdatePicker()" class="layui-input" />
-                   </div>
-         </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">承若交期：</label>
+            <div class="layui-input-block">
+                <input type="text" name="txt_startctime" id="txt_startctime" onclick="WdatePicker()" autocomplete="off" class="layui-input" />
+            </div>
+        </div>
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">备注：</label>
             <div class="layui-input-block">
@@ -329,19 +369,23 @@
         var dw = $("#dw").val();//功率单位
         var sl = $("#sl").val();//数量
         var price = $("#price").val();//合同单位售价
-        // var cpph = $("#cpph").val();//生产批号
+        var Ps_sanduanno = $("#Ps_sanduanno").val();
+        if (Ps_sanduanno == "") {
+            layer.alert("选择产品类型！", { icon: 2 });
+            return false;
+        }
         if (khname == "") {
             layer.alert("客户名称不为空！", { icon: 2 });
             return false;
         }
-        if (lxrname == "") {
-            layer.alert("客户联系人不为空！", { icon: 2 });
-            return false;
-        }
-        if (tel == "") {
-            layer.alert("联系电话不为空！", { icon: 2 });
-            return false;
-        }
+        //if (lxrname == "") {
+        //    layer.alert("客户联系人不为空！", { icon: 2 });
+        //    return false;
+        //}
+        //if (tel == "") {
+        //    layer.alert("联系电话不为空！", { icon: 2 });
+        //    return false;
+        //}
         if (dkxtype == "") {
             layer.alert("请选择订单类型！", { icon: 2 });
             return false;
@@ -355,12 +399,15 @@
             return false;
         }
 
+        if (Ps_sanduanno != "0") { 
         if (price == "") {
-             $("#price").val(0);//合同单位售价
+            layer.alert("单价不为空！", { icon: 2 });
+            return false;
         } else {
             if (isNaN(price)) {
                 layer.alert("合同单位售价请填写数字！", { icon: 2 });
                 return false;
+            }
             }
         }
 

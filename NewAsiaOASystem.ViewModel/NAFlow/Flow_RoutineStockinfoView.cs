@@ -97,5 +97,15 @@ namespace NewAsiaOASystem.ViewModel
        /// 产品的类型 0 温控 1电控箱
        /// </summary>
         public virtual int? type { get; set; }
+
+        /// <summary>
+        /// 是否物联网  NAW 就是物联网的
+        /// </summary>
+        public virtual string Iswlw { get; set; }
+
+        /// <summary>
+        /// BOM编号
+        /// </summary>
+        public virtual string Bomno { get; set; }
     }
 }

@@ -1,0 +1,155 @@
+﻿@{
+    ViewBag.Title = "电控箱MRP计算订单列表";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@section HeadContent{
+    <script type="text/javascript">
+        var loadi;
+        function ddchen() {
+            loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+        }
+        //关闭等待效果
+        function disLoading() {
+            layer.close(loadi);
+        }
+        $(function () {
+            Gettabledata();
+        })
+
+        //初始化table数据
+        function Gettabledata() {
+            var txt_ordertime = $("#txt_ordertime").val();
+            layui.use('table', function () {
+                var table = layui.table;
+                table.render({
+                    elem: '#test',
+                    url: '/DKX_DD/GetDKXMRPlist',
+                    where: {
+                        ordertime: txt_ordertime,
+                    },//设定异步数据接口的额外参数
+                    cellMinWidth: 80, //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                    cols: [[
+                        { field: 'Id', width: 80, title: 'ID', sort: true, },
+
+                        {
+                            field: 'Ordertime', width: 130, title: '订单时间', templet: function (d) {
+                                return layui_dateToStr(d.Ordertime)
+                            }
+                        },
+
+                        { field: 'Ordersum', width: 130, title: '计算单数' },
+                        {
+                            field: 'c_time', width: 130, title: '计算时间', templet: function (d) {
+                                return layui_dateToStr(d.c_time)
+                            }
+                        },
+
+                        { field: '', title: '操作', width: 200, fixed: 'right', toolbar: "#bar" }
+                    ]],
+                    done: function (res, curr, count) {
+                        $(".layui-table-box").find("[data-field='Id']").css("display", "none");
+                        //$("[data-field='DD_Type']").children().each(function () {
+                        //    var dd_typename = showddtype($(this).text());
+                        //    $(this).text(dd_typename)
+                        //});
+                    }
+                    , page: true
+                    , limits: [3, 5, 10, 15, 20]  //一页选择显示3,5或10条数据
+                    , limit: 10  //一页显示10条数据
+                });
+                table.on('tool(test)', function (obj) {
+                    var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+                    var data = obj.data; //获得当前行 tr 的 DOM 对象（如果有的话）
+
+                    if (layEvent === 'show') {//编辑
+                        showMRPResult(data.Id);
+                    }
+                    if (layEvent === 'del') {//删除
+                        Del_orderMrp(data.Id);
+                    }
+
+                })
+            })
+        }
+
+        //查询MRP结果
+        function showMRPResult(val) {
+            layer.open({
+                type: 2,
+                title: ['MRP计算结果', 'font-size:14px;'],
+                area: ['80vw', '95vh'],
+                offset: '10px',
+                fixed: false, //不固定
+                maxmin: true,
+                content: '../DKX_DD/ShowMRPcountResult?Id=' + val,
+                //end: function () {
+                //    location.reload();
+                //}
+            })
+        }
+
+        //删除MRP订单
+        function Del_orderMrp(val) {
+             $.ajax({
+                 url: "../DKX_DD/Del_MRPorder",
+                type: "POST",
+                data: { Id: val },
+                dataType: "Json",
+                async: true,
+                beforeSend: function () {
+                    ddchen();
+                },
+                success: function (response) {
+                    disLoading();
+                    if (response.result == "error") {
+                        layer.alert(response.msg, { icon: 2 }, function () { location.reload(); });
+                    }
+                    else {
+                        layer.alert(response.msg, { icon: 1 }, function () { location.reload(); });
+                    }
+                },
+                error: function (e) {
+                    disLoading();
+                    layer.alert("操作失败！", { icon: 2 });
+                }
+            })
+        }
+    </script>
+    <script type="text/html" id="bar">
+        <button class="layui-btn layui-btn-primary layui-btn-small" lay-event="show">查看</button>
+
+        <button class="layui-btn layui-btn-primary layui-btn-small" lay-event="del">删除</button>
+    </script>
+}
+
+<div class="inquiry1">
+    <fieldset>
+        <legend>查询条件：</legend>
+
+        <ul>
+            <li>
+                <span>生产批号：</span>
+                <span class="inquiry-input">
+                    <input type="text" name="txt_DD_Bianhao" id="txt_DD_Bianhao" />
+                </span>
+            </li>
+
+            <li style="*width: 100%; *margin: -10px 0 5px 90px;">
+                <span class="inquiry-input">
+                    <button name="btnSerch" class="layui-btn" onclick="Gettabledata()"><i class="layui-icon">&#xe615;</i>查询</button>
+                </span>
+            </li>
+            <li>
+                <span class="inquiry-input">
+                    <button class="layui-btn" onclick="return myrefresh()"><i class="layui-icon">&#x1002;</i>刷新</button>
+                </span>
+            </li>
+        </ul>
+    </fieldset>
+</div>
+
+<div style="padding:0 20px 0 20px">
+    <table class="layui-hide" id="test" lay-filter="test"></table>
+</div>
+<script src="~/Scripts/NAjs/DKXpulice.js"></script>

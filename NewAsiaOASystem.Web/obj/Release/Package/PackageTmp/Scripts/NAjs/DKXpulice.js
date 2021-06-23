@@ -61,9 +61,10 @@ function AjaxPuliceGcsinfo(Id) {
     return json;
 }
 
-//订单状态的返回// val4 电器排布图的上传审核状态  val5 电器原理图的上传审核状态 （原来其他图纸） val6 品审状态
-function showddzt(val,val2,val3,val4,val5,val6)
+//订单状态的返回// val4 电器排布图的上传审核状态  val5 电器原理图的上传审核状态 （原来其他图纸） val6 品审状态 flzt发料状态
+function showddzt(val, val2, val3, val4, val5, val6, flzt)
 {
+    console.log("FLZT", flzt)
     if (val == "-1")
     {
         return '<span style="color:red">未提交</span>';
@@ -114,10 +115,61 @@ function showddzt(val,val2,val3,val4,val5,val6)
         return '<span style="color:red">待品审</span>';
     }
     if (val == "3") {
-        return "待发料";
+        var flstr = "物料待确认";
+        if (flzt == "0") {
+            flstr = "物料待确认";
+        }
+        if (flzt == "5") {
+            flstr = "等待发料";
+        }
+        if (flzt == "10") {
+            flstr = "缺料";
+            var xtstr = "未确定";
+            var qtstr = "未确定";
+            if (val2 == "1") {
+                xtstr = "箱体缺";
+            }
+            if (val2 == "2") {
+                xtstr = "箱体齐";
+            }
+            if (val3 == "1") {
+                qtstr = "其他缺";
+            }
+            if (val3 == "2") {
+                qtstr = "其他齐";
+            }
+            flstr = flstr + "(" + xtstr + "/" + qtstr + ")";
+        }
+ 
+        if (flzt == "15") {
+            flstr = "完成发料";
+        }
+        return "未发料[" + flstr + "]";
     }
     if (val == "4") {
-        return "可生产";
+        var flstr = "";
+        if (flzt == "15") {
+            flstr = "完成发料";
+        }
+        if (flzt == "20") {
+            flstr = "部分发料";
+            var xtstr = "未确定";
+            var qtstr = "未确定";
+            if (val2 == "1") {
+                xtstr = "箱体缺";
+            }
+            if (val2 == "2") {
+                xtstr = "箱体齐";
+            }
+            if (val3 == "1") {
+                qtstr = "其他缺";
+            }
+            if (val3 == "2") {
+                qtstr = "其他齐";
+            }
+            flstr = flstr + "(" + xtstr + "/" + qtstr + ")";
+        }
+        return "可生产[" + flstr+"]";
     }
     if (val == "5") {
         var xtstr = "未确定";
@@ -168,18 +220,27 @@ function showwlwtype(val)
 
 //layui 数据列中时间字段的转换
 function layui_dateToStr(date) {
-    var time = new Date(parseInt(date.replace("/Date(", "").replace(")/", ""), 10));
-    var y = time.getFullYear();
-    var M = time.getMonth() + 1;
-    M = M < 10 ? ("0" + M) : M;
-    var d = time.getDate();
-    d = d < 10 ? ("0" + d) : d;
-    var h = time.getHours();
-    h = h < 10 ? ("0" + h) : h;
-    var m = time.getMinutes();
-    m = m < 10 ? ("0" + m) : m;
-    var s = time.getSeconds();
-    s = s < 10 ? ("0" + s) : s;
-    var str = y + "-" + M + "-" + d + " " + h + ":" + m + ":" + s;
-    return str;
+    if (date) {
+
+        var time = new Date(parseInt(date.replace("/Date(", "").replace(")/", ""), 10));
+        var y = time.getFullYear();
+        var M = time.getMonth() + 1;
+        M = M < 10 ? ("0" + M) : M;
+        var d = time.getDate();
+        d = d < 10 ? ("0" + d) : d;
+        var h = time.getHours();
+        h = h < 10 ? ("0" + h) : h;
+        var m = time.getMinutes();
+        m = m < 10 ? ("0" + m) : m;
+        var s = time.getSeconds();
+        s = s < 10 ? ("0" + s) : s;
+        var str = y + "-" + M + "-" + d + " " + h + ":" + m + ":" + s;
+        return str;
+    } else {
+        return "";
+    }
+}
+
+function myrefresh() {
+    window.location.reload();
 }

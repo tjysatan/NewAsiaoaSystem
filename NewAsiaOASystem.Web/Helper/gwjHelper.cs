@@ -24,8 +24,10 @@ namespace NewAsiaOASystem.Web
     {
 
         public static IDKX_ZLDataInfoDao _IDKX_ZLDataInfoDao = ContextRegistry.GetContext().GetObject("DKX_ZLDataInfoDao") as IDKX_ZLDataInfoDao;
+        public static IDKX_RKZLDataInfoDao _IDKX_RKZLDataInfoDao = ContextRegistry.GetContext().GetObject("DKX_RKZLDataInfoDao") as IDKX_RKZLDataInfoDao;
         public static string url = "https://erp.sbycjk.net/admin_api/mo/create_by_external";
-       // public static string url = "http://192.168.10.217:9501/admin_api/mo/create_by_external";
+        //public static string url = "http://erp.sbycjk.net:9601/admin_api/mo/create_by_external";
+        //public static string url = "http://192.168.10.217:9501/admin_api/mo/create_by_external";
 
         //插入订单和订单的资料数据
         /// <summary>
@@ -37,9 +39,8 @@ namespace NewAsiaOASystem.Web
         /// <param name="number"></param>
         /// <param name="bomno"></param>
         /// <returns></returns>
-        public static string synchronizationorderandzl(string Id, string orderno,string ordercustname,string number,string bomno)
+        public static string synchronizationorderandzl(string Id, string orderno,string ordercustname,string number,string bomno,string ftemplate_id,string fproduction_line_id)
         {
-            
             try
             {
                 moldedata model = new moldedata();
@@ -60,7 +61,6 @@ namespace NewAsiaOASystem.Web
                     List<string> ds = new List<string>();
                     foreach (var item in modellist)
                     {
-
                         string url = "http://wx.chinanewasia.com/" + item.url;
                        // string url =  item.url; 
                         if (item.Zl_type == 2)//箱体图
@@ -80,6 +80,8 @@ namespace NewAsiaOASystem.Web
                         {
                             jcx.Add(url);
                             ds.Add(url);
+                            jxkz.Add(url);
+                            mbjx.Add(url);
                             //lmodel.接粗线.Add(url);
                             //lmodel.调试.Add(url);
                         }
@@ -112,12 +114,13 @@ namespace NewAsiaOASystem.Web
                     bodyNvc.Add("fexternal_mo_bill_no", orderno);
                     bodyNvc.Add("fcustomer", ordercustname);
                     bodyNvc.Add("fqty", number);
+                    bodyNvc.Add("ftemplate_id", ftemplate_id);
+                    bodyNvc.Add("fproduction_line_id ", fproduction_line_id);
                     bodyNvc.Add("fbom_number", TO_Base_Encode(Encoding.UTF8,bomno));
                     bodyNvc.Add("fwork_instruction", jsonstr);
                     log4net.LogManager.GetLogger("2021-01"+ bodyNvc.ToString());
                     string res = CreatePostSysHttpResponse(url, headersNvc, bodyNvc, 5000, Encoding.UTF8, null);
                     return res;
-
                 } 
                 else
                 {
@@ -130,6 +133,376 @@ namespace NewAsiaOASystem.Web
             }
         }
 
+        #region //常规电控NAWORNAK
+        public static string ESOP_CGDKX(string type, string orderno, string ordercustname, string number, string bomno, string wlbno,string fproduction_line_id)
+        {
+            try
+            {
+                //查询资料
+                IList<DKX_RKZLDataInfoView> modellist = _IDKX_RKZLDataInfoDao.GetDKXCPZLdatalist(wlbno);
+                if (modellist!=null)
+                {
+                    List<string> tu2 = new List<string>();
+                    List<string> tu3 = new List<string>();
+                    List<string> tu4 = new List<string>();
+                    List<string> tu5 = new List<string>();
+                    List<string> tu6 = new List<string>();
+                    List<string> tu7 = new List<string>();
+                    List<string> tu8 = new List<string>();
+                    List<string> tu9 = new List<string>();
+                    List<string> tu10 = new List<string>();
+                    List<string> tu11 = new List<string>();
+                    foreach (var item in modellist)
+                    {
+
+                        string url = "http://wx.chinanewasia.com/" + item.wjurl;
+                        if (item.Zl_type == 2)
+                        {
+                            tu2.Add(url);
+                        }
+                        if (item.Zl_type == 3)
+                        {
+                            tu3.Add(url);
+                        }
+                        if (item.Zl_type == 4)
+                        {
+                            tu4.Add(url);
+                        }
+                        if (item.Zl_type == 5)
+                        {
+                            tu5.Add(url);
+                        }
+                        if (item.Zl_type == 6)
+                        {
+                            tu6.Add(url);
+                        }
+                        if (item.Zl_type == 7)
+                        {
+                            tu7.Add(url);
+                        }
+                        if (item.Zl_type == 8)
+                        {
+                            tu8.Add(url);
+                        }
+                        if (item.Zl_type == 9)
+                        {
+                            tu9.Add(url);
+                        }
+                        if (item.Zl_type == 10)
+                        {
+                            tu10.Add(url);
+                        }
+                        if (item.Zl_type == 11)
+                        {
+                            tu11.Add(url);
+                        }
+                    }
+                    string jsonstr = "";
+                    string ftemplate_id = "";
+                    if (type == "0")
+                    {//物联网
+                        fwork_NAWinstruction NAWmodel = new fwork_NAWinstruction();
+                        NAWmodel.底板装配一 = tu2;
+                        NAWmodel.底板装配二 = tu3;
+                        NAWmodel.接控制线一 = tu4;
+                        NAWmodel.接控制线二 = tu5;
+                        NAWmodel.接主回路线 = tu6;
+                        NAWmodel.上温控线绕管 = tu7;
+                        NAWmodel.面板装箱 = tu8;
+                        NAWmodel.底板装箱 = tu9;
+                        NAWmodel.调试 = tu10;
+                        NAWmodel.包装 = tu11;
+                        jsonstr = JsonConvert.SerializeObject(NAWmodel);
+                        ftemplate_id = "28";
+                    }
+                    else
+                    {
+                        fwork_NAKinstruction NAKmodel = new fwork_NAKinstruction();
+                        NAKmodel.底板装配一 = tu2;
+                        NAKmodel.接控制线一 = tu3;
+                        NAKmodel.接主回路线 = tu4;
+                        NAKmodel.上温控线绕管 = tu5;
+                        NAKmodel.面板装箱 = tu6;
+                        NAKmodel.底板装箱 = tu7;
+                        NAKmodel.接温控线 = tu8;
+                        NAKmodel.焊灯 = tu9;
+                        NAKmodel.调试 = tu10;
+                        NAKmodel.包装 = tu11;
+                        jsonstr = JsonConvert.SerializeObject(NAKmodel);
+                        ftemplate_id = "27";
+                    }
+                    string res=pulicgwESOP(orderno, ordercustname, number, bomno, ftemplate_id, fproduction_line_id,jsonstr);
+                    return res;
+                }
+                else
+                {
+                    return "0-1";
+                }
+            }
+            catch
+            {
+                return "1";
+            }
+        }
+        #endregion
+
+        #region //非标转常规订单
+        public static string ESOP_fbzhuancg(string ftemplate_id, string Id, string orderno, string ordercustname, string number, string bomno,string fproduction_line_id)
+        {
+            try
+            {
+                //查询资料
+                IList<DKX_ZLDataInfoView> modellist = _IDKX_ZLDataInfoDao.GetAllzldatabyId(Id);
+                if (modellist!= null)
+                {
+                    List<string> tu2 = new List<string>();
+                    List<string> tu3 = new List<string>();
+                    List<string> tu4 = new List<string>();
+                    List<string> tu5 = new List<string>();
+                    List<string> tu6 = new List<string>();
+                    List<string> tu7 = new List<string>();
+                    List<string> tu8 = new List<string>();
+                    List<string> tu9 = new List<string>();
+                    List<string> tu10 = new List<string>();
+                    List<string> tu11 = new List<string>();
+                    foreach (var item in modellist)
+                    {
+                        string url = "http://wx.chinanewasia.com/" + item.url;
+                        if (ftemplate_id == "27")//常规NAK
+                        {
+                            if (item.Zl_type == 2)//箱体图
+                            {
+                                tu6.Add(url);//面板装箱
+                            }
+                            else if (item.Zl_type == 6)//电气排布图
+                            {
+                                tu2.Add(url);
+                                tu3.Add(url);
+                            }
+                            else if (item.Zl_type == 5)
+                            {
+                                tu4.Add(url);
+                                tu5.Add(url);
+                                tu7.Add(url);
+                                tu8.Add(url);
+                                tu9.Add(url);
+                                tu10.Add(url);
+                                tu11.Add(url);
+                            }
+                        }
+                        if (ftemplate_id == "28")//常规NAW
+                        {
+                            if (item.Zl_type == 2)//箱体图
+                            {
+                                tu8.Add(url);//面板装箱
+                            }
+                            else if (item.Zl_type == 6)//电气排布图
+                            {
+                                tu2.Add(url);
+                                tu3.Add(url);
+                            }
+                            else if(item.Zl_type == 5)
+                            {
+                                tu4.Add(url);
+                                tu5.Add(url);
+                                tu7.Add(url);
+                                tu6.Add(url);
+                                tu9.Add(url);
+                                tu10.Add(url);
+                                tu11.Add(url);
+                            }
+                        }
+                    }
+                    string jsonstr = "";
+                    //string ftemplate_id = "";
+                    if (ftemplate_id == "28")
+                    {//物联网
+                        fwork_NAWinstruction NAWmodel = new fwork_NAWinstruction();
+                        NAWmodel.底板装配一 = tu2;
+                        NAWmodel.底板装配二 = tu3;
+                        NAWmodel.接控制线一 = tu4;
+                        NAWmodel.接控制线二 = tu5;
+                        NAWmodel.接主回路线 = tu6;
+                        NAWmodel.上温控线绕管 = tu7;
+                        NAWmodel.面板装箱 = tu8;
+                        NAWmodel.底板装箱 = tu9;
+                        NAWmodel.调试 = tu10;
+                        NAWmodel.包装 = tu11;
+                        jsonstr = JsonConvert.SerializeObject(NAWmodel);
+                      
+                    }
+                    else
+                    {
+                        fwork_NAKinstruction NAKmodel = new fwork_NAKinstruction();
+                        NAKmodel.底板装配一 = tu2;
+                        NAKmodel.接控制线一 = tu3;
+                        NAKmodel.接主回路线 = tu4;
+                        NAKmodel.上温控线绕管 = tu5;
+                        NAKmodel.面板装箱 = tu6;
+                        NAKmodel.底板装箱 = tu7;
+                        NAKmodel.接温控线 = tu8;
+                        NAKmodel.焊灯 = tu9;
+                        NAKmodel.调试 = tu10;
+                        NAKmodel.包装 = tu11;
+                        jsonstr = JsonConvert.SerializeObject(NAKmodel);
+                       
+                    }
+                    string res = pulicgwESOP(orderno, ordercustname, number, bomno, ftemplate_id, fproduction_line_id,jsonstr);
+                    return res;
+                }
+                else
+                {
+                    return "0-1";
+                }
+            }
+            catch
+            {
+                return "1";
+            }
+        }
+        #endregion
+
+        #region //温控同步工位机
+        public static string ESOP_WK(string orderno, string ordercustname, string number, string bomno, string wlbno, string fproduction_line_id)
+        {
+            try
+            {
+                //查询资料
+                IList<DKX_RKZLDataInfoView> modellist= _IDKX_RKZLDataInfoDao.GetDKXCPZLdatalist(wlbno);
+                if (modellist != null)
+                {
+                    List<string> tu2 = new List<string>();
+                    List<string> tu3 = new List<string>(); 
+                    List<string> tu4 = new List<string>();
+                    List<string> tu5 = new List<string>();
+                    List<string> tu6 = new List<string>();
+                    List<string> tu7 = new List<string>();
+                    List<string> tu8 = new List<string>();
+                    //List<string> tu9 = new List<string>();
+                    List<string> tu10 = new List<string>();
+                    List<string> tu11 = new List<string>();
+                    List<string> tu12 = new List<string>();
+                    List<string> tu13 = new List<string>();
+                    List<string> tu14 = new List<string>();
+                    foreach (var item in modellist)
+                    {
+                        string url = "http://wx.chinanewasia.com/" + item.wjurl;
+                        if (item.Zl_type == 2)
+                        {
+                            tu2.Add(url);
+                        }
+                        if (item.Zl_type == 3)
+                        {
+                            tu3.Add(url);
+                        }
+                        if (item.Zl_type == 4)
+                        {
+                            tu4.Add(url);
+                        }
+                        if (item.Zl_type == 5)
+                        {
+                            tu5.Add(url);
+                        }
+                        if (item.Zl_type == 6)
+                        {
+                            tu6.Add(url);
+                        }
+                        if (item.Zl_type == 7)
+                        {
+                            tu7.Add(url);
+                        }
+                        if (item.Zl_type == 8)
+                        {
+                            tu8.Add(url);
+                        }
+                        //if (item.Zl_type == 9)
+                        //{
+                        //    tu9.Add(url);
+                        //}
+                        if (item.Zl_type == 10)
+                        {
+                            tu10.Add(url);
+                        }
+                        if (item.Zl_type == 11)
+                        {
+                            tu11.Add(url);
+                        }
+                        if (item.Zl_type == 12)
+                        {
+                            tu12.Add(url);
+                        }
+                        if (item.Zl_type == 13)
+                        {
+                            tu13.Add(url);
+                        }
+                        if (item.Zl_type == 14)
+                        {
+                            tu14.Add(url);
+                        }
+                      
+                      
+                      
+                    }
+                    fwork_WKinstruction wkmodel = new fwork_WKinstruction();
+                    wkmodel.SMT = tu2;
+                    wkmodel.插件 = tu3;
+                    wkmodel.焊接 = tu4;
+                    wkmodel.洗板 = tu5;
+                    wkmodel.看板 = tu6;
+                    wkmodel.烧录 = tu7;
+                    wkmodel.初检 = tu8;
+                    wkmodel.老化 = tu10;
+                    wkmodel.防潮 = tu11;
+                    wkmodel.装配 = tu12;
+                    wkmodel.总检 = tu13;
+                    wkmodel.包装 = tu14;
+                    string jsonstr = "";
+                    string ftemplate_id = "";
+                    jsonstr = JsonConvert.SerializeObject(wkmodel);
+                    ftemplate_id = "30";
+                    string res = pulicgwESOP(orderno, ordercustname, number, bomno, ftemplate_id, fproduction_line_id, jsonstr);
+                    return res;
+                }
+                else
+                {
+                    return "0-1";
+                }
+            }
+            catch
+            {
+                return "1";
+            }
+        }
+        #endregion
+
+
+        #region //插入工位机生成订单和图纸
+        public static string pulicgwESOP(string orderno, string ordercustname, string number, string bomno,string ftemplate_id,string fproduction_line_id, string jsonstr)
+        {
+            try
+            {
+
+                var headersNvc = new NameValueCollection();
+                headersNvc.Add("Authorization", "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImlzcyI6IkFza2EifQ.eyJpc3MiOiJBc2thIiwiYXVkIjoic29tZWJvZHkiLCJqdGkiOiI2MDRlZDNlYjc3ZjA0IiwiaWF0IjoiMTYxNTc3ODc5NS40OTEwNTUiLCJuYmYiOiIxNjE1Nzc4Nzk1LjQ5MTA1NSIsImV4cCI6IjE2NDczMTQ3OTUuNDkxMDU1IiwidXNlcl9pZCI6MSwicm9sZV9pZCI6MSwidXNlcm5hbWUiOiJhZG1pbiIsInRva2VuX3R5cGUiOiIyIn0.hNXGqVPNFA0jjcigg7gtRu0e0UyDAKxKTgo1-4jXgx8575e4ZfB4G9GFnb9H6XtCuIhN28VjN7aydYHXCFEdi6Y0k3f380qmsiL2kkgmcdo8UBTe-lxqyx2AsLz0OvzOa9MBlT8xnJgYZpiyCVdDP6PJ9SBiQCvHavPUEBHuEVk6lpGmD2gRhgP1GldJGSXtM2f-GSL8ERwO41VcfkDQAoRpqh3v7517PBcr_C5f7ch69O7CXyDRWrbvz-3fe14b40IfARAG0Tcnf3_2RqppiBmmXbi4oXx_rj0UTODTlKePY5sCXaS41ky_jw4fvNRKJlblucZf4XcXr7VzITu0WA");
+                var bodyNvc = new NameValueCollection();
+                bodyNvc.Add("fexternal_mo_bill_no", orderno);
+                bodyNvc.Add("fcustomer", ordercustname);
+                bodyNvc.Add("fqty", number);
+                bodyNvc.Add("ftemplate_id", ftemplate_id);
+                bodyNvc.Add("fproduction_line_id", fproduction_line_id);
+                bodyNvc.Add("fbom_number", TO_Base_Encode(Encoding.UTF8, bomno));
+                bodyNvc.Add("fwork_instruction", jsonstr);
+                log4net.LogManager.GetLogger("2021-01" + bodyNvc.ToString());
+                string res = CreatePostSysHttpResponse(url, headersNvc, bodyNvc, 5000, Encoding.UTF8, null);
+                return res;
+            }
+            catch
+            {
+                return "1";
+            }
+        }
+        #endregion
+         
         #region 创建POST方式的HTTP请求
         /// <summary>
         /// 创建POST方式的HTTP请求
@@ -301,9 +674,169 @@ namespace NewAsiaOASystem.Web
         public List<string> 调试 { get; set; }
     }
 
+    #region //常规物联网电控箱
+
+    public class Nawmoldedata
+    {
+        /// <summary>
+        /// 订单编号
+        /// </summary>
+        public string fexternal_mo_bill_no { get; set; }
+
+        /// <summary>
+        /// 客户名称
+        /// </summary>
+
+        public string fcustomer { get; set; }
+
+        /// <summary>
+        /// 关联的BOM编号
+        /// </summary>
+        public string fbom_number { get; set; }
+
+        /// <summary>
+        /// 数量
+        /// </summary>
+        public string fqty { get; set; }
+
+        public fwork_NAWinstruction fwork_instruction { get; set; }
+    }
+
+    public class fwork_NAWinstruction { 
+       public List<string> 底板装配一 { get; set; }
+
+       public List<string> 底板装配二 { get; set; }
+
+        public List<string> 接控制线一 { get; set; }
+
+        public List<string> 接控制线二 { get; set; }
+
+        public List<string> 接主回路线 { get; set; }
+
+        public List<string> 上温控线绕管 { get; set; }
+
+        public List<string> 面板装箱 { get; set; }
+
+        public List<string> 底板装箱 { get; set; }
+
+        public List<string> 调试 { get; set; }
+
+        public List<string> 包装 { get; set; }
+    }
+    #endregion
+
+    #region ///常规NAK电控箱
+    public class Nakmoldedata
+    {
+        /// <summary>
+        /// 订单编号
+        /// </summary>
+        public string fexternal_mo_bill_no { get; set; }
+
+        /// <summary>
+        /// 客户名称
+        /// </summary>
+
+        public string fcustomer { get; set; }
+
+        /// <summary>
+        /// 关联的BOM编号
+        /// </summary>
+        public string fbom_number { get; set; }
+
+        /// <summary>
+        /// 数量
+        /// </summary>
+        public string fqty { get; set; }
+
+        public fwork_NAKinstruction fwork_instruction { get; set; }
+    }
 
 
- 
- 
- 
+    public class fwork_NAKinstruction
+    {
+        public List<string> 底板装配一 { get; set; }
+
+        public List<string> 接控制线一 { get; set; }
+
+        public List<string> 接主回路线 { get; set; }
+
+        public List<string> 上温控线绕管 { get; set; }
+
+        public List<string> 面板装箱 { get; set; }
+
+        public List<string> 底板装箱 { get; set; }
+
+        public List<string> 接温控线 { get; set; }
+
+        public List<string> 焊灯 { get; set; }
+
+        public List<string> 调试 { get; set; }
+
+        public List<string> 包装 { get; set; }
+    }
+    #endregion
+
+    #region //温控
+    public class WKmodeldata
+    {
+        /// <summary>
+        /// 订单编号
+        /// </summary>
+        public string fexternal_mo_bill_no { get; set; }
+
+        /// <summary>
+        /// 客户名称
+        /// </summary>
+
+        public string fcustomer { get; set; }
+
+        /// <summary>
+        /// 关联的BOM编号
+        /// </summary>
+        public string fbom_number { get; set; }
+
+        /// <summary>
+        /// 数量
+        /// </summary>
+        public string fqty { get; set; }
+
+        public fwork_WKinstruction fwork_instruction { get; set; }
+    }
+
+    public class fwork_WKinstruction
+    {
+        public List<string> SMT { get; set; }
+
+        public List<string> 插件 { get; set; }
+
+        public List<string> 焊接 { get; set; }
+
+        public List<string> 洗板 { get; set; }
+
+        public List<string> 看板 { get; set; }
+
+        public List<string> 烧录 { get; set; }
+
+        public List<string> 初检 { get; set; }
+
+        public List<string> 老化 { get; set; }
+
+        public List<string> 防潮 { get; set; }
+
+        public List<string> 装配 { get; set; }
+
+        public List<string> 总检 { get; set; }
+
+        public List<string> 包装 { get; set; }
+
+
+    }
+    #endregion
+
+
+
+
+
+
 }

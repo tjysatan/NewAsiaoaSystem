@@ -47,7 +47,13 @@ namespace NewAsiaOASystem.IDao
         /// 返回当天的电控箱的下单数量
         /// </summary>
         /// <returns></returns>
-        int GetDKXcount(); 
+        int GetDKXcount();
+        #endregion
+
+
+        
+        #region //返回当天温控的生产下单数量
+        int Getwkcount(); 
         #endregion
 
     }

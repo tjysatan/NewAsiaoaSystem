@@ -143,7 +143,6 @@ namespace NewAsiaOASystem.Web.WebAPI
             INA_XSdetailsinfoDao _INA_XSdetailsinfoDao = ContextRegistry.GetContext().GetObject("NA_XSdetailsinfoDao") as INA_XSdetailsinfoDao;
             INQ_productinfoDao _INQ_productinfoDao = ContextRegistry.GetContext().GetObject("NQ_productinfoDao") as INQ_productinfoDao;
             INA_AddresseeInfoDao _INA_AddresseeInfoDao = ContextRegistry.GetContext().GetObject("NA_AddresseeInfoDao") as INA_AddresseeInfoDao;
-
             Newasia.XYOffer model = new Newasia.XYOffer();
             NA_XSinfoView OrdermodelNewdate = _INA_XSinfoDao.GetxsinfoNewdate();
             int t = 0;
@@ -180,7 +179,7 @@ namespace NewAsiaOASystem.Web.WebAPI
                 string Province = dt.Rows[a]["Province"].ToString();//省
                 string City = dt.Rows[a]["City"].ToString();//地级市
                 string Area = dt.Rows[a]["Area"].ToString();//区县
-
+                string beizhu = dt.Rows[a]["OrderRemark"].ToString();//备注
                 if (_INA_XSinfoDao.jccfbySc_Id(OrderCode))
                 { //检测是否存在重复的订单
                     NA_XSinfoView Ordermodel = new NA_XSinfoView();
@@ -197,15 +196,7 @@ namespace NewAsiaOASystem.Web.WebAPI
                         Ordermodel.Fk_type = 0;//付款方式 支付宝
                     }
                     NACustomerinfoView Custmodel = new NACustomerinfoView();//实例化 
-                    //  Custmodel = _INACustomerinfoDao.GetKHinfobykhname(userName, ShipName);//查询客户信息
-                    //if (company != null && company != "")
-                    //{//如果客户公司名称不为空就用公司名称查询 否则就用登录名称查询
-                    //    Custmodel = _INACustomerinfoDao.GetKHinfobyname(company);
-                    //}
-                    //else
-                    //{
-                    //    Custmodel = _INACustomerinfoDao.GetKHinfobyname(userName);
-                    //}
+                  
                     Custmodel = _INACustomerinfoDao.GetCustomerbyUId(userid);
                     if (Custmodel != null)//存在该客户信息
                     {
@@ -291,6 +282,8 @@ namespace NewAsiaOASystem.Web.WebAPI
                     Ordermxmodel.xsId = OrderId;//销售订单Id
                     Ordermxmodel.Je = Convert.ToDecimal(Quantity) * Convert.ToDecimal(AdjustedPrice);//明细价格
                     Ordermxmodel.SL = Convert.ToInt32(Quantity);//产品数量
+                    Ordermxmodel.cpbianmao = sku;
+                    Ordermxmodel.beizhu = beizhu;
                     NQ_productinfoView SPmodel = new NQ_productinfoView();
                     SPmodel = _INQ_productinfoDao.GetProinfobyname(sku);//根据产品名称查询产品信息
                     if (SPmodel != null)
@@ -336,6 +329,8 @@ namespace NewAsiaOASystem.Web.WebAPI
                     Ordermxmodel.xsId = Ordermodel.Id;//订单Id
                     Ordermxmodel.Je = Convert.ToDecimal(Quantity) * Convert.ToDecimal(AdjustedPrice);//明细价格
                     Ordermxmodel.SL = Convert.ToInt32(Quantity);//产品数量
+                    Ordermxmodel.cpbianmao = sku;
+                    Ordermxmodel.beizhu = beizhu;
                     NQ_productinfoView SPmodel = new NQ_productinfoView();
                     SPmodel = _INQ_productinfoDao.GetProinfobyname(sku);//根据产品名称查询产品信息
                     if (SPmodel != null)
@@ -350,12 +345,15 @@ namespace NewAsiaOASystem.Web.WebAPI
                         SPmodel.CreateTime = DateTime.Now;
                         string PRiD = _INQ_productinfoDao.InsertID(SPmodel);
                         Ordermxmodel.cpId = PRiD;
+
                     }
                     _INA_XSdetailsinfoDao.Ninsert(Ordermxmodel);
                 }
             }
         }
         #endregion 
+
+
         #endregion
 
         //电商平台新产品添加

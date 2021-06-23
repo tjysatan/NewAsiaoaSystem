@@ -1,0 +1,10 @@
+2021-05-12 15:11:13,465 [18] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2021-05-12 15:11:13,465 [18] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2021-05-12 15:11:13,466 [18] ERROR ApplicationInfoLog [(null)] <(null)< - d:\object\NewAsiaOASystem.Web\Views\DKX_DDtypeinfo\ForderinstarViewN.cshtml(227): error CS1002: 应输入 ;
+2021-05-12 15:11:13,466 [18] ERROR ApplicationInfoLog [(null)] <(null)< - System.CodeDom.Compiler.CompilerResults Compile()
+2021-05-12 15:11:13,466 [18] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================
+2021-05-12 15:11:16,965 [68] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2021-05-12 15:11:16,965 [68] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2021-05-12 15:11:16,965 [68] ERROR ApplicationInfoLog [(null)] <(null)< - d:\object\NewAsiaOASystem.Web\Views\DKX_DDtypeinfo\ForderinstarViewN.cshtml(227): error CS1002: 应输入 ;
+2021-05-12 15:11:16,965 [68] ERROR ApplicationInfoLog [(null)] <(null)< - System.CodeDom.Compiler.CompilerResults Compile()
+2021-05-12 15:11:16,965 [68] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================

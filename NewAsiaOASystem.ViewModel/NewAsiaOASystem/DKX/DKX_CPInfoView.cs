@@ -101,5 +101,36 @@ namespace NewAsiaOASystem.ViewModel
         /// 大系统单价
         /// </summary>
         public virtual decimal? DXTDJ { get; set; }
+
+        /// <summary>
+        /// 普实的非标BOM号
+        /// </summary>
+        public virtual string Ps_BomNO { get; set; }
+
+        /// <summary>
+        /// 普实的非标物料号
+        /// </summary>
+        public virtual string Ps_wlBomNO { get; set; }
+
+        /// <summary>
+        /// 普实的物料号或者bom后面的流水号
+        /// </summary>
+        public virtual string Ps_Serialnumber { get; set; }
+
+        /// <summary>
+        /// 非标产品的大类的物料编号
+        /// </summary>
+        public virtual string Ps_sanduanno { get; set; }
+
+        /// <summary>
+        /// 普实非标产品的物料回填编号
+        /// </summary>
+        public virtual string Ps_DocEntry { get; set; }
+
+        /// <summary>
+        /// 硬件成本
+        /// </summary>
+        public virtual decimal? YJcb { get; set; }
+
     }
 }

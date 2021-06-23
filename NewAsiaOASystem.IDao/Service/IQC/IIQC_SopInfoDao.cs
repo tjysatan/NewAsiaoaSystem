@@ -39,7 +39,17 @@ namespace NewAsiaOASystem.IDao
         /// </summary>
         /// <param name="wlno">元器件物料代码</param>
         /// <returns></returns>
-        IQC_SopInfoView Getsopinfobyyqjwlno(string wlno); 
+        IQC_SopInfoView Getsopinfobyyqjwlno(string wlno);
+        #endregion
+
+
+        
+        #region //查咋全部检验标准的数据
+        /// <summary>
+        /// 查询全部正常的检验标准的数据
+        /// </summary>
+        /// <returns></returns>
+        IList<IQC_SopInfoView> GetAllIQC_Soppagelist(); 
         #endregion
     }
 }

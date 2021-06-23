@@ -444,8 +444,118 @@ namespace NewAsiaOASystem.ViewModel
         public virtual int? IsPdrefund { get; set; }
 
         /// <summary>
-        /// 发料状态 0 物料待确认  5 待发料  10 缺料 15 完成发料
+        /// 发料状态 0 物料待确认  5 待发料  10 缺料 15 完成发料  20部分发料
         /// </summary>
         public virtual int? Flzt { get; set; }
+
+        /// <summary>
+        /// 发料完成时间-可以生产时间
+        /// </summary>
+        public virtual DateTime? Flwxtime { get; set; }
+
+        /// <summary>
+        /// 生产过程中状态 0 等待开始  5 底板装配  10控制线配线 15 主回路配线  20 面板装箱 25 底板装箱 30 面板接线 35 调试 40 验收
+        /// </summary>
+        public virtual string sczt { get; set; }
+
+
+        public virtual DateTime? scgx1starttime { get; set; }
+        public virtual DateTime? scgx1endtime { get; set; }
+        public virtual DateTime? scgx2starttime { get; set; }
+        public virtual DateTime? scgx2endtime { get; set; }
+        public virtual DateTime? scgx3starttime { get; set; }
+        public virtual DateTime? scgx3endtime { get; set; }
+        public virtual DateTime? scgx4starttime { get; set; }
+        public virtual DateTime? scgx4endtime { get; set; }
+        public virtual DateTime? scgx5starttime { get; set; }
+        public virtual DateTime? scgx5endtime { get; set; }
+        public virtual DateTime? scgx6starttime { get; set; }
+        public virtual DateTime? scgx6endtime { get; set; }
+        public virtual DateTime? scgx7starttime { get; set; }
+        public virtual DateTime? scgx7endtime { get; set; }
+        public virtual DateTime? scgx8starttime { get; set; }
+        public virtual DateTime? scgx8endtime { get; set; }
+
+        /// <summary>
+        /// 是否同步生产K3的生产任务单 0 未生成 1已生成
+        /// </summary>
+        public virtual int? Istbwork { get; set; }
+
+        /// <summary>
+        /// 最近操作同步生成任务单的时间
+        /// </summary>
+        public virtual DateTime? tbworktime { get; set; }
+
+        /// <summary>
+        /// 普实的非标BOM号
+        /// </summary>
+        public virtual string Ps_BomNO { get; set; }
+
+        /// <summary>
+        /// 普实的非标物料号
+        /// </summary>
+        public virtual string Ps_wlBomNO { get; set; }
+
+        /// <summary>
+        /// 普实的物料号或者bom后面的流水号
+        /// </summary>
+        public virtual string Ps_Serialnumber { get; set; }
+
+        /// <summary>
+        /// 非标产品的大类的物料编号
+        /// </summary>
+        public virtual string Ps_sanduanno { get; set; }
+
+        /// <summary>
+        /// 普实非标产品的物料回填编号
+        /// </summary>
+        public virtual string Ps_DocEntry { get; set; }
+
+        /// <summary>
+        /// 普实销售订单同步回填的单价
+        /// </summary>
+        public virtual string Ps_orderDocEntry { get; set; }
+
+        public virtual string Ps_orderDocEntryNUM { get; set; }
+
+        /// <summary>
+        /// K3客户code
+        /// </summary>
+        public virtual string khkecode { get; set; }
+
+        /// <summary>
+        /// 硬件成本
+        /// </summary>
+        public virtual decimal? YJcb { get; set; }
+
+        /// <summary>
+        /// 同步给普实的订单号
+        /// </summary>
+        public virtual string Ps_orderno { get; set; }
+
+        /// <summary>
+        /// 工位机的 同步的工艺路线 25 非标电控箱（小系统）29 非标电控箱（大系统）30 非标电控箱（PLC） 27 常规NAK 28 常规NAW
+        /// </summary>
+        public virtual string gwj_gylxId { get; set; }
+
+        /// <summary>
+        /// 工程图纸异常  0 正常  1 异常
+        /// </summary>
+        public virtual int? gczl_Isyc { get; set; }
+
+        /// <summary>
+        /// 工程图纸异常原因 
+        /// </summary>
+        public virtual string gczl_ycyy { get; set; }
+
+        /// <summary>
+        /// 工程图纸异常 时间
+        /// </summary>
+        public virtual DateTime? gczl_yctime { get; set; }
+
+        /// <summary>
+        /// 工程图纸异常出来时间
+        /// </summary>
+        public virtual DateTime? gczl_yccltime { get; set; }
     }
 }

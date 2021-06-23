@@ -1,0 +1,144 @@
+﻿@model NewAsiaOASystem.ViewModel.DKX_DDinfoView
+@{
+    ViewBag.Title = "非标销售订单明细编辑";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<script type="text/javascript">
+    $(function () {
+        //$("#infozhi").hide()
+        fuzhi();
+    })
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+
+    //赋值
+    function fuzhi() {
+        //$("#infozhi").show();
+        $("#id").val('');
+        $("#dd_bianhao").val('@Model.DD_Bianhao');
+        $("#Ps_wlBomNO").val('@Model.Ps_wlBomNO');
+        var bomstr = '@Model.KBomNo'.substring(0, 3);
+        if (bomstr == "BOM") {//常规
+            $("#BOMNO").val('@Model.KBomNo');
+            $("#kliaohao_btn").show();
+        }
+        else {
+            $("#BOMNO").val('@Model.Ps_BomNO');
+            $("#kliaohao_btn").hide();
+        }
+        $("#danjia").val('@Model.price');
+    }
+
+    //修改单价
+    function updateprice() {
+        var id = '@Model.Id';
+        var danjia = $("#danjia").val();
+        if (danjia == "" || danjia == null) {
+            layer.alert("单价不为空", { icon: 2 });
+            return false;
+        } else {
+            if (isNaN(danjia)) {
+                layer.alert("合同单位售价请填写数字！", { icon: 2 });
+                return false;
+            }
+            else {
+                if (danjia == 0) {
+                    layer.alert("单价不为0", { icon: 2 });
+                    return false;
+                }
+            }
+        }
+        $.ajax({
+            url: "../DKX_DDtypeinfo/updateprice",
+            type: "POST",
+            data: { Id: id, price: danjia },
+            dataType: "json",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+
+                disLoading();
+                if (response.result == "success") {
+                    layer.alert(response.msg, { icon: 1 });
+                }
+                if (response.result == "error") {
+                    layer.alert(response.msg, { icon: 2 });
+                }
+            }
+        })
+    }
+
+    //通过BOM查询产品的物料编号
+    function xiugaiwlno() {
+          var id = '@Model.Id';
+        $.ajax({
+            url: "../DKX_DDtypeinfo/GetFNumberbyFBOMNumber",
+            type: "POST",
+            data: { Id: id },
+            dataType: "json",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response.result == "success") {
+                    layer.alert(response.msg, { icon: 1 });
+                }
+                if (response.result == "error") {
+                    layer.alert(response.msg, { icon: 2 });
+                }
+            }
+        })
+    }
+</script>
+
+<div style="width: 97.5%;padding: 10px 10px 0px 10px;">
+    <div class="layui-form" action="" id="infozhi">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">生产批号：</label>
+                <div class="layui-input-inline" style="width: 200px;">
+                    <input type="text" name="dd_bianhao" id="dd_bianhao" required lay-verify="required" placeholder="产品批号" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">物料号：</label>
+                <div class="layui-input-inline" style="width: 200px;">
+                    <input type="text" name="Ps_wlBomNO" id="Ps_wlBomNO" required lay-verify="required" placeholder="产品的物料号" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">
+                    <button class="layui-btn layui-btn-primary" onclick="xiugaiwlno()" id="kliaohao_btn">同步物料号</button>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">BOM号：</label>
+                <div class="layui-input-block" style="width: 200px;">
+                    <input type="text" name="BOMNO" id="BOMNO" required lay-verify="required" placeholder="" readonly="readonly" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">单价：</label>
+                <div class="layui-input-inline" style="width: 200px;">
+                    <input type="text" name="danjia" id="danjia" required lay-verify="required" placeholder="请填写销售单价" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">
+                    <button class="layui-btn layui-btn-primary" onclick="updateprice()">单价修改</button>
+                </div>
+            </div>
+
+        </div>
+  
+    </div>
+</div>

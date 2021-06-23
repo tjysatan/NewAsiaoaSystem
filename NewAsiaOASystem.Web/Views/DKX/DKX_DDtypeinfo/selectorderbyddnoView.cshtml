@@ -1,0 +1,724 @@
+﻿@{
+    ViewBag.Title = "订单资料查询页面";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<script src="~/Scripts/NAjs/layui.js"></script>
+<script type="text/javascript">
+
+    //点击查询
+    function btn_sel() {
+        var orderno = $("#orderno").val();
+        if (orderno == "") {
+            layer.alert("请输入订单号！", { icon: 2 });
+            return false;
+        }
+        var ddstr = AjaxGetddinfoyId(orderno);
+        //功能简述赋值
+        $("#gnjsstr").val(ddstr.gnjsstr);
+        if (ddstr.dragstart == "0") $("#drag").html("资料完成提交之后，需要一位工程师检查助力");
+        if (ddstr.dragstart == "1") $("#drag").html("待检查助力");
+        if (ddstr.dragstart == "2") $("#drag").html("完成检查助力");
+        if (ddstr.dragstart == "3") $("#drag").html("检查助力驳回。原因：" + ddstr.dragsm);
+        //订单Id和k3料单编号赋值
+        $("#ddId").val(ddstr.Id);
+        $("#Id").val(ddstr.Id);
+        $("#Id5").val(ddstr.Id);
+        $("#Id4").val(ddstr.Id);
+        $("#Id6").val(ddstr.Id);
+        $("#Id7").val(ddstr.Id);
+        $("#Id9").val(ddstr.Id);
+        $("#Id8").val(ddstr.Id);
+        $("#dd_zt").html(ddstr.DD_ZT)
+        $("#K3LDBH").val(ddstr.KBomNo);
+        if (ddstr.DD_Type <= 3) {//不是plc 不需要上传软件和操作手册
+            $("#form7").attr("style", "display:none;");//隐藏div
+            $("#form8").attr("style", "display:none;");//隐藏div
+            $("#form9").attr("style", "display:none;");//隐藏div
+        }
+        //获取生产订单的生产资料
+        var ziliaostr = AJaxziliaojson(ddstr.Id);
+        pjziliaohtml(ziliaostr, ddstr)
+    }
+    //拼接资料html
+    function pjziliaohtml(strjson, ddstr) {
+        if (strjson != null && strjson != "") {
+            //需求
+            var xqzlstr = [];
+            //料单
+            var liaodanstr = [];
+            //箱体图
+            var tuzhistr = [];
+            //电器排布图
+            var dqpbtuzhistr = [];
+            //电器原理图
+            var QTtuzhistr = [];
+            //线号表
+            var XTJTtuzhistr = [];
+            //软件程序
+            var rjcxTtuzhistr = [];
+            //软件源程序
+            var rjycxtuzhistr = [];
+            //操作手册
+            var czshoucestr = [];
+            for (var i = 0; i < strjson.length; i++) {
+                if (strjson[i].Zl_type == "0") {//需求
+                    xqzlstr.push(strjson[i])
+                }
+                if (strjson[i].Zl_type == "1") {//料单
+                    liaodanstr.push(strjson[i])
+                }
+                if (strjson[i].Zl_type == "2") {//箱体图
+                    tuzhistr.push(strjson[i])
+                }
+                if (strjson[i].Zl_type == "6") {//电器排布图
+                    dqpbtuzhistr.push(strjson[i])
+                }
+                if (strjson[i].Zl_type == "5") {//电器原理图
+                    QTtuzhistr.push(strjson[i])
+                }
+                if (strjson[i].Zl_type == "10") {//线号表
+                    XTJTtuzhistr.push(strjson[i])
+                }
+                if (strjson[i].Zl_type == "8") {//软件程序（烧录软件）（仅仅plc 项目有）
+                    rjcxTtuzhistr.push(strjson[i])
+                }
+                if (strjson[i].Zl_type == "11") {//软件程序-源程序（仅仅plc 项目有）
+                    rjycxtuzhistr.push(strjson[i])
+                }
+                if (strjson[i].Zl_type == "9") {//操作手册（仅仅plc 项目有）
+                    czshoucestr.push(strjson[i])
+                }
+            }
+            if (xqzlstr != "" && xqzlstr != null) {
+                var htmlxq = "";
+                for (var i = 0, j = xqzlstr.length; i < j; i++) {
+                    if (xqzlstr[i].Isgl == "0") {//附件资料
+                        var id = "'" + xqzlstr[i].Id + "'";
+                        htmlxq += '<a  target="_blank" href="' + xqzlstr[i].url + '">' + xqzlstr[i].wjName + '</a>&nbsp;&nbsp;';
+                    } else {//关联的资料
+                        var xuqiustr = AJaxxuqiujson(xqzlstr[i].Bjno);
+                        if (xuqiustr.COMPRESSOR_TYPE == '0') {
+                            htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/BLDetail.aspx?CONTROL_NO=' + xuqiustr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                        }
+                        else if (xuqiustr.COMPRESSOR_TYPE == '1') {
+                            htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/LGDetail.aspx?CONTROL_NO=' + xuqiustr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                        }
+                        else if (xuqiustr.COMPRESSOR_TYPE == '2') {
+                            htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/LSDetail.aspx?CONTROL_NO=' + xuqiustr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                        }
+                        else if (xuqiustr.COMPRESSOR_TYPE == '3') {
+                            htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/MDDetail2.aspx?CONTROL_NO=' + xuqiustr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                        }
+                        else if (xuqiustr.COMPRESSOR_TYPE == '12') {
+                            htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/PTLDetail.aspx?CONTROL_NO=' + xuqiustr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                        } else {
+                            htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/XXTDetail.aspx?CONTROL_NO=' + xuqiustr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                        }
+                    }
+                }
+                $("#xuqiucon").html(htmlxq)
+            } else {
+                $("#xuqiucon").html('<span style="color:red">暂无需求</span>');
+            }
+            if (liaodanstr != "" && liaodanstr != null) {
+                var htmlliaodan = "";
+                for (var z = 0, s = liaodanstr.length; z < s; z++) {
+                    if (liaodanstr[z].Isgl == "0") {//附件资料
+                        var id = "'" + liaodanstr[z].Id + "'";
+                        htmlliaodan += '<a  target="_blank" href="' + liaodanstr[z].url + '">' + liaodanstr[z].wjName + '</a>&nbsp;&nbsp; <a href="#" onclick="ziliaoDel(' + id + ')"><i class="layui-icon">&#xe640;</i></a>&nbsp;&nbsp;';
+                    }
+                    if (liaodanstr[z].Isgl == "1") {
+                        var xuqiustr = AJaxxuqiujson(ddstr.BJno);
+                        htmlliaodan += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/ToExcel2.aspx?NO=' + xuqiustr.CONTROL_INFO_NO + '&TYPE=' + xuqiustr.CONTROL_TYPE + '">料单</a>';
+                    }
+                    if (liaodanstr[z].Isgl == "2") {//k3数据
+                        htmlliaodan += '<a  target="_blank" href="../DKX_DDtypeinfo/NewliaodanView?oId=' + ddstr.Id + '">K料单</a>';
+                    }
+                }
+                $("#liaodancon").html(htmlliaodan)
+            } else {
+                $("#liaodancon").html('<span style="color:red">暂无料单</span>');
+            }
+            if (tuzhistr != "" && tuzhistr != null) {
+                var htmltuzhi = "";
+                for (var i = 0, j = tuzhistr.length; i < j; i++) {
+                    var id = "'" + tuzhistr[i].Id + "'";
+                    htmltuzhi += '<a  target="_blank" href="' + tuzhistr[i].url + '">' + tuzhistr[i].wjName + '</a>&nbsp;&nbsp; <a href="#" onclick="ziliaoDel(' + id + ')"><i class="layui-icon">&#xe640;</i></a>&nbsp;&nbsp;';
+                }
+                $("#tuzhicon").html(htmltuzhi)
+            } else {
+                $("#tuzhicon").html('<span style="color:red">暂无图纸(箱体图)</span>');
+            }
+            if (dqpbtuzhistr != "" && dqpbtuzhistr != null) {
+                var htmldqpbtuzhi = "";
+                for (var i = 0, j = dqpbtuzhistr.length; i < j; i++) {
+                    var id = "'" + dqpbtuzhistr[i].Id + "'";
+                    htmldqpbtuzhi += '<a  target="_blank" href="' + dqpbtuzhistr[i].url + '">' + dqpbtuzhistr[i].wjName + '</a>&nbsp;&nbsp; <a href="#" onclick="ziliaoDel(' + id + ')"><i class="layui-icon">&#xe640;</i></a>&nbsp;&nbsp;';
+                }
+                $("#dqpbtuzhi").html(htmldqpbtuzhi)
+            } else {
+                $("#dqpbtuzhi").html('<span style="color:red">暂无图纸(电器排布图)</span>');
+            }
+            if (QTtuzhistr != "" && QTtuzhistr != null) {
+                var htmlqttuzhi = "";
+                for (var i = 0, j = QTtuzhistr.length; i < j; i++) {
+                    var id = "'" + QTtuzhistr[i].Id + "'";
+                    htmlqttuzhi += '<a  target="_blank" href="' + QTtuzhistr[i].url + '">' + QTtuzhistr[i].wjName + '</a>&nbsp;&nbsp; <a href="#" onclick="ziliaoDel(' + id + ')"><i class="layui-icon">&#xe640;</i></a>&nbsp;&nbsp;';
+                }
+                $("#qttuzhicon").html(htmlqttuzhi)
+            } else { $("#qttuzhicon").html('<span style="color:red">暂无图纸(电器原理图)</span>'); }
+            if (XTJTtuzhistr != "" && XTJTtuzhistr != null) {
+                var htmlxtjttuzhi = "";
+                for (var i = 0, j = XTJTtuzhistr.length; i < j; i++) {
+                    var id = "'" + XTJTtuzhistr[i].Id + "'";
+                    htmlxtjttuzhi += '<a  target="_blank" href="' + XTJTtuzhistr[i].url + '">' + XTJTtuzhistr[i].wjName + '</a>&nbsp;&nbsp; <a href="#" onclick="ziliaoDel(' + id + ')"><i class="layui-icon">&#xe640;</i></a>&nbsp;&nbsp;';
+                }
+                $("#xtjtcon").html(htmlxtjttuzhi);
+            } else {
+                $("#xtjtcon").html('<span style="color:red">暂无图纸(线号表)</span>');
+            }
+            if (rjcxTtuzhistr != "" && rjcxTtuzhistr != null) {
+                var htmlrjcxtuzhi = "";
+                for (var i = 0, j = rjcxTtuzhistr.length; i < j; i++) {
+                    var id = "'" + rjcxTtuzhistr[i].Id + "'";
+                    htmlrjcxtuzhi += '<a  target="_blank" href="' + rjcxTtuzhistr[i].url + '">' + rjcxTtuzhistr[i].wjName + '</a>&nbsp;&nbsp; <a href="#" onclick="ziliaoDel(' + id + ')"><i class="layui-icon">&#xe640;</i></a>&nbsp;&nbsp;';
+                }
+                $("#rjxctcon").html(htmlrjcxtuzhi)
+            } else { $("#rjxctcon").html('<span style="color:red">暂无烧录程序</span>'); }
+            if (rjycxtuzhistr != "" && rjycxtuzhistr != null) {
+                var htmlrjycxtuzhi = "";
+                for (var i = 0, j = rjycxtuzhistr.length; i < j; i++) {
+                    var id = "'" + rjycxtuzhistr[i].Id + "'";
+                    htmlrjycxtuzhi += '<a  target="_blank" href="' + rjycxtuzhistr[i].url + '">' + rjycxtuzhistr[i].wjName + '</a>&nbsp;&nbsp; <a href="#" onclick="ziliaoDel(' + id + ')"><i class="layui-icon">&#xe640;</i></a>&nbsp;&nbsp;';
+                }
+                $("#rjycxtcon").html(htmlrjycxtuzhi)
+            } else {
+                $("#rjycxtcon").html('<span style="color:red">暂无源程序</span>');
+            }
+            if (czshoucestr != "" && czshoucestr != null) {
+                var htmlczsctuzhi = "";
+                for (var i = 0, j = czshoucestr.length; i < j; i++) {
+                    var id = "'" + czshoucestr[i].Id + "'";
+                    htmlczsctuzhi += '<a  target="_blank" href="' + czshoucestr[i].url + '">' + czshoucestr[i].wjName + '</a>&nbsp;&nbsp; <a href="#" onclick="ziliaoDel(' + id + ')"><i class="layui-icon">&#xe640;</i></a>&nbsp;&nbsp;';
+                }
+                $("#czsctcon").html(htmlczsctuzhi)
+            } else {
+                $("#czsctcon").html('<span style="color:red">暂无操作手册</span>');
+            }
+
+        } else {//资料为空时
+            $("#xuqiucon").html('<span style="color:red">暂无需求</span>');
+            $("#liaodancon").html('<span style="color:red">暂无料单</span>');
+            $("#tuzhicon").html('<span style="color:red">暂无图纸(箱体图)</span>');
+            $("#dqpbtuzhi").html('<span style="color:red">暂无图纸(电器排布图)</span>');
+            $("#qttuzhicon").html('<span style="color:red">暂无图纸(电器原理图)</span>');
+            $("#xtjtcon").html('<span style="color:red">暂无图纸(线号表)</span>');
+            $("#rjxctcon").html('<span style="color:red">暂无烧录程序</span>');
+            $("#rjycxtcon").html('<span style="color:red">暂无源程序</span>');
+            $("#czsctcon").html('<span style="color:red">暂无操作手册</span>');
+        }
+    }
+    //获取订单信息
+    function AjaxGetddinfoyId(orderno) {
+
+        var json;
+        $.ajax({
+            url: "../DKX_DDtypeinfo/Ajaxorderbyno",
+            type: "POST",
+            data: { orderno: orderno },
+            dataType: "JSON",
+            async: false,
+            success: function (response) {
+                json = eval(response);
+            },
+            error: function (e) {
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+        return json;
+    }
+
+    //获取需求数据
+    function AJaxxuqiujson(val) {
+        var json;
+        $.ajax({
+            url: "../DKX_DDtypeinfo/AjaxxuqiubyorderNo",
+            type: "POST",
+            data: { Bjno: val },
+            dataType: "JSON",
+            async: false,
+            success: function (response) {
+                json = eval(response);
+            },
+            error: function (e) {
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+        return json;
+    }
+
+    //获取资料数据
+    function AJaxziliaojson(Id) {
+        var json;
+        $.ajax({
+            url: "../DKX_DDtypeinfo/Getalltypeziliaojsonbyddid",
+            type: "POST",
+            data: { ddId: Id },
+            dataType: "JSON",
+            async: false,
+            success: function (response) {
+                json = eval(response);
+            },
+            error: function (e) {
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+        return json;
+    }
+
+
+
+
+
+
+
+
+    //资料上传
+    function RjCXtuzhishangchuanSavaForm(fromname) {
+        //表单验证
+        var options = {
+            beforeSubmit: function () {
+                return true;
+            },
+            dataType: "json",//这里是指控制器处理后返回的类型，这里返回json格式。
+            success: function (context) {
+                if ("success" == context.result) {
+                    layer.alert("保存成功！", { icon: 1 }, function () { btn_sel(); });
+                }
+                if ("error" == context.result) {
+                    layer.alert("提交失败，请重新操作！", { icon: 2 }, function () { btn_sel(); });
+                }
+                if ("error1" == context.result) {
+                    layer.alert("请选择文件！", { icon: 2 }, function () { btn_sel(); });
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $.messager.alert("操作提示", '操作失败！', 'error');
+            }
+        }
+        $('#' + fromname).ajaxSubmit(options);
+        return false; //为了不刷新页面,返回false
+    }
+
+
+
+    //
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+
+    //删除资料
+    function ziliaoDel(val) {
+        $.ajax({
+            url: "../DKX_DDtypeinfo/ziliaodel",
+            type: "POST",
+            data: { Id: val },
+            dataType: "html",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response == "0") {
+                    layer.alert("删除失败！", { icon: 2 }, function () { btn_sel() });
+                }
+                if (response == "1") {
+                    layer.alert("删除成功！", { icon: 1 }, function () { btn_sel(); });
+                }
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+    }
+    //更新K3料单
+    function AjaxUpk3LDData() {
+        var ddId = $("#ddId").val();
+        var K3LDBH = $("#K3LDBH").val();
+        $.ajax({
+            url: "../DKX_DDtypeinfo/UPK3bomInterface",
+            type: "POST",
+            data: { FnumberBom: K3LDBH, ddId: ddId },
+            dataType: "html",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response == "0") {
+                    layer.alert("更新异常,请重新再试！", { icon: 2 }, function () { btn_sel(); });
+                }
+                if (response == "2") {
+                    layer.alert("更新成功！", { icon: 1 }, function () { btn_sel(); });
+                }
+
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+    }
+
+    //完成制图提交
+    function gcswczhitu(val) {
+        var beizhu = $("#beizhu").val();
+        $.ajax({
+            url: "../DKX_DDtypeinfo/GCSwczhituEide",
+            type: "POST",
+            data: { Id: val, beizhu: beizhu },
+            dataType: "html",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response == "2") {
+                    layer.alert("图纸（箱体图）缺失,请上传图纸！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "0") {
+                    layer.alert("提交成功！", { icon: 1 }, function () { guanbi(); });
+                }
+                if (response == "3") {
+                    layer.alert("料单缺失,请上传料单！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "4") {
+                    layer.alert("提交异常,请重新提交！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "5") {
+                    layer.alert("无法提交制图完成！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "6") {
+                    layer.alert("图纸（电器原理图）缺失,请上传图纸！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "7") {
+                    layer.alert("图纸（电器排布图）缺失,请上传图纸！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "8") {
+                    layer.alert("图纸（电器排布图）尚未审核！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "9") {
+                    layer.alert("图纸（电器原理图）尚未审核 ！", { icon: 2 }, function () { location.reload(); });
+                }
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+    }
+
+    //资料生产提交审核
+    function gcszltsh(val) {
+        var beizhu = $("#beizhu").val();
+        var gnjsstr = $("#gnjsstr").val();
+        $.ajax({
+            url: "../DKX_DDtypeinfo/GCSzltjshEide",
+            type: "POST",
+            data: { Id: val, beizhu: beizhu, gnjsstr: gnjsstr },
+            dataType: "html",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response == "0") {
+                    layer.alert("提交成功，需要一位工程师检查资料之后会直接进入生产部门！", { icon: 1 }, function () { guanbi(); });
+                }
+                if (response == "0-1") {
+                    layer.alert("提交成功,订单进入资料审核状态！", { icon: 1 }, function () { guanbi(); });
+                }
+                if (response == "1") {
+                    layer.alert("提交失败！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "2") {
+                    layer.alert("图纸（箱体图）缺失,请上传图纸！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "3") {
+                    layer.alert("料单缺失,请上传料单！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "4") {
+                    layer.alert("提交异常,请重新提交！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "5") {
+                    layer.alert("无法提交制图完成！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "6") {
+                    layer.alert("图纸（电器原理图）缺失,请上传图纸！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "7") {
+                    layer.alert("图纸（电器排布图）缺失,请上传图纸！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "8-1") {
+                    layer.alert("图纸（烧录软件）未上传！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "8-2") {
+                    layer.alert("图纸（源程序）未上传 ！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "8-3") {
+                    layer.alert("操作手册未上传 ！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "10") {
+                    layer.alert("订单资料已经审核完成,该状态下不可以进行资料修改！", { icon: 2 }, function () { location.reload(); });
+                }
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+    }
+
+    function guanbi() {
+        var index = parent.layer.getFrameIndex(window.name);
+        //关闭弹出层
+        parent.layer.close(index);
+    }
+
+    //同步更新方案库的资料
+    function updateFANGKAN() {
+        var Id = $("#ddId").val();
+        if (Id == "") {
+            layer.alert("请先查询订单！", { icon: 2 });
+            return false;
+        }
+        $.ajax({
+            url: "../DKX_DDtypeinfo/updateFANGKAN",
+            type: "POST",
+            data: { Id: Id },
+            dataType: "html",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response == "0") {
+                    layer.alert("订单不存在！", { icon: 2 }, function () { btn_sel() });
+                }
+                if (response == "1") {
+                    layer.alert("不存在方案！", { icon: 2 }, function () { btn_sel(); });
+                }
+                if (response == "2") {
+                    layer.alert("更新成功！", { icon: 1 }, function () { btn_sel(); });
+                }
+                if (response == "3") {
+                    layer.alert("操作异常！", { icon: 1 }, function () { btn_sel(); });
+                }
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+    }
+
+</script>
+
+<blockquote class="layui-elem-quote">非标订单图纸资料的修改已经同步更新方案库</blockquote>
+
+<div class="layui-form" action="">
+    <div class="layui-form-item">
+        <label class="layui-form-label">订单编号</label>
+        <div class="layui-input-inline">
+            <input type="text" name="orderno" id="orderno" required lay-verify="required" placeholder="请输入订单编号" autocomplete="off" class="layui-input">
+        </div>
+        <div class="layui-input-inline">
+            <button class="layui-btn layui-btn-sm" onclick="btn_sel()">点击查询</button>
+        </div>
+    </div>
+</div>
+
+
+<input type="hidden" id="ddId" name="ddId" />
+<input type="hidden" id="K3LDBH" name="K3LDBH" />
+
+ 
+
+<div style="width: 90%; padding: 20px 20px 0 20px">
+    <table style="width: 100%">
+        <tr>
+            <td width="120px">当前状态：</td>
+            <td id="dd_zt"></td>
+        </tr>
+    </table>
+    <hr class="layui-bg-blue">
+    <table style="width: 100%">
+        <tr>
+            <td width="120px">需求：</td>
+            <td id="xuqiucon"></td>
+        </tr>
+    </table>
+
+    <hr class="layui-bg-blue">
+    <table>
+        <tr>
+            <td width="120px">料单：</td>
+            <td id="liaodancon"></td>
+        </tr>
+    </table>
+    <hr class="layui-bg-blue">
+
+    @using (Html.BeginForm("tuziuploadEide", "DKX_DDtypeinfo", FormMethod.Post, new { id = "form3", enctype = "multipart/form-data" }))
+    {
+        <input type="hidden" name="Id" id="Id" />
+        <table>
+            <tr>
+                <td width="120px">
+                    箱体图
+                    (<span style="color:red">多一份pdf格式</span>)：
+                </td>
+                <td width="270px">
+                    <input type="file" name="image3" id="image3" multiple="multiple" class="layui-btn layui-btn-normal" style="width: 150px">
+                    <button type="button" class="layui-btn" onclick='RjCXtuzhishangchuanSavaForm("form3")'>开始上传</button>
+                </td>
+                <td id="tuzhicon"></td>
+            </tr>
+        </table>
+    }
+    <hr class="layui-bg-blue">
+    @using (Html.BeginForm("DQPBtuzhiEide", "DKX_DDtypeinfo", FormMethod.Post, new { id = "form5", enctype = "multipart/form-data" }))
+    {
+        <input type="hidden" name="Id" id="Id5" />
+        <table>
+            <tr>
+                <td width="120px">电器排布图(<span style="color:red">多一份pdf格式</span>)：</td>
+                <td width="270px">
+                    <input type="file" name="image5" id="image5" multiple="multiple" class="layui-btn layui-btn-normal" style="width: 150px">
+                    <button type="button" class="layui-btn" onclick='RjCXtuzhishangchuanSavaForm("form5")'>开始上传</button>
+                </td>
+                <td id="dqpbtuzhi"></td>
+            </tr>
+        </table>
+    }
+
+
+    <hr class="layui-bg-blue">
+    @using (Html.BeginForm("QTtuzhiuploadEide", "DKX_DDtypeinfo", FormMethod.Post, new { id = "form4", enctype = "multipart/form-data" }))
+    {
+        <input type="hidden" name="Id" id="Id4" />
+        <table>
+            <tr>
+                <td width="120px">电器原理图(<span style="color:red">多一份pdf格式</span>)：</td>
+                <!--原其他图名称修改成电器原理图-->
+                <td width="270px">
+                    <input type="file" name="image4" id="image4" multiple="multiple" class="layui-btn layui-btn-normal" style="width: 150px">
+                    <button type="button" class="layui-btn" onclick='RjCXtuzhishangchuanSavaForm("form4")'>开始上传</button>
+                </td>
+                <td id="qttuzhicon"></td>
+            </tr>
+        </table>
+    }
+    <hr class="layui-bg-blue">
+    @using (Html.BeginForm("XTJTtuzhiEide", "DKX_DDtypeinfo", FormMethod.Post, new { id = "form6", enctype = "multipart/form-data" }))
+    {
+        <input type="hidden" name="Id" id="Id6" />
+        <table>
+            <tr>
+                <td width="120px">线号表(<span style="color:red">多一份excl格式</span>)：</td>
+                <td width="270px">
+                    <input type="file" name="image6" id="image6" multiple="multiple" class="layui-btn layui-btn-normal" style="width: 150px">
+                    <button type="button" class="layui-btn" onclick='RjCXtuzhishangchuanSavaForm("form6")'>开始上传</button>
+                </td>
+                <td id="xtjtcon"></td>
+            </tr>
+        </table>
+    }
+
+    @using (Html.BeginForm("RjcxuploadEide", "DKX_DDtypeinfo", FormMethod.Post, new { id = "form7", enctype = "multipart/form-data" }))
+    {
+        <hr class="layui-bg-blue">
+        <input type="hidden" name="Id" id="Id7" />
+        <table>
+            <tr>
+                <td width="120px">烧录程序：</td>
+                <td width="270px">
+                    <input type="file" name="image7" id="image7" multiple="multiple" class="layui-btn layui-btn-normal" style="width: 150px">
+                    <button type="button" class="layui-btn" onclick='RjCXtuzhishangchuanSavaForm("form7")'>开始上传</button>
+                </td>
+                <td id="rjxctcon"></td>
+            </tr>
+        </table>
+    }
+    @using (Html.BeginForm("RjycxuploadEide", "DKX_DDtypeinfo", FormMethod.Post, new { id = "form9", enctype = "multipart/form-data" }))
+    {
+        <hr class="layui-bg-blue">
+        <input type="hidden" name="Id" id="Id9" />
+        <table>
+            <tr>
+                <td width="120px">源程序：</td>
+                <td width="270px">
+                    <input type="file" name="image9" id="image9" multiple="multiple" class="layui-btn layui-btn-normal" style="width: 150px">
+                    <button type="button" class="layui-btn" onclick='RjCXtuzhishangchuanSavaForm("form9")'>开始上传</button>
+                </td>
+                <td id="rjycxtcon"></td>
+            </tr>
+        </table>
+    }
+
+    @using (Html.BeginForm("czscuploadEide", "DKX_DDtypeinfo", FormMethod.Post, new { id = "form8", enctype = "multipart/form-data" }))
+    {
+        <hr class="layui-bg-blue">
+        <input type="hidden" name="Id" id="Id8" />
+        <table>
+            <tr>
+                <td width="120px">操作手册：</td>
+                <td width="270px">
+                    <input type="file" name="image8" id="image8" multiple="multiple" class="layui-btn layui-btn-normal" style="width: 150px">
+                    <button type="button" class="layui-btn" onclick='RjCXtuzhishangchuanSavaForm("form8")'>开始上传</button>
+                </td>
+                <td id="czsctcon"></td>
+            </tr>
+        </table>
+    }
+    <hr class="layui-bg-black">
+    @*<div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">功能简述：</label>
+            <div class="layui-input-block">
+                <textarea placeholder="功能简述" id="gnjsstr" name="gnjsstr" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">备注：</label>
+            <div class="layui-input-block">
+                <input class="layui-input" id="beizhu" name="beizhu" placeholder="备注" type="text" />
+            </div>
+        </div>*@
+
+    <div class="layui-form-item" style="margin: auto">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit="" lay-filter="demo1" onclick="updateFANGKAN()">更新方案</button>
+            @*<span id="drag" style="color: #2ec770; padding-left: 10px"></span>*@
+            @*<button class="layui-btn" lay-submit="" lay-filter="demo1" onclick="AjaxUpk3LDData()">更新料单</button>*@
+        </div>
+    </div>
+
+    <hr class="layui-bg-black">
+    <blockquote class="layui-elem-quote layui-quote-nm">
+        说明：<br />
+        1.附件形式的料单修改,先删除,再点击上传.<br />
+        2.请上传全图纸<span style="color: red">注：附件可以删除</span><br />
+        3.K3料单修改之后，请工程师点击下更新料单
+    </blockquote>
+</div>

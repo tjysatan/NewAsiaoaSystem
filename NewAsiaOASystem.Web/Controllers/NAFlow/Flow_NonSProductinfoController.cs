@@ -25,6 +25,7 @@ namespace NewAsiaOASystem.Web.Controllers
         IFlow_PlanPPrintinfoDao _IFlow_PlanPPrintinfoDao = ContextRegistry.GetContext().GetObject("Flow_PlanPPrintinfoDao") as IFlow_PlanPPrintinfoDao;
         IFlow_RoutineStockinfoDao _IFlow_RoutineStockinfoDao = ContextRegistry.GetContext().GetObject("Flow_RoutineStockinfoDao") as IFlow_RoutineStockinfoDao;
         IFlow_AjaxtxdateDao _IFlow_AjaxtxdateDao = ContextRegistry.GetContext().GetObject("Flow_AjaxtxdateDao") as IFlow_AjaxtxdateDao;
+        IK3_wuliaoinfoDao _IK3_wuliaoinfoDao = ContextRegistry.GetContext().GetObject("K3_wuliaoinfoDao") as IK3_wuliaoinfoDao;
 
         public ActionResult Index()
         {
@@ -132,7 +133,7 @@ namespace NewAsiaOASystem.Web.Controllers
             Flow_NonSProductinfoView model = _IFlow_NonSProductinfoDao.NGetModelById(Id);
             ViewData["pname"] = model.Pname;
             ViewData["pmodel"] = model.Pmodel;
-            ViewData["Newdatetime"] = DateTime.Now.ToString("yyyMMdd");
+            //ViewData["Newdatetime"] = DateTime.Now.ToString("yyyMMdd");
             ViewData["p_type"] = model.Category;
             DataTable dt = GetKcsum("'" + model.Pbianma + "'");
             if (dt.Rows.Count > 0)
@@ -170,6 +171,8 @@ namespace NewAsiaOASystem.Web.Controllers
             planmodel.P_SCnumber = Convert.ToDecimal(scsum);//要货数量
             planmodel.P_type = Convert.ToInt32(p_type);//生产计划单的种类 0 常规  1非标（销售） 2非标（工程） 3 试产
             planmodel.Status = 0;
+            planmodel.scbianhao = Getwkorderbianhao();
+            planmodel.Nc_time= DateTime.Now;//创建时间
             string pId = _IFlow_PlanProductioninfoDao.InsertID(planmodel);
             MassManager.FMb_ProductionOrderNotice(pId);
             string tzdtype;
@@ -185,6 +188,25 @@ namespace NewAsiaOASystem.Web.Controllers
             return pId;
         }
 
+        #region //生产温控的生产批号
+        public string Getwkorderbianhao()
+        {
+            string Newdatestr = DateTime.Now.ToString("yyyyMMdd");
+            string str;
+            int sum = _IFlow_PlanProductioninfoDao.Getwkcount() + 1;
+            if (sum < 10)
+            {
+                str = "0" + sum.ToString();
+            }
+            else
+            {
+                str = sum.ToString();
+            }
+            string bianhao = Newdatestr + str;
+            return bianhao;
+        }
+        #endregion
+
         //保存生产通知单
         /// <summary>
         /// 
@@ -199,7 +221,7 @@ namespace NewAsiaOASystem.Web.Controllers
         /// <param name="DYdy">电源电源</param>
         /// <param name="yhxz">要货性质 0库存储备 1订单生产</param>
         /// <returns></returns>
-        public string PrintPlanDATa(string pId, string scph1, string scph2, string yhsl, string Cusname, string yhdatetime, string cpname, string DYdy, string yhxz, string p_type, string kfbeizhu)
+        public string PrintPlanDATa(string pId,string yhsl, string Cusname, string yhdatetime, string cpname, string DYdy, string yhxz, string p_type, string kfbeizhu)
         {
             try
             {
@@ -213,12 +235,14 @@ namespace NewAsiaOASystem.Web.Controllers
                     return "3";//要货时间小于当前时间
                 }
                 string Plan_Id = ReturnPId(pId, yhsl, p_type);
+                //查询生产计划
+                Flow_PlanProductioninfoView jhmode = _IFlow_PlanProductioninfoDao.NGetModelById(Plan_Id);
                 model.Plan_Id = Plan_Id;
-                scph2 = GetcountPproduction();
-                model.Scph = scph1 + scph2;//生产批号
+                //scph2 = GetcountPproduction();
+                //model.Scph = scph1 + scph2;//生产批号
+                model.Scph = jhmode.scbianhao;
                 model.Scsl = yhsl;//要货数量
                 model.Cusname = Cusname;//客户名称
-             
                 model.CPname = cpname;//产品名称
                 model.DYDY = DYdy;//电源型号
                 model.Yhxz = Convert.ToInt32(yhxz);
@@ -327,6 +351,88 @@ namespace NewAsiaOASystem.Web.Controllers
         }
         #endregion
 
+        #endregion
+
+        #region //非标温控已经试产产品的资料数据管理 ESOP
+        public ActionResult NowkESOPlist()
+        {
+            return View();
+        }
+
+        #region //非标温控已经试产产品的分页数据（2021-05-27）
+        public ActionResult GetNowkpage(int? page, int limit, string cpname, string wlno, string type, string category)
+        {
+            int CurrentPageIndex = Convert.ToInt32(page);
+            if (CurrentPageIndex == 0)
+                CurrentPageIndex = 1;
+            _IFlow_NonSProductinfoDao.SetPagerPageIndex(CurrentPageIndex);
+            _IFlow_NonSProductinfoDao.SetPagerPageSize(limit);
+            PagerInfo<Flow_NonSProductinfoView> listmodel = _IFlow_NonSProductinfoDao.Getfeibiaowkpagerlist(cpname, wlno, category);
+            var result = new
+            {
+                code = 0,
+                msg = "",
+                count = listmodel.RecordCount,
+                data = listmodel.DataList,
+            };
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+        #endregion
+
+        #region //非标温控的图纸资料
+        public ActionResult nowkgxtzView(string Id)
+        {
+            Flow_NonSProductinfoView model = _IFlow_NonSProductinfoDao.NGetModelById(Id);
+            return View(model);
+        }
+        #endregion
+        #region //非标温控基础数据整理
+        public JsonResult NOwkdatezl()
+        {
+            try
+            {
+                IList<Flow_NonSProductinfoView> listmodel = _IFlow_NonSProductinfoDao.NGetList();
+                foreach (var item in listmodel)
+                {
+                    item.Bomno =k3bomnobywl(item.Pbianma);
+                    _IFlow_NonSProductinfoDao.NUpdate(item);
+                }
+                return Json(new { result = "success" });
+            }
+            catch
+            {
+                return Json(new { result = "error" });
+            }
+        }
+        #endregion
+        public string k3bomnobywl(string wl)
+        {
+            try
+            {
+
+                DataTable dt = GetK3BOM(wl);
+                if (dt != null)
+                {
+                    string BOMNO = dt.Rows[0]["BOM编号"].ToString();//库存
+                    return BOMNO;
+                }
+                return "";
+            }
+            catch
+            {
+                return "";
+            }
+        }
+
+
+        public DataTable GetK3BOM(string P_bianhao)
+        {
+            Newasia.XYOffer Dsmodel = new Newasia.XYOffer();
+            string Wldm = P_bianhao;//物料代码
+            string Key = "00BE974F-C52D-434D-AB99-4D9E3796CD81";
+            DataTable dt = Dsmodel.GetBom(Wldm, Key);
+            return dt;
+        }
         #endregion
 
 

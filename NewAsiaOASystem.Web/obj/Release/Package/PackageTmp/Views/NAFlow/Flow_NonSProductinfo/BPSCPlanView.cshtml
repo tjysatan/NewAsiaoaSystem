@@ -20,9 +20,9 @@
 
 <script type="text/javascript">
     function FZ() {
-        $("#scph1").val('@ViewData["Newdatetime"]');//生产批号前一部分
+        @*$("#scph1").val('@ViewData["Newdatetime"]');//生产批号前一部分
         var sp2 = Getscp2();
-        $("#scph2").val(sp2)
+        $("#scph2").val(sp2)*@
         $("#cpname").val('@ViewData["pname"]');//产品名称
         $("#DYdy").val('@ViewData["pmodel"]');
     }
@@ -55,8 +55,8 @@
     }
 
     function PlanPprintSavaForm(obj) {
-        var scph1 = $("#scph1").val();//批号前面
-        var scph2 = $("#scph2").val();//批号后面
+        //var scph1 = $("#scph1").val();//批号前面
+        //var scph2 = $("#scph2").val();//批号后面
         var yhsl = $("#yhsl").val();//要货数量
         var Cusname = $("#Cusname").val();//客户名称
         var yhdatetime = $("#yhdatetime").val();//要货时间
@@ -73,11 +73,11 @@
             p_type=3;
         }
 
-        if (scph1 == "" || scph2 == "") {
-            layer.alert("生产批号不为空！", { icon: 2 });
-            $("#scph1").focus();
-            return;
-        }
+        //if (scph1 == "" || scph2 == "") {
+        //    layer.alert("生产批号不为空！", { icon: 2 });
+        //    $("#scph1").focus();
+        //    return;
+        //}
         if (yhsl == "") {
             layer.alert("要货数量不为空！", { icon: 2 });
             $("#scph1").focus();
@@ -96,7 +96,7 @@
         $.ajax({
             url: $(obj).attr("action"),
             type: "POST",
-            data: { pId: '@ViewData["Id"]', scph1: scph1, scph2: scph2, yhsl: yhsl, Cusname: Cusname, yhdatetime: yhdatetime, cpname: cpname, DYdy: DYdy, yhxz: yhxz, p_type: p_type, kfbeizhu: kfbeizhu },
+            data: { pId: '@ViewData["Id"]',  yhsl: yhsl, Cusname: Cusname, yhdatetime: yhdatetime, cpname: cpname, DYdy: DYdy, yhxz: yhxz, p_type: p_type, kfbeizhu: kfbeizhu },
             dataType: "html",
             async: false,
             success: function (response) {
@@ -139,14 +139,13 @@
             <table style="width: 100%; color: #000; font-size: 13px;">
                 <tr>
                     <td>生产批号：
-                         <span class="infor-c-input">
-                             <input type="text" id="scph1" name="scph1" />-
-                              <input type="text" style="width: 20px;" id="scph2" name="scph2" />
-                         </span>
+                        <span class="infor-c-input">
+                            会根据生产计划自动生成
+                        </span>
                     </td>
                     <td>要货数量：
                             <span class="infor-c-input">
-                                <input type="text" id="yhsl" name="yhsl" />
+                                <input type="text" id="yhsl" name="yhsl" autocomplete="off" />
                             </span>
                     </td>
                 </tr>
@@ -158,7 +157,7 @@
                     </td>
                     <td>要货日期：
                             <span class="infor-c-input">
-                                <input type="text" id="yhdatetime" name="yhdatetime" onclick="WdatePicker()" />
+                                <input type="text" id="yhdatetime" name="yhdatetime" autocomplete="off" onclick="WdatePicker()" />
                             </span>
                     </td>
                 </tr>

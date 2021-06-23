@@ -12,6 +12,7 @@
     <property name="Je" column="Je" />
     <property name="C_datetime" column="C_datetime" />
     <property name="kcType" column="kcType" />
-    
+    <property name="cpbianmao" column="cpbianmao" />
+    <property name="beizhu" column="beizhu" />
   </class>
 </hibernate-mapping>

@@ -110,7 +110,7 @@
             cptype = "物联网/" + showwlwtype(@Model.DD_WLWtype);
         }
         var shuliang = '@Model.NUM';
-        var bmbm = '<span style="color:red">BOM编号：' +BOMbm + '</span><br/>'
+        var bmbm = '<span style="color:red;">BOM编号：' +BOMbm + '</span><br/>'
         var strbt =bmbm+"生产批号：" + bianma + "&nbsp;&nbsp;客户：" + KHname + "&nbsp;&nbsp;产品：" + cpname + "&nbsp;&nbsp;功率："+gl+"/"+dw+ "&nbsp;&nbsp;类型:" + cptype + "&nbsp;&nbsp;数量：" + shuliang;
         var html = "";
         html = '<tr><td colspan="8" style=" height:50px; font-size: 16px; font-weight:bold;">' + strbt + '</td></tr>';
@@ -286,10 +286,17 @@
 
 <div id="form1">
     <div id="Mcon" style="width: 100%; margin: auto">
-        <div >
-            <div style="" id="imgDiv">
-            </div>
-        </div>
+         <table  style="width: 98%; color: #000; font-size: 13px; margin: auto;">
+             <tr>
+                 <td style="text-align:right">
+                     <div >
+                         <div style="" id="imgDiv">
+                         </div>
+                     </div>
+                 </td>
+                 
+             </tr>
+         </table>
         <table class="table_con" style="width: 98%; color: #000; font-size: 13px; margin: auto;" id="table_con">
         </table>
     </div>

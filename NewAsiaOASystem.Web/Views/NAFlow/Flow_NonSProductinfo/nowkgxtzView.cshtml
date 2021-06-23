@@ -1,0 +1,491 @@
+﻿@model NewAsiaOASystem.ViewModel.Flow_NonSProductinfoView
+@{
+    ViewBag.Title = "非标温控图纸资料编辑";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<script src="~/Scripts/NAjs/layui.js"></script>
+<script type="text/javascript">
+    //
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+
+      $(function () {
+        //获取生产订单的生产资料
+        var ziliaostr = AJaxziliaojson('@Model.Pbianma');
+        pjziliaohtml(ziliaostr);
+    })
+
+     //拼接资料html
+    function pjziliaohtml(strjson) {
+
+        //SMT
+        var SMT = [];
+        //插件
+        var chajian = [];
+        //焊接
+        var hanjie = [];
+        //洗板
+        var xiban = [];
+        //看板
+        var kanban = [];
+        //烧录
+        var shaoru = [];
+        //初检
+        var chujian = [];
+        //灌胶
+        var guanjiao = [];
+        //老化
+        var laohua = [];
+        //防潮
+        var fangchao = [];
+        //装配
+        var zhuangpei = [];
+        //总检
+        var zongjian = [];
+        //包装
+        var baozhuang = [];
+        for (var i = 0; i < strjson.length; i++) {
+            if (strjson[i].Zl_type == "2") {//SMT
+                SMT.push(strjson[i])
+            }
+            if (strjson[i].Zl_type == "3") {//插件
+                chajian.push(strjson[i])
+            }
+            if (strjson[i].Zl_type == "4") {//焊接
+                hanjie.push(strjson[i])
+            }
+            if (strjson[i].Zl_type == "5") {//洗板
+                xiban.push(strjson[i])
+            }
+            if (strjson[i].Zl_type == "6") {//看板
+                kanban.push(strjson[i])
+            }
+            if (strjson[i].Zl_type == "7") {//烧录
+                shaoru.push(strjson[i])
+            }
+            if (strjson[i].Zl_type == "8") {//初检
+                chujian.push(strjson[i])
+            }
+            if (strjson[i].Zl_type == "9") {//灌胶
+                guanjiao.push(strjson[i]);
+            }
+            if (strjson[i].Zl_type == "10") {//老化
+                laohua.push(strjson[i]);
+            }
+            if (strjson[i].Zl_type == "11") {//防潮
+                fangchao.push(strjson[i]);
+            }
+            if (strjson[i].Zl_type == "12") {//装配
+                zhuangpei.push(strjson[i]);
+            }
+            if (strjson[i].Zl_type == "13") {//总检
+                zongjian.push(strjson[i]);
+            }
+            if (strjson[i].Zl_type == "14") {//包装
+                baozhuang.push(strjson[i]);
+            }
+
+        }
+
+        if (SMT != "" && SMT != null) {
+            var htmltuzhi = "";
+            for (var i = 0, j = SMT.length; i < j; i++) {
+                var id = "'" + SMT[i].Id + "'";
+                htmltuzhi += '<a  target="_blank" href="' + SMT[i].url + '">' + SMT[i].wjName + '</a>&nbsp;&nbsp; <a href="#" onclick="ziliaoDel(' + id + ')"><i class="layui-icon">&#xe640;</i></a>&nbsp;&nbsp;';
+            }
+            $("#SMTcon").html(htmltuzhi)
+        } else {
+            $("#SMTcon").html('<span style="color:red">暂无图纸(SMT)</span>');
+        }
+        if (chajian != "" && chajian != null) {
+            var htmltuzhi = "";
+            for (var i = 0, j = chajian.length; i < j; i++) {
+                var id = "'" + chajian[i].Id + "'";
+                htmltuzhi += '<a  target="_blank" href="' + chajian[i].url + '">' + chajian[i].wjName + '</a>&nbsp;&nbsp; <a href="#" onclick="ziliaoDel(' + id + ')"><i class="layui-icon">&#xe640;</i></a>&nbsp;&nbsp;';
+            }
+            $("#chajiancon").html(htmltuzhi)
+        } else {
+            $("#chajiancon").html('<span style="color:red">暂无图纸(插件)</span>');
+        }
+
+        if (hanjie != "" && hanjie != null) {
+            var htmltuzhi = "";
+            for (var i = 0, j = hanjie.length; i < j; i++) {
+                var id = "'" + hanjie[i].Id + "'";
+                htmltuzhi += '<a  target="_blank" href="' + hanjie[i].url + '">' + hanjie[i].wjName + '</a>&nbsp;&nbsp; <a href="#" onclick="ziliaoDel(' + id + ')"><i class="layui-icon">&#xe640;</i></a>&nbsp;&nbsp;';
+            }
+            $("#hanjiecon").html(htmltuzhi)
+        } else {
+            $("#hanjiecon").html('<span style="color:red">暂无图纸(焊接)</span>');
+        }
+
+        if (xiban != "" && xiban != null) {
+            var htmltuzhi = "";
+            for (var i = 0, j = xiban.length; i < j; i++) {
+                var id = "'" + xiban[i].Id + "'";
+                htmltuzhi += '<a  target="_blank" href="' + xiban[i].url + '">' + xiban[i].wjName + '</a>&nbsp;&nbsp; <a href="#" onclick="ziliaoDel(' + id + ')"><i class="layui-icon">&#xe640;</i></a>&nbsp;&nbsp;';
+            }
+            $("#xibancon").html(htmltuzhi)
+        } else {
+            $("#xibancon").html('<span style="color:red">暂无图纸(洗板)</span>');
+        }
+        if (kanban != "" && kanban != null) {
+            var htmltuzhi = "";
+            for (var i = 0, j = kanban.length; i < j; i++) {
+                var id = "'" + kanban[i].Id + "'";
+                htmltuzhi += '<a  target="_blank" href="' + kanban[i].url + '">' + kanban[i].wjName + '</a>&nbsp;&nbsp; <a href="#" onclick="ziliaoDel(' + id + ')"><i class="layui-icon">&#xe640;</i></a>&nbsp;&nbsp;';
+            }
+            $("#kanbancon").html(htmltuzhi)
+        } else {
+            $("#kanbancon").html('<span style="color:red">暂无图纸(看板)</span>');
+        }
+        if (shaoru != "" && shaoru != null) {
+            var htmltuzhi = "";
+            for (var i = 0, j = shaoru.length; i < j; i++) {
+                var id = "'" + shaoru[i].Id + "'";
+                htmltuzhi += '<a  target="_blank" href="' + shaoru[i].url + '">' + shaoru[i].wjName + '</a>&nbsp;&nbsp; <a href="#" onclick="ziliaoDel(' + id + ')"><i class="layui-icon">&#xe640;</i></a>&nbsp;&nbsp;';
+            }
+            $("#shaorucon").html(htmltuzhi)
+        } else {
+            $("#shaorucon").html('<span style="color:red">暂无图纸(烧录)</span>');
+        }
+        if (chujian != "" && chujian != null) {
+            var htmltuzhi = "";
+            for (var i = 0, j = chujian.length; i < j; i++) {
+                var id = "'" + chujian[i].Id + "'";
+                htmltuzhi += '<a  target="_blank" href="' + chujian[i].url + '">' + chujian[i].wjName + '</a>&nbsp;&nbsp; <a href="#" onclick="ziliaoDel(' + id + ')"><i class="layui-icon">&#xe640;</i></a>&nbsp;&nbsp;';
+            }
+            $("#chujiancon").html(htmltuzhi)
+        } else {
+            $("#chujiancon").html('<span style="color:red">暂无图纸(初检)</span>');
+        }
+        if (guanjiao != "" && guanjiao != null) {
+            var htmltuzhi = "";
+            for (var i = 0, j = guanjiao.length; i < j; i++) {
+                var id = "'" + guanjiao[i].Id + "'";
+                htmltuzhi += '<a  target="_blank" href="' + guanjiao[i].url + '">' + guanjiao[i].wjName + '</a>&nbsp;&nbsp; <a href="#" onclick="ziliaoDel(' + id + ')"><i class="layui-icon">&#xe640;</i></a>&nbsp;&nbsp;';
+            }
+            $("#guanjiaocon").html(htmltuzhi)
+        } else {
+            $("#guanjiaocon").html('<span style="color:red">暂无图纸(灌胶)</span>');
+        }
+        if (laohua != "" && laohua != null) {
+            var htmltuzhi = "";
+            for (var i = 0, j = laohua.length; i < j; i++) {
+                var id = "'" + laohua[i].Id + "'";
+                htmltuzhi += '<a  target="_blank" href="' + laohua[i].url + '">' + laohua[i].wjName + '</a>&nbsp;&nbsp; <a href="#" onclick="ziliaoDel(' + id + ')"><i class="layui-icon">&#xe640;</i></a>&nbsp;&nbsp;';
+            }
+            $("#laohuacon").html(htmltuzhi)
+        } else {
+            $("#laohuacon").html('<span style="color:red">暂无图纸(老化)</span>');
+        }
+        if (fangchao != "" && fangchao != null) {
+            var htmltuzhi = "";
+            for (var i = 0, j = fangchao.length; i < j; i++) {
+                var id = "'" + fangchao[i].Id + "'";
+                htmltuzhi += '<a  target="_blank" href="' + fangchao[i].url + '">' + fangchao[i].wjName + '</a>&nbsp;&nbsp; <a href="#" onclick="ziliaoDel(' + id + ')"><i class="layui-icon">&#xe640;</i></a>&nbsp;&nbsp;';
+            }
+            $("#fangchaocon").html(htmltuzhi)
+        } else {
+            $("#fangchaocon").html('<span style="color:red">暂无图纸(防潮)</span>');
+        }
+        if (zhuangpei != "" && zhuangpei != null) {
+            var htmltuzhi = "";
+            for (var i = 0, j = zhuangpei.length; i < j; i++) {
+                var id = "'" + zhuangpei[i].Id + "'";
+                htmltuzhi += '<a  target="_blank" href="' + zhuangpei[i].url + '">' + zhuangpei[i].wjName + '</a>&nbsp;&nbsp; <a href="#" onclick="ziliaoDel(' + id + ')"><i class="layui-icon">&#xe640;</i></a>&nbsp;&nbsp;';
+            }
+            $("#zhuangpeicon").html(htmltuzhi)
+        } else {
+            $("#zhuangpeicon").html('<span style="color:red">暂无图纸(装配)</span>');
+        }
+        if (zongjian != "" && zongjian != null) {
+            var htmltuzhi = "";
+            for (var i = 0, j = zongjian.length; i < j; i++) {
+                var id = "'" + zongjian[i].Id + "'";
+                htmltuzhi += '<a  target="_blank" href="' + zongjian[i].url + '">' + zongjian[i].wjName + '</a>&nbsp;&nbsp; <a href="#" onclick="ziliaoDel(' + id + ')"><i class="layui-icon">&#xe640;</i></a>&nbsp;&nbsp;';
+            }
+            $("#zongjiancon").html(htmltuzhi)
+        } else {
+            $("#zongjiancon").html('<span style="color:red">暂无图纸(总检)</span>');
+        }
+        if (baozhuang != "" && baozhuang != null) {
+            var htmltuzhi = "";
+            for (var i = 0, j = baozhuang.length; i < j; i++) {
+                var id = "'" + baozhuang[i].Id + "'";
+                htmltuzhi += '<a  target="_blank" href="' + baozhuang[i].url + '">' + baozhuang[i].wjName + '</a>&nbsp;&nbsp; <a href="#" onclick="ziliaoDel(' + id + ')"><i class="layui-icon">&#xe640;</i></a>&nbsp;&nbsp;';
+            }
+            $("#baozhuangcon").html(htmltuzhi)
+        } else {
+            $("#baozhuangcon").html('<span style="color:red">暂无图纸(包装)</span>');
+        }
+
+    }
+
+    //获取资料数据
+    function AJaxziliaojson(Id) {
+        var json;
+        $.ajax({
+            url: "../DKX_DDtypeinfo/GetallRKziliaobycpid",
+            type: "POST",
+            data: { cpId: Id },
+            dataType: "JSON",
+            async: false,
+            success: function (response) {
+                json = eval(response);
+            },
+            error: function (e) {
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+        return json;
+    }
+
+    //资料上传
+    function RjCXtuzhishangchuanSavaForm(fromname) {
+        //表单验证
+        var options = {
+            beforeSubmit: function () {
+                return true;
+            },
+            dataType: "json",//这里是指控制器处理后返回的类型，这里返回json格式。
+            success: function (context) {
+                if ("success" == context.result) {
+                    layer.alert("保存成功！", { icon: 1 }, function () { location.reload(); });
+                }
+                if ("error" == context.result) {
+                    layer.alert("提交失败，请重新操作！", { icon: 2 }, function () { location.reload(); });
+                }
+                if ("error1" == context.result) {
+                    layer.alert("请选择文件！", { icon: 2 }, function () { location.reload(); });
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $.messager.alert("操作提示", '操作失败！', 'error');
+            }
+        }
+        $('#' + fromname).ajaxSubmit(options);
+        return false; //为了不刷新页面,返回false
+    }
+
+</script>
+
+<div style="width: 90%; padding: 20px 20px 0 20px">
+    @using (Html.BeginForm("ziliaouploadEide", "Flow_RoutineStockinfo", FormMethod.Post, new { id = "form3", enctype = "multipart/form-data" }))
+    {
+        <input type="hidden" name="wlno" value='@Model.Pbianma' />
+        <input type="hidden" name="gx" value="2" />
+        <table>
+            <tr>
+                <td width="120px">
+                    SMT:
+                </td>
+                <td width="270px">
+                    <input type="file" name="image" id="image" multiple="multiple" class="layui-btn layui-btn-normal" style="width: 150px">
+                    <button type="button" class="layui-btn" onclick='RjCXtuzhishangchuanSavaForm("form3")'>开始上传</button>
+                </td>
+                <td id="SMTcon"></td>
+            </tr>
+        </table>
+    }
+    <hr class="layui-bg-blue">
+    @using (Html.BeginForm("ziliaouploadEide", "Flow_RoutineStockinfo", FormMethod.Post, new { id = "form5", enctype = "multipart/form-data" }))
+    {
+        <input type="hidden" name="wlno" value='@Model.Pbianma' />
+        <input type="hidden" name="gx" value="3" />
+        <table>
+            <tr>
+                <td width="120px">插件：</td>
+                <td width="270px">
+                    <input type="file" name="image" id="image" multiple="multiple" class="layui-btn layui-btn-normal" style="width: 150px">
+                    <button type="button" class="layui-btn" onclick='RjCXtuzhishangchuanSavaForm("form5")'>开始上传</button>
+                </td>
+                <td id="chajiancon"></td>
+            </tr>
+        </table>
+    }
+    <hr class="layui-bg-blue">
+    @using (Html.BeginForm("ziliaouploadEide", "Flow_RoutineStockinfo", FormMethod.Post, new { id = "form6", enctype = "multipart/form-data" }))
+    {
+        <input type="hidden" name="wlno" value='@Model.Pbianma' />
+        <input type="hidden" name="gx" value="4" />
+        <table>
+            <tr>
+                <td width="120px">焊接：</td>
+                <td width="270px">
+                    <input type="file" name="image" id="image" multiple="multiple" class="layui-btn layui-btn-normal" style="width: 150px">
+                    <button type="button" class="layui-btn" onclick='RjCXtuzhishangchuanSavaForm("form6")'>开始上传</button>
+                </td>
+                <td id="hanjiecon"></td>
+            </tr>
+        </table>
+    }
+
+    <hr class="layui-bg-blue">
+    @using (Html.BeginForm("ziliaouploadEide", "Flow_RoutineStockinfo", FormMethod.Post, new { id = "form7", enctype = "multipart/form-data" }))
+    {
+        <input type="hidden" name="wlno" value='@Model.Pbianma' />
+        <input type="hidden" name="gx" value="5" />
+        <table>
+            <tr>
+                <td width="120px">洗板：</td>
+                <td width="270px">
+                    <input type="file" name="image" id="image" multiple="multiple" class="layui-btn layui-btn-normal" style="width: 150px">
+                    <button type="button" class="layui-btn" onclick='RjCXtuzhishangchuanSavaForm("form7")'>开始上传</button>
+                </td>
+                <td id="xibancon"></td>
+            </tr>
+        </table>
+    }
+    <hr class="layui-bg-blue">
+    @using (Html.BeginForm("ziliaouploadEide", "Flow_RoutineStockinfo", FormMethod.Post, new { id = "form8", enctype = "multipart/form-data" }))
+    {
+        <input type="hidden" name="wlno" value='@Model.Pbianma' />
+        <input type="hidden" name="gx" value="6" />
+        <table>
+            <tr>
+                <td width="120px">看板：</td>
+                <td width="270px">
+                    <input type="file" name="image" id="image" multiple="multiple" class="layui-btn layui-btn-normal" style="width: 150px">
+                    <button type="button" class="layui-btn" onclick='RjCXtuzhishangchuanSavaForm("form8")'>开始上传</button>
+                </td>
+                <td id="kanbancon"></td>
+            </tr>
+        </table>
+    }
+    <hr class="layui-bg-blue">
+    @using (Html.BeginForm("ziliaouploadEide", "Flow_RoutineStockinfo", FormMethod.Post, new { id = "form9", enctype = "multipart/form-data" }))
+    {
+        <input type="hidden" name="wlno" value='@Model.Pbianma' />
+        <input type="hidden" name="gx" value="7" />
+        <table>
+            <tr>
+                <td width="120px">烧录：</td>
+                <td width="270px">
+                    <input type="file" name="image" id="image" multiple="multiple" class="layui-btn layui-btn-normal" style="width: 150px">
+                    <button type="button" class="layui-btn" onclick='RjCXtuzhishangchuanSavaForm("form9")'>开始上传</button>
+                </td>
+                <td id="shaorucon"></td>
+            </tr>
+        </table>
+    }
+    <hr class="layui-bg-blue">
+    @using (Html.BeginForm("ziliaouploadEide", "Flow_RoutineStockinfo", FormMethod.Post, new { id = "form10", enctype = "multipart/form-data" }))
+    {
+        <input type="hidden" name="wlno" value='@Model.Pbianma' />
+        <input type="hidden" name="gx" value="8" />
+        <table>
+            <tr>
+                <td width="120px">初检：</td>
+                <td width="270px">
+                    <input type="file" name="image" id="image" multiple="multiple" class="layui-btn layui-btn-normal" style="width: 150px">
+                    <button type="button" class="layui-btn" onclick='RjCXtuzhishangchuanSavaForm("form10")'>开始上传</button>
+                </td>
+                <td id="chujiancon"></td>
+            </tr>
+        </table>
+    }
+    <hr class="layui-bg-blue">
+    @using (Html.BeginForm("ziliaouploadEide", "Flow_RoutineStockinfo", FormMethod.Post, new { id = "form11", enctype = "multipart/form-data" }))
+    {
+        <input type="hidden" name="wlno" value='@Model.Pbianma' />
+        <input type="hidden" name="gx" value="9" />
+        <table>
+            <tr>
+                <td width="120px">灌胶：</td>
+                <td width="270px">
+                    <input type="file" name="image" id="image" multiple="multiple" class="layui-btn layui-btn-normal" style="width: 150px">
+                    <button type="button" class="layui-btn" onclick='RjCXtuzhishangchuanSavaForm("form11")'>开始上传</button>
+                </td>
+                <td id="guanjiaocon"></td>
+            </tr>
+        </table>
+    }
+    <hr class="layui-bg-blue">
+    @using (Html.BeginForm("ziliaouploadEide", "Flow_RoutineStockinfo", FormMethod.Post, new { id = "form12", enctype = "multipart/form-data" }))
+    {
+        <input type="hidden" name="wlno" value='@Model.Pbianma' />
+        <input type="hidden" name="gx" value="10" />
+        <table>
+            <tr>
+                <td width="120px">老化：</td>
+                <td width="270px">
+                    <input type="file" name="image" id="image" multiple="multiple" class="layui-btn layui-btn-normal" style="width: 150px">
+                    <button type="button" class="layui-btn" onclick='RjCXtuzhishangchuanSavaForm("form12")'>开始上传</button>
+                </td>
+                <td id="laohuacon"></td>
+            </tr>
+        </table>
+    }
+    <hr class="layui-bg-blue">
+    @using (Html.BeginForm("ziliaouploadEide", "Flow_RoutineStockinfo", FormMethod.Post, new { id = "form13", enctype = "multipart/form-data" }))
+    {
+        <input type="hidden" name="wlno" value='@Model.Pbianma' />
+        <input type="hidden" name="gx" value="11" />
+        <table>
+            <tr>
+                <td width="120px">防潮：</td>
+                <td width="270px">
+                    <input type="file" name="image" id="image" multiple="multiple" class="layui-btn layui-btn-normal" style="width: 150px">
+                    <button type="button" class="layui-btn" onclick='RjCXtuzhishangchuanSavaForm("form13")'>开始上传</button>
+                </td>
+                <td id="fangchaocon"></td>
+            </tr>
+        </table>
+    }
+    <hr class="layui-bg-blue">
+    @using (Html.BeginForm("ziliaouploadEide", "Flow_RoutineStockinfo", FormMethod.Post, new { id = "form14", enctype = "multipart/form-data" }))
+    {
+        <input type="hidden" name="wlno" value='@Model.Pbianma' />
+        <input type="hidden" name="gx" value="12" />
+        <table>
+            <tr>
+                <td width="120px">装配：</td>
+                <td width="270px">
+                    <input type="file" name="image" id="image" multiple="multiple" class="layui-btn layui-btn-normal" style="width: 150px">
+                    <button type="button" class="layui-btn" onclick='RjCXtuzhishangchuanSavaForm("form14")'>开始上传</button>
+                </td>
+                <td id="zhuangpeicon"></td>
+            </tr>
+        </table>
+    }
+    <hr class="layui-bg-blue">
+    @using (Html.BeginForm("ziliaouploadEide", "Flow_RoutineStockinfo", FormMethod.Post, new { id = "form15", enctype = "multipart/form-data" }))
+    {
+        <input type="hidden" name="wlno" value='@Model.Pbianma' />
+        <input type="hidden" name="gx" value="13" />
+        <table>
+            <tr>
+                <td width="120px">总检：</td>
+                <td width="270px">
+                    <input type="file" name="image" id="image" multiple="multiple" class="layui-btn layui-btn-normal" style="width: 150px">
+                    <button type="button" class="layui-btn" onclick='RjCXtuzhishangchuanSavaForm("form15")'>开始上传</button>
+                </td>
+                <td id="zongjiancon"></td>
+            </tr>
+        </table>
+    }
+    <hr class="layui-bg-blue">
+    @using (Html.BeginForm("ziliaouploadEide", "Flow_RoutineStockinfo", FormMethod.Post, new { id = "form16", enctype = "multipart/form-data" }))
+    {
+        <input type="hidden" name="wlno" value='@Model.Pbianma' />
+        <input type="hidden" name="gx" value="14" />
+        <table>
+            <tr>
+                <td width="120px">包装：</td>
+                <td width="270px">
+                    <input type="file" name="image" id="image" multiple="multiple" class="layui-btn layui-btn-normal" style="width: 150px">
+                    <button type="button" class="layui-btn" onclick='RjCXtuzhishangchuanSavaForm("form16")'>开始上传</button>
+                </td>
+                <td id="baozhuangcon"></td>
+            </tr>
+        </table>
+    }
+</div>

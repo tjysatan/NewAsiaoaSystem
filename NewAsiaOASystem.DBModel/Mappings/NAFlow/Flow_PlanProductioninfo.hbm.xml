@@ -34,5 +34,8 @@
       <key column="P_Id"/>
       <one-to-many class="Flow_Pleasepurchaseinfo"/>
     </bag>
+    <property name="Istbwork" column="Istbwork" />
+    <property name="tbworktime" column="tbworktime" />
+    <property name="Nc_time" column="Nc_time" />
   </class>
 </hibernate-mapping>

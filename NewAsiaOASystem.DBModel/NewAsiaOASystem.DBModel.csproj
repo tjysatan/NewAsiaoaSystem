@@ -81,6 +81,8 @@
     <Compile Include="Model\NewAsiaOASystem\DKX\DKX_Pleasepurchaseinfo.cs" />
     <Compile Include="Model\NewAsiaOASystem\DKX\DKX_RKZLDataInfo.cs" />
     <Compile Include="Model\NewAsiaOASystem\DKX\DKX_ZLDataInfo.cs" />
+    <Compile Include="Model\NewAsiaOASystem\DKX\NA_MRPdetailed.cs" />
+    <Compile Include="Model\NewAsiaOASystem\DKX\NA_MRPmain.cs" />
     <Compile Include="Model\NewAsiaOASystem\DKX\NewChargebackReason.cs" />
     <Compile Include="Model\NewAsiaOASystem\EP_jlinfo.cs" />
     <Compile Include="Model\NewAsiaOASystem\K3\K3_wuliaoinfo.cs" />
@@ -94,6 +96,7 @@
     <Compile Include="Model\NewAsiaOASystem\NA_Sharealike.cs" />
     <Compile Include="Model\NewAsiaOASystem\NA_XSdetailsinfo.cs" />
     <Compile Include="Model\NewAsiaOASystem\NA_XSinfo.cs" />
+    <Compile Include="Model\NewAsiaOASystem\NA_XSqitainfo.cs" />
     <Compile Include="Model\NewAsiaOASystem\NQCosttype.cs" />
     <Compile Include="Model\NewAsiaOASystem\NQR_Product.cs" />
     <Compile Include="Model\NewAsiaOASystem\NQR_Reason.cs" />
@@ -226,6 +229,8 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Mappings\NewAsiaOASystem\DKX\NewChargebackReason.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\DKX\NA_MRPmain.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\DKX\NA_MRPdetailed.hbm.xml" />
     <Content Include="Mappings\NewAsiaOASystem\KSGZ\KS_Trackinglistinfo.hbm.xml">
       <SubType>Designer</SubType>
     </Content>

@@ -194,6 +194,19 @@ namespace NewAsiaOASystem.Web.Controllers
             return View();
         }
 
+        /// <summary>
+        /// 佳邦
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult jiabangPrint(string id)
+        {
+            SessionUser user = Session[SessionHelper.User] as SessionUser;
+            ViewData["UID"] = user.Id;//当前登录用户id
+            ViewData["Id"] = id;//客户Id
+            return View();
+        }
+
 
         /// <summary>
         /// 打印跳转页面
@@ -300,6 +313,16 @@ namespace NewAsiaOASystem.Web.Controllers
 
 
         public ActionResult DsanPrint(string kdId, string addId)
+        {
+            SessionUser user = Session[SessionHelper.User] as SessionUser;
+            ViewData["UID"] = user.Id;//当前登录用户
+            ViewData["Id"] = kdId;//客户信息ID
+            ViewData["addId"] = addId;
+            return View();
+        }
+
+        //佳邦
+        public ActionResult DsjiabangPrint(string kdId, string addId)
         {
             SessionUser user = Session[SessionHelper.User] as SessionUser;
             ViewData["UID"] = user.Id;//当前登录用户

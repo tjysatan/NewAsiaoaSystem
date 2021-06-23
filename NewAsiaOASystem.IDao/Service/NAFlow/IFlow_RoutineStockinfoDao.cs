@@ -46,5 +46,19 @@ namespace NewAsiaOASystem.IDao
         /// <returns></returns>
         IList<Flow_RoutineStockinfoView> DKXGetCpkcInfo(string Isscing);
         #endregion
+
+
+
+
+        #region //常规电控箱的分页数据
+        /// <summary>
+        /// 常规电控温控的分页数据
+        /// </summary>
+        /// <param name="cpname">产品名称</param>
+        /// <param name="wlno">物料号</param>
+        /// <param name="type">类型 0 温控 1电控</param>
+        /// <returns></returns>
+        PagerInfo<Flow_RoutineStockinfoView> Getcgdiankongpagerlist(string cpname, string wlno, string type, string category); 
+        #endregion
     }
 }

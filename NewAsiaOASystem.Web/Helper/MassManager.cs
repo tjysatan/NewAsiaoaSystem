@@ -1105,6 +1105,10 @@ namespace NewAsiaOASystem.Web
             {
                 bicon = "资料被审核退回(" + model.dqshmsg + ")。请尽快查看,进行下步操作。订单号：" + model.DD_Bianhao + ";客户：" + model.KHname;
             }
+            if (type == "16")
+            {
+                bicon = "物料已发可以生产。订单号：" + model.DD_Bianhao + ";客户：" + model.KHname;
+            }
             gl = model.POWER;
             dw = model.dw;
             cpname = model.DD_DHType + "/" + gl + "/" + dw;

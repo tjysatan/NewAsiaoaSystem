@@ -1,0 +1,204 @@
+﻿@model NewAsiaOASystem.ViewModel.DKX_DDinfoView
+@{
+    ViewBag.Title = "PAD仓库发料扫码工单详情页面";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+
+<style>
+    .con {
+        width: 95vw;
+        height: 100vh;
+        padding: 20px 10px 40px 10px;
+    }
+
+    .con_one {
+        width:90vw;
+        padding-top: 20px;
+    }
+
+    .regTop {
+        margin: auto;
+        text-align: center;
+        line-height: 45px;
+    }
+</style>
+
+@section HeadContent{
+    <script type="text/javascript">
+        $(function () {
+            pjthml()
+        })
+
+        //html 评价
+        function pjthml() {
+            var jindu = showddzt('@Model.DD_ZT', '@Model.xtIsq', '@Model.qtIsq', '@Model.Bnote2', '@Model.Bnote1', '@Model.pbshzt', '@Model.Flzt');
+            var xt = '';
+            if (@Model.xtIsq=== 0) { xt = "未确认" }
+            if (@Model.xtIsq=== 1) { xt = "缺" }
+            if (@Model.xtIsq=== 2) { xt = "料齐" }
+            var qtIsq = '';
+            if (@Model.qtIsq=== 0) { qtIsq = "未确认" }
+            if (@Model.qtIsq=== 1) { qtIsq = "缺" }
+            if (@Model.qtIsq=== 2) { qtIsq="料齐"}
+            var html = "";
+            html += '单号：@Model.DD_Bianhao<br><br>';
+            html += '客户：@Model.KHname<br><br>';
+            html += '进度：' + jindu+'<br><br>';
+            html += '箱体（物料）：' + xt + '<br><br>';
+            html += '其他（物料）：' + qtIsq+'<br>';
+            $("#str").html(html)
+        }
+
+
+        //订单进度
+        //返回
+        function goto_back() {
+            window.location = "../publicAPI/PDAWarehouse_FLView";
+            return false;
+        }
+
+         //物料确认
+    function wlqr(type,caozuo) {
+        var ispermissions=false
+        if (type == "1") {//其他物料确认
+            if ('@ViewData["Uname"]' == "jy" || '@ViewData["Uname"]' == "shengguan")
+            {
+                ispermissions=true
+            }
+        }
+        if (type == "0") {
+            if ('@ViewData["Uname"]' == "taoyonggang" || '@ViewData["Uname"]' == "shengguan")
+            {
+                ispermissions = true
+            }
+        }
+        if (!ispermissions)
+        {
+            layer.alert("当前登录的角色无权操作！", { icon: 2 });
+            return false;
+        }
+        $.ajax({
+            url: "../publicAPI/WLQRTJEide",
+            type: "POST",
+            data: { Id: '@ViewData["Id"]', type: type, zt: caozuo },
+            dataType: "html",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response == "0") {
+                    layer.alert("提交成功！", { icon: 1 }, function () { location.reload(); });
+                }
+                if (response == "1") {
+                    layer.alert("提交异常！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "2") {
+                    layer.alert("该状态下无需该操作！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "3") {
+                    layer.alert("订单不存在！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "4") {
+                    layer.alert("处理类型参数缺少！", { icon: 2 }, function () { location.reload(); });
+                }
+
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+    }
+
+
+        //确认完成发料
+        function confirm_wcfl(Id) {
+            $.ajax({
+                url: "../publicAPI/FLconfirmEide",
+                type: "POST",
+                data: { Id: Id },
+                dataType: "json",
+                async: true,
+                beforeSend: function () {
+                    ddchen();
+                },
+                success: function (response) {
+                    disLoading();
+                    if (response.resule == "success") {
+                        layer.alert(response.msg, { icon: 1 }, function () { goto_back(); });
+                    }
+                    if (response.resule == "error") {
+                        layer.alert(response.msg, { icon: 2 }, function () { location.reload(); });
+                    }
+                }
+            })
+        }
+
+        var loadi;
+        function ddchen() {
+            loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+        }
+        //关闭等待效果
+        function disLoading() {
+            layer.close(loadi);
+        }
+
+        function guanbi() {
+            var index = parent.layer.getFrameIndex(window.name);
+            //关闭弹出层
+            parent.layer.close(index);
+        }
+    </script>
+}
+<script src="~/Scripts/NAjs/DKXpulice.js"></script>
+<div class="con">
+
+
+    <table style="width: 90vw;">
+        <tr>
+            <td style="width:45vw;">当前登录：@ViewData["name"]</td>
+            <td style="width:45vw; text-align:right">
+
+                <button type="button" class="layui-btn layui-btn-primary  layui-btn-sm layui-border-black" onclick="goto_back()">返回</button>
+
+
+            </td>
+        </tr>
+    </table>
+
+    <div class="con_one">
+        <div class="layui-card">
+            <div class="layui-card-header">工单信息</div>
+            <div class="layui-card-body" id="str">
+
+            </div>
+        </div>
+    </div>
+    @*<div class="con_one">
+
+        <table style="width:100%;">
+            <tr>
+                <td style="width:50%;">
+                    箱体（物料）：<div class="layui-btn-group">
+                        <button type="button" class="layui-btn layui-btn-sm" onclick='wlqr("0","2")'>料齐</button>
+                        <button type="button" class="layui-btn layui-btn-sm layui-btn-danger" onclick='wlqr("0","1")'>缺料</button>
+                    </div>
+                </td>
+                <td style="width:50%; text-align:right">
+                    其他（物料）：<div class="layui-btn-group">
+                        <button type="button" class="layui-btn layui-btn-sm" onclick='wlqr("1","2")'>料齐</button>
+                        <button type="button" class="layui-btn layui-btn-sm layui-btn-danger" onclick='wlqr("1","1")'>缺料</button>
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+
+    </div>*@
+    <div class="con_one">
+            <button type="button" class="layui-btn layui-btn-sm layui-btn-fluid" onclick="confirm_wcfl('@Model.Id')">完成发料</button>
+        </div>
+</div>

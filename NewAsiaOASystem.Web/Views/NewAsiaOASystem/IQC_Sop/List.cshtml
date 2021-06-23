@@ -78,7 +78,28 @@
             return false;
         }
 
- 
+        //导出数据询问层
+        function exportexcel() {
+            
+
+            var text = "是否确定导出当月下单生产的电控箱订单！"
+            
+            var type;
+            layer.open({
+                type: 1,
+                offset: type //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
+                , id: 'layerDemo' + type //防止重复弹出
+                , content: '<div style="padding: 20px 100px;">是否确定导出当前检验标准的数据吗</div>'
+                , btn: ['数据导出', '关闭']
+                , btnAlign: 'c' //按钮居中
+                , shade: 0 //不显示遮罩
+                , yes: function () {
+                    
+                    window.location.href = "/IQC_Sop/ExcelExportIQC_Sop";
+                    layer.closeAll();
+                }
+            });
+        }
     </script>
 }
 
@@ -141,21 +162,25 @@
                             <button name="btnSerch" class="layui-btn" onclick="return SerchList(1)"><i class="layui-icon">&#xe615;</i>查询</button>
                         </span>
                         </li>
-                    </ul>
-                }
-                <ul>
+                    
+               
+                
 
                     <li>
                         <span class="inquiry-input">
-                            <button class="layui-btn" onclick="iframeopen()" id="parentIframe"><i class="layui-icon">&#xe608;</i> 新建</button>
+                            <button class="layui-btn" onclick="return iframeopen()" id="parentIframe"><i class="layui-icon">&#xe608;</i> 新建</button>
                         </span>
                         <span class="inquiry-input">
                             <button class="layui-btn" onclick="return addClick('/IQC_Sop/List')"><i class="layui-icon">&#x1002;</i>刷新</button></span>
+                        <span>
+                            <button type="submit" class="layui-btn layui-btn-primary btn1" onclick="exportexcel(); return false"> <i class="layui-icon"> &#xe67d;</i> 导出excel</button>
+                        </span>
                     </li>
                 </ul>
+                }
             </fieldset>
         </div>
-
+                
 
         <div class="h-table">
             <div class="h-table-content">

@@ -77,6 +77,8 @@
     <Compile Include="NewAsiaOASystem\DKX\DKX_PleasepurchaseinfoView.cs" />
     <Compile Include="NewAsiaOASystem\DKX\DKX_RKZLDataInfoView.cs" />
     <Compile Include="NewAsiaOASystem\DKX\DKX_ZLDataInfoView.cs" />
+    <Compile Include="NewAsiaOASystem\DKX\NA_MRPdetailedView.cs" />
+    <Compile Include="NewAsiaOASystem\DKX\NA_MRPmainView.cs" />
     <Compile Include="NewAsiaOASystem\DKX\NewChargebackReasonView.cs" />
     <Compile Include="NewAsiaOASystem\EP_jlinfoView.cs" />
     <Compile Include="NewAsiaOASystem\FTHCHTJView.cs" />

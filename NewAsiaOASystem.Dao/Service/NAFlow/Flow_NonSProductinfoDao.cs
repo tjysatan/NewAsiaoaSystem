@@ -154,7 +154,6 @@ namespace NewAsiaOASystem.Dao
             List<Flow_NonSProductinfo> list = HibernateTemplate.Find<Flow_NonSProductinfo>(HQLstr) as List<Flow_NonSProductinfo>;
             IList<Flow_NonSProductinfoView> listmodel = GetViewlist(list);
             return listmodel;
-
         }
 
         #region //根据物料代码查找产品信息 
@@ -170,7 +169,25 @@ namespace NewAsiaOASystem.Dao
                 return listmodel[0];
             else
                 return null;
-        } 
+        }
+        #endregion
+
+        #region //非标试产产品的分页数据
+        public PagerInfo<Flow_NonSProductinfoView> Getfeibiaowkpagerlist(string cpname, string wlno,  string category)
+        {
+            TempList = new List<string>();
+            TempHql = new StringBuilder();
+            if (!string.IsNullOrEmpty(cpname))
+                TempHql.AppendFormat(" and Pname like '%{0}%'", cpname);
+            if (!string.IsNullOrEmpty(wlno))
+                TempHql.AppendFormat(" and Pbianma like '%{0}%'", wlno);
+            if (!string.IsNullOrEmpty(category))
+                TempHql.AppendFormat(" and Category='{0}'", category);
+            //string HQLstr = string.Format("from Flow_NonSProductinfo u where 1=1 {0}", TempHql.ToString());
+            TempHql.AppendFormat("order by A_Sum DESC");
+            PagerInfo<Flow_NonSProductinfoView> list = Search();
+            return list;
+        }
         #endregion
 
 

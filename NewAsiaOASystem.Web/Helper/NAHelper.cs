@@ -8,6 +8,7 @@ using NewAsiaOASystem.ViewModel;
 using Spring.Context.Support;
 using System.Security.Cryptography;
 using System.Text;
+using System.Collections;
 
 namespace NewAsiaOASystem.Web
 {
@@ -101,7 +102,6 @@ namespace NewAsiaOASystem.Web
         }
         #endregion
 
-
         #region //根据逗号分割字符串
         public static List<string> GetDivisionstrlist(string str)
         {
@@ -133,6 +133,33 @@ namespace NewAsiaOASystem.Web
         }
         #endregion
 
- 
+        #region //随机生成一个字符串
+        public static string RandomNum(int Digit)
+        {
+            ArrayList MyArray = new ArrayList();
+            Random random = new Random();
+            string str = null;
+            int Nums = Digit;
+            while (Nums > 0)
+            {
+                int i = random.Next(1, 10);// 9>=a>=1
+                if (!MyArray.Contains(i))
+                {
+                    if (MyArray.Count < 6)
+                    {
+                        MyArray.Add(i);
+                    }
+                    Nums -= 1;
+                }
+            }
+            for (int j = 0; j <= MyArray.Count - 1; j++)
+            {
+                str += MyArray[j].ToString();
+            }
+            return str;
+        }
+        #endregion
+
+
     }
 }

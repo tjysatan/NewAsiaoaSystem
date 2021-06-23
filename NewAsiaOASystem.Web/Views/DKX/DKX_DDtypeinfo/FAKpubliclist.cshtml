@@ -150,6 +150,30 @@
                 }
             }
         }
+
+        //根据工程师导出数据
+        function exportexcel() {
+            var txtGcs_name = $("#txtGcs_name").val();
+            if (txtGcs_name == "" || txtGcs_name == null) {
+                layer.alert("请选择工程师！", { icon: 2 });
+                return false;
+            }
+            var type;
+            layer.open({
+                type: 1,
+                offset: type //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
+                , id: 'layerDemo' + type //防止重复弹出
+                , content: '<div style="padding: 20px 100px;">确定要导出数据吗 </div>'
+                , btn: ['数据导出', '关闭']
+                , btnAlign: 'c' //按钮居中
+                , shade: 0 //不显示遮罩
+                , yes: function () {
+                    console.log('111111')
+                    window.location.href = "/DKX_DDtypeinfo/dc_Faninfo?Gcs_name=" + txtGcs_name;
+                    layer.closeAll();
+                }
+            });
+        }
     </script>
 }
 
@@ -229,6 +253,9 @@
                         <li style="*width: 100%; *margin: -10px 0 5px 90px;">
                             <span class="inquiry-input">
                                 <button name="btnSerch" class="layui-btn" onclick="return SerchList(1)"><i class="layui-icon">&#xe615;</i>查询</button>
+                            </span>
+                            <span class="inquiry-input">
+                                <button class="layui-btn" onclick="exportexcel();return false;" style="width: 110px">导出数据</button>
                             </span>
                         </li>
                     </ul>

@@ -243,7 +243,6 @@ D:\object\NewAsiaOASystem.Dao\bin\Release\System.Web.WebPages.dll
 D:\object\NewAsiaOASystem.Dao\bin\Release\System.Web.WebPages.Razor.dll
 D:\object\NewAsiaOASystem.Dao\bin\Release\ThoughtWorks.QRCode.dll
 D:\object\NewAsiaOASystem.Dao\bin\Release\Microsoft.Data.OData.dll
-D:\object\NewAsiaOASystem.Dao\bin\Release\Microsoft.QualityTools.Testing.Fakes.dll
 D:\object\NewAsiaOASystem.Dao\bin\Release\NewAsiaOASystem.DBModel.pdb
 D:\object\NewAsiaOASystem.Dao\bin\Release\NewAsiaOASystem.IDao.pdb
 D:\object\NewAsiaOASystem.Dao\bin\Release\NewAsiaOASystem.ViewModel.pdb

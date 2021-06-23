@@ -66,7 +66,7 @@ namespace NewAsiaOASystem.Web.Controllers
                 CurrentPageIndex = 1;
             _INACustomerinfoDao.SetPagerPageIndex(CurrentPageIndex);
             _INACustomerinfoDao.SetPagerPageSize(11);
-            PagerInfo<NACustomerinfoView> listmodel = _INACustomerinfoDao.GetCinfoList(Name, lxrname, null, Isjy,Tel,Isds, Suser);
+            PagerInfo<NACustomerinfoView> listmodel = _INACustomerinfoDao.GetCinfokecodeList(Name, lxrname, null, Isjy,Tel,Isds, Suser);
             return listmodel;
         }
         #endregion
@@ -3710,6 +3710,97 @@ namespace NewAsiaOASystem.Web.Controllers
             catch
             {
                 return Json(new { result = "error", explain = "操作异常" });
+            }
+        }
+        #endregion
+
+
+        #region //反退货出货补新同步普实销售订单
+        public ActionResult TBPsfthorderView(string Id)
+        {
+            NAReturnListView model = _INAReturnListDao.NGetModelById(Id);
+            return View(model);
+        }
+
+        public JsonResult Ps_Insterorder(string Id, string Z_JHQX, string Z_JHDD, string Z_YSFS, string yfprice, string dsprice)
+        {
+            NAReturnListView model = _INAReturnListDao.NGetModelById(Id);
+            if (model != null)
+            {
+                if (model.Ps_DocEntry == "" || model.Ps_DocEntry == null)
+                {
+                    pushsoftorder Psordermodel = new pushsoftorder();
+                    //客户编码k3code
+                    NACustomerinfoView khmodel = _INACustomerinfoDao.NGetModelById(model.C_Id);
+                    if (khmodel.K3CODE == "")
+                        return Json(new { result = "error", msg = "客户没有维护编号" });
+                    Psordermodel.CrdID = khmodel.K3CODE;
+                    Psordermodel.NumAtCrd = model.fthbianhao;
+                    Psordermodel.DocDate =Convert.ToDateTime(DateTime.Now.ToString("yyyy-MMM-dd"));
+                    Psordermodel.Z_JHQX = Z_JHQX;
+                    Psordermodel.Z_JHDD = Z_JHDD;
+                    Psordermodel.Z_YSFS = Z_YSFS;
+                    Psordermodel.DocKind = 1;
+                    //查询订单明细
+                    IList<NQ_CHdetailinfoView> mxmodellist = _INQ_CHdetailinfoDao.Getchinfoby_rid(Id);
+                    List<pushsoftorderDetails> psmxlist = new List<pushsoftorderDetails>();
+                    foreach (var item in mxmodellist)
+                    {
+                        //查询产品
+                        NQ_productinfoView cpmodel = _INQ_productinfoDao.NGetModelById(item.P_Id);
+                        pushsoftorderDetails Psmxmodel = new pushsoftorderDetails();
+                        Psmxmodel.ItmID = cpmodel.P_bianhao;
+                        Psmxmodel.Qty = item.shuliang;
+                        Psmxmodel.TaxAfPriceFC = 0;
+                        Psmxmodel.ReqDate = Convert.ToDateTime(Z_JHQX);
+                        psmxlist.Add(Psmxmodel);
+                    }
+                    if (yfprice != "")
+                    {
+                        pushsoftorderDetails Psmxmodel = new pushsoftorderDetails();
+                        Psmxmodel.ItmID = "08.002";
+                        Psmxmodel.Qty = 1;
+                        Psmxmodel.TaxAfPriceFC = Convert.ToDecimal(yfprice);
+                        Psmxmodel.ReqDate = Convert.ToDateTime(Z_JHQX);
+                        psmxlist.Add(Psmxmodel);
+                    }
+                    if (dsprice != "")
+                    {
+                        pushsoftorderDetails Psmxmodel = new pushsoftorderDetails();
+                        Psmxmodel.ItmID = "08.005";
+                        Psmxmodel.Qty = 1;
+                        Psmxmodel.TaxAfPriceFC = Convert.ToDecimal(yfprice);
+                        Psmxmodel.ReqDate = Convert.ToDateTime(Z_JHQX);
+                        psmxlist.Add(Psmxmodel);
+                    }
+                    Psordermodel.Details = psmxlist;
+                    string res = pushsoftHelper.Insterorder(Psordermodel);
+                    if (res == "" || res == null) { return Json(new { result = "error", msg = "订单不存在" }); }
+                    else
+                    {
+                        pushsoftErrmodel errmodel = new pushsoftErrmodel();
+                        errmodel = JsonConvert.DeserializeObject<pushsoftErrmodel>(res);
+                        if (errmodel.ErrCode == "0")
+                        {
+                            model.Ps_DocEntry = errmodel.Data.DocEntry;
+                            model.Ps_DocNu = errmodel.Data.DocNum;
+                            _INAReturnListDao.NUpdate(model);
+                            return Json(new { result = "success", msg = errmodel.ErrMsg });
+                        }
+                        else
+                        {
+                            return Json(new { result = "error", msg = errmodel.ErrMsg });
+                        }
+                    }
+                 }
+                else
+                {
+                    return Json(new { result = "error", msg = "订单已经同步,不能再次同步" });
+                }
+            }
+            else
+            {
+                return Json(new { result = "error", msg = "订单不存在" });
             }
         }
         #endregion

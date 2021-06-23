@@ -1,0 +1,115 @@
+2021-06-22 16:29:43,795 [23] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2021-06-22 16:29:43,795 [23] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2021-06-22 16:29:43,795 [23] ERROR ApplicationInfoLog [(null)] <(null)< - 未将对象引用设置到对象的实例。
+2021-06-22 16:29:43,796 [23] ERROR ApplicationInfoLog [(null)] <(null)< - Void loginsession(NewAsiaOASystem.ViewModel.SessionUser)
+2021-06-22 16:29:43,796 [23] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================
+2021-06-22 16:32:19,045 [36] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2021-06-22 16:32:19,045 [36] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2021-06-22 16:32:19,045 [36] ERROR ApplicationInfoLog [(null)] <(null)< - 未将对象引用设置到对象的实例。
+2021-06-22 16:32:19,045 [36] ERROR ApplicationInfoLog [(null)] <(null)< - Void loginsession(NewAsiaOASystem.ViewModel.SessionUser)
+2021-06-22 16:32:19,045 [36] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================
+2021-06-22 16:37:17,044 [62] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2021-06-22 16:37:17,044 [62] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2021-06-22 16:37:17,044 [62] ERROR ApplicationInfoLog [(null)] <(null)< - 未将对象引用设置到对象的实例。
+2021-06-22 16:37:17,044 [62] ERROR ApplicationInfoLog [(null)] <(null)< - Void loginsession(NewAsiaOASystem.ViewModel.SessionUser)
+2021-06-22 16:37:17,044 [62] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================
+2021-06-22 16:39:41,042 [46] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2021-06-22 16:39:41,042 [46] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2021-06-22 16:39:41,042 [46] ERROR ApplicationInfoLog [(null)] <(null)< - 未将对象引用设置到对象的实例。
+2021-06-22 16:39:41,042 [46] ERROR ApplicationInfoLog [(null)] <(null)< - Void loginsession(NewAsiaOASystem.ViewModel.SessionUser)
+2021-06-22 16:39:41,042 [46] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================
+2021-06-22 16:42:19,045 [15] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2021-06-22 16:42:19,045 [15] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2021-06-22 16:42:19,045 [15] ERROR ApplicationInfoLog [(null)] <(null)< - 未将对象引用设置到对象的实例。
+2021-06-22 16:42:19,045 [15] ERROR ApplicationInfoLog [(null)] <(null)< - Void loginsession(NewAsiaOASystem.ViewModel.SessionUser)
+2021-06-22 16:42:19,045 [15] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================
+2021-06-22 16:47:17,039 [6] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2021-06-22 16:47:17,039 [6] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2021-06-22 16:47:17,039 [6] ERROR ApplicationInfoLog [(null)] <(null)< - 未将对象引用设置到对象的实例。
+2021-06-22 16:47:17,039 [6] ERROR ApplicationInfoLog [(null)] <(null)< - Void loginsession(NewAsiaOASystem.ViewModel.SessionUser)
+2021-06-22 16:47:17,039 [6] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================
+2021-06-22 16:49:41,052 [69] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2021-06-22 16:49:41,052 [69] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2021-06-22 16:49:41,052 [69] ERROR ApplicationInfoLog [(null)] <(null)< - 未将对象引用设置到对象的实例。
+2021-06-22 16:49:41,052 [69] ERROR ApplicationInfoLog [(null)] <(null)< - Void loginsession(NewAsiaOASystem.ViewModel.SessionUser)
+2021-06-22 16:49:41,052 [69] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================
+2021-06-22 16:52:19,050 [22] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2021-06-22 16:52:19,050 [22] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2021-06-22 16:52:19,050 [22] ERROR ApplicationInfoLog [(null)] <(null)< - 未将对象引用设置到对象的实例。
+2021-06-22 16:52:19,050 [22] ERROR ApplicationInfoLog [(null)] <(null)< - Void loginsession(NewAsiaOASystem.ViewModel.SessionUser)
+2021-06-22 16:52:19,050 [22] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================
+2021-06-22 16:57:17,049 [55] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2021-06-22 16:57:17,049 [55] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2021-06-22 16:57:17,049 [55] ERROR ApplicationInfoLog [(null)] <(null)< - 未将对象引用设置到对象的实例。
+2021-06-22 16:57:17,049 [55] ERROR ApplicationInfoLog [(null)] <(null)< - Void loginsession(NewAsiaOASystem.ViewModel.SessionUser)
+2021-06-22 16:57:17,049 [55] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================
+2021-06-22 16:59:41,046 [16] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2021-06-22 16:59:41,046 [16] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2021-06-22 16:59:41,046 [16] ERROR ApplicationInfoLog [(null)] <(null)< - 未将对象引用设置到对象的实例。
+2021-06-22 16:59:41,046 [16] ERROR ApplicationInfoLog [(null)] <(null)< - Void loginsession(NewAsiaOASystem.ViewModel.SessionUser)
+2021-06-22 16:59:41,046 [16] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================
+2021-06-22 17:02:19,051 [72] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2021-06-22 17:02:19,051 [72] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2021-06-22 17:02:19,051 [72] ERROR ApplicationInfoLog [(null)] <(null)< - 未将对象引用设置到对象的实例。
+2021-06-22 17:02:19,051 [72] ERROR ApplicationInfoLog [(null)] <(null)< - Void loginsession(NewAsiaOASystem.ViewModel.SessionUser)
+2021-06-22 17:02:19,051 [72] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================
+2021-06-22 17:07:17,042 [12] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2021-06-22 17:07:17,042 [12] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2021-06-22 17:07:17,042 [12] ERROR ApplicationInfoLog [(null)] <(null)< - 未将对象引用设置到对象的实例。
+2021-06-22 17:07:17,042 [12] ERROR ApplicationInfoLog [(null)] <(null)< - Void loginsession(NewAsiaOASystem.ViewModel.SessionUser)
+2021-06-22 17:07:17,042 [12] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================
+2021-06-22 17:09:41,037 [27] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2021-06-22 17:09:41,037 [27] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2021-06-22 17:09:41,037 [27] ERROR ApplicationInfoLog [(null)] <(null)< - 未将对象引用设置到对象的实例。
+2021-06-22 17:09:41,038 [27] ERROR ApplicationInfoLog [(null)] <(null)< - Void loginsession(NewAsiaOASystem.ViewModel.SessionUser)
+2021-06-22 17:09:41,038 [27] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================
+2021-06-22 17:12:19,046 [82] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2021-06-22 17:12:19,046 [82] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2021-06-22 17:12:19,046 [82] ERROR ApplicationInfoLog [(null)] <(null)< - 未将对象引用设置到对象的实例。
+2021-06-22 17:12:19,046 [82] ERROR ApplicationInfoLog [(null)] <(null)< - Void loginsession(NewAsiaOASystem.ViewModel.SessionUser)
+2021-06-22 17:12:19,046 [82] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================
+2021-06-22 17:17:17,038 [94] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2021-06-22 17:17:17,038 [94] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2021-06-22 17:17:17,038 [94] ERROR ApplicationInfoLog [(null)] <(null)< - 未将对象引用设置到对象的实例。
+2021-06-22 17:17:17,038 [94] ERROR ApplicationInfoLog [(null)] <(null)< - Void loginsession(NewAsiaOASystem.ViewModel.SessionUser)
+2021-06-22 17:17:17,038 [94] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================
+2021-06-22 17:19:41,048 [88] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2021-06-22 17:19:41,048 [88] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2021-06-22 17:19:41,048 [88] ERROR ApplicationInfoLog [(null)] <(null)< - 未将对象引用设置到对象的实例。
+2021-06-22 17:19:41,048 [88] ERROR ApplicationInfoLog [(null)] <(null)< - Void loginsession(NewAsiaOASystem.ViewModel.SessionUser)
+2021-06-22 17:19:41,048 [88] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================
+2021-06-22 17:22:19,053 [77] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2021-06-22 17:22:19,053 [77] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2021-06-22 17:22:19,053 [77] ERROR ApplicationInfoLog [(null)] <(null)< - 未将对象引用设置到对象的实例。
+2021-06-22 17:22:19,053 [77] ERROR ApplicationInfoLog [(null)] <(null)< - Void loginsession(NewAsiaOASystem.ViewModel.SessionUser)
+2021-06-22 17:22:19,053 [77] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================
+2021-06-22 17:27:17,050 [93] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2021-06-22 17:27:17,050 [93] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2021-06-22 17:27:17,050 [93] ERROR ApplicationInfoLog [(null)] <(null)< - 未将对象引用设置到对象的实例。
+2021-06-22 17:27:17,050 [93] ERROR ApplicationInfoLog [(null)] <(null)< - Void loginsession(NewAsiaOASystem.ViewModel.SessionUser)
+2021-06-22 17:27:17,050 [93] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================
+2021-06-22 17:29:41,040 [89] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2021-06-22 17:29:41,040 [89] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2021-06-22 17:29:41,040 [89] ERROR ApplicationInfoLog [(null)] <(null)< - 未将对象引用设置到对象的实例。
+2021-06-22 17:29:41,040 [89] ERROR ApplicationInfoLog [(null)] <(null)< - Void loginsession(NewAsiaOASystem.ViewModel.SessionUser)
+2021-06-22 17:29:41,040 [89] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================
+2021-06-22 17:32:19,048 [7] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2021-06-22 17:32:19,048 [7] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2021-06-22 17:32:19,048 [7] ERROR ApplicationInfoLog [(null)] <(null)< - 未将对象引用设置到对象的实例。
+2021-06-22 17:32:19,048 [7] ERROR ApplicationInfoLog [(null)] <(null)< - Void loginsession(NewAsiaOASystem.ViewModel.SessionUser)
+2021-06-22 17:32:19,048 [7] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================
+2021-06-22 17:37:17,043 [29] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2021-06-22 17:37:17,043 [29] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2021-06-22 17:37:17,043 [29] ERROR ApplicationInfoLog [(null)] <(null)< - 未将对象引用设置到对象的实例。
+2021-06-22 17:37:17,043 [29] ERROR ApplicationInfoLog [(null)] <(null)< - Void loginsession(NewAsiaOASystem.ViewModel.SessionUser)
+2021-06-22 17:37:17,043 [29] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================
+2021-06-22 17:39:41,037 [88] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2021-06-22 17:39:41,037 [88] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2021-06-22 17:39:41,037 [88] ERROR ApplicationInfoLog [(null)] <(null)< - 未将对象引用设置到对象的实例。
+2021-06-22 17:39:41,037 [88] ERROR ApplicationInfoLog [(null)] <(null)< - Void loginsession(NewAsiaOASystem.ViewModel.SessionUser)
+2021-06-22 17:39:41,037 [88] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================
+2021-06-22 17:42:19,043 [19] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2021-06-22 17:42:19,043 [19] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2021-06-22 17:42:19,043 [19] ERROR ApplicationInfoLog [(null)] <(null)< - 未将对象引用设置到对象的实例。
+2021-06-22 17:42:19,043 [19] ERROR ApplicationInfoLog [(null)] <(null)< - Void loginsession(NewAsiaOASystem.ViewModel.SessionUser)
+2021-06-22 17:42:19,043 [19] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================

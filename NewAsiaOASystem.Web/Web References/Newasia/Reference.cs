@@ -24,7 +24,7 @@ namespace NewAsiaOASystem.Web.Newasia {
     
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.3056.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Web.Services.WebServiceBindingAttribute(Name="XYOfferSoap", Namespace="http://tempuri.org/")]
@@ -36,11 +36,19 @@ namespace NewAsiaOASystem.Web.Newasia {
         
         private System.Threading.SendOrPostCallback GetOrdersOperationCompleted;
         
+        private System.Threading.SendOrPostCallback GetOrderByIDOperationCompleted;
+        
+        private System.Threading.SendOrPostCallback GetOrderByOrderCodeOperationCompleted;
+        
+        private System.Threading.SendOrPostCallback GetOrderShipInfoByIDOperationCompleted;
+        
         private System.Threading.SendOrPostCallback GetNewOrdersOperationCompleted;
         
         private System.Threading.SendOrPostCallback GetUserProvinceCityOperationCompleted;
         
         private System.Threading.SendOrPostCallback GetUserProvinceCityByUserIdOperationCompleted;
+        
+        private System.Threading.SendOrPostCallback GetUserInfoByUserIdOperationCompleted;
         
         private System.Threading.SendOrPostCallback GetUsersOperationCompleted;
         
@@ -100,6 +108,15 @@ namespace NewAsiaOASystem.Web.Newasia {
         public event GetOrdersCompletedEventHandler GetOrdersCompleted;
         
         /// <remarks/>
+        public event GetOrderByIDCompletedEventHandler GetOrderByIDCompleted;
+        
+        /// <remarks/>
+        public event GetOrderByOrderCodeCompletedEventHandler GetOrderByOrderCodeCompleted;
+        
+        /// <remarks/>
+        public event GetOrderShipInfoByIDCompletedEventHandler GetOrderShipInfoByIDCompleted;
+        
+        /// <remarks/>
         public event GetNewOrdersCompletedEventHandler GetNewOrdersCompleted;
         
         /// <remarks/>
@@ -107,6 +124,9 @@ namespace NewAsiaOASystem.Web.Newasia {
         
         /// <remarks/>
         public event GetUserProvinceCityByUserIdCompletedEventHandler GetUserProvinceCityByUserIdCompleted;
+        
+        /// <remarks/>
+        public event GetUserInfoByUserIdCompletedEventHandler GetUserInfoByUserIdCompleted;
         
         /// <remarks/>
         public event GetUsersCompletedEventHandler GetUsersCompleted;
@@ -211,6 +231,93 @@ namespace NewAsiaOASystem.Web.Newasia {
         }
         
         /// <remarks/>
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/GetOrderByID", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        public System.Data.DataTable GetOrderByID(int orderId) {
+            object[] results = this.Invoke("GetOrderByID", new object[] {
+                        orderId});
+            return ((System.Data.DataTable)(results[0]));
+        }
+        
+        /// <remarks/>
+        public void GetOrderByIDAsync(int orderId) {
+            this.GetOrderByIDAsync(orderId, null);
+        }
+        
+        /// <remarks/>
+        public void GetOrderByIDAsync(int orderId, object userState) {
+            if ((this.GetOrderByIDOperationCompleted == null)) {
+                this.GetOrderByIDOperationCompleted = new System.Threading.SendOrPostCallback(this.OnGetOrderByIDOperationCompleted);
+            }
+            this.InvokeAsync("GetOrderByID", new object[] {
+                        orderId}, this.GetOrderByIDOperationCompleted, userState);
+        }
+        
+        private void OnGetOrderByIDOperationCompleted(object arg) {
+            if ((this.GetOrderByIDCompleted != null)) {
+                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                this.GetOrderByIDCompleted(this, new GetOrderByIDCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
+            }
+        }
+        
+        /// <remarks/>
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/GetOrderByOrderCode", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        public System.Data.DataTable GetOrderByOrderCode(string orderCode) {
+            object[] results = this.Invoke("GetOrderByOrderCode", new object[] {
+                        orderCode});
+            return ((System.Data.DataTable)(results[0]));
+        }
+        
+        /// <remarks/>
+        public void GetOrderByOrderCodeAsync(string orderCode) {
+            this.GetOrderByOrderCodeAsync(orderCode, null);
+        }
+        
+        /// <remarks/>
+        public void GetOrderByOrderCodeAsync(string orderCode, object userState) {
+            if ((this.GetOrderByOrderCodeOperationCompleted == null)) {
+                this.GetOrderByOrderCodeOperationCompleted = new System.Threading.SendOrPostCallback(this.OnGetOrderByOrderCodeOperationCompleted);
+            }
+            this.InvokeAsync("GetOrderByOrderCode", new object[] {
+                        orderCode}, this.GetOrderByOrderCodeOperationCompleted, userState);
+        }
+        
+        private void OnGetOrderByOrderCodeOperationCompleted(object arg) {
+            if ((this.GetOrderByOrderCodeCompleted != null)) {
+                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                this.GetOrderByOrderCodeCompleted(this, new GetOrderByOrderCodeCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
+            }
+        }
+        
+        /// <remarks/>
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/GetOrderShipInfoByID", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        public System.Data.DataTable GetOrderShipInfoByID(int orderId) {
+            object[] results = this.Invoke("GetOrderShipInfoByID", new object[] {
+                        orderId});
+            return ((System.Data.DataTable)(results[0]));
+        }
+        
+        /// <remarks/>
+        public void GetOrderShipInfoByIDAsync(int orderId) {
+            this.GetOrderShipInfoByIDAsync(orderId, null);
+        }
+        
+        /// <remarks/>
+        public void GetOrderShipInfoByIDAsync(int orderId, object userState) {
+            if ((this.GetOrderShipInfoByIDOperationCompleted == null)) {
+                this.GetOrderShipInfoByIDOperationCompleted = new System.Threading.SendOrPostCallback(this.OnGetOrderShipInfoByIDOperationCompleted);
+            }
+            this.InvokeAsync("GetOrderShipInfoByID", new object[] {
+                        orderId}, this.GetOrderShipInfoByIDOperationCompleted, userState);
+        }
+        
+        private void OnGetOrderShipInfoByIDOperationCompleted(object arg) {
+            if ((this.GetOrderShipInfoByIDCompleted != null)) {
+                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                this.GetOrderShipInfoByIDCompleted(this, new GetOrderShipInfoByIDCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
+            }
+        }
+        
+        /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/GetNewOrders", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         public System.Data.DataTable GetNewOrders() {
             object[] results = this.Invoke("GetNewOrders", new object[0]);
@@ -290,6 +397,35 @@ namespace NewAsiaOASystem.Web.Newasia {
             if ((this.GetUserProvinceCityByUserIdCompleted != null)) {
                 System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.GetUserProvinceCityByUserIdCompleted(this, new GetUserProvinceCityByUserIdCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
+            }
+        }
+        
+        /// <remarks/>
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/GetUserInfoByUserId", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        public System.Data.DataTable GetUserInfoByUserId(int userId) {
+            object[] results = this.Invoke("GetUserInfoByUserId", new object[] {
+                        userId});
+            return ((System.Data.DataTable)(results[0]));
+        }
+        
+        /// <remarks/>
+        public void GetUserInfoByUserIdAsync(int userId) {
+            this.GetUserInfoByUserIdAsync(userId, null);
+        }
+        
+        /// <remarks/>
+        public void GetUserInfoByUserIdAsync(int userId, object userState) {
+            if ((this.GetUserInfoByUserIdOperationCompleted == null)) {
+                this.GetUserInfoByUserIdOperationCompleted = new System.Threading.SendOrPostCallback(this.OnGetUserInfoByUserIdOperationCompleted);
+            }
+            this.InvokeAsync("GetUserInfoByUserId", new object[] {
+                        userId}, this.GetUserInfoByUserIdOperationCompleted, userState);
+        }
+        
+        private void OnGetUserInfoByUserIdOperationCompleted(object arg) {
+            if ((this.GetUserInfoByUserIdCompleted != null)) {
+                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                this.GetUserInfoByUserIdCompleted(this, new GetUserInfoByUserIdCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
         
@@ -468,7 +604,7 @@ namespace NewAsiaOASystem.Web.Newasia {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.3056.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -561,7 +697,7 @@ namespace NewAsiaOASystem.Web.Newasia {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.3056.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -657,11 +793,11 @@ namespace NewAsiaOASystem.Web.Newasia {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.3056.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")]
     public delegate void GetUsrInfoCompletedEventHandler(object sender, GetUsrInfoCompletedEventArgs e);
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.3056.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class GetUsrInfoCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
@@ -683,11 +819,11 @@ namespace NewAsiaOASystem.Web.Newasia {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.3056.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")]
     public delegate void SaveOfferCompletedEventHandler(object sender, SaveOfferCompletedEventArgs e);
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.3056.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class SaveOfferCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
@@ -709,11 +845,11 @@ namespace NewAsiaOASystem.Web.Newasia {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.3056.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")]
     public delegate void GetOrdersCompletedEventHandler(object sender, GetOrdersCompletedEventArgs e);
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.3056.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class GetOrdersCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
@@ -735,11 +871,89 @@ namespace NewAsiaOASystem.Web.Newasia {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.3056.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")]
+    public delegate void GetOrderByIDCompletedEventHandler(object sender, GetOrderByIDCompletedEventArgs e);
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    public partial class GetOrderByIDCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+        
+        private object[] results;
+        
+        internal GetOrderByIDCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+                base(exception, cancelled, userState) {
+            this.results = results;
+        }
+        
+        /// <remarks/>
+        public System.Data.DataTable Result {
+            get {
+                this.RaiseExceptionIfNecessary();
+                return ((System.Data.DataTable)(this.results[0]));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")]
+    public delegate void GetOrderByOrderCodeCompletedEventHandler(object sender, GetOrderByOrderCodeCompletedEventArgs e);
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    public partial class GetOrderByOrderCodeCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+        
+        private object[] results;
+        
+        internal GetOrderByOrderCodeCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+                base(exception, cancelled, userState) {
+            this.results = results;
+        }
+        
+        /// <remarks/>
+        public System.Data.DataTable Result {
+            get {
+                this.RaiseExceptionIfNecessary();
+                return ((System.Data.DataTable)(this.results[0]));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")]
+    public delegate void GetOrderShipInfoByIDCompletedEventHandler(object sender, GetOrderShipInfoByIDCompletedEventArgs e);
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    public partial class GetOrderShipInfoByIDCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+        
+        private object[] results;
+        
+        internal GetOrderShipInfoByIDCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+                base(exception, cancelled, userState) {
+            this.results = results;
+        }
+        
+        /// <remarks/>
+        public System.Data.DataTable Result {
+            get {
+                this.RaiseExceptionIfNecessary();
+                return ((System.Data.DataTable)(this.results[0]));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")]
     public delegate void GetNewOrdersCompletedEventHandler(object sender, GetNewOrdersCompletedEventArgs e);
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.3056.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class GetNewOrdersCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
@@ -761,11 +975,11 @@ namespace NewAsiaOASystem.Web.Newasia {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.3056.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")]
     public delegate void GetUserProvinceCityCompletedEventHandler(object sender, GetUserProvinceCityCompletedEventArgs e);
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.3056.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class GetUserProvinceCityCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
@@ -787,11 +1001,11 @@ namespace NewAsiaOASystem.Web.Newasia {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.3056.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")]
     public delegate void GetUserProvinceCityByUserIdCompletedEventHandler(object sender, GetUserProvinceCityByUserIdCompletedEventArgs e);
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.3056.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class GetUserProvinceCityByUserIdCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
@@ -813,11 +1027,37 @@ namespace NewAsiaOASystem.Web.Newasia {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.3056.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")]
+    public delegate void GetUserInfoByUserIdCompletedEventHandler(object sender, GetUserInfoByUserIdCompletedEventArgs e);
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    public partial class GetUserInfoByUserIdCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+        
+        private object[] results;
+        
+        internal GetUserInfoByUserIdCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+                base(exception, cancelled, userState) {
+            this.results = results;
+        }
+        
+        /// <remarks/>
+        public System.Data.DataTable Result {
+            get {
+                this.RaiseExceptionIfNecessary();
+                return ((System.Data.DataTable)(this.results[0]));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")]
     public delegate void GetUsersCompletedEventHandler(object sender, GetUsersCompletedEventArgs e);
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.3056.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class GetUsersCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
@@ -839,11 +1079,11 @@ namespace NewAsiaOASystem.Web.Newasia {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.3056.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")]
     public delegate void GetKuCunCompletedEventHandler(object sender, GetKuCunCompletedEventArgs e);
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.3056.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class GetKuCunCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
@@ -865,11 +1105,11 @@ namespace NewAsiaOASystem.Web.Newasia {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.3056.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")]
     public delegate void GetBomCompletedEventHandler(object sender, GetBomCompletedEventArgs e);
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.3056.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class GetBomCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
@@ -891,11 +1131,11 @@ namespace NewAsiaOASystem.Web.Newasia {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.3056.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")]
     public delegate void UpdateOrderNumberCompletedEventHandler(object sender, UpdateOrderNumberCompletedEventArgs e);
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.3056.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class UpdateOrderNumberCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
@@ -917,11 +1157,11 @@ namespace NewAsiaOASystem.Web.Newasia {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.3056.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")]
     public delegate void WlwChargeCompletedEventHandler(object sender, WlwChargeCompletedEventArgs e);
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.3056.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class WlwChargeCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {

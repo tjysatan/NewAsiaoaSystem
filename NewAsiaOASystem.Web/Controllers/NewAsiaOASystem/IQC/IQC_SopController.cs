@@ -1542,5 +1542,82 @@ namespace NewAsiaOASystem.Web.Controllers
         }
         #endregion
         #endregion
+
+        #region //检验标准数据的导出
+
+        //检验标准数据导出
+        public FileResult ExcelExportIQC_Sop()
+        {
+            IList<IQC_SopInfoView> modellist = _IIQC_SopInfoDao.GetAllIQC_Soppagelist();
+            //创建Excel文件的对象
+            NPOI.HSSF.UserModel.HSSFWorkbook book = new NPOI.HSSF.UserModel.HSSFWorkbook();
+            //添加一个sheet
+            NPOI.SS.UserModel.ISheet sheet1 = book.CreateSheet("Sheet1");
+            //给sheet1添加第一行的头部标题
+            NPOI.SS.UserModel.IRow row1 = sheet1.CreateRow(0);
+            row1.CreateCell(0).SetCellValue("序号");
+            row1.CreateCell(1).SetCellValue("物料编码");
+            row1.CreateCell(2).SetCellValue("物料名称");
+            row1.CreateCell(3).SetCellValue("物料型号");
+            row1.CreateCell(4).SetCellValue("是否检验");//0 没有检验项目   1 有免检 有非免检项目  2 都是免检项目  3 都是非免检项目
+            if (modellist != null)
+            {
+                int n = 0;
+                for (int i = 0; i < modellist.Count; i++)
+                {
+                    n = n + 1;
+                    NPOI.SS.UserModel.IRow rowtemp = sheet1.CreateRow(n);
+                    rowtemp.CreateCell(0).SetCellValue(n);//序号
+                    rowtemp.CreateCell(1).SetCellValue(modellist[i].Yqjdm);//物料编码
+                    rowtemp.CreateCell(2).SetCellValue(modellist[i].Yqjname);//物料名称
+                    rowtemp.CreateCell(3).SetCellValue(modellist[i].Yqjxh);//物料型号
+                    rowtemp.CreateCell(4).SetCellValue(jcmjinfo(modellist[i].Id));//物料型号
+                }
+            }
+
+
+
+            System.IO.MemoryStream ms = new System.IO.MemoryStream();
+            book.Write(ms);
+            ms.Seek(0, SeekOrigin.Begin);
+            return File(ms, "application/vnd.ms-excel", "物料是否免检数据.xls");
+        }
+
+
+        #region ///查询检验内容
+        public int jcmjinfo(string Id)
+        {
+            try
+            {
+                IList<IQC_JyconstrinfoView> modellist = _IIQC_JyconstrinfoDao.GetjyconbysopId(Id);
+                if (modellist == null)
+                    return 0;//没有检验内容
+
+                var m = 0;
+                var fm = 0;
+                for (int i = 0; i < modellist.Count; i++)
+                {
+             
+                    if (modellist[i].Ismj == 0)
+                    {
+                        fm = fm + 1;
+                    }
+                    if (modellist[i].Ismj == 1)
+                    {
+                        m = m + 1;
+                    }
+                }
+                if (m == 0 && fm > 0) { return 3; }
+                else if (m > 0 && fm == 0) { return 1; }
+                else { return 2; }
+            }
+            catch {
+                return -1;
+            }
+        }
+        #endregion
+        #endregion
+
+
     }
 }

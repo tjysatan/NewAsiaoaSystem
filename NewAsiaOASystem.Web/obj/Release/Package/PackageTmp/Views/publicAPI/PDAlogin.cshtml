@@ -1,0 +1,106 @@
+﻿@{
+    ViewBag.Title = "PDAlogin";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+
+<style>
+    .con {
+        width: 95vw;
+        height: 100vh;
+        padding: 20px 10px 20px 10px;
+    }
+
+    .regTop {
+        margin: auto;
+        text-align: center;
+        line-height: 45px;
+    }
+</style>
+<script src="~/Scripts/md5.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $("#loginuser").focus();
+    })
+
+    //登陆
+    function Login() {
+        var userId = $("#userId").val();
+        var passwd = $.md5($("#passwd").val());
+        var cztype = $("#cztype").val();
+        if (userId == "" || passwd == "") {
+            layer.alert("账号和密码不能为空！", { icon: 2 });
+            $("#loginuser").focus();
+            return;
+        }
+
+        $.ajax({
+            url: "../publicAPI/PDAloginE",
+            type: "POST",
+            data: { "userId": userId, "passwd": passwd, "cztype": cztype },
+            dataType: "json",
+            async: false,
+            success: function (response) {
+                if (response.result == "success") {
+                    //layer.alert(response.msg, { icon: 1 }, function () {
+                        if (cztype == "0") {//跳转到地址
+                            window.location.href ="../publicAPI/PDAWarehouse_FLView"
+                        }
+                    //});
+
+                }
+                if (response.result == "error") {
+                    layer.alert(response.msg, { icon: 2 });
+                }
+
+            },
+            error: function (e) {
+                layer.alert("登陆失败，请重试！", { icon: 2 });
+            }
+        });
+
+    }
+
+    layui.use('form', function () {
+        var form = layui.form; //只有执行了这一步，部分表单元素才会自动修饰成功
+    })
+</script>
+<div class="con">
+
+    <div class="layui-panel" style="width:70vw; margin:auto;">
+        <div style="padding: 40px; font-size:20px">蓝河PDA登录</div>
+    </div>
+    <div class="layui-form" action="" style="width:70vw; margin:auto;">
+        <div class="layui-form-item">
+            <div >
+                <input type="text" name="userId" id="userId" required lay-verify="required" placeholder="请输入账号" autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux">办公平台账号,必填</div>
+        </div>
+        <div class="layui-form-item">
+            <div>
+                <input type="password" name="passwd" id="passwd" required lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux">办公平台密码,必填</div>
+        </div>
+
+        <div class="layui-form-item">
+            <div>
+                <select name="cztype" id="cztype" class="layui-input">
+                    <option value=""></option>
+                    <option value="0">仓库发料</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div >
+                <button class="layui-btn layui-btn-sm layui-btn-fluid" lay-submit lay-filter="formDemo" onclick="Login()">登录</button>
+                @*<button type="reset" class="layui-btn layui-btn-primary">重置</button>*@
+            </div>
+        </div>
+
+
+    </div>
+
+
+</div>

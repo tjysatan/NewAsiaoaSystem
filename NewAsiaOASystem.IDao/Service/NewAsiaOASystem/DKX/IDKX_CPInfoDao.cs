@@ -60,7 +60,28 @@ namespace NewAsiaOASystem.IDao
         /// <param name="str">参数 控制器型号或者控制器物料代码</param>
         /// <param name="type">类型 0 型号 1物料代码</param>
         /// <returns></returns>
-        IList<DKX_CPInfoView> Getcpinfobyxhorwldm(string str, string type); 
+        IList<DKX_CPInfoView> Getcpinfobyxhorwldm(string str, string type);
         #endregion
+        
+
+        #region //查询同一个大类中的产品数据
+        /// <summary>
+        /// 查询同一个大类的产品数据
+        /// </summary>
+        /// <param name="sanduanno">查询同一个大类的产品数据</param>
+        /// <returns></returns>
+        int Getdaleichanpincount(string sanduanno);
+        #endregion
+
+        #region //通过工程师查询全部的电控箱方案库数据
+        /// <summary>
+        /// 通过工程师查询全部的电控箱方案库数据
+        /// </summary>
+        /// <param name="Gcs_name">工程师</param>
+        /// <returns></returns>
+        IList<DKX_CPInfoView> GetalldkxcpbygcsId(string Gcs_name);
+        #endregion
+
+
     }
 }

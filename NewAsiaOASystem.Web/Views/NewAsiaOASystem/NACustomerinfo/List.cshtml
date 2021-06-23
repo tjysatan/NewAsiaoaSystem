@@ -40,10 +40,11 @@
                 html+='<td width="15%">客户名称</td>';
                 html+='<td width="10%">联系人</td>';
                 html+='<td width="10%">联系电话</td>';
-                html+='<td width="25%">地址</td>';
+                html+='<td width="20%">地址</td>';
                 html+='<td width="10%">状态</td>';
                 html+='<td width="10%">电商Id</td>';
-                html+=' <td width="15%">创建时间</td>';
+                html += '<td width="10%">创建时间</td>';
+                html += '<td width="10%">操作</td>';
                 html+='</tr>';
                 html+='</thead>';
                 for (var i = 0, j = jsonStr.length; i < j; i++) {
@@ -59,9 +60,9 @@
                     else
                         html += '<td width="10%"></td>';
                     if(jsonStr[i].Adress!=null)
-                        html += '<td width="25%">' + jsonStr[i].Adress + '</td>';
+                        html += '<td width="20%">' + jsonStr[i].Adress + '</td>';
                     else
-                        html += '<td width="25%"></td>';
+                        html += '<td width="20%"></td>';
                     
                     if(jsonStr[i].Status!=null)
                         html += '<td width="10%">' + showVal(jsonStr[i].Status) + '</td>';
@@ -72,15 +73,46 @@
                     else
                         html += '<td width="10%">非电商</td>';
                     if(jsonStr[i].CreateTime!=null)
-                        html += '<td width="15%">' + showDate(jsonStr[i].CreateTime) + '</td>';
+                        html += '<td width="10%">' + showDate(jsonStr[i].CreateTime) + '</td>';
                     else
-                        html += '<td width="15%"></td>';
+                        html += '<td width="10%"></td>';
+                    html += '<td width="9%">' + listbtnshow(jsonStr[i].Id) + '</td>';
 
                     html+='</tr>';
                 }
                 html += '</table>';
                 $("#content").html(html);
             }
+        }
+
+
+        //列表中操作的列表
+        function listbtnshow(val) {
+            var id = "'" + val + "'";
+            
+         
+            var z = '<a class="layui-btn layui-btn-primary layui-btn-small" onclick="updatek3codeopen(' + id +  ')">K3CODE修改</a>';
+          
+            return z;
+        }
+
+        //修改K3code页面
+        function updatek3codeopen(val) {
+            
+          
+                layer.open({
+                    type: 2,
+                    title: ['修改K3CODEL页面', 'font-size:14px;'],
+                    area: ['550px', '350px'],
+                    offset: '10px',
+                    fixed: false, //不固定
+                    maxmin: true,
+                    content: '../NACustomerinfo/Updaetk3codeView?Id=' + val,
+                    //end: function () {
+                    //    location.reload();
+                    //}
+                })
+            
         }
 
         //pageIndex当前页
@@ -109,6 +141,23 @@
         function ExportEPJSON()
         {
             window.location.href="../NACustomerinfo/DCCusinfo";
+        }
+
+        function openImportView() {
+           
+                layer.open({
+                    type: 2,
+                    title: ['更新K3CODE', 'font-size:14px;'],
+                    area: ['550px', '350px'],
+                    offset: '10px',
+                    fixed: false, //不固定
+                    maxmin: true,
+                    content: '../NACustomerinfo/ImportCusk3codeView',
+                    //end: function () {
+                    //    location.reload();
+                    //}
+                })
+           
         }
     </script>
 }
@@ -185,8 +234,11 @@
                                 <button class="layui-btn" onclick="return addClick('/NACustomerinfo/List')"><i class="layui-icon">&#x1002;</i> 刷新</button>
                             </span>
 
-                             <span class="inquiry-input">
+                            <span class="inquiry-input">
                                 <button type="button" onclick="return ExportEPJSON()">记录导出</button>
+                            </span>
+                            <span class="inquiry-input">
+                                <button type="button" onclick="return openImportView()">更新K3CODE</button>
                             </span>
                         </li>
                     </ul>

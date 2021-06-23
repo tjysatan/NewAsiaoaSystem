@@ -25,8 +25,8 @@
 
         //window.location = "/Flow_PlanProductioninfo/PlanPrint";
         //return;
-        var scph1 = $("#scph1").val();//批号前面
-        var scph2 = $("#scph2").val();//批号后面
+        //var scph1 = $("#scph1").val();//批号前面
+        //var scph2 = $("#scph2").val();//批号后面
         var yhsl = $("#yhsl").val();//要货数量
         var Cusname = $("#Cusname").val();//客户名称
         var yhdatetime = $("#yhdatetime").val();//要货时间
@@ -38,11 +38,11 @@
         var GY = $("#GY").val();//生产工艺
         var jsqr = $("#jsqr").val();//
         var Plan_Id = '@ViewData["PlId"]';
-        if (scph1 == "" || scph2 == "") {
-            layer.alert("生产批号不为空！", { icon: 2 });
-            $("#scph1").focus();
-            return;
-        }
+        //if (scph1 == "" || scph2 == "") {
+        //    layer.alert("生产批号不为空！", { icon: 2 });
+        //    $("#scph1").focus();
+        //    return;
+        //}
         if (yhsl == "") {
             layer.alert("要货数量不为空！", { icon: 2 });
             $("#scph1").focus();
@@ -67,7 +67,7 @@
         $.ajax({
             url: $(obj).attr("action"),
             type: "POST",
-            data: { Plan_Id: Plan_Id, scph1: scph1, scph2: scph2, yhsl: yhsl, Cusname: Cusname, yhdatetime: yhdatetime, cpname: cpname, DYdy: DYdy, yhxz: yhxz, kfqr: kfqr, PL: PL, GY: GY, jsqr: jsqr },
+            data: { Plan_Id: Plan_Id,yhsl: yhsl, Cusname: Cusname, yhdatetime: yhdatetime, cpname: cpname, DYdy: DYdy, yhxz: yhxz, kfqr: kfqr, PL: PL, GY: GY, jsqr: jsqr },
             dataType: "html",
             async: false,
             success: function (response) {
@@ -81,7 +81,7 @@
                 if ("3" == response) {
                     $.messager.alert("操作提示", '要货时间小于当前时间，无法提交！！', 'info')
                 }
-                
+
             },
             error: function (e) {
                 layer.alert("提交失败！", { icon: 2 });
@@ -100,9 +100,9 @@
 
     ///赋值
     function Fz() {
-        $("#scph1").val('@ViewData["Newdatetime"]');//生产批号前一部分
-        var sp2 = Getscp2();
-        $("#scph2").val(sp2)
+        @*$("#scph1").val('@ViewData["Newdatetime"]');//生产批号前一部分
+        var sp2 = Getscp2();*@
+        $("#scph").val('@ViewData["scph"]')
         $("#yhsl").val('@ViewData["Yhsl"]');//要货数量
         $("#cpname").val('@ViewData["cpname"]');//产品名称
         $("#PL").val('@ViewData["cpname"]');//配料
@@ -144,8 +144,7 @@
                 <tr>
                     <td>生产批号：
                          <span class="infor-c-input">
-                             <input type="text" id="scph1" name="scph1" />-
-                              <input type="text" style="width: 20px;" id="scph2" name="scph2" />
+                            会根据生产计划自动生成
                          </span>
                     </td>
                     <td>要货数量：

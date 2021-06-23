@@ -24,5 +24,7 @@
     <property name="SM_ZT" column="SM_ZT" />
     <property name="S_Number" column="S_Number" />
     <property name="CP_Number" column="CP_Number" />
+    <property name="Ps_DocEntry" column="Ps_DocEntry" />
+    <property name="Ps_DocNu" column="Ps_DocNu" />
   </class>
 </hibernate-mapping>

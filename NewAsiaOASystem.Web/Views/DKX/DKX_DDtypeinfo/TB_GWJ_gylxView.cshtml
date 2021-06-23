@@ -1,0 +1,73 @@
+﻿@{
+    ViewBag.Title = "手动选择工艺路线同步工位机";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+<script type="text/javascript">
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+
+    //同步K3生产任务单
+    function confirm_tbgwej() {
+     
+        var ftemplate_id = $("#ftemplate_id").val();//工艺路线
+        $.ajax({
+            url: "../DKX_DDtypeinfo/ManualTB_GWJacyncInterface",
+            type: "POST",
+            data: { Id: '@ViewData["Id"]', ftemplate_id: ftemplate_id },
+            dataType: "json",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response.result == "success") {
+                    layer.alert(response.msg, { icon: 1 }, function () { location.reload(); });
+                }
+                if (response.result == "error") {
+                    layer.alert(response.msg, { icon: 2 }, function () { location.reload(); });
+                }
+            }
+        })
+    }
+</script>
+<div style="padding:10px 10px 10px 10px">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">工艺路线：</label>
+        <div class="layui-input-block" style="width: 200px;">
+            <select id="ftemplate_id" name="ftemplate_id" class="layui-input">
+                <option value='25'>非标电控箱（默认）</option>
+                <option value='29'>非标电控箱（大系统）</option>
+                <option value='30'>非标电控箱（PLC）</option>
+                <option value='27'>NAK电控箱</option>
+                <option value='28'>NAW电控箱（物联网）</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form" >
+        @*<div class="layui-form-item">
+            <label class="layui-form-label">选择工艺路线：</label>
+            <div class="layui-input-block" style="width: 200px;">
+                <select id="ftemplate_id" name="ftemplate_id" class="layui-input">
+                    <option value='25'>非标电控箱（默认）</option>
+                    <option value='29'>非标电控箱（大系统）</option>
+                    <option value='30'>非标电控箱（PLC）</option>
+                    <option value='27'>NAK电控箱</option>
+                    <option value='28'>NAW电控箱（物联网）</option>
+                </select>
+            </div>
+        </div>*@
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" onclick="confirm_tbgwej()">立即提交</button>
+            </div>
+        </div>
+    </div>
+</div>

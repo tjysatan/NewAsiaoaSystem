@@ -1,0 +1,175 @@
+﻿@{
+    ViewBag.Title = "MRP计算结果查看";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+<style id="style1">
+    .table_con {
+        border-collapse: collapse;
+        border: none;
+    }
+
+        .table_con td {
+            border: solid #000 1px;
+            height: 25px;
+            padding: 0 0 0 5px;
+        }
+
+    .Miantitle {
+        width: 100%;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .hedertitle {
+        width: 100%;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .fontsizetd {
+        font-size: 14px;
+    }
+
+    .bhcss {
+        width: 98%;
+        margin: auto;
+        height: 100px;
+    }
+
+    .xkk {
+        width: 5px;
+        height: 5px;
+        border: 1px solid #000;
+    }
+
+    i {
+        width: 10px;
+        height: 10px;
+        line-height: 24px;
+        vertical-align: top;
+        margin: 4px 2px 0 0;
+        overflow: hidden;
+        border: 1px solid #000;
+        display: inline-block;
+    }
+</style>
+@section HeadContent{
+    <script type="text/javascript">
+        var loadi;
+        function ddchen() {
+            loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+        }
+        //关闭等待效果
+        function disLoading() {
+            layer.close(loadi);
+        }
+        $(function () {
+            GetMRPresuly();
+        })
+
+        //查询结果
+        function GetMRPresuly() {
+            $.ajax({
+                url: "../DKX_DD/GetMRPResult",
+                type: "POST",
+                data: { MId: '@ViewData["MId"]' },
+                dataType: "Json",
+                async: true,
+                beforeSend: function () {
+                    ddchen();
+                },
+                success: function (response) {
+                    disLoading();
+                    if (response.result == "error") {
+                        layer.alert(response.msg, { icon: 2 }, function () { location.reload(); });
+                    }
+                    else {
+                        console.log('1111', response.msg);
+                        HTMLpj(response.msg)
+                    }
+                },
+                error: function (e) {
+                    disLoading();
+                    layer.alert("操作失败！", { icon: 2 });
+                }
+            })
+        }
+
+        //html拼接
+        function HTMLpj(str) {
+            var html = "";
+            html += '<tr>';
+            html += '<td>序号</td>';
+            html += '<td>物料</td>';
+            html += '<td>名称</td>';
+            html += '<td>规格型号</td>';
+            html += '<td>总用量</td>';
+            html += '<td>当前库存</td>';
+            html += '<td>缺少</td>';
+            html += '<td>操作</td>';
+            html += '</tr>';
+            var Kliaodanmxstr = eval('(' + str + ')');
+            if (Kliaodanmxstr != "" && Kliaodanmxstr != null) {
+                for (var i = 0, j = Kliaodanmxstr.length; i < j; i++) {
+                    xh = i + 1;
+
+                    var qssl = "0";
+                    //if (dqkc != "-") {
+                        qssl = Kliaodanmxstr[i][4] - Kliaodanmxstr[i][3];
+                    //}
+                    html += '<tr>';
+                    html += '<td>' + xh + '</td>';
+                    html += '<td>' + Kliaodanmxstr[i][0] + '</td>';
+                    html += '<td> ' + Kliaodanmxstr[i][1] + '</td>';
+                    html += '<td>' + Kliaodanmxstr[i][2] + '</td>';
+                    html += '<td>' + Kliaodanmxstr[i][3] + '</td>';
+                    html += '<td>' + Kliaodanmxstr[i][4] + '</td>';
+                    if (qssl != "") {
+                        if (qssl >= 0)
+                            html += '<td>-</td>';
+                        else
+                            html += '<td style="color:red">' + qssl + '</td>';
+                    }
+                    else {
+                        html += '<td>-</td>';
+                    }
+                    html += '<td></td>';
+                    html += '</tr>';
+                }
+            }
+            $("#table_con").html(html);
+        }
+
+        //数据导出结果
+        function ExcelExportMRP(val) {
+            var type;
+            layer.open({
+                type: 1,
+                offset: type //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
+                , id: 'layerDemo' + type //防止重复弹出
+                , content: '<div style="padding: 20px 100px;">确认导出数据吗</div>'
+                , btn: ['数据导出', '关闭']
+                , btnAlign: 'c' //按钮居中
+                , shade: 0 //不显示遮罩
+                , yes: function () {
+                   
+                    window.location.href = "/DKX_DD/ExcelExportDD?MId=" + val;
+                    layer.closeAll();
+                }
+            });
+        }
+    </script>
+    }
+<div style="padding:10px">
+    <button class="layui-btn" onclick="ExcelExportMRP('@ViewData["MId"]');return false">   导出excel</button>
+</div>
+
+<table class="table_con" style="width: 98%; color: #000; font-size: 13px; margin: auto;" id="table_con">
+</table>
+

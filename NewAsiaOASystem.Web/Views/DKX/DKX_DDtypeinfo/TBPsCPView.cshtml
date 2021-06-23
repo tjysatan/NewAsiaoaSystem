@@ -1,0 +1,131 @@
+﻿@model NewAsiaOASystem.ViewModel.DKX_DDinfoView
+@{
+    ViewBag.Title = "同步普实的产品数据";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<script type="text/javascript">
+    $(function () {
+        $("#Ps_sanduanno").val('@Model.Ps_sanduanno');
+    })
+
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+     //同步
+    function confirm_tbpscpwork() {
+
+        var bomstr = '@Model.KBomNo'.substring(0, 3);
+        if (bomstr == "BOM") {//常规
+            layer.alert("该非标产品有常规料号,不需要重新新建同步", { icon: 2 });
+            return false;
+        }
+
+        var danjia = $("#yjcb").val();
+        if (danjia == "" || danjia == null) {
+            layer.alert("硬件成本没有核算", { icon: 2 });
+            return false;
+        } else {
+            if (isNaN(danjia)) {
+                layer.alert("硬件成本是数字！", { icon: 2 });
+                return false;
+            }
+            else {
+                if (danjia == 0) {
+                    layer.alert("硬件成本不为0", { icon: 2 });
+                    return false;
+                }
+            }
+        }
+        var Ps_sanduanno = $("#Ps_sanduanno").val();//产品
+        if (Ps_sanduanno == "") {
+            layer.alert("请选择产品类型", { icon: 2 });
+            return false;
+        }
+        $.ajax({
+            url: "../DKX_DDtypeinfo/Ps_Instercp",
+            type: "POST",
+            data: { Id: '@Model.Id', Ps_sanduanno: Ps_sanduanno},
+            dataType: "json",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response.result == "success") {
+                    layer.alert(response.msg, { icon: 1 }, function () { location.reload(); });
+                }
+                if (response.result == "error") {
+                    layer.alert(response.msg, { icon: 2 }, function () { location.reload(); });
+                }
+            }
+        })
+    }
+
+    //已经成本核算
+    function confirm_heisuanyjcb() {
+        $.ajax({
+            url: "../DKX_DDtypeinfo/Fyingjiancbsum",
+            type: "POST",
+            data: { Id: '@Model.Id'},
+            dataType: "json",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response.result == "success") {
+                    layer.alert(response.msg, { icon: 1 }, function () { location.reload(); });
+                }
+                if (response.result == "error") {
+                    layer.alert(response.msg, { icon: 2 }, function () { location.reload(); });
+                }
+            }
+        })
+    }
+</script>
+
+<div style="width: 80%; padding: 20px 20px 0 20px">
+     
+        <div class="layui-form-item">
+            <label class="layui-form-label">产品类型：</label>
+            <div class="layui-input-block" style="width: 200px;">
+                <select id="Ps_sanduanno" name="Ps_sanduanno" class="layui-input">
+                    <option value=''>请选择</option>
+                    <option value='05.013.0001'>订做电控箱</option>
+                    <option value='05.013.0002'>涡旋机组控制箱</option>
+                    <option value='05.013.0003'>活塞机组控制箱</option>
+                    <option value='05.013.0004'>螺杆机组控制箱</option>
+                    <option value='05.013.0005'>螺杆冷水机组控制箱</option>
+                    <option value='05.013.0006'>食用菌机组控制箱</option>
+                    <option value='05.013.0007'>医药机组控制箱</option>
+                    <option value='05.013.0009'>PLC1.0订做电控箱</option>
+                    <option value='05.013.NAW0008'>物联网订做电控箱</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">硬件成本：</label>
+            <div class="layui-input-inline" style="width: 150px;">
+                <input type="text" name="yjcb" id="yjcb" required lay-verify="required" value="@Model.YJcb" placeholder="硬件必填" autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux">
+                <button class="layui-btn" onclick="confirm_heisuanyjcb()">核算硬件成本</button>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" onclick="confirm_tbpscpwork()">同步普实</button>
+            </div>
+        </div>
+     
+</div>

@@ -220,6 +220,20 @@ namespace NewAsiaOASystem.Dao
         }
         #endregion
 
+        #region //查咋全部检验标准的数据
+        /// <summary>
+        /// 查询全部正常的检验标准的数据
+        /// </summary>
+        /// <returns></returns>
+        public IList<IQC_SopInfoView> GetAllIQC_Soppagelist()
+        {
+            string hqlstr = string.Format("from IQC_SopInfo where  Iszf='0'");
+            List<IQC_SopInfo> list = HibernateTemplate.Find<IQC_SopInfo>(hqlstr) as List<IQC_SopInfo>;
+            IList<IQC_SopInfoView> listmodel = GetViewlist(list);
+            return listmodel;
+        }
+        #endregion
+
 
 
     }

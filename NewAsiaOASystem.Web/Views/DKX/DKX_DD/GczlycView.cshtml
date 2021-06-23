@@ -1,0 +1,70 @@
+﻿@{
+    ViewBag.Title = "生产操作工程资料异常";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<script>
+    function guanbi() {
+        var index = parent.layer.getFrameIndex(window.name);
+        //关闭弹出层
+        parent.layer.close(index);
+    }
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+     function scTF() {
+         var ycyy = $("#ycyy").val();
+         if (ycyy == null || ycyy == "") {
+             layer.alert("异常原因不为空！", { icon: 2 });
+             return false;
+         }
+        $.ajax({
+            url: "../DKX_DD/ModifyGczlycbyorderId",
+            type: "POST",
+            data: { Id: '@ViewData["OID"]', ycyy: ycyy},
+            dataType: "json",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response.result == "success") {
+                    layer.alert(response.msg, { icon: 1 }, function () { location.reload(); });
+                }
+                
+                if (response.result == "error") {
+                    layer.alert(response.msg, { icon: 2 }, function () { location.reload(); });
+                }
+
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+            }
+</script>
+
+<div style="width: 80%; padding: 20px 20px 0 20px">
+    <input type="hidden" id="CBRName" name="CBRName" />
+    <input type="hidden" id="isbz" name="isbz" />
+    <div class="layui-form-item">
+        <label class="layui-form-label">异常原因：</label>
+        <div class="layui-input-block">
+            <input type="text" name="ycyy" id="ycyy" required lay-verify="required" placeholder="请输入异常原因" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+ 
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="formDemo" onclick="return scTF()">确定提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary" onclick="guanbi()">取消</button>
+        </div>
+    </div>
+</div>

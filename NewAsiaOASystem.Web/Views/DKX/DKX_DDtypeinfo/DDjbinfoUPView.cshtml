@@ -38,7 +38,7 @@
         </div>
     </div>
 
-    <div class="layui-form-item">
+    <div class="layui-form-item" id="htdjhtml">
         <label class="layui-form-label">合同售价：</label>
         <div class="layui-input-inline">
             <input class="layui-input" id="price" name="price" value='@Model.price' placeholder="请填写合同的单位售价" type="text" style="width: 200px;" />
@@ -70,6 +70,12 @@
             <input class="layui-input" id="sl" name="sl" placeholder="填写下单数量" value='@Model.NUM' type="text" style="width: 200px;" />
         </div>
     </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">功能简述：</label>
+        <div class="layui-input-block">
+            <input placeholder="请输入内容" id="gnjs" name="gnjs" value='@Model.gnjsstr' class="layui-input" autocomplete="off" />
+        </div>
+    </div>
 
     <div class="layui-form-item">
         <label class="layui-form-label">客户名称：</label>
@@ -78,17 +84,19 @@
         </div>
     </div>
 
+
+
     <div class="layui-form-item">
         <label class="layui-form-label">承若交期：</label>
         <div class="layui-input-block">
-            <input type="text" name="txt_startctime" id="txt_startctime" onclick="WdatePicker()" value='@Model.YJJQtime' class="layui-input" />
+            <input type="text" name="txt_startctime" id="txt_startctime" onclick="WdatePicker()" value='@Model.YJJQtime' class="layui-input" autocomplete="off" />
         </div>
     </div>
 
     <div class="layui-form-item layui-form-text">
         <label class="layui-form-label">备注：</label>
         <div class="layui-input-block">
-            <textarea placeholder="请输入内容" id="beizhu" name="beizhu" value='@Model.REMARK' class="layui-textarea"></textarea>
+            <input placeholder="请输入内容" id="beizhu" name="beizhu" value='@Model.REMARK' class="layui-input" autocomplete="off" />
         </div>
     </div>
 
@@ -138,6 +146,10 @@
             }
             else {
                 $("#wlwtyep").css('display', 'none');
+        }
+
+         if ('@Model.Ps_sanduanno' == "0") {
+                $("#htdjhtml").css('display', 'none');
             }
     }
 
@@ -174,6 +186,7 @@
         var crjq = $("#txt_startctime").val();
         var DD_WLWtype = $("#DD_WLWtype").val();
         var price = $("#price").val();
+        var gnjs = $("#gnjs").val();
         if (khname == "") {
             layer.alert("客户名称不为空！", { icon: 2 });
             return false;
@@ -190,13 +203,16 @@
             layer.alert("请填写功率！", { icon: 2 });
             return false;
         }
-        if (price == "") {
-            price = 0;
-        } else {
-            if (isNaN(price)) {
-            layer.alert("合同单位售价请填写数字！", { icon: 2 });
-            return false;
-        }
+        if ('@Model.Ps_sanduanno' != "0") {
+            if (price == "") {
+                layer.alert("单价不为空！", { icon: 2 });
+                return false;
+            } else {
+                if (isNaN(price)) {
+                    layer.alert("合同单位售价请填写数字！", { icon: 2 });
+                    return false;
+                }
+            }
         }
         //if (isNaN(gl)) {
         //    layer.alert("功率为纯数字！", { icon: 2 });
@@ -217,7 +233,7 @@
         $.ajax({
             url: "../DKX_DDtypeinfo/DDJBINFOUPEide",
             type: "POST",
-            data: { Id: Id, ddxh: ddxh, gl: gl, dw: dw, dkxtype: dkxtype, DD_WLWtype: DD_WLWtype, sl: sl, khname: khname, beizhu: beizhu, gcsId: gcsId, crjytime: crjq, price: price },
+            data: { Id: Id, ddxh: ddxh, gl: gl, dw: dw, dkxtype: dkxtype, DD_WLWtype: DD_WLWtype, sl: sl, khname: khname, beizhu: beizhu, gcsId: gcsId, crjytime: crjq, price: price, gnjs: gnjs },
             dataType: "html",
             async: true,
             beforeSend: function () {

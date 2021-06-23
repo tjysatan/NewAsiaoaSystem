@@ -206,6 +206,7 @@
             $("#czsctcon").html('<span style="color:red">暂无操作手册</span>');
         }
     }
+
     //获取订单信息
     function AjaxGetddinfoyId() {
         var json;
@@ -263,13 +264,6 @@
         return json;
     }
 
-
-
-
-
-
-
-
     //资料上传
     function RjCXtuzhishangchuanSavaForm(fromname) {
         //表单验证
@@ -296,7 +290,6 @@
         $('#'+fromname).ajaxSubmit(options);
         return false; //为了不刷新页面,返回false
     }
-
 
 
     //
@@ -481,6 +474,34 @@
         //关闭弹出层
         parent.layer.close(index);
     }
+
+    //更新普实BOM
+    function Ps_updateBom(val) {
+        $.ajax({
+            url: "../DKX_DDtypeinfo/Ps_updateBom",
+            type: "POST",
+            data: { Id: val},
+            dataType: "json",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response.result == "error") {
+                    layer.alert(response.msg, { icon: 2 });
+                }
+                if (response.result == "success") {
+                    layer.alert(response.msg, { icon: 1 });
+                }
+               
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+    }
 </script>
 
 
@@ -637,9 +658,9 @@
     <div class="layui-form-item" style="margin: auto">
         <div class="layui-input-block">
             <button class="layui-btn" lay-submit="" lay-filter="demo1" onclick="gcszltsh('@ViewData["Id"]')">提交（检查）</button>
-             <span id="drag" style="color: #2ec770; padding-left: 10px"></span>
+            <span id="drag" style="color: #2ec770; padding-left: 10px"></span>
             <button class="layui-btn" lay-submit="" lay-filter="demo1" onclick="AjaxUpk3LDData()">更新料单</button>
-
+            <button class="layui-btn" lay-submit=""  onclick="Ps_updateBom('@ViewData["Id"]')">更新普实BOM</button>
         </div>
     </div>
 

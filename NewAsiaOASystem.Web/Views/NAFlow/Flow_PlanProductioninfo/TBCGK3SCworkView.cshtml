@@ -1,0 +1,277 @@
+﻿@model NewAsiaOASystem.ViewModel.Flow_PlanProductioninfoView
+@{
+    ViewBag.Title = "常规的生产任务单同步";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+
+<script type="text/javascript">
+    layui.use('form', function () {
+        var form = layui.form; //只有执行了这一步，部分表单元素才会自动修饰成功
+        //let str = "<option value=''>请选择</option>";
+        //str += "<option value='05.013.0001'>订做电控箱</option>";
+        //str += "<option value='05.013.0002'>涡旋机组控制箱</option>";
+        //str += "<option value='05.013.0003'>活塞机组控制箱</option>";
+        //str += "<option value='05.013.0004'>螺杆机组控制箱</option>";
+        //str += "<option value='05.013.0005'>螺杆冷水机组控制箱</option>";
+        //str += "<option value='05.013.0006'>食用菌机组控制箱</option>";
+        //str += "<option value='05.013.0007'>医药机组控制箱</option>";
+        //str += "<option value='05.013.0009'>PLC1.0订做电控箱</option>";
+        //str += "<option value='05.013.NAW0008'>物联网订做电控箱</option>";
+        ////jquery赋值方式
+        //$("#Sel_cp").html(str);
+        ////重新渲染生效
+        //form.render();
+
+        let strcj = "<option value=''>请选择</option>";
+        strcj += "<option value='001.06'>电子车间</option>";
+        strcj += "<option value='001.07'>电气车间</option>";
+        $("#Sel_sj").html(strcj);
+        //重新渲染生效
+        form.render();
+
+        let strtype = "<option value=''>请选择</option>";
+        strtype += "<option value='普通订单'>普通订单</option>";
+        strtype += "<option value='返工'>返工</option>";
+        $("#Sel_sctype").html(strtype);
+        //重新渲染生效
+        form.render();
+
+
+    })
+
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+    //同步K3生产任务单
+    function confirm_tbscwork() {
+        var Sel_cp = $("#Sel_cp").val();//产品
+        var Sel_sj = $("#Sel_sj").val();//生产车间
+        var Sel_sctype = $("#Sel_sctype").val();//生产类型
+       var starttime = $("#starttime").val();//开工时间
+        var endtime = $("#endtime").val();//完工时间
+        $.ajax({
+            url: "../Flow_PlanProductioninfo/TBcgK3SCworkEide",
+            type: "POST",
+            data: { Id: '@Model.Id', cpbom: Sel_cp, Sel_sj: Sel_sj, Sel_sctype: Sel_sctype, starttime: starttime, endtime: endtime },
+            dataType: "json",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response.result == "success") {
+                    layer.alert(response.msg, { icon: 1 }, function () { location.reload(); });
+                }
+                if (response.result == "error") {
+                    layer.alert(response.msg, { icon: 2 }, function () { location.reload(); });
+                }
+            }
+        })
+    }
+    //重置生产批号
+    function Resetscph() {
+        var type;
+        layer.open({
+            type: 1,
+            offset: type //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
+            , id: 'layerDemo' + type //防止重复弹出
+            , content: '<div style="padding: 20px 100px;">确定要重置生产批号吗</div>'
+            , btn: ['重置批号', '关闭']
+            , btnAlign: 'c' //按钮居中
+            , shade: 0 //不显示遮罩
+            , yes: function () {
+                //console.log('111111')
+                //window.location.href = "/DKX_DDtypeinfo/ExcelExportDD?DD_Bianhao=" + DD_Bianhao + "&KBomNo=" + KBomNo + "&DD_Type=" + DD_Type + "&KHname=" + KHname + "&Lxname=" + Lxname
+                //    + "&Tel=" + Tel + "&DD_ZT=" + DD_ZT + "&startctime=" + starttime + "&endctiome=" + enedtime + "&GCSId=" + GCSId + "&DHtype=" + DHtype + "&YQtype=" + YQtype
+                //    + "&Isdqpb=" + Isdqpb + "&Isqttz=" + Isqtt;
+                  $.ajax({
+                      url: "../Flow_PlanProductioninfo/workphupdate",
+            type: "POST",
+            data: { Id: '@Model.Id'},
+            dataType: "json",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response.result == "success") {
+                    layer.alert(response.msg, { icon: 1 }, function () { location.reload(); });
+                }
+                if (response.result == "error") {
+                    layer.alert(response.msg, { icon: 2 }, function () { location.reload(); });
+                }
+            }
+        })
+                layer.closeAll();
+            }
+        });
+    }
+
+        //重置生产批号手动修改
+    function SDResetscph() {
+        var type;
+        layer.open({
+            type: 1,
+            offset: type //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
+            , id: 'layerDemo' + type //防止重复弹出
+            , content: '<div style="padding: 20px 100px;">确定要手动修改生产批号吗</div>'
+            , btn: ['确定', '关闭']
+            , btnAlign: 'c' //按钮居中
+            , shade: 0 //不显示遮罩
+            , yes: function () {
+                var scph = $("#scph").val();
+                if (scph == "" || scph == null) {
+                    layer.alert("生产批号不为空", { icon: 2 });
+                    return false;
+                }
+                  $.ajax({
+                      url: "../Flow_PlanProductioninfo/workscphSDupdate",
+            type: "POST",
+             data: { Id: '@Model.Id', scph: scph},
+            dataType: "json",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response.result == "success") {
+                    layer.alert(response.msg, { icon: 1 }, function () { location.reload(); });
+                }
+                if (response.result == "error") {
+                    layer.alert(response.msg, { icon: 2 }, function () { location.reload(); });
+                }
+            }
+        })
+                layer.closeAll();
+            }
+        });
+    }
+
+    //修改生产数量
+    function Resetsum() {
+         var type;
+        layer.open({
+            type: 1,
+            offset: type //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
+            , id: 'layerDemo' + type //防止重复弹出
+            , content: '<div style="padding: 20px 100px;">确定要修改生产数量吗</div>'
+            , btn: ['确定', '关闭']
+            , btnAlign: 'c' //按钮居中
+            , shade: 0 //不显示遮罩
+            , yes: function () {
+                //console.log('111111')
+                //window.location.href = "/DKX_DDtypeinfo/ExcelExportDD?DD_Bianhao=" + DD_Bianhao + "&KBomNo=" + KBomNo + "&DD_Type=" + DD_Type + "&KHname=" + KHname + "&Lxname=" + Lxname
+                //    + "&Tel=" + Tel + "&DD_ZT=" + DD_ZT + "&startctime=" + starttime + "&endctiome=" + enedtime + "&GCSId=" + GCSId + "&DHtype=" + DHtype + "&YQtype=" + YQtype
+                //    + "&Isdqpb=" + Isdqpb + "&Isqttz=" + Isqtt;
+                var sum = $("#sum").val();
+                if (sum == "" || sum == null) {
+                    layer.alert("数量不为空", { icon: 2 });
+                    return false;
+                } else {
+                    if (isNaN(sum)) {
+                        layer.alert("数量请填写数字！", { icon: 2 });
+                        return false;
+                    }
+                    else {
+                        if (sum == 0) {
+                            layer.alert("数量不为0", { icon: 2 });
+                            return false;
+                        }
+                    }
+                }
+                  $.ajax({
+                      url: "../Flow_PlanProductioninfo/worksumupdate",
+            type: "POST",
+                      data: { Id: '@Model.Id', sum: sum},
+            dataType: "json",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response.result == "success") {
+                    layer.alert(response.msg, { icon: 1 }, function () { location.reload(); });
+                }
+                if (response.result == "error") {
+                    layer.alert(response.msg, { icon: 2 }, function () { location.reload(); });
+                }
+            }
+        })
+                layer.closeAll();
+            }
+        });
+    }
+</script>
+
+<div style="padding:10px 10px 10px 10px">
+
+    <div class="layui-form" action="">
+        <div class="layui-form-item">
+            <label class="layui-form-label">生产批号：</label>
+            <div class="layui-input-inline" style="width: 200px;">
+                <input type="text" name="scph" id="scph" value="@Model.scbianhao" autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux">
+                <button class="layui-btn layui-btn-primary" onclick="Resetscph()">自动重置批号</button>
+            </div>
+            <div class="layui-form-mid layui-word-aux">
+                <button class="layui-btn layui-btn-primary" onclick="SDResetscph()">手动修改批号</button>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">计划数量：</label>
+            <div class="layui-input-inline" style="width: 200px;">
+                <input type="text" name="sum" id="sum" value="@Model.P_SCnumber" autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux">
+                <button class="layui-btn layui-btn-primary" onclick="Resetsum()">重置计划数量</button>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">生产车间：</label>
+            <div class="layui-input-block">
+                <select lay-verify="" lay-filter="Sel_sj" id="Sel_sj" name="Sel_sj" lay-search>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">生产类型：</label>
+            <div class="layui-input-block">
+                <select lay-verify="" lay-filter="Sel_sctype" id="Sel_sctype" name="Sel_sctype" lay-search>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">开工时间：</label>
+            <div class="layui-input-block">
+                <input type="text" name="date" id="starttime" onclick="WdatePicker()" placeholder="不填写时间默认当天" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">完工时间：</label>
+            <div class="layui-input-block">
+                <input type="text" name="date" id="endtime" onclick="WdatePicker()" placeholder="不填写时间默认当天" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" onclick="confirm_tbscwork()">立即同步K3</button>
+            </div>
+        </div>
+    </div>
+</div>

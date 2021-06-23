@@ -8,32 +8,38 @@
     //
     $(function () {
         var ddstr = AjaxGetddinfoyId();
+        if (ddstr.Ps_wlBomNO == "" || ddstr.Ps_wlBomNO == null) {
+            $("#cpwlno").html("尚未同步")
+        } else {
+            $("#cpwlno").html(ddstr.Ps_wlBomNO)
+        }
+
+        if (ddstr.Ps_BomNO == "" || ddstr.Ps_BomNO == null) {
+            $("#bomno").html("尚未同步")
+        } else {
+            $("#bomno").html(ddstr.Ps_BomNO)
+        }
         var Isck = true;
         if (ddstr.DD_Type <= 3) {//不是plc 不需要上传软件和操作手册
             $("#rjcon").attr("style", "display:none;");//隐藏div
             $("#czsccon").attr("style", "display:none;");//隐藏div
         } else {
-            console.log('222211','@ViewData["gsc_Id"]')
             if ('@ViewData["gsc_Id"]' == "False") {
                 Isck = false;
             }
             else if ('@ViewData["gsc_Id"]' == "True")//电气主管或者管理员账号
             {
-                console.log('111111222');
                 Isck = true;
             }
             else {
-                console.log('111111');
                 if ('@ViewData["gsc_Id"]' != ddstr.Gcs_nameId) { Isck = false;}
             }
 
         }
-
-
         //获取生产订单的生产资料
         var ziliaostr = AJaxziliaojson(ddstr.Id);
         console.log('ziliaostr',ziliaostr)
-        pjziliaohtml(ziliaostr, ddstr, Isck);
+        pjziliaohtml(ziliaostr, ddstr, "True");
 
     })
 
@@ -326,12 +332,69 @@
         return json;
     }
 
+
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+
+    //同步不是BOM
+    function TBpushsofeBom() {
+         //同步K3生产任务单
+        $.ajax({
+            url: "../DKX_DDtypeinfo/Ps_InstarBom",
+            type: "POST",
+            data: {
+                Id: '@ViewData["Id"]'
+            },
+            dataType: "json",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                
+                disLoading();
+                if (response.result == "success") {
+                    layer.alert(response.msg, { icon: 1 }, function () { location.reload(); });
+                }
+                if (response.result == "error") {
+                    layer.alert(response.msg, { icon: 2 }, function () { location.reload(); });
+                }
+            }
+        })
+
+    }
+
+    //同步普实产品
+    function TBPscpOpen(val) {
+        layer.open({
+            type: 2,
+            title: ['普实非标产品同步', 'font-size:14px;'],
+            area: ['500px', '450px'],
+            offset: '10px',
+            fixed: false, //不固定
+            maxmin: true,
+            content: '../DKX_DDtypeinfo/TBPsCPView?Id=' + val,
+            //end: function () {
+            //    location.reload();
+            //}
+        })
+    }
 </script>
 
 
 
 <div style="width: 90%; padding: 20px 20px 0 20px">
-    <div class="layui-row layui-col-space15">
+    <button class="layui-btn" onclick="TBPscpOpen('@ViewData["Id"]')">同步普实非标产品</button>
+    普实物料：<span id="cpwlno" style="font-size:12px"></span>
+    <button class="layui-btn" onclick="TBpushsofeBom()">同步普实BOM</button>
+    普实BOM：<span id="bomno" style="font-size:12px"></span>
+    <div class="layui-row layui-col-space15" style="padding-top:10px">
         <div class="layui-col-xs6">
             <fieldset class="layui-elem-field">
                 <legend style="font-size:12px">需求</legend>

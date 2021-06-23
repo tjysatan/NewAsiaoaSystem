@@ -11,7 +11,7 @@ using Spring.Context.Support;
 
 namespace NewAsiaOASystem.Dao
 {
-    public class DKX_DDinfoDao:ServiceConversion<DKX_DDinfoView,DKX_DDinfo>,IDKX_DDinfoDao
+    public class DKX_DDinfoDao : ServiceConversion<DKX_DDinfoView, DKX_DDinfo>,IDKX_DDinfoDao
     {
         //重写sql语句
         private StringBuilder TempHql = null;
@@ -137,25 +137,25 @@ namespace NewAsiaOASystem.Dao
         /// <param name="DHtype">订货型号</param>
         /// <param name="YQtype">逾期类型 0 发货逾期 1 生产中（生产逾期） 2 可生产（生产接单逾期）  3待生产和缺料（箱体确认逾期） 4待生产和缺料（其他物料确认逾期） 5制图中（制图逾期） 6 待制图（制图接单逾期）</param>
         /// <returns></returns>
-        public PagerInfo<DKX_DDinfoView> Getdkxtypelistpage(string DD_Bianhao,string BJno,string DD_Type,string KHname,string Lxname,string Tel,string Gcs_nameId,
-            string DD_ZT, string startctime, string endctiome, string start,string DHtype,string cpph,string beizhu1,string beizhu2,string YQtype,string Isdqpb,string Isqttz,string gnjs,string kfId, SessionUser user)
+        public PagerInfo<DKX_DDinfoView> Getdkxtypelistpage(string DD_Bianhao, string BJno, string DD_Type, string KHname, string Lxname, string Tel, string Gcs_nameId,
+            string DD_ZT, string startctime, string endctiome, string start, string DHtype, string cpph, string beizhu1, string beizhu2, string YQtype, string Isdqpb, string Isqttz, string gnjs, string kfId,string POWER, SessionUser user)
         {
             TempList = new List<string>();
             TempHql = new StringBuilder();
             if (!string.IsNullOrEmpty(DD_Bianhao))
                 TempHql.AppendFormat(" and DD_Bianhao like '%{0}%'", DD_Bianhao);
             if (!string.IsNullOrEmpty(BJno))
-                TempHql.AppendFormat(" and BJno like '%{0}%'",BJno);
+                TempHql.AppendFormat(" and BJno like '%{0}%'", BJno);
             if (!string.IsNullOrEmpty(DD_Type))
-                TempHql.AppendFormat(" and DD_Type='{0}'",DD_Type);
+                TempHql.AppendFormat(" and DD_Type='{0}'", DD_Type);
             if (!string.IsNullOrEmpty(KHname))
-                TempHql.AppendFormat(" and KHname like '%{0}%'",KHname);
+                TempHql.AppendFormat(" and KHname like '%{0}%'", KHname);
             if (!string.IsNullOrEmpty(Lxname))
-                TempHql.AppendFormat(" and Lxname like '%{0}%'",Lxname);
+                TempHql.AppendFormat(" and Lxname like '%{0}%'", Lxname);
             if (!string.IsNullOrEmpty(Tel))
-                TempHql.AppendFormat(" and Tel like '%{0}%'",Tel);
+                TempHql.AppendFormat(" and Tel like '%{0}%'", Tel);
             if (!string.IsNullOrEmpty(Gcs_nameId))
-                TempHql.AppendFormat(" and Gcs_nameId='{0}'",Gcs_nameId);
+                TempHql.AppendFormat(" and Gcs_nameId='{0}'", Gcs_nameId);
             if (!string.IsNullOrEmpty(DD_ZT))
                 TempHql.AppendFormat(" and DD_ZT='{0}'", DD_ZT);
             if (!string.IsNullOrEmpty(startctime))
@@ -163,15 +163,17 @@ namespace NewAsiaOASystem.Dao
             if (!string.IsNullOrEmpty(start))
                 TempHql.AppendFormat(" and u.Start='{0}'", start);
             if (!string.IsNullOrEmpty(DHtype))
-                TempHql.AppendFormat(" and u.DD_DHType like '%{0}%'",DHtype);
+                TempHql.AppendFormat(" and u.DD_DHType like '%{0}%'", DHtype);
             if (!string.IsNullOrEmpty(cpph))
-                TempHql.AppendFormat(" and u.cpph like '%{0}%'",cpph);
+                TempHql.AppendFormat(" and u.cpph like '%{0}%'", cpph);
             if (!string.IsNullOrEmpty(beizhu1))
-                TempHql.AppendFormat(" and u.REMARK like '%{0}%'",beizhu1);
+                TempHql.AppendFormat(" and u.REMARK like '%{0}%'", beizhu1);
             if (!string.IsNullOrEmpty(beizhu2))
-                TempHql.AppendFormat(" and u.REMARK2 like '{0}'",beizhu2);
+                TempHql.AppendFormat(" and u.REMARK2 like '{0}'", beizhu2);
             if (user.RoleType != "0")
                 TempHql.AppendFormat(" and u.C_name='{0}'", user.Id);
+            if (!string.IsNullOrEmpty(POWER))
+                TempHql.AppendFormat(" and u.POWER like '%{0}%'", POWER);
             if (!string.IsNullOrEmpty(YQtype))
             {
                 if (YQtype == "0")//发货逾期
@@ -180,7 +182,7 @@ namespace NewAsiaOASystem.Dao
                     TempHql.AppendFormat(" and DD_ZT='6' and  DATEDIFF(day,Scjdtime, getdate()) > 3");
                 if (YQtype == "2")//生产接单逾期（可生产状态）
                     TempHql.AppendFormat(" and DD_ZT='4' and DATEDIFF(day,wlsqtime,getdate())>1");
-                   // TempHql.AppendFormat(" and DD_ZT='3' and  DATEDIFF(day,Gscwctime, getdate()) > 1");
+                // TempHql.AppendFormat(" and DD_ZT='3' and  DATEDIFF(day,Gscwctime, getdate()) > 1");
                 if (YQtype == "3")//箱体库存确认逾期
                     TempHql.AppendFormat(" and DD_ZT in (3,5) and xtIsq='0' and DATEDIFF(day,Gscwctime,getdate())>1");
                 if (YQtype == "4")//其他库存确认逾期
@@ -193,11 +195,11 @@ namespace NewAsiaOASystem.Dao
                     TempHql.AppendFormat(" and DD_ZT='-1' and DATEDIFF(day,Gstjshtime,getdate())>1");
             }
             if (!string.IsNullOrEmpty(Isdqpb))//电器排布图状态
-                TempHql.AppendFormat(" and Bnote2='{0}'",Isdqpb);
+                TempHql.AppendFormat(" and Bnote2='{0}'", Isdqpb);
             if (!string.IsNullOrEmpty(Isqttz))//电器原理图状态（原其他图）
                 TempHql.AppendFormat(" and Bnote1='{0}'", Isqttz);
             if (!string.IsNullOrEmpty(gnjs))
-                TempHql.AppendFormat(" and gnjsstr like '%{0}%'",gnjs);
+                TempHql.AppendFormat(" and gnjsstr like '%{0}%'", gnjs);
             if (!string.IsNullOrEmpty(kfId))
             {
                 if (kfId == "1")
@@ -211,7 +213,7 @@ namespace NewAsiaOASystem.Dao
             }
             else
             {
-                if(user.RoleType=="0")
+                if (user.RoleType == "0")
                 {
 
                 }
@@ -277,7 +279,7 @@ namespace NewAsiaOASystem.Dao
             else
             {
                 if (user.RoleType == "0" || user.RoleType == "5")
-                { 
+                {
 
                 }
                 else
@@ -286,7 +288,7 @@ namespace NewAsiaOASystem.Dao
                 }
             }
             if (!string.IsNullOrEmpty(DHtype))
-                TempHql.AppendFormat(" and u.DD_DHType like '%{0}%'",DHtype);
+                TempHql.AppendFormat(" and u.DD_DHType like '%{0}%'", DHtype);
             if (!string.IsNullOrEmpty(YQtype))
             {
                 if (YQtype == "0")//发货逾期
@@ -357,7 +359,7 @@ namespace NewAsiaOASystem.Dao
             }
             if (!string.IsNullOrEmpty(DHtype))
                 TempHql.AppendFormat(" and u.DD_DHType like '%{0}%'", DHtype);
-            if(!string.IsNullOrEmpty(dqshjd))
+            if (!string.IsNullOrEmpty(dqshjd))
                 TempHql.AppendFormat(" and u.dqshres='{0}'", dqshjd);
             TempHql.AppendFormat(" and u.Isdqsh='1'");
             TempHql.AppendFormat("order by u.dqshres asc,u.C_time desc");
@@ -460,7 +462,7 @@ namespace NewAsiaOASystem.Dao
         /// <param name="YQtype">逾期类型 0 发货逾期 1 生产中（生产逾期） 2 缺料 3 待生产（生产接单逾期）  4制图中（制图逾期） </param>
         /// <returns></returns>
         public PagerInfo<DKX_DDinfoView> GetdkxlistpageSC(string DD_Bianhao, string BJno, string DD_Type, string KHname, string Lxname, string Tel, string DD_ZT,
-            string startctime, string endctiome, string start,string DHtype,string YQtype, SessionUser user)
+            string startctime, string endctiome, string start, string DHtype, string YQtype, SessionUser user)
         {
             TempList = new List<string>();
             TempHql = new StringBuilder();
@@ -485,13 +487,13 @@ namespace NewAsiaOASystem.Dao
             {
                 TempHql.AppendFormat(" and DD_ZT in(2,3,4,5,6,7,8,-2,-3)");
                 TempHql.AppendFormat(" and Bnote='1'");
-            }  
+            }
             if (!string.IsNullOrEmpty(startctime))
                 TempHql.AppendFormat("and u.C_time>='{0}' and C_time<='{1}'", startctime + " 00:00:00", endctiome + " 23:59:59");
             if (!string.IsNullOrEmpty(start))
                 TempHql.AppendFormat(" and u.Start='{0}'", start);
             if (!string.IsNullOrEmpty(DHtype))
-                TempHql.AppendFormat(" and u.DD_DHType='{0}'",DHtype);
+                TempHql.AppendFormat(" and u.DD_DHType='{0}'", DHtype);
             if (!string.IsNullOrEmpty(YQtype))
             {
                 if (YQtype == "0")//发货逾期
@@ -535,7 +537,7 @@ namespace NewAsiaOASystem.Dao
         /// <param name="YQtype">逾期类型 0 发货逾期 1 生产中（生产逾期） 2 缺料 3 待生产（生产接单逾期）  4制图中（制图逾期） </param>
         /// <returns></returns>
         public PagerInfo<DKX_DDinfoView> GetDKXDDlistpageCK(string DD_Bianhao, string BJno, string DD_Type, string KHname, string Lxname, string Tel, string DD_ZT,
-            string startctime, string endctiome, string start, string DHtype,string YQtype, SessionUser user)
+            string startctime, string endctiome, string start, string DHtype, string YQtype, SessionUser user)
         {
             TempList = new List<string>();
             TempHql = new StringBuilder();
@@ -606,6 +608,7 @@ namespace NewAsiaOASystem.Dao
         }
         #endregion
 
+
         #region //电控箱生产单数量分页数据 汇总
         /// <summary>
         /// 电控箱生产单数量分页数据
@@ -623,9 +626,9 @@ namespace NewAsiaOASystem.Dao
         /// <returns></returns>
         public PagerInfo<DKX_DDinfoView> Getdkxhzlistpage(string DD_Bianhao, string BJno, string DD_Type, string KHname, string Lxname, string Tel, string Gcs_nameId,
             string DD_ZT, string startctime, string endctiome, string start, string DHtype, string cpph, string beizhu1, string beizhu2, string YQtype, string Isdqpb, string Isqttz, string gnjs,
-            string wcstarttime,string wcendtime)
+            string wcstarttime, string wcendtime,string POWER)
         {
-            TempList = new List<string>(); 
+            TempList = new List<string>();
             TempHql = new StringBuilder();
             if (!string.IsNullOrEmpty(DD_Bianhao))
                 TempHql.AppendFormat(" and DD_Bianhao like '%{0}%'", DD_Bianhao);
@@ -678,11 +681,13 @@ namespace NewAsiaOASystem.Dao
                     TempHql.AppendFormat(" and DD_ZT='-2' and DATEDIFF(day,Gstjshtime,getdate())>1");
             }
             if (!string.IsNullOrEmpty(Isdqpb))//电器排布图状态
-                TempHql.AppendFormat(" and Bnote2='{0}'",Isdqpb);
+                TempHql.AppendFormat(" and Bnote2='{0}'", Isdqpb);
             if (!string.IsNullOrEmpty(Isqttz))//电器原理图状态（原其他图）
                 TempHql.AppendFormat(" and Bnote1='{0}'", Isqttz);
             if (!string.IsNullOrEmpty(gnjs))
                 TempHql.AppendFormat(" and gnjsstr like '%{0}%'", gnjs);
+            if (!string.IsNullOrEmpty(POWER))
+                TempHql.AppendFormat(" and u.POWER like '%{0}%'", POWER);
             TempHql.AppendFormat("order by u.DD_ZT asc,u.C_time desc");
             PagerInfo<DKX_DDinfoView> list = Search();
             return list;
@@ -717,7 +722,7 @@ namespace NewAsiaOASystem.Dao
         /// <returns></returns>
         public IList<DKX_DDinfoView> CZYQDATAList(string type)
         {
-            string Hqlstr="";
+            string Hqlstr = "";
             if (type == "0")//工程师接单逾期
             {
                 Hqlstr = string.Format(" from DKX_DDinfo  where Start='0' and DD_ZT='1' and  DATEDIFF(day,C_time, getdate()) >1 ");
@@ -761,7 +766,7 @@ namespace NewAsiaOASystem.Dao
         /// 按照时间顺序查询全部的订单
         /// </summary>
         /// <returns></returns>
-        public IList<DKX_DDinfoView> GetallzcDDlist(string DD_Bianhao,string DHtype, string ddtype, string gcsname, string khname, string xdstrattime, string xdendtime, string ysstrattime, string ysendtime)
+        public IList<DKX_DDinfoView> GetallzcDDlist(string DD_Bianhao, string DHtype, string ddtype, string gcsname, string khname, string xdstrattime, string xdendtime, string ysstrattime, string ysendtime)
         {
             TempList = new List<string>();
             TempHql = new StringBuilder();
@@ -769,22 +774,22 @@ namespace NewAsiaOASystem.Dao
                 TempHql.AppendFormat(" and DD_Bianhao like '%{0}%'", DD_Bianhao);
             if (!string.IsNullOrEmpty(DHtype))
                 TempHql.AppendFormat(" and DD_DHType like '%{0}%'", DHtype);
-             if (!string.IsNullOrEmpty(ddtype))
-                 TempHql.AppendFormat(" and DD_Type='{0}'", ddtype);
-            if(!string.IsNullOrEmpty(gcsname))
+            if (!string.IsNullOrEmpty(ddtype))
+                TempHql.AppendFormat(" and DD_Type='{0}'", ddtype);
+            if (!string.IsNullOrEmpty(gcsname))
                 TempHql.AppendFormat(" and Gcs_nameId='{0}'", gcsname);
-            if(!string.IsNullOrEmpty(khname))
+            if (!string.IsNullOrEmpty(khname))
                 TempHql.AppendFormat(" and KHname like '%{0}%'", khname);
-            if(!string.IsNullOrEmpty(xdstrattime))
+            if (!string.IsNullOrEmpty(xdstrattime))
                 TempHql.AppendFormat("and C_time>='{0}' and C_time<='{1}'", xdstrattime + " 00:00:00", xdendtime + " 23:59:59");
             if (!string.IsNullOrEmpty(ysstrattime))
-                 TempHql.AppendFormat(" and Ysdatetime>='{0}' and Ysdatetime<='{1}'", ysstrattime + " 00:00:00", ysendtime + " 23:59:59");
-             TempHql.AppendFormat(" and Start='0'");
-             TempHql.AppendFormat(" order by C_time asc");
-             string HQLstr = string.Format("from DKX_DDinfo u where 1=1 {0}", TempHql.ToString());
-             List<DKX_DDinfo> list = HibernateTemplate.Find<DKX_DDinfo>(HQLstr) as List<DKX_DDinfo>;
-             IList<DKX_DDinfoView> listmodel = GetViewlist(list);
-             return listmodel;
+                TempHql.AppendFormat(" and Ysdatetime>='{0}' and Ysdatetime<='{1}'", ysstrattime + " 00:00:00", ysendtime + " 23:59:59");
+            TempHql.AppendFormat(" and Start='0'");
+            TempHql.AppendFormat(" order by C_time asc");
+            string HQLstr = string.Format("from DKX_DDinfo u where 1=1 {0}", TempHql.ToString());
+            List<DKX_DDinfo> list = HibernateTemplate.Find<DKX_DDinfo>(HQLstr) as List<DKX_DDinfo>;
+            IList<DKX_DDinfoView> listmodel = GetViewlist(list);
+            return listmodel;
         }
         #endregion
 
@@ -797,7 +802,7 @@ namespace NewAsiaOASystem.Dao
         /// <param name="DD_ZT"></param>
         /// <param name="Isyq">是否逾期分俩种 0 进行中逾期  1 完成的订单 逾期</param>
         /// <returns></returns>
-        public PagerInfo<DKX_DDinfoView> Getscddinfopagerlist(string DD_Bianhao, string KHname, string DD_ZT, string Isyq,string starttime,string endtime)
+        public PagerInfo<DKX_DDinfoView> Getscddinfopagerlist(string DD_Bianhao, string KHname, string DD_ZT, string Isyq, string starttime, string endtime)
         {
             DateTime now = DateTime.Now;
             DateTime d1 = new DateTime(now.Year, now.Month, 1);
@@ -1004,14 +1009,14 @@ namespace NewAsiaOASystem.Dao
         {
             try
             {
-                 string temHql="";
-                 if (!string.IsNullOrEmpty(starttime))//完成时间不为空
-                     temHql = string.Format(" from DKX_DDinfo where Fhdatetime>='{0}' and Fhdatetime<='{1}' and DD_DHType='{2}' and POWER='{3}' and dw='{4}' and DD_ZT='8'", starttime + " 00:00:00", endtime + " 23:59:59", cpname, gl, dw);
+                string temHql = "";
+                if (!string.IsNullOrEmpty(starttime))//完成时间不为空
+                    temHql = string.Format(" from DKX_DDinfo where Fhdatetime>='{0}' and Fhdatetime<='{1}' and DD_DHType='{2}' and POWER='{3}' and dw='{4}' and DD_ZT='8'", starttime + " 00:00:00", endtime + " 23:59:59", cpname, gl, dw);
                 else
-                     temHql = string.Format(" from DKX_DDinfo where  DD_DHType='{0}' and POWER='{1}' and dw='{2}' and DD_ZT='8'", cpname, gl, dw);
-                 IQuery queryCount = Session.CreateQuery(string.Format("select sum(NUM)  {0} ", temHql));
-                 int count = Convert.ToInt32(queryCount.UniqueResult());
-                 return count;
+                    temHql = string.Format(" from DKX_DDinfo where  DD_DHType='{0}' and POWER='{1}' and dw='{2}' and DD_ZT='8'", cpname, gl, dw);
+                IQuery queryCount = Session.CreateQuery(string.Format("select sum(NUM)  {0} ", temHql));
+                int count = Convert.ToInt32(queryCount.UniqueResult());
+                return count;
             }
             catch
             {
@@ -1033,15 +1038,16 @@ namespace NewAsiaOASystem.Dao
             try
             {
                 string temHql = "";
-                if (!string.IsNullOrEmpty(dragstart)) { 
-                    temHql = string.Format(" from DKX_DDinfo where DD_ZT='2' and dragstart='{0}' and Gcs_nameId !='{1}'", dragstart,user.Id);
-                IQuery queryCount = Session.CreateQuery(string.Format("select count(*)  {0} ", temHql));
-                int count = Convert.ToInt32(queryCount.UniqueResult());
+                if (!string.IsNullOrEmpty(dragstart))
+                {
+                    temHql = string.Format(" from DKX_DDinfo where DD_ZT='2' and dragstart='{0}' and Gcs_nameId !='{1}'", dragstart, user.Id);
+                    IQuery queryCount = Session.CreateQuery(string.Format("select count(*)  {0} ", temHql));
+                    int count = Convert.ToInt32(queryCount.UniqueResult());
                     return count;
                 }
 
                 else { return -1; }
-                  
+
             }
             catch
             {
@@ -1066,6 +1072,53 @@ namespace NewAsiaOASystem.Dao
             TempHql.AppendFormat(" and DD_ZT='2'");
             TempHql.AppendFormat(" and dragstart='1'");
             TempHql.AppendFormat(" and Gcs_nameId !='{0}'", user.Id);
+            TempHql.AppendFormat("order by  u.C_time desc");
+            PagerInfo<DKX_DDinfoView> list = Search();
+            return list;
+        }
+        #endregion
+
+        #region //查询工程师需要处理的标记异常的数据的数量
+        public int GetgczlycsumDate(SessionUser user)
+        {
+            try
+            {
+                string temHql = "";
+
+                if (user.RoleType == "0" || user.RoleType == "5")
+                {
+                    temHql = string.Format(" from DKX_DDinfo where gczl_Isyc='1'");
+                }
+                else
+                {
+                    temHql = string.Format(" from DKX_DDinfo where gczl_Isyc='1' and Gcs_nameId ='{0}'", user.Id);
+                }
+                IQuery queryCount = Session.CreateQuery(string.Format("select count(*)  {0} ", temHql));
+                int count = Convert.ToInt32(queryCount.UniqueResult());
+                return count;
+            }
+            catch
+            {
+                return -1;
+            }
+        }
+        #endregion
+
+        #region //查询需要工程师修改的工程资料异常分页数据
+        public PagerInfo<DKX_DDinfoView> GetgczlycPagerlistdate(string DD_Bianhao, SessionUser user)
+        {
+            TempList = new List<string>();
+            TempHql = new StringBuilder();
+            if (!string.IsNullOrEmpty(DD_Bianhao))
+                TempHql.AppendFormat(" and DD_Bianhao like '%{0}%'", DD_Bianhao);
+            TempHql.AppendFormat(" and gczl_Isyc='1'");
+            if (user.RoleType == "0" || user.RoleType == "5")
+            {
+            }
+            else
+            {
+                TempHql.AppendFormat(" and Gcs_nameId ='{0}'", user.Id);
+            }
             TempHql.AppendFormat("order by  u.C_time desc");
             PagerInfo<DKX_DDinfoView> list = Search();
             return list;
@@ -1108,7 +1161,8 @@ namespace NewAsiaOASystem.Dao
             {
                 TempHql.AppendFormat(" and u.Gcs_nameId='{0}'", GCSId);
             }
-            else {
+            else
+            {
                 if (user.RoleType == "0" || user.RoleType == "5")
                 {
 
@@ -1146,7 +1200,7 @@ namespace NewAsiaOASystem.Dao
                 TempHql.AppendFormat(" and Bnote1='{0}'", Isqttz);
             TempHql.AppendFormat("order by u.DD_ZT asc,u.C_time desc");
             string HQLstr = string.Format("from DKX_DDinfo u where 1=1 {0}", TempHql.ToString());
-            List <DKX_DDinfo> list = HibernateTemplate.Find<DKX_DDinfo>(HQLstr) as List<DKX_DDinfo>;
+            List<DKX_DDinfo> list = HibernateTemplate.Find<DKX_DDinfo>(HQLstr) as List<DKX_DDinfo>;
             IList<DKX_DDinfoView> listmodel = GetViewlist(list);
             return listmodel;
 
@@ -1160,6 +1214,123 @@ namespace NewAsiaOASystem.Dao
             List<DKX_DDinfo> list = HibernateTemplate.Find<DKX_DDinfo>(Hqlstr) as List<DKX_DDinfo>;
             IList<DKX_DDinfoView> listmodel = GetViewlist(list);
             return listmodel;
+        }
+        #endregion
+
+        #region //通过订单编号查询订单的详情数据
+        /// <summary>
+        /// 通过订单编号查询订单的详情数据
+        /// </summary>
+        /// <param name="orderno">订单编号</param>
+        /// <returns></returns>
+        public DKX_DDinfoView GetDDmodelbyorderno(string orderno)
+        {
+            string temHql = string.Format(" from DKX_DDinfo where   DD_Bianhao='{0}' and Start='0'", orderno);
+            List<DKX_DDinfo> list = HibernateTemplate.Find<DKX_DDinfo>(temHql) as List<DKX_DDinfo>;
+            IList<DKX_DDinfoView> listmodel = GetViewlist(list);
+            if (listmodel != null)
+                return listmodel[0];
+            else
+                return null;
+        }
+        #endregion
+
+        #region //查询当天的完成发料的数据数量
+        /// <summary>
+        /// 查询当天的完成发料的数据数量
+        /// </summary>
+        /// <returns></returns>
+        public int GetTodayFLWCordercunot()
+        {
+            string tempHql = "from  DKX_DDinfo where DateDiff(dd,Flwxtime,getdate())=0";
+            IQuery queryCount = Session.CreateQuery(string.Format("select count(*)  {0} ", tempHql));
+            int count = Convert.ToInt32(queryCount.UniqueResult());
+            return count;
+        }
+        #endregion
+
+        #region //查询同一个大类中的产品数据
+        /// <summary>
+        /// 查询同一个大类的产品数据
+        /// </summary>
+        /// <param name="sanduanno">查询同一个大类的产品数据</param>
+        /// <returns></returns>
+        public int Getdaleordercount(string sanduanno)
+        {
+            string Hqlstr = string.Format(" from DKX_DDinfo where Ps_sanduanno='{0}' and Start='0'  ", sanduanno);
+            IQuery queryCount = Session.CreateQuery(string.Format("select count(*)  {0} ", Hqlstr));
+            int count = Convert.ToInt32(queryCount.UniqueResult());
+            return count;
+        }
+        #endregion
+
+        #region //通过自动生成的销售订单号查询所有的明细
+        /// <summary>
+        /// 通过自动生成的销售订单号查询所有的明细
+        /// </summary>
+        /// <param name="Ps_orderno">自动生成的销售明细单</param>
+        /// <returns></returns>
+        public IList<DKX_DDinfoView> GetAllmxbyPs_orderno(string Ps_orderno)
+        {
+            string Hqlstr = string.Format("from  DKX_DDinfo where  Ps_orderno='{0}'", Ps_orderno);
+            List<DKX_DDinfo> list = HibernateTemplate.Find<DKX_DDinfo>(Hqlstr) as List<DKX_DDinfo>;
+            IList<DKX_DDinfoView> listmodel = GetViewlist(list);
+            return listmodel;
+        }
+        #endregion
+
+        #region //通过客户的编码查询没有生成销售单号的数据
+        /// <summary>
+        /// 通过客户的编码查询没有生成销售单号的数据
+        /// </summary>
+        /// <param name="K3CODEL">客户编码</param>
+        /// <returns></returns>
+        public IList<DKX_DDinfoView> Getqtmxbyk3code(string K3CODEL)
+        {
+            string Hqlstr = string.Format("from  DKX_DDinfo where  khkecode='{0}' and Ps_orderno is null and Start='0'", K3CODEL);
+            List<DKX_DDinfo> list = HibernateTemplate.Find<DKX_DDinfo>(Hqlstr) as List<DKX_DDinfo>;
+            IList<DKX_DDinfoView> listmodel = GetViewlist(list);
+            return listmodel;
+        }
+        #endregion
+
+
+        #region //通过下单时间和订单状态查询订单数据
+        /// <summary>
+        /// 通过下单时间和订单状态查询订单数据
+        /// </summary>
+        /// <param name="startctime">下单时间</param>
+        /// <param name="endctiome"></param>
+        /// <param name="DD_ZT">状态</param>
+        /// <returns></returns>
+        public IList<DKX_DDinfoView> Getorderlistbyxdtimeandddzt(string startctime, string endctiome, string DD_ZT)
+        {
+            TempHql = new StringBuilder();
+            TempHql.AppendFormat("and u.C_time>='{0}' and C_time<='{1}'", startctime + " 00:00:00", endctiome + " 23:59:59");
+            TempHql.AppendFormat(" and u.Start='0'");
+            TempHql.AppendFormat(" and DD_ZT in ({0})", DD_ZT);
+            TempHql.AppendFormat("order by u.DD_ZT asc,u.C_time desc");
+            string HQLstr = string.Format("from DKX_DDinfo u where 1=1 {0}", TempHql.ToString());
+            List<DKX_DDinfo> list = HibernateTemplate.Find<DKX_DDinfo>(HQLstr) as List<DKX_DDinfo>;
+            IList<DKX_DDinfoView> listmodel = GetViewlist(list);
+            return listmodel;
+        }
+        #endregion
+
+        #region //通过新生成的普实料号查询是否重复
+        /// <summary>
+        /// 检查普实料号是否重复
+        /// </summary>
+        /// <param name="pswlno"></param>
+        /// <returns></returns>
+        public bool checkpswlno(string pswlno)
+        {
+            string Hqlstr = string.Format(" from DKX_DDinfo  where Start='0' and  Ps_wlBomNO='{0}' ",pswlno);
+            List<DKX_DDinfo> list = HibernateTemplate.Find<DKX_DDinfo>(Hqlstr) as List<DKX_DDinfo>;
+            if (list != null)
+                return true;
+            else
+                return false;
         }
         #endregion
     }

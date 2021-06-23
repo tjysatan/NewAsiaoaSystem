@@ -60,20 +60,7 @@
     }
     //物料确认
     function wlqr(type,caozuo) {
-        @* var type = ""
-        if ('@ViewData["Uname"]' == "jy")//其他物料
-        {
-            type = "1"
-        }
-        if ('@ViewData["Uname"]' == "taoyonggang")//箱体
-        {
-            type = "0";
-        }
-        if (type == "") {
-            layer.alert("当前登录的角色无权操作！", { icon: 2 });
-            return false;
-        }*@
-        var ispermissions=false
+        @*var ispermissions=false
         if (type == "1") {//其他物料确认
             if ('@ViewData["Uname"]' == "jy" || '@ViewData["Uname"]' == "shengguan")
             {
@@ -90,7 +77,7 @@
         {
             layer.alert("当前登录的角色无权操作！", { icon: 2 });
             return false;
-        }
+        }*@
         $.ajax({
             url: "../DKX_DDtypeinfo/WLQRTJEide",
             type: "POST",
@@ -116,6 +103,9 @@
                 }
                 if (response == "4") {
                     layer.alert("处理类型参数缺少！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "1-1") {
+                    layer.alert("改状态下，不可以操作缺料", { icon: 2 }, function () { location.reload(); })
                 }
 
             },

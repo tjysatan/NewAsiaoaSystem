@@ -7,7 +7,7 @@
     <script type="text/javascript">
 
         $(function () {
-          
+
             var XSinfomodel = ajaxXSinfojson('@ViewData["EwmOrderId"]');
             $("#XS_Id").val(XSinfomodel.Id);
             $("#DDJE").html(XSinfomodel.Xs_je);
@@ -22,9 +22,9 @@
                dataGrid();
                createImage('@ViewData["EwmOrderId"]');//订单二维码
              @*  $('#qrcode').qrcode({
-                   width: 90, //宽度 
-                   height: 90, //高度 
-                   text: '@ViewData["EwmOrderId"]', //内容 
+                   width: 90, //宽度
+                   height: 90, //高度
+                   text: '@ViewData["EwmOrderId"]', //内容
                    typeNumber: -1,//计算模式
                    correctLevel: 2,//二维码纠错级别
                    background: "#ffffff",//背景颜色
@@ -50,7 +50,7 @@
                         html += '<td width="48%" style="font-size:14px;"  align="center">' + Perinfo.Pname + '</td>';
                         html += '<td width="10%" style="font-size:14px;"  align="center">x' + jsonStr[i].SL + '</td>';
                         html += '<td width="10%" style="font-size:14px;"  align="center">' + jsonStr[i].Je + '.00元</td>';
-                      
+
                         html += '</tr>';
                     }
                     html += '</table>';
@@ -191,6 +191,7 @@
             //pagesetup_null();
             //document.all.WebBrowser.Execwb(a, b);
             window.print();
+            $("#noprint").css("display", "block")
         }
 
 
@@ -206,6 +207,54 @@
                     $("#ORImage").attr("src", data);
                 });
             //ajax结束
+        }
+
+        //同步普实订单
+        function opentbpsView() {
+            layer.open({
+                type: 2,
+                title: ['销售订单同步普实', 'font-size:14px;'],
+                area: ['800px', '500px'],
+                offset: '10px',
+                fixed: false, //不固定
+                maxmin: true,
+                content: '../NA_XSinfo/TBPsorderView?Id=' + '@ViewData["EwmOrderId"]',
+                //end: function () {
+                //    location.reload();
+                //}
+            })
+        }
+
+        var loadi;
+        function ddchen() {
+            loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+        }
+        //关闭等待效果
+        function disLoading() {
+            layer.close(loadi);
+        }
+
+        //更新订单
+        function openupdateorder() {
+          $.ajax({
+            url: "../NA_XSinfo/updateDsorder",
+            type: "POST",
+            data: { Id: '@ViewData["EwmOrderId"]'},
+            dataType: "json",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response.result == "success") {
+                    layer.alert(response.msg, { icon: 1 }, function () { location.reload(); });
+                }
+                if (response.result == "error") {
+                    layer.alert(response.msg, { icon: 2 }, function () { location.reload(); });
+                }
+            }
+        })
         }
     </script>
   }
@@ -266,12 +315,14 @@
           </div>
      </div>
    <!--endprint-->
-    <table width="671" height="26" border="0" align="center" cellpadding="0" cellspacing="0" id="noprint">
+    <table width="671" height="26" border="0" align="center" cellpadding="0" cellspacing="0" id="noprint" >
         <tr>
             <td width="671" style="height: 27px">
-                <div align="center">
+                <div align="center" style="padding-top:20px">
                     <a href="#" onclick=" printpr(6, 1) ">打印</a>
                 </div>
+                <button type="button" class="layui-btn" onclick="opentbpsView()" style="float:right">同步普实</button>
+                <button type="button" class="layui-btn" onclick="openupdateorder()" >更新订单</button>
             </td>
         </tr>
     </table>

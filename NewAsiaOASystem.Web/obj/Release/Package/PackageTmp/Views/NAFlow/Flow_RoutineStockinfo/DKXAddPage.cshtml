@@ -27,11 +27,18 @@
                 @Html.TextBoxFor(m => m.P_Name, new { placeholder = "产品名称", @class = "layui-input", @readonly = "readonly" })
             </div>
         </div>
-        
+
         <div class="layui-form-item">
             <label class="layui-form-label">产品型号：</label>
             <div class="layui-input-block">
                 @Html.TextBoxFor(m => m.P_Model, new { placeholder = "产品型号", @class = "layui-input", @readonly = "readonly" })
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">是否物联网：</label>
+            <div class="layui-input-block">
+                @Html.TextBoxFor(m => m.Iswlw, new { placeholder = "是否物联网", @class = "layui-input", @readonly = "readonly" })
             </div>
         </div>
 
@@ -49,8 +56,10 @@
         </div>
         <div class="inquiry-input infor-b">
             <span>
-                <button onclick="return SavaForm('/Flow_RoutineStockinfo/dkxlist')">保存</button></span><span>
-                    <button onclick="return RedirectUrl('/Flow_RoutineStockinfo/dkxlist')">返回</button></span>
+                <button onclick="return SavaForm('/Flow_RoutineStockinfo/dkxlist')">保存</button>
+            </span><span>
+                <button onclick="return RedirectUrl('/Flow_RoutineStockinfo/dkxlist')">返回</button>
+            </span>
         </div>
     }
 </div>
@@ -62,12 +71,15 @@
             $("#tscon").html("不存在该物料代码！");
             $("#P_Name").val("");
             $("#P_Model").val("");
+            $("#Iswlw").val("");
         }
         else {
             $("#tscon").html("");
             $("#P_Bianhao").val(json.fnumber);
             $("#P_Name").val(json.fname)
             $("#P_Model").val(json.fmodel);
+            $("#Iswlw").val(json.str2);
+            
         }
     }
 

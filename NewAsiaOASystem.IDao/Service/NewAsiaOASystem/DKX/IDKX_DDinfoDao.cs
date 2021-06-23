@@ -24,7 +24,7 @@ namespace NewAsiaOASystem.IDao
         /// <param name="start">是否禁用</param>
         /// <returns></returns>
         PagerInfo<DKX_DDinfoView> Getdkxtypelistpage(string DD_Bianhao, string BJno, string DD_Type, string KHname, string Lxname, string Tel, string Gcs_nameId,
-            string DD_ZT, string startctime, string endctiome, string start, string DHtype, string cpph, string beizhu1, string beizhu2, string YQtype, string Isdqpb, string Isqttz, string gnjs,string kfId, SessionUser user);
+            string DD_ZT, string startctime, string endctiome, string start, string DHtype, string cpph, string beizhu1, string beizhu2, string YQtype, string Isdqpb, string Isqttz, string gnjs,string kfId, string POWER, SessionUser user);
         #endregion
 
 
@@ -153,7 +153,7 @@ namespace NewAsiaOASystem.IDao
         /// <returns></returns>
         PagerInfo<DKX_DDinfoView> Getdkxhzlistpage(string DD_Bianhao, string BJno, string DD_Type, string KHname, string Lxname, string Tel, string Gcs_nameId,
             string DD_ZT, string startctime, string endctiome, string start, string DHtype, string cpph, string beizhu1, string beizhu2, string YQtype, string Isdqpb, string Isqttz,string gnjs,
-             string wcstarttime, string wcendtime);
+             string wcstarttime, string wcendtime,string POWER);
 	#endregion
 
         #region //显存订单返回Id
@@ -280,7 +280,87 @@ namespace NewAsiaOASystem.IDao
 
          
         #region //查询2020和2021年有效订单数据
-        IList<DKX_DDinfoView> GetorderdataToyear(); 
+        IList<DKX_DDinfoView> GetorderdataToyear();
+        #endregion
+
+
+        
+        #region //通过订单编号查询订单的详情数据
+        /// <summary>
+        /// 通过订单编号查询订单的详情数据
+        /// </summary>
+        /// <param name="orderno">订单编号</param>
+        /// <returns></returns>
+        DKX_DDinfoView GetDDmodelbyorderno(string orderno);
+        #endregion
+
+        
+        #region //查询当天的完成发料的数据数量
+        /// <summary>
+        /// 查询当天的完成发料的数据数量
+        /// </summary>
+        /// <returns></returns>
+        int GetTodayFLWCordercunot();
+        #endregion
+
+
+        
+        #region //查询同一个大类中的产品数据
+        /// <summary>
+        /// 查询同一个大类的产品数据
+        /// </summary>
+        /// <param name="sanduanno">查询同一个大类的产品数据</param>
+        /// <returns></returns>
+        int Getdaleordercount(string sanduanno);
+        #endregion
+
+        
+        #region //通过自动生成的销售订单号查询所有的明细
+        /// <summary>
+        /// 通过自动生成的销售订单号查询所有的明细
+        /// </summary>
+        /// <param name="Ps_orderno">自动生成的销售明细单</param>
+        /// <returns></returns>
+        IList<DKX_DDinfoView> GetAllmxbyPs_orderno(string Ps_orderno);
+        #endregion
+
+         
+        #region //通过客户的编码查询没有生成销售单号的数据
+        /// <summary>
+        /// 通过客户的编码查询没有生成销售单号的数据
+        /// </summary>
+        /// <param name="K3CODEL">客户编码</param>
+        /// <returns></returns>
+        IList<DKX_DDinfoView> Getqtmxbyk3code(string K3CODEL);
+        #endregion
+
+        #region //查询工程师需要处理的标记异常的数据的数量
+        int GetgczlycsumDate(SessionUser user);
+        #endregion
+
+        #region //查询需要工程师修改的工程资料异常分页数据
+        PagerInfo<DKX_DDinfoView> GetgczlycPagerlistdate(string DD_Bianhao, SessionUser user);
+        #endregion
+
+        
+        #region //通过下单时间和订单状态查询订单数据
+        /// <summary>
+        /// 通过下单时间和订单状态查询订单数据
+        /// </summary>
+        /// <param name="startctime">下单时间</param>
+        /// <param name="endctiome"></param>
+        /// <param name="DD_ZT">状态</param>
+        /// <returns></returns>
+        IList<DKX_DDinfoView> Getorderlistbyxdtimeandddzt(string startctime, string endctiome, string DD_ZT);
+        #endregion
+
+        #region //通过新生成的普实料号查询是否重复
+        /// <summary>
+        /// 检查普实料号是否重复
+        /// </summary>
+        /// <param name="pswlno"></param>
+        /// <returns></returns>
+        bool checkpswlno(string pswlno); 
         #endregion
     }
 }

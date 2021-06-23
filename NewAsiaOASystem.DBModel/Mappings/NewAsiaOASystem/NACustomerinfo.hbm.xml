@@ -24,5 +24,6 @@
     <property name="qyname" column="qyname" />
     <property name="qycname" column="qycname" />
     <property name="qyqxname" column="qyqxname" />
+    <property name="K3CODE" column="K3CODE" />
   </class>
 </hibernate-mapping>

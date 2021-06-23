@@ -18,5 +18,7 @@ namespace NewAsiaOASystem.Web
         public const string DKXSerch = "DKXSerch";
 
         public const string NACusSerch = "NACusSerch";
+
+        public const string PDAUser = "PDAUser";
     }
 }

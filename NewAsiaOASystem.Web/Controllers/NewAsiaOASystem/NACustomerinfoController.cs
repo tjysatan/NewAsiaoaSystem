@@ -9,6 +9,8 @@ using Spring.Context.Support;
 using System.Text;
 using Newtonsoft.Json;
 using System.IO;
+using System.Data;
+using System.Data.OleDb;
 
 namespace NewAsiaOASystem.Web.Controllers
 {
@@ -347,6 +349,168 @@ namespace NewAsiaOASystem.Web.Controllers
             return File(ms, "application/vnd.ms-excel", DataNew + "客户信息.xls");
         }
         #endregion
+
+        #region //导入匹配KECODE
+        public ActionResult ImportCusk3codeView()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public JsonResult Cusk3codeExcel(HttpPostedFileBase fileImport)
+        {
+           
+            if (fileImport != null)
+            {
+                string fileName = DateTime.Now.ToString("yyyyMMdd") + "-" + Path.GetFileName(fileImport.FileName);
+                string filePath = Path.Combine(Server.MapPath("~/Content/upload"), fileName);
+                fileImport.SaveAs(filePath);
+                string filurl = Server.MapPath("~") + "/Content/upload/" + fileName;
+                System.Data.DataTable dt =ExcelBase.GetExcelDatatable(filurl, "mapTable");
+                Updateuserk3codeinfo(dt);
+                return Json(new { result = "success" });
+            }
+            else
+            {
+                return Json(new { result = "error" });
+            }
+        }
+
+        public void Updateuserk3codeinfo(System.Data.DataTable dt)
+        {
+            string uid = "";//电商用户Id
+            string k3code = "";//k3code
+            NACustomerinfoView model = new NACustomerinfoView();
+            foreach (DataRow dr in dt.Rows)
+            {
+                uid= dr["uid"].ToString().Trim();//电商用户Id
+                k3code = dr["k3code"].ToString().Trim();//k3code
+                if (k3code != "")
+                {
+                    model = _INACustomerinfoDao.GetCustomerbyUId(uid);
+                    if (model != null) {
+                        model.K3CODE = k3code;
+                        _INACustomerinfoDao.NUpdate(model);
+                    }
+                        
+                    
+                }
+            }
+
+
+        }
+
+        //Excel数据导入Datable
+        /// <summary>
+        /// Excel数据导入Datable
+        /// </summary>
+        /// <param name="fileUrl">excel 文件路径</param>
+        /// <param name="table"></param>
+        /// <returns></returns>
+        public System.Data.DataTable GetExcelDatatable(string fileUrl, string table)
+        {
+            //office2007之前 仅支持.xls
+            //const string cmdText = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source={0};Extended Properties='Excel 8.0;IMEX=1';";
+            //支持.xls和.xlsx，即包括office2010等版本的   HDR=Yes代表第一行是标题，不是数据；
+            const string cmdText = "Provider=Microsoft.Ace.OleDb.12.0;Data Source={0};Extended Properties='Excel 12.0; HDR=Yes; IMEX=1'";
+            System.Data.DataTable dt = null;
+            //建立连接
+            OleDbConnection conn = new OleDbConnection(string.Format(cmdText, fileUrl));
+            try
+            {
+                //打开连接
+                if (conn.State == ConnectionState.Broken || conn.State == ConnectionState.Closed)
+                {
+                    conn.Open();
+                }
+                System.Data.DataTable schemaTable = conn.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
+
+                //获取Excel的第一个Sheet名称
+                string sheetName = schemaTable.Rows[0]["TABLE_NAME"].ToString().Trim();
+                //查询sheet中的数据
+                string strSql = "select * from [" + sheetName + "]";
+                OleDbDataAdapter da = new OleDbDataAdapter(strSql, conn);
+                DataSet ds = new DataSet();
+                da.Fill(ds, table);
+                dt = ds.Tables[0];
+                return dt;
+
+            }
+            catch (Exception exc)
+            {
+                throw exc;
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+            }
+
+        }
+        #endregion
+
+        #region //更新修改K3code
+        public ActionResult Updaetk3codeView(string Id)
+        {
+            NACustomerinfoView model = _INACustomerinfoDao.NGetModelById(Id);
+            return View(model);
+        }
+
+        //手动提交修改
+        public JsonResult updatek3code(string Id, string k3code)
+        {
+            NACustomerinfoView model = _INACustomerinfoDao.NGetModelById(Id);
+            if (model != null)
+            {
+                model.K3CODE = k3code;
+                if (_INACustomerinfoDao.NUpdate(model))
+                {
+                    return Json(new { result = "success", msg = "提交成功" });
+                }
+                else
+                {
+                    return Json(new { result = "error", msg = "修改异常" });
+                }
+            }
+            else
+            {
+                return Json(new { result = "error", msg = "客户信息为空" });
+            }
+        }
+
+        //同步电商的k3code
+        public JsonResult updatek3codeTbds(string Id)
+        {
+            NACustomerinfoView model = _INACustomerinfoDao.NGetModelById(Id);
+            if (model != null)
+            {
+                if (model.DsUid == "" || model.DsUid == null)
+                    return Json(new { result = "error", msg = "不是电商同步的客户信息" });
+                else
+                {
+                    Newasia.XYOffer dsway = new Newasia.XYOffer();
+                    DataTable dt = dsway.GetUserInfoByUserId(Convert.ToInt32(model.DsUid) );
+                    string K3CODE = dt.Rows[0]["K3CODE"].ToString();// 
+                    model.K3CODE = K3CODE;
+                    if (_INACustomerinfoDao.NUpdate(model))
+                    {
+                        return Json(new { result = "success", msg = "提交成功" });
+                    }
+                    else
+                    {
+                        return Json(new { result = "error", msg = "修改异常" });
+                    }
+                }
+            }
+            else
+            {
+                return Json(new { result = "error", msg = "客户信息为空" });
+            }
+        }
+        #endregion
+
+
+
 
     }
 }

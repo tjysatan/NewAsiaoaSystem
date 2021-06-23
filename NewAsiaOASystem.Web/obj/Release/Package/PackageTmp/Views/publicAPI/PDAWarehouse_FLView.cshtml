@@ -1,0 +1,106 @@
+﻿@{
+    ViewBag.Title = "仓库发料扫码页面";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@section HeadContent{
+    <script type="text/javascript">
+        $(function () {
+            $("#orderno").focus();
+            var flwcsum = Getsmflcount();//已经扫描的条数
+            $("#flwcsum").html("今日发料单数：" + flwcsum);
+        })
+
+        function smfhSavaForm() {
+            var orderID = $("#orderno").val();
+            if (orderID == "") {
+                alert("请输入生产单号！");
+                return false;
+            }
+
+            //表单验证
+            var options = {
+                beforeSubmit: function () {
+                    return true;
+                },
+                dataType: "json",//这里是指控制器处理后返回的类型，这里返回json格式。
+                success: function (context) {
+                    if (context.resule == "success") {
+                        layer.alert(context.msg, { icon: 1 }, function () { location.reload(); });
+                    }
+                    if (context.resule == "error") {
+                        layer.alert(context.msg, { icon: 2 }, function () { location.reload(); });
+                    }
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $.messager.alert("操作提示", '操作失败！', 'error');
+                }
+            }
+            $('#form1').ajaxSubmit(options);
+            return false; //为了不刷新页面,返回false
+        }
+
+        //刷新
+        function reload() {
+            location.reload();
+        }
+        //返回登录页面
+        function goto_login() {
+            window.location.href = "../publicAPI/PDAlogin"
+        }
+
+       function Getsmflcount() {
+            var json;
+            $.ajax({
+                type: "POST",
+                url: "../publicAPI/GetTodayFLWCOordersum",
+                 dataType: "json",
+                 async: false,
+                 success: function (reslut) {
+                     json = reslut.status;
+                 },
+                 error: function (e) {
+                     alert("请求失败！");
+                 }
+             })
+             return json;
+         }
+    </script>
+    }
+<style>
+    .con {
+        width: 95vw;
+        height: 100vh;
+        padding: 20px 10px 20px 10px;
+    }
+
+    .regTop {
+        margin: auto;
+        text-align: center;
+        line-height: 45px;
+    }
+</style>
+<div class="con">
+    <div class="layui-panel" style="width:70vw; margin:auto;">
+        <div style="padding: 40px; font-size:20px">非标发料扫码</div>
+    </div>
+    <div class="layui-form" action="" style="width:70vw; margin:auto;">
+        @using (Html.BeginForm("FLconfirmEide", "publicAPI", FormMethod.Post, new { id = "form1" }))
+        {
+            <input type="text" name="orderno" id="orderno" class="layui-input" style="height:120px" />
+
+            <div style=" padding-top:20px; ">
+                <button onclick="return smfhSavaForm()" class="layui-btn layui-btn-sm layui-btn-fluid">手动提交</button>
+            </div>
+        }
+        </div>
+    <div style="width: 70vw; margin: auto; padding-top: 20px; ">
+        <button onclick="return reload()" class="layui-btn layui-btn-sm layui-btn-primary layui-btn-fluid">刷新页面</button>
+    </div>
+    <div style="width: 70vw; margin: auto; padding-top: 20px; ">
+        <button onclick="return goto_login()" class="layui-btn layui-btn-sm layui-btn-primary layui-btn-fluid">退出</button>
+    </div>
+    <div style="width: 70vw; margin: auto; padding-top: 20px; " id="flwcsum" name="flwcsum">
+        今日发料单数：1
+    </div>
+</div>

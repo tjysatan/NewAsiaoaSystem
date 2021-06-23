@@ -14,17 +14,6 @@
 @section HeadContent{
     <script type="text/javascript">
         $(function () {
-            //document.getElementById("saveBtn").onclick = function (event) {
-            //    event.preventDefault();
-            //    var BB = self.Blob;
-            //    saveAs(
-            //          new BB(
-            //              ["\ufeff" + document.getElementById("PrintA").value] //\ufeff防止utf8 bom防止中文乱码
-            //            , { type: "text/plain;charset=utf8" }
-            //        )
-            //        , document.getElementById("filename").value
-            //    );
-            //};
             $("#lxrname").val('@ViewData["lxrname"]');
             $("#txtSearch_Name").val('@ViewData["Name"]');
             $("#txtrlis").val('@ViewData["rlis"]');
@@ -92,7 +81,6 @@
                             html += '<td width="5%">' + ShowCustlxrName(jsonStr[i].SjId) + '</td>';
                         }
                     }
-
                     if(jjPersondata!=null){
                         html += '<td width="5%">' +jjPersondata.UserName+ '</td>';
                     }else
@@ -188,6 +176,8 @@
                     kdnam = "德邦物流";
                 } else if (val == "an") {
                     kdnam = "安能物流";
+                } else if (val == "jbwl") {
+                    kdnam = "佳邦物流";
                 }
             }
             return kdnam;
@@ -454,6 +444,7 @@
                                     <option value="JJ">佳吉物流</option>
                                     <option value="ztky">中通快运</option>
                                     <option value="an">安能物流</option>
+                                    <option value="jbwl">佳邦物流</option>
                                 </select>
                             </span>
                         </li>
@@ -471,7 +462,6 @@
                                 <input type="text" name="dyendrldate" id="dyendrldate" onclick="WdatePicker()" />
                             </span>
                         </li>
-
                         <li style="*width: 100%; *margin: -10px 0 5px 90px;">
                             <span class="inquiry-input">
                                 <button name="btnSerch" onclick="return SerchList(1)">查询</button>
@@ -489,7 +479,6 @@
                             <span class="inquiry-input">
                                 <button onclick="return addClick('/EP_jlinfo/List')">刷新</button>
                             </span>
-
                             <span class="inquiry-input">
                                 <button type="button" onclick="return ExportEPJSON()">记录导出</button>
                             </span>
@@ -522,7 +511,6 @@
                         <td width="8%">实际到货</td>
                         <td width="5%">到货数量</td>
                         <td width="5%">状态</td>
-
                         <td width="8%">打印时间</td>
                         <td width="8%">K3单号</td>
                         <td width="10%">操作</td>

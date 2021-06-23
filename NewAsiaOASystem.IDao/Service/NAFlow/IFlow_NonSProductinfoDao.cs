@@ -25,5 +25,10 @@ namespace NewAsiaOASystem.IDao
         /// <param name="wldm"></param>
         /// <returns></returns>
        Flow_NonSProductinfoView Getmodelbywldm(string wldm);
+
+       
+        #region //非标试产产品的分页数据
+        PagerInfo<Flow_NonSProductinfoView> Getfeibiaowkpagerlist(string cpname, string wlno, string category); 
+        #endregion
     }
 }

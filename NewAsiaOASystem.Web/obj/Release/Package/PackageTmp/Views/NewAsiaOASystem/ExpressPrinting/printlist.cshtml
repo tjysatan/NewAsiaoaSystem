@@ -134,6 +134,9 @@
                 if (kdgs == "an") {
                     OpenUrl = "/ExpressPrinting/anPrint";
                 }
+                if (kdgs == "jbwl") {
+                    OpenUrl = "/ExpressPrinting/jiabangPrint";
+                }
                 var arr = GetGridSelete();
                 if (arr.length > 1) {
                     $.messager.alert("操作提示", "只能选择一个！", "warning");
@@ -274,6 +277,7 @@
                                 <option value="JJ">佳吉物流</option>
                                 <option value="ztky">中通快运</option>
                                 <option value="an">安能物流</option>
+                                <option value="jbwl">佳邦物流</option>
                             </select>
                         </span>
                     </li>

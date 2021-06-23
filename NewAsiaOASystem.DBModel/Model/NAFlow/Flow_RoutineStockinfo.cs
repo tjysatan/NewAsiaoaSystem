@@ -96,5 +96,15 @@ namespace NewAsiaOASystem.DBModel
         /// 产品的类型 0 温控 1电控箱
         /// </summary>
         public virtual int? type { get; set; }
+
+        /// <summary>
+        /// 是否物联网 0 是物联网 1 NAK
+        /// </summary>
+        public virtual string Iswlw { get; set; }
+
+        /// <summary>
+        /// BOM编号
+        /// </summary>
+        public virtual string Bomno { get; set; }
     }
 }

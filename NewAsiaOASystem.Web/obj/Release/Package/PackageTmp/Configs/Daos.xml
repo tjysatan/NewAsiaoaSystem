@@ -507,4 +507,11 @@
   <object id="NA_CustomerRecordDao" type="NewAsiaOASystem.Dao.NA_CustomerRecordDao,NewAsiaOASystem.Dao">
     <property name="SessionFactory" ref="SessionFactory" /> 
   </object>
+  <!--MRP计算表-->
+  <object id="NA_MRPmainDao" type="NewAsiaOASystem.Dao.NA_MRPmainDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+  <object id="NA_MRPdetailedDao" type="NewAsiaOASystem.Dao.NA_MRPdetailedDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
 </objects>

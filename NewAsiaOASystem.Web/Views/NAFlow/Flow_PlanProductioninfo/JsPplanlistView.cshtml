@@ -37,10 +37,16 @@
                     else
                         html += '<tr class="h-table-content-r"  id="'+jsonStr[i].Id+'">';
                     html += '<td width="5%"><input type="checkbox" name="ContentChecked" value="' + jsonStr[i].Id + '"/></td>';
+                    if (jsonStr[i].scbianhao == null) {
+                        html += '<td width="10%">-</td>';
+                    }
+                    else {
+                        html += '<td width="10%">' + jsonStr[i].scbianhao + '</td>';
+                    }
                     html += '<td width="10%">'+jsonStr[i].P_CPname + '</td>';
                     html += '<td width="10%">'+jsonStr[i].P_Pianhao + '</td>';
-                    html += '<td width="10%">'+jsonStr[i].P_SCnumber + '</td>';
-                    html += '<td width="10%">' + showsczt(jsonStr[i].P_Issc) + '</td>';
+                    html += '<td width="5%">'+jsonStr[i].P_SCnumber + '</td>';
+                    html += '<td width="5%">' + showsczt(jsonStr[i].P_Issc) + '</td>';
                     if (jsonStr[i].Isprint == "" || jsonStr[i].Isprint == null)
                         html += '<td width="5%" style="color:red">未打印</td>';
                     else
@@ -317,11 +323,11 @@
                         <td width="5%">
                             <input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" />
                         </td>
+                        <td width="10%">生产批号</td>
                         <td width="10%">产品名称</td>
                         <td width="10%">代码</td>
-                        <td width="10%">生产数量</td>
-
-                        <td width="10%">状态</td>
+                        <td width="5%">生产数量</td>
+                        <td width="5%">状态</td>
                         <td width="5%">打印</td>
                         <td width="10%">创建时间</td>
                         <td width="10%">预计完成</td>

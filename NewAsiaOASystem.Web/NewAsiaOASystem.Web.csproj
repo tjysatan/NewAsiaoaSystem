@@ -51,13 +51,15 @@
       <HintPath>..\Lib\Interop.Microsoft.Office.Core.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
+    <Reference Include="JWT, Version=8.0.0.0, Culture=neutral, PublicKeyToken=6f98bca0f40f2ecf, processorArchitecture=MSIL">
+      <HintPath>..\packages\JWT.8.2.0\lib\net40\JWT.dll</HintPath>
+    </Reference>
     <Reference Include="LitJSON, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\公司网站\code\ComPanyWebsite\Website\Admin\kindeditor-4.0\asp.net\bin\LitJSON.dll</HintPath>
     </Reference>
     <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\log4net.dll</HintPath>
+      <HintPath>..\packages\log4net.1.2.10\lib\2.0\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Data.Edm, Version=5.6.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -72,16 +74,12 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.Data.Services.Client.5.6.2\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Office.Interop.Excel, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </Reference>
     <Reference Include="Microsoft.QualityTools.Testing.Fakes, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="MyXls.SL2">
       <HintPath>..\Lib\MyXls.SL2.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Users\Administrator\Desktop\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json.4.5.0.0.Fakes, Version=4.5.0.0, Culture=neutral, PublicKeyToken=0ae41878053f6703, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -140,12 +138,32 @@
     <Reference Include="System.Web.Extensions">
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Web.Helpers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.Helpers.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Web.Http.WebHost, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files (x86)\Microsoft ASP.NET\ASP.NET MVC 4\Assemblies\System.Web.Mvc.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.4.0.20710.0\lib\net40\System.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.2.0.20710.0\lib\net40\System.Web.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.Deployment.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.Razor.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Web.Abstractions">
@@ -176,29 +194,9 @@
       <Private>True</Private>
       <HintPath>bin\System.Net.Http.WebRequest.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.Helpers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <Private>True</Private>
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.Helpers.dll</HintPath>
-    </Reference>
     <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.4.0.20710.0\lib\net40\System.Web.Http.dll</HintPath>
       <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Web.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <Private>True</Private>
-      <HintPath>..\packages\Microsoft.AspNet.Razor.2.0.20710.0\lib\net40\System.Web.Razor.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <Private>True</Private>
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.WebPages.Deployment, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <Private>True</Private>
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.Deployment.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.WebPages.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <Private>True</Private>
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
     <Reference Include="ThoughtWorks.QRCode">
       <HintPath>E:\安装文件\后付费项目\Code\M2MSystem\Lib\ThoughtWorks.QRCode.dll</HintPath>
@@ -208,6 +206,7 @@
     <Compile Include="AppWebAPI\ParaModel\ParaModel.cs" />
     <Compile Include="AppWebAPI\WebApiController.cs" />
     <Content Include="App_Code\HtmlHelper.cs" />
+    <Compile Include="App_Start\ApiAuthorize.cs" />
     <Compile Include="App_Start\AuthorFilter.cs" />
     <Compile Include="App_Start\AuthorizeKey.cs" />
     <Compile Include="App_Start\CommonClass.cs" />
@@ -230,6 +229,10 @@
     <Compile Include="businessHelper\ResultNotify.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\AftersaleController.cs" />
+    <Compile Include="Controllers\API\MSController.cs" />
+    <Compile Include="Controllers\Default1Controller.cs" />
+    <Compile Include="Controllers\IBase64UrlEncoder.cs" />
+    <Compile Include="Controllers\IJwtAlgorithm.cs" />
     <Compile Include="Controllers\NACG\CG_aqkcController.cs" />
     <Compile Include="Controllers\NAFlow\Flow_AjaxtxdateController.cs" />
     <Compile Include="Controllers\NAFlow\Flow_NonSProductinfoController.cs" />
@@ -243,6 +246,7 @@
     <Compile Include="Controllers\FrameController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\NewAsiaOASystem\DKX\DkxBasicsManagementController.cs" />
+    <Compile Include="Controllers\NewAsiaOASystem\DKX\DKX_DDController.cs" />
     <Compile Include="Controllers\NewAsiaOASystem\DKX\DKX_DDtypeinfoController.cs" />
     <Compile Include="Controllers\NewAsiaOASystem\EP_jlinfoController.cs" />
     <Compile Include="Controllers\NewAsiaOASystem\ExpressPrintingController.cs" />
@@ -327,17 +331,20 @@
     <Compile Include="Helper\ExpressinterfaceHelper.cs" />
     <Compile Include="Helper\gwjHelper.cs" />
     <Compile Include="Helper\HelpermyTimer.cs" />
+    <Compile Include="Helper\JwtHelp.cs" />
     <Compile Include="Helper\K3Helper.cs" />
     <Compile Include="Helper\MassManager.cs" />
     <Compile Include="Helper\MenuContext.cs" />
     <Compile Include="Helper\MenuManager.cs" />
     <Compile Include="Helper\NAHelper.cs" />
+    <Compile Include="Helper\pushsoftHelper.cs" />
     <Compile Include="Helper\QRHelper.cs" />
     <Compile Include="Helper\SessionHelper.cs" />
     <Compile Include="Helper\ValidateCode.cs" />
     <Compile Include="Helper\WeixinExecutor.cs" />
     <Compile Include="Helper\WxGET.cs" />
     <Compile Include="Helper\ZTOHelper.cs" />
+    <Compile Include="Helper\zypushsoftHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -2376,7 +2383,7 @@
     <Content Include="Views\NewAsiaOASystem\Aftersale\AftersalesanalysisView.cshtml" />
     <Content Include="Views\NewAsiaOASystem\NAReturnList\StatisticsgroupResdepartmentcostChartView.cshtml" />
     <Content Include="Views\NewAsiaOASystem\NAReturnList\StatisticsgroupThcusIdcostView.cshtml" />
-    <Content Include="Views\DKX_DDtypeinfo\TestDKXDDgcslist.cshtml" />
+    <Content Include="Views\DKX\DKX_DDtypeinfo\TestDKXDDgcslist.cshtml" />
     <Content Include="Scripts\layer\font\iconfont.eot" />
     <Content Include="Scripts\layer\font\iconfont.ttf" />
     <Content Include="Scripts\layer\font\iconfont.woff" />
@@ -2387,6 +2394,38 @@
     <None Include="bin\NewAsiaOASystem.Web.dll.config" />
     <Content Include="bin\System.Web.Mvc.Fakes.fakesconfig" />
     <Content Include="Views\Record\AddRecordView.cshtml" />
+    <Content Include="Views\DKX\DKX_DDtypeinfo\DKXSCGCCPrintView.cshtml" />
+    <Content Include="Views\publicAPI\PDAlogin.cshtml" />
+    <Content Include="Views\publicAPI\PDAWarehouse_FLView.cshtml" />
+    <Content Include="Views\publicAPI\PDAWarehouse_FLinfoView.cshtml" />
+    <Content Include="Views\DKX\DKX_DDtypeinfo\selectorderbyddnoView.cshtml" />
+    <Content Include="Views\DKX\DKX_DDtypeinfo\TBK3SCworkView.cshtml" />
+    <Content Include="Views\NewAsiaOASystem\ExpressPrinting\jiabangPrint.cshtml" />
+    <Content Include="Views\NewAsiaOASystem\NACustomerinfo\ImportCusk3codeView.cshtml" />
+    <Content Include="Views\NewAsiaOASystem\NA_XSinfo\TBPsorderView.cshtml" />
+    <Content Include="Views\DKX\DKX_DDtypeinfo\TBPsCPView.cshtml" />
+    <Content Include="Views\NACustomerinfo\Updaetk3codeView.cshtml" />
+    <Content Include="Views\DKX\DKX_DDtypeinfo\ForderinstarView.cshtml" />
+    <Content Include="Views\NewAsiaOASystem\ExpressPrinting\DsjiabangPrint.cshtml" />
+    <Content Include="Views\DKX\DKX_DDtypeinfo\ForderinstarViewN.cshtml" />
+    <Content Include="Views\DKX\DKX_DDtypeinfo\SelectForderView.cshtml" />
+    <Content Include="Views\DKX\DKX_DDtypeinfo\FordermxbianjiView.cshtml" />
+    <Content Include="Views\NewAsiaOASystem\NA_XSinfo\TBPsSelectForderView.cshtml" />
+    <Content Include="Views\NAFlow\Flow_RoutineStockinfo\gcblist.cshtml" />
+    <Content Include="Views\NAFlow\Flow_RoutineStockinfo\gxtzView.cshtml" />
+    <Content Include="Views\NAFlow\Flow_RoutineStockinfo\wkcplist.cshtml" />
+    <Content Include="Views\NAFlow\Flow_RoutineStockinfo\wkgxtzView.cshtml" />
+    <Content Include="Views\DKX\DKX_DDtypeinfo\TB_GWJ_gylxView.cshtml" />
+    <Content Include="Views\NAFlow\Flow_NonSProductinfo\NowkESOPlist.cshtml" />
+    <Content Include="Views\NAFlow\Flow_NonSProductinfo\nowkgxtzView.cshtml" />
+    <Content Include="Views\NAFlow\Flow_PlanProductioninfo\TBCGK3SCworkView.cshtml" />
+    <Content Include="Views\NewAsiaOASystem\NAReturnList\TBPsfthorderView.cshtml" />
+    <Content Include="Views\NewAsiaOASystem\K3Basicdata\BomcomparisonView.cshtml" />
+    <Content Include="Views\DKX\DKX_DD\gczlyclist.cshtml" />
+    <Content Include="Views\DKX\DKX_DD\gczlycBJView.cshtml" />
+    <Content Include="Views\DKX\DKX_DD\DKXMRPorderlist.cshtml" />
+    <Content Include="Views\DKX\DKX_DD\ShowMRPcountResult.cshtml" />
+    <Content Include="Views\DKX\DKX_DD\GczlycView.cshtml" />
     <None Include="Web References\localhost\Reference.map">
       <Generator>MSDiscoCodeGenerator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
@@ -2545,6 +2584,7 @@
     <Folder Include="Content\images\QRImages\" />
     <Folder Include="Content\upload\czshouce\" />
     <Folder Include="Content\upload\DQPBtuzhi\" />
+    <Folder Include="Content\upload\ESOP\" />
     <Folder Include="Content\upload\liaodan\" />
     <Folder Include="Content\upload\QTtuzhi\" />
     <Folder Include="Content\upload\rjcxtuzhi\" />

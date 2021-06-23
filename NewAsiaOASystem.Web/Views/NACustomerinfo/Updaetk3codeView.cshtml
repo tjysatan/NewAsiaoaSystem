@@ -1,0 +1,91 @@
+﻿@model NewAsiaOASystem.ViewModel.NACustomerinfoView
+@{
+    ViewBag.Title = "更新K3客户的code";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<script type="text/javascript">
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+
+    //手动修改
+    function updateAjaxform() {
+        var K3CODE = $("#K3CODE").val();
+        if (K3CODE == "" || K3CODE == null) {
+            layer.alert("K3CODE不为空", { icon: 2 });
+            return false;
+        }
+        $.ajax({
+            url: "../NACustomerinfo/updatek3code",
+            type: "POST",
+            data: { Id: '@Model.Id', k3code: K3CODE },
+            dataType: "json",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response.result == "success") {
+                    layer.alert(response.msg, { icon: 1 }, function () { location.reload(); });
+                }
+                if (response.result == "error") {
+                    layer.alert(response.msg, { icon: 2 }, function () { location.reload(); });
+                }
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+    }
+    //
+    function dsupdateAjaxform() {
+        $.ajax({
+            url: "../NACustomerinfo/updatek3codeTbds",
+            type: "POST",
+            data: { Id: '@Model.Id'},
+            dataType: "json",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response.result == "success") {
+                    layer.alert(response.msg, { icon: 1 }, function () { location.reload(); });
+                }
+                if (response.result == "error") {
+                    layer.alert(response.msg, { icon: 2 }, function () { location.reload(); });
+                }
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+    }
+</script>
+<div style="width: 80%; padding: 20px 20px 0 20px">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">K3code：</label>
+        <div class="layui-input-block" style="width: 200px;">
+            <input class="layui-input" id="K3CODE" name="K3CODE" value="@Model.K3CODE" placeholder="K3code" autocomplete="off" type="text" style="width: 200px" />
+        </div>
+
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="formDemo" onclick=" updateAjaxform()">手动修改</button>
+            <button type="reset" class="layui-btn layui-btn-primary" onclick="dsupdateAjaxform()">同步电商</button>
+        </div>
+    </div>
+</div>

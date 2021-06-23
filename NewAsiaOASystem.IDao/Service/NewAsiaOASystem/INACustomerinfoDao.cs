@@ -11,6 +11,22 @@ namespace NewAsiaOASystem.IDao
     {
         PagerInfo<NACustomerinfoView> GetCinfoList(string Name, string lxrname, string isjxs,string IsIsjy,string Tel,string Isds, SessionUser user);
 
+
+        #region //维护过K3CODE的客户信息
+        /// <summary>
+        /// 维护过K3CODE的客户信息
+        /// </summary>
+        /// <param name="Name"></param>
+        /// <param name="lxrname"></param>
+        /// <param name="isjxs"></param>
+        /// <param name="Isjy"></param>
+        /// <param name="Tel"></param>
+        /// <param name="Isds"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        PagerInfo<NACustomerinfoView> GetCinfokecodeList(string Name, string lxrname, string isjxs, string Isjy, string Tel, string Isds, SessionUser user); 
+    #endregion
+
         #region //查询客户信息
         IList<NACustomerinfoView> GetlistCust(); 
         #endregion
@@ -64,8 +80,13 @@ namespace NewAsiaOASystem.IDao
        /// <returns></returns>
        IList<NACustomerinfoView> Getcusinfolikename(string name);
 
-          //根据Id查找客户信息
-       NACustomerinfoView GetcusInfobyId(string Id);
+        
+        #region //根据公司名称模糊查询客户信息K3CODE不为空
+        NACustomerinfoView GetCusinfok3codebylikekhname(string khname); 
+        #endregion
+
+        //根据Id查找客户信息
+        NACustomerinfoView GetcusInfobyId(string Id);
 
        #region //通过电商用户UID查找客户资料
        /// <summary>

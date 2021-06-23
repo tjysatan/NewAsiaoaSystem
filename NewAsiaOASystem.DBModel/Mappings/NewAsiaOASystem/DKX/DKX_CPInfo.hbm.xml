@@ -21,5 +21,12 @@
     <property name="cpgnjs" column="cpgnjs"  />
     <property name="cplytype" column="cplytype"  />
     <property name="DXTDJ" column="DXTDJ"  />
+
+    <property name="Ps_BomNO" column="Ps_BomNO"  />
+    <property name="Ps_wlBomNO" column="Ps_wlBomNO"  />
+    <property name="Ps_Serialnumber" column="Ps_Serialnumber"  />
+    <property name="Ps_sanduanno" column="Ps_sanduanno"  />
+    <property name="Ps_DocEntry" column="Ps_DocEntry"  />
+    <property name="YJcb" column="YJcb"  />
   </class>
 </hibernate-mapping>

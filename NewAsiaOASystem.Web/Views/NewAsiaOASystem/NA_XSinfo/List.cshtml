@@ -53,7 +53,7 @@
                     html += '<td width="5%"><input type="checkbox" name="ContentChecked" value="' + jsonStr[i].Id + '"/></td>';
                     html += '<td width="15%"><a href="#" title="'+ALLcpName +'" style="color:#256ea7">'+ALLcpName.substring(1,13) +'</a></td>';
                     html+='<td width="10%">'+showDate(jsonStr[i].Xs_datetime)+'</td>';
-                    html+='<td width="10%">'+jsonStr[i].Xs_je+'元</td>';
+                    html+='<td width="5%">'+jsonStr[i].Xs_je+'元</td>';
                     if(Addresseeinfo!=null){
                         html+='<td width="10%"><a href="#" title="'+Addresseeinfo.Aname +'" style="color:#256ea7">'+Addresseeinfo.Aname.substring(0,8)+'</a></td>';
                     }else
@@ -79,6 +79,11 @@
                     {
                         html+='<td width="5%">-</td>';
                     }
+                    if (jsonStr[i].Ps_DocNu != null)
+                        html += '<td width="5%">' + jsonStr[i].Ps_DocNu + '</td>';
+                    else
+                        html += '<td width="5%">未同步</td>';
+
                     html+='<td width="25%"><div class="layui-btn-group">'+czshow1(jsonStr[i].Id,jsonStr[i].KhId,jsonStr[i].AddresseeId,jsonStr[i].Sort)+'</div></td>';
                     html+='</tr>';
                 }
@@ -367,11 +372,13 @@
                 }
                 if(kdgs=="dbwl")
                 {
-                   
                     OpenUrl="/ExpressPrinting/DsdbwlPrint";
                 }
                 if (kdgs == "an") {
                     OpenUrl = "/ExpressPrinting/DsanPrint";
+                }
+                if (kdgs == "jbwl") {
+                    OpenUrl = "/ExpressPrinting/DsjiabangPrint";
                 }
                 var start=InsEPModel(khId,addId,Uid,kdgs);
                 if(start=="1")
@@ -515,6 +522,7 @@
                                 <option value="JJ">佳吉物流</option>
                                 <option value="ztky">中通快运</option>
                                 <option value="an">安能物流</option>
+                                <option value="jbwl">佳邦物流</option>
                             </select>
                         </span>
                     </li>
@@ -540,14 +548,16 @@
                 <table cellpadding="0" cellspacing="0" class="h-right-table-title1" style="border: none; width: 100%;">
                     <tr>
                         <td width="5%">
-                            <input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" /></td>
+                            <input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" />
+                        </td>
                         <td width="15%">商品名称</td>
                         <td width="10%">下单时间</td>
-                        <td width="10%">应付总额</td>
+                        <td width="5%">应付总额</td>
                         <td width="10%">收货人</td>
                         <td width="10%">公司名称</td>
                         <td width="10%">出货状态</td>
                         <td width="5%">区域</td>
+                        <td width="5%">普实单号</td>
                         <td width="25%">操作</td>
                     </tr>
                 </table>

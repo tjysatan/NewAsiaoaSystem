@@ -1,0 +1,118 @@
+﻿@model NewAsiaOASystem.ViewModel.NAReturnListView
+@{
+    ViewBag.Title = "返退货补新订单同步普实";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<script type="text/javascript">
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+        //同步普实的销售订单
+    function confirm_tbxxwork() {
+        var Z_JHQX = $("#Z_JHQX").val();//交货日期
+        var Z_JHDD = $("#Z_JHDD").val();//交货地点
+        var Z_YSFS = $("#Z_YSFS").val();//运输方式
+        var yfprice = $("#yfprice").val();//运费
+        var dsprice = $("#dsprice").val();//调式费
+        if (Z_JHQX == "") {
+            layer.alert("请填写交货日期", { icon: 2 });
+            return false;
+        }
+        if (yfprice != "") {
+            if (isNaN(yfprice)) {
+                layer.alert("运费请填写数字！", { icon: 2 });
+                return false;
+            }
+            else {
+                if (yfprice == 0) {
+                    layer.alert("运费不能填写0", { icon: 2 });
+                    return false;
+                }
+            }
+        }
+        if (dsprice != "") {
+            if (isNaN(yfprice)) {
+                layer.alert("调式费请填写数字！", { icon: 2 });
+                return false;
+            }
+            else {
+                if (yfprice == 0) {
+                    layer.alert("调式费不能填写0", { icon: 2 });
+                    return false;
+                }
+            }
+        }
+       $.ajax({
+           url: "../NAReturnList/Ps_Insterorder",
+            type: "POST",
+            data: { Id: '@Model.Id', Z_JHQX: Z_JHQX, Z_JHDD: Z_JHDD, Z_YSFS: Z_YSFS, yfprice: yfprice, dsprice: dsprice},
+            dataType: "json",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response.result == "success") {
+                    layer.alert(response.msg, { icon: 1 }, function () { location.reload(); });
+                }
+                if (response.result == "error") {
+                    layer.alert(response.msg, { icon: 2 }, function () { location.reload(); });
+                }
+            }
+        })
+    }
+
+</script>
+
+<div style="padding:10px 10px 10px 10px">
+    <div class="layui-form" action="">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">交货日期：</label>
+                <div class="layui-input-block" style="width: 120px;">
+                    <input type="text" name="Z_JHQX" id="Z_JHQX" onclick="WdatePicker()" placeholder="交货日期必填" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">交货地点：</label>
+                <div class="layui-input-block" style="width: 120px;">
+                    <input type="text" name="Z_JHDD" id="Z_JHDD" placeholder="交货地点" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">运输方式：</label>
+                <div class="layui-input-block" style="width: 120px;">
+                    <input type="text" name="Z_YSFS" id="Z_YSFS" placeholder="运输方式" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">运费：</label>
+                <div class="layui-input-block" style="width: 120px;">
+                    <input type="text" name="yfprice" id="yfprice" placeholder="运费，不填写默认没有" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">调试费：</label>
+                <div class="layui-input-block" style="width: 120px;">
+                    <input type="text" name="dsprice" id="dsprice" placeholder="调试费，不填写默认没有" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block" style="float:right; padding-right:40px">
+            <button class="layui-btn" onclick="confirm_tbxxwork()">同步普实</button>
+        </div>
+    </div>
+</div>

@@ -20,5 +20,7 @@
     <property name="Sjsc_Sum" column="Sjsc_Sum" />
     <property name="state" column="state" />
     <property name="type" column="type" />
+    <property name="Iswlw" column="Iswlw" />
+    <property name="Bomno" column="Bomno" />
   </class>
 </hibernate-mapping>

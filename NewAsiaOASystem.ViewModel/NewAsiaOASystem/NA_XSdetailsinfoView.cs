@@ -79,5 +79,17 @@ namespace NewAsiaOASystem.ViewModel
             get;
             set;
         }
+
+        /// <summary>
+        /// 产品物料编码
+        /// </summary>
+        public virtual string cpbianmao
+        {
+            get;
+            set;
+        }
+
+
+        public virtual string beizhu { get; set; }
     }
 }

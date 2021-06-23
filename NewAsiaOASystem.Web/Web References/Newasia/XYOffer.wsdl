@@ -73,6 +73,69 @@
           </s:sequence>
         </s:complexType>
       </s:element>
+      <s:element name="GetOrderByID">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="orderId" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetOrderByIDResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetOrderByIDResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetOrderByOrderCode">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="orderCode" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetOrderByOrderCodeResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetOrderByOrderCodeResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetOrderShipInfoByID">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="orderId" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetOrderShipInfoByIDResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetOrderShipInfoByIDResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
       <s:element name="GetNewOrders">
         <s:complexType />
       </s:element>
@@ -118,6 +181,27 @@
         <s:complexType>
           <s:sequence>
             <s:element minOccurs="0" maxOccurs="1" name="GetUserProvinceCityByUserIdResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserInfoByUserId">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="userId" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserInfoByUserIdResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetUserInfoByUserIdResult">
               <s:complexType>
                 <s:sequence>
                   <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
@@ -237,6 +321,24 @@
   <wsdl:message name="GetOrdersSoapOut">
     <wsdl:part name="parameters" element="tns:GetOrdersResponse" />
   </wsdl:message>
+  <wsdl:message name="GetOrderByIDSoapIn">
+    <wsdl:part name="parameters" element="tns:GetOrderByID" />
+  </wsdl:message>
+  <wsdl:message name="GetOrderByIDSoapOut">
+    <wsdl:part name="parameters" element="tns:GetOrderByIDResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetOrderByOrderCodeSoapIn">
+    <wsdl:part name="parameters" element="tns:GetOrderByOrderCode" />
+  </wsdl:message>
+  <wsdl:message name="GetOrderByOrderCodeSoapOut">
+    <wsdl:part name="parameters" element="tns:GetOrderByOrderCodeResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetOrderShipInfoByIDSoapIn">
+    <wsdl:part name="parameters" element="tns:GetOrderShipInfoByID" />
+  </wsdl:message>
+  <wsdl:message name="GetOrderShipInfoByIDSoapOut">
+    <wsdl:part name="parameters" element="tns:GetOrderShipInfoByIDResponse" />
+  </wsdl:message>
   <wsdl:message name="GetNewOrdersSoapIn">
     <wsdl:part name="parameters" element="tns:GetNewOrders" />
   </wsdl:message>
@@ -254,6 +356,12 @@
   </wsdl:message>
   <wsdl:message name="GetUserProvinceCityByUserIdSoapOut">
     <wsdl:part name="parameters" element="tns:GetUserProvinceCityByUserIdResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetUserInfoByUserIdSoapIn">
+    <wsdl:part name="parameters" element="tns:GetUserInfoByUserId" />
+  </wsdl:message>
+  <wsdl:message name="GetUserInfoByUserIdSoapOut">
+    <wsdl:part name="parameters" element="tns:GetUserInfoByUserIdResponse" />
   </wsdl:message>
   <wsdl:message name="GetUsersSoapIn">
     <wsdl:part name="parameters" element="tns:GetUsers" />
@@ -298,6 +406,18 @@
       <wsdl:input message="tns:GetOrdersSoapIn" />
       <wsdl:output message="tns:GetOrdersSoapOut" />
     </wsdl:operation>
+    <wsdl:operation name="GetOrderByID">
+      <wsdl:input message="tns:GetOrderByIDSoapIn" />
+      <wsdl:output message="tns:GetOrderByIDSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetOrderByOrderCode">
+      <wsdl:input message="tns:GetOrderByOrderCodeSoapIn" />
+      <wsdl:output message="tns:GetOrderByOrderCodeSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetOrderShipInfoByID">
+      <wsdl:input message="tns:GetOrderShipInfoByIDSoapIn" />
+      <wsdl:output message="tns:GetOrderShipInfoByIDSoapOut" />
+    </wsdl:operation>
     <wsdl:operation name="GetNewOrders">
       <wsdl:input message="tns:GetNewOrdersSoapIn" />
       <wsdl:output message="tns:GetNewOrdersSoapOut" />
@@ -309,6 +429,10 @@
     <wsdl:operation name="GetUserProvinceCityByUserId">
       <wsdl:input message="tns:GetUserProvinceCityByUserIdSoapIn" />
       <wsdl:output message="tns:GetUserProvinceCityByUserIdSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserInfoByUserId">
+      <wsdl:input message="tns:GetUserInfoByUserIdSoapIn" />
+      <wsdl:output message="tns:GetUserInfoByUserIdSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="GetUsers">
       <wsdl:input message="tns:GetUsersSoapIn" />
@@ -360,6 +484,33 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="GetOrderByID">
+      <soap:operation soapAction="http://tempuri.org/GetOrderByID" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetOrderByOrderCode">
+      <soap:operation soapAction="http://tempuri.org/GetOrderByOrderCode" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetOrderShipInfoByID">
+      <soap:operation soapAction="http://tempuri.org/GetOrderShipInfoByID" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="GetNewOrders">
       <soap:operation soapAction="http://tempuri.org/GetNewOrders" style="document" />
       <wsdl:input>
@@ -380,6 +531,15 @@
     </wsdl:operation>
     <wsdl:operation name="GetUserProvinceCityByUserId">
       <soap:operation soapAction="http://tempuri.org/GetUserProvinceCityByUserId" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserInfoByUserId">
+      <soap:operation soapAction="http://tempuri.org/GetUserInfoByUserId" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -462,6 +622,33 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="GetOrderByID">
+      <soap12:operation soapAction="http://tempuri.org/GetOrderByID" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetOrderByOrderCode">
+      <soap12:operation soapAction="http://tempuri.org/GetOrderByOrderCode" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetOrderShipInfoByID">
+      <soap12:operation soapAction="http://tempuri.org/GetOrderShipInfoByID" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="GetNewOrders">
       <soap12:operation soapAction="http://tempuri.org/GetNewOrders" style="document" />
       <wsdl:input>
@@ -482,6 +669,15 @@
     </wsdl:operation>
     <wsdl:operation name="GetUserProvinceCityByUserId">
       <soap12:operation soapAction="http://tempuri.org/GetUserProvinceCityByUserId" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserInfoByUserId">
+      <soap12:operation soapAction="http://tempuri.org/GetUserInfoByUserId" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
