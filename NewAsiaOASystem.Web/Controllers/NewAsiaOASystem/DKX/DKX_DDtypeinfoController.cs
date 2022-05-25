@@ -39,7 +39,7 @@ namespace NewAsiaOASystem.Web.Controllers
         IDKX_PleasepurchaseinfoDao _IDKX_PleasepurchaseinfoDao = ContextRegistry.GetContext().GetObject("DKX_PleasepurchaseinfoDao") as IDKX_PleasepurchaseinfoDao;
         IDKX_DDCLyqNoteInfoDao _IDKX_DDCLyqNoteInfoDao = ContextRegistry.GetContext().GetObject("DKX_DDCLyqNoteInfoDao") as IDKX_DDCLyqNoteInfoDao;
         IDKX_pjgdbinfoDao _IDKX_pjgdbinfoDao = ContextRegistry.GetContext().GetObject("DKX_pjgdbinfoDao") as IDKX_pjgdbinfoDao;
-
+        IK3_wuliaoinfoDao _IK3_wuliaoinfoDao = ContextRegistry.GetContext().GetObject("K3_wuliaoinfoDao") as IK3_wuliaoinfoDao;
 
         #region //电控箱类型管理
 
@@ -339,12 +339,14 @@ namespace NewAsiaOASystem.Web.Controllers
         #region //电控箱生产单列表（客服下单列表）
         public ActionResult DKXDDlist(int? pageIndex)
         {
+            SessionUser Suser = Session[SessionHelper.User] as SessionUser;
             AlGCSdataDropdown(null);
             ALLKFdataDropdown(null);//客服的下拉数据
             allDKXtypeDropdown(null);//电控箱类型的下来数据
             ViewBag.MyJson = getjsonalldkxtypedata();
             //PagerInfo<DKX_DDinfoView> listmodel = GetDKXDDlistpage(pageIndex,null,null,null,null,null,null,null,null,null,null,"0",null,null,null,null,null,null,null,null,null);
             //return View(listmodel);
+            ViewData["RoleType"] = Suser.RoleType;
             return View();
         }
         #endregion
@@ -403,7 +405,7 @@ namespace NewAsiaOASystem.Web.Controllers
         /// <param name="start">是否启用 0启用 1禁用</param>
         /// <returns></returns>
         private PagerInfo<DKX_DDinfoView> GetDKXDDlistpage(int? pageIndex, string DD_Bianhao, string BJno, string DD_Type, string KHname, string Lxname, string Tel, string Gcs_nameId,
-            string DD_ZT, string startctime, string endctiome, string start, string DHtype, string cpph, string beizhu1, string beizhu2, string YQtype, string Isdqpb, string Isqttz, string gnjs, string kfId,string POWER)
+            string DD_ZT, string startctime, string endctiome, string start, string DHtype, string cpph, string beizhu1, string beizhu2, string YQtype, string Isdqpb, string Isqttz, string gnjs, string kfId, string POWER)
         {
             SessionUser Suser = Session[SessionHelper.User] as SessionUser;
             int CurrentPageIndex = Convert.ToInt32(pageIndex);
@@ -418,7 +420,7 @@ namespace NewAsiaOASystem.Web.Controllers
 
         #region //电控箱查询（客服）生产订单分页数据-20210412
         public ActionResult Getdkxorderlist_customerservice(int? page, int limit, string DD_Bianhao, string BJno, string DD_Type, string KHname, string Lxname, string Tel, string Gcs_nameId,
-            string DD_ZT, string startctime, string endctiome, string start, string DHtype, string cpph, string beizhu1, string beizhu2, string YQtype, string Isdqpb, string Isqttz, string gnjs, string kfId,string POWER)
+            string DD_ZT, string startctime, string endctiome, string start, string DHtype, string cpph, string beizhu1, string beizhu2, string YQtype, string Isdqpb, string Isqttz, string gnjs, string kfId, string POWER)
         {
             SessionUser Suser = Session[SessionHelper.User] as SessionUser;
             int CurrentPageIndex = Convert.ToInt32(page);
@@ -451,6 +453,7 @@ namespace NewAsiaOASystem.Web.Controllers
                     model.Start = 1;//先禁用
                     string DD_Bianhao = Getorderbianhao();//订单编号
                     model.DD_Bianhao = DD_Bianhao;
+                    model.liushuitype = "B";
                     model.C_time = DateTime.Now;
                     Id = _IDKX_DDinfoDao.InsertID(model);
                     Session["oId"] = Id;
@@ -478,8 +481,9 @@ namespace NewAsiaOASystem.Web.Controllers
             AlGCSdataDropdown(null);
             allDKXtypeDropdown(null);//电控箱类型的下来数据
             ViewBag.MyJson = getjsonalldkxtypedata();
-            PagerInfo<DKX_CPInfoView> listmodel = Getcplistpage(pageIndex, null, null, null, null, null, null, null);
-            return View(listmodel);
+            return View();
+            //PagerInfo<DKX_CPInfoView> listmodel = Getcplistpage(pageIndex, null, null, null, null, null, null, null);
+            //return View(listmodel);
         }
 
         #region //产品列表的条件查询
@@ -529,6 +533,27 @@ namespace NewAsiaOASystem.Web.Controllers
         }
         #endregion
 
+        #region //
+        public ActionResult New_Getcplistpage(int? page, int limit, string wlno, string cpname, string gl, string dw, string Type, string ft, string Gcs_name, string gnjs)
+        {
+            SessionUser Suser = Session[SessionHelper.User] as SessionUser;
+            int CurrentPageIndex = Convert.ToInt32(page);
+            if (CurrentPageIndex == 0)
+                CurrentPageIndex = 1;
+            _IDKX_CPInfoDao.SetPagerPageIndex(CurrentPageIndex);
+            _IDKX_CPInfoDao.SetPagerPageSize(limit);
+            PagerInfo<DKX_CPInfoView> listmodel = _IDKX_CPInfoDao.New_GetDKXcppagelist(wlno, cpname, gl, dw, Type, ft, Gcs_name, gnjs);
+            var result = new
+            {
+                code = 0,
+                msg = "",
+                count = listmodel.RecordCount,
+                data = listmodel.DataList,
+            };
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+        #endregion
+
         #region //产品选择之后提交(保存该产品的相关资料)
         public string cpxztjEide(string cpId)
         {
@@ -561,6 +586,10 @@ namespace NewAsiaOASystem.Web.Controllers
                 model.Ps_Serialnumber = CPmodel.Ps_Serialnumber;
                 model.Ps_DocEntry = CPmodel.Ps_DocEntry;
                 model.YJcb = CPmodel.YJcb;//硬件成本
+                model.CONTROL_INFO_NO = CPmodel.CONTROL_INFO_NO;
+                if (CPmodel.COMPRESSOR_TYPE!=""|| CPmodel.COMPRESSOR_TYPE!=null) {
+                    model.COMPRESSOR_TYPE = CPmodel.COMPRESSOR_TYPE;
+                }
                 model.Iszjsc = 1;//选择产品默认直接生产
                 if (CPmodel.DXTDJ != null)
                 {
@@ -570,7 +599,7 @@ namespace NewAsiaOASystem.Web.Controllers
                 {
                     model.DXTDJ = 0;//单价
                 }
-                model.gnjsstr = CPmodel.cpgnjs;
+                //model.gnjsstr = CPmodel.cpgnjs;
                 model.gnjsstr = CPmodel.cpgnjs;
                 model.Bnote = "1";//箱体存在
                 model.Bnote1 = "1";//电器原来图
@@ -612,6 +641,9 @@ namespace NewAsiaOASystem.Web.Controllers
                     }
                 }
 
+                //查询入库产品信息
+                DKX_CPInfoView cpmodel = _IDKX_CPInfoDao.NGetModelById(cpId);
+
                 IList<DKX_RKZLDataInfoView> RKzlmodellist = _IDKX_RKZLDataInfoDao.GetDKXCPZLdatalist(cpId);
                 if (RKzlmodellist != null)
                 {
@@ -649,11 +681,19 @@ namespace NewAsiaOASystem.Web.Controllers
                             _IDKX_DDinfoDao.NUpdate(ddmodel);
                             if (_IDKX_k3BominfoDao.GetliaodanlistbyIdandbomno(NewId, item.BomNo) == null)
                             {
+                               
                                 string Idstr = "";
                                 if (item.dd_Id != "" && item.dd_Id != null)
-                                    Idstr = item.dd_Id;
+                                { 
+                                    if (cpmodel != null)
+                                    { Idstr = cpmodel.Dd_Id; } else
+                                    {
+                                        Idstr = item.dd_Id;
+                                    } }
+                                    
                                 else
-                                    Idstr = item.cpId;
+                                { Idstr = item.cpId; }
+                                   
 
                                 string tbRES = FZKliaodan(NewId, Idstr, item.BomNo);
                                 if (tbRES == "0")
@@ -763,6 +803,7 @@ namespace NewAsiaOASystem.Web.Controllers
         #endregion
 
         #region //下单提交
+        [ValidateInput(false)]
         public string DKXXDEide(FrameController from)
         {
             try
@@ -774,7 +815,7 @@ namespace NewAsiaOASystem.Web.Controllers
                 model = _IDKX_DDinfoDao.NGetModelById(Id);
                 string DD_Bianhao = Getorderbianhao();//订单编号
                 string DD_Type = Request.Form["dkxtype"];//订单类型 0 大系统 1 小系统 2 物联网
-                DateTime C_time = DateTime.Now;//创建时间
+                //DateTime C_time = DateTime.Now;//创建时间
                 string KHname = Request.Form["khname"];//客户名称
                 string Lxname = Request.Form["lxrname"];//客户联系人
                 string Tel = Request.Form["tel"];//联系电话
@@ -787,7 +828,7 @@ namespace NewAsiaOASystem.Web.Controllers
                 string C_name = user.Id;//创建人
                 string Gcs_nameId = Request.Form["gcs"];//工程师Id
                 string REMARK = Request.Form["beizhu"];//备注
-                string gnjsstr = Request.Form["gnjsstr"];//功能简述
+                //string gnjsstr = Request.Form["gnjsstr"];//功能简述
                 string zjsc = Request.Form["zjsc"];//是否直接生产 0 否 1是
                 //string dxtdj = Request.Form["dj"];//大系统单价
                 string yjjqtime = Request.Form["txt_startctime"];//预计交期
@@ -807,7 +848,6 @@ namespace NewAsiaOASystem.Web.Controllers
                 {
                     model.Isdqsh = 0;//无需电气审核
                 }
-                //model.C_time = C_time;
                 model.KHname = KHname;
                 model.Lxname = Lxname;
                 model.khkecode = K3CODE;
@@ -828,7 +868,7 @@ namespace NewAsiaOASystem.Web.Controllers
                 model.Isrk = 0;//未入方案库
                 model.Start = 0;
                 model.gcsfh = "";
-                model.gnjsstr = gnjsstr;
+                //model.gnjsstr = gnjsstr;
                 model.xtIsq = 0;
                 model.qtIsq = 0;
                 model.IsPdrefund = 0;//不是生产退单
@@ -841,10 +881,45 @@ namespace NewAsiaOASystem.Web.Controllers
                 {
                     model.DD_ZT = -1;//未提交
                     model.Bnote1 = "0";//不存在箱体
-                    model.Ps_BomNO = "";
-                    model.Ps_Serialnumber = "";
-                    model.Ps_wlBomNO = "";
-                    model.Ps_DocEntry = "";
+                    //是否需要生产物料
+                    if (model.Ps_sanduanno != "0")
+                    {
+                        if (model.Ps_wlBomNO == "" || model.Ps_wlBomNO == null)
+                        {
+                            //自动生产物料号
+                            string liaohao = NAHelper.liushuihao();
+                            //model.ps
+                            //同步料号
+                            Ps_fbcpmodel pscpmodel = new Ps_fbcpmodel();
+                            pscpmodel.ItmID = model.Ps_sanduanno + ".B" + liaohao;
+                            pscpmodel.ItmSpec = model.KBomNo;
+                            pscpmodel.Z_ItmID = model.Ps_sanduanno;
+                            if (model.YJcb == null)
+                                model.YJcb =Convert.ToDecimal(GetK3BOMYJCB(model.Id));
+                            pscpmodel.Z_Price = model.YJcb.ToString();
+                            string res = pushsoftHelper.Instercpinfo(pscpmodel);
+                            if (res == "" || res == null) { return "1"; }
+                            else
+                            {
+                                pushsoftErrmodel errmodel = new pushsoftErrmodel();
+                                errmodel = JsonConvert.DeserializeObject<pushsoftErrmodel>(res);
+                                if (errmodel.ErrCode == "0")
+                                {
+                                    model.Ps_wlBomNO = Ps_sanduanno + ".B" + liaohao;
+                                    model.Ps_Serialnumber = ".B" + liaohao;
+                                    model.Ps_sanduanno = Ps_sanduanno;
+                                    model.Ps_DocEntry = errmodel.Data.DocEntry;
+                                    //更新物料的工程师 公司名称
+                                    DKX_GCSinfoView gcsmodel = _IDKX_GCSinfoDao.NGetModelById(Gcs_nameId);
+                                    zypushsoftHelper.updateMDMDItmZ_temName(model.Ps_wlBomNO, gcsmodel.Name, KHname);
+                                }
+                                else
+                                {
+                                    return "1";
+                                }
+                            }
+                        }
+                    }
                     if (_IDKX_DDinfoDao.NUpdate(model))
                     {
                         NAHelper.Insertczjl(Id, "下单成功", user.Id);
@@ -901,7 +976,52 @@ namespace NewAsiaOASystem.Web.Controllers
                         NAHelper.Insertczjl(Id, "下单成功", user.Id);
                         return "3";//
                     }
-
+                    //是否需要生产物料
+                    if (model.Ps_sanduanno != "0")
+                    {
+                        if (model.Ps_wlBomNO == "" || model.Ps_wlBomNO == null)
+                        {
+                            //自动生产物料号
+                            string liaohao = NAHelper.liushuihao();
+                            //model.ps
+                            //同步料号
+                            Ps_fbcpmodel pscpmodel = new Ps_fbcpmodel();
+                            pscpmodel.ItmID = model.Ps_sanduanno + ".B" + liaohao;
+                            pscpmodel.ItmSpec = model.KBomNo;
+                            pscpmodel.Z_ItmID = model.Ps_sanduanno;
+                            if (model.YJcb == null)
+                                model.YJcb = Convert.ToDecimal(GetK3BOMYJCB(model.Id));
+                            pscpmodel.Z_Price = model.YJcb.ToString();
+                            string res = pushsoftHelper.Instercpinfo(pscpmodel);
+                            if (res == "" || res == null) { return "1"; }
+                            else
+                            {
+                                pushsoftErrmodel errmodel = new pushsoftErrmodel();
+                                errmodel = JsonConvert.DeserializeObject<pushsoftErrmodel>(res);
+                                if (errmodel.ErrCode == "0")
+                                {
+                                    model.Ps_wlBomNO = Ps_sanduanno + ".B" + liaohao;
+                                    model.Ps_Serialnumber = ".B" + liaohao;
+                                    model.Ps_sanduanno = Ps_sanduanno;
+                                    model.Ps_DocEntry = errmodel.Data.DocEntry;
+                                    //更新物料的工程师 公司名称
+                                    DKX_GCSinfoView gcsmodel = _IDKX_GCSinfoDao.NGetModelById(Gcs_nameId);
+                                    zypushsoftHelper.updateMDMDItmZ_temName(model.Ps_wlBomNO, gcsmodel.Name, KHname);
+                                }
+                                else
+                                {
+                                    return "1";
+                                }
+                            }
+                        }
+                        //同步BOM
+                        if (model.Ps_BomNO == "" || model.Ps_BomNO == null) {
+                            string aa = NAHelper.JK_Ps_InstarBom(model.Id, model.Ps_wlBomNO);
+                            if (aa == "0") {
+                                model.Ps_BomNO = model.Ps_wlBomNO;
+                            }
+                        }
+                    }
                     _IDKX_DDinfoDao.NUpdate(model);
                     //同步工位机
                     string ftemplate_id = "";
@@ -918,14 +1038,14 @@ namespace NewAsiaOASystem.Web.Controllers
                         ftemplate_id = "30";
                     }
                     //同步工位机平板的订单资料
-                    gwjHelper.synchronizationorderandzl(model.Id, model.DD_Bianhao, model.KHname, model.NUM.ToString(), model.KBomNo, ftemplate_id, "40003");//同步工位机平板的订单资料
+                    gwjHelper.synchronizationorderandzl(model.Id, model.DD_Bianhao, model.KHname, model.NUM.ToString(), model.Ps_wlBomNO,model.YJJQtime.ToString(),"", ftemplate_id, "40003");//同步工位机平板的订单资料
                     NAHelper.Insertczjl(Id, "下单成功，直接到未发料状态", user.Id);
                     return "4";
                 }
             }
-            catch
+            catch(Exception x)
             {
-                return "2";//保存异常
+                return "2"+ x;//保存异常
             }
 
         }
@@ -1056,8 +1176,7 @@ namespace NewAsiaOASystem.Web.Controllers
                         //zlmodel.Bjno = Bjno;//报价系统单号
                         //zlmodel.C_Datetime = DateTime.Now;
                         //zlmodel.C_name = Suser.Id;
-                        zlmodel.Start = 1;//禁用 （逻辑删除）
-                        _IDKX_ZLDataInfoDao.NUpdate(zlmodel);
+
                         zlmodel = new DKX_ZLDataInfoView();
                         zlmodel.dd_Id = Id;
                         zlmodel.Zl_type = 0;//需求
@@ -1144,6 +1263,70 @@ namespace NewAsiaOASystem.Web.Controllers
             }
         }
 
+
+        #region //关联普实的物料号
+        public string liaodanglps(string Id, string wlno)
+        {
+            try
+            {
+                SessionUser Suser = Session[SessionHelper.User] as SessionUser;
+                //检查是否存在该料单
+                if (_IDKX_k3BominfoDao.GetliaodanlistbyIdandbomno(Id, wlno) == null)//不存在
+                {
+                    string k3liaodan = psbomInterface(wlno, Id);
+                    if (k3liaodan == "1"|| k3liaodan=="0")
+                        return "3";//不存在料单
+                }
+                DKX_DDinfoView model = _IDKX_DDinfoDao.NGetModelById(Id);
+                if (model != null)
+                {
+                    model.KBomNo = wlno;
+                    model.Ps_wlBomNO = wlno;
+                    model.xqIsgl = 0;//需求不关联
+                    model.ldIsgl = 0;//料单不管理
+                    _IDKX_DDinfoDao.NUpdate(model);
+                    DKX_ZLDataInfoView zlmodel = new DKX_ZLDataInfoView();
+                    zlmodel = _IDKX_ZLDataInfoDao.GetzldatamodelbyIdandtype(Id, "1");
+                    if (zlmodel == null)
+                    {
+                        zlmodel = new DKX_ZLDataInfoView();
+                        zlmodel.dd_Id = Id;
+                        zlmodel.Zl_type = 1;//料单
+                        zlmodel.Bjno = wlno;//K3系统的BOM编号
+                        zlmodel.Isgl = 2;//关联的资 k3关联
+                        zlmodel.C_Datetime = DateTime.Now;
+                        zlmodel.C_name = Suser.Id;
+                        zlmodel.Start = 0;//启用
+                        _IDKX_ZLDataInfoDao.Ninsert(zlmodel);
+                    }
+                    else
+                    {
+                        zlmodel.Start = 1;
+                        _IDKX_ZLDataInfoDao.NUpdate(zlmodel);
+                        zlmodel = new DKX_ZLDataInfoView();
+                        zlmodel.dd_Id = Id;
+                        zlmodel.Zl_type = 1;//需求
+                        zlmodel.Bjno = wlno;//K3系统的BOM编号
+                        zlmodel.Isgl = 2;//关联的资 k3关联
+                        zlmodel.C_Datetime = DateTime.Now;
+                        zlmodel.C_name = Suser.Id;
+                        zlmodel.Start = 0;//启用
+                        _IDKX_ZLDataInfoDao.Ninsert(zlmodel);
+                    }
+                    NAHelper.Insertczjl(Id, "关联普实物料：" + wlno, Suser.Id);
+                    return "2";//成功
+                }
+                else
+                {
+                    return "1";//为空
+                }
+            }
+            catch
+            {
+                return "0";//提交异常
+            }
+        }
+        #endregion
         #endregion
 
         #region //客服提交订单（只有处于未提交状态,且已经关联号需求和料单的订单可以提交）
@@ -1213,7 +1396,35 @@ namespace NewAsiaOASystem.Web.Controllers
                     //检查图纸
                     if (_IDKX_ZLDataInfoDao.GetzljsonbyId(Id, "2") == null)
                         return "4";//图纸缺失
+                    if (model.Ps_sanduanno != "0") {//同步
+                        if (model.Ps_wlBomNO != "" || model.Ps_wlBomNO != null) {
+                            if (model.Ps_BomNO == "" || model.Ps_BomNO == null)
+                            {
+                                string aa = NAHelper.JK_Ps_InstarBom(model.Id,model.Ps_wlBomNO);
+                                if (aa == "0")
+                                {
+                                    model.Ps_BomNO = model.Ps_wlBomNO;
+                                }
+                            }
+                        }
+                    }
                     _IDKX_DDinfoDao.NUpdate(model);
+                    //同步工位机
+                    string ftemplate_id = "";
+                    if (model.DD_Type == 0 || model.DD_Type == 2)
+                    {//小系统和物联网
+                        ftemplate_id = "25";
+                    }
+                    else if (model.DD_Type == 1 || model.DD_Type == 3)
+                    {//大系统
+                        ftemplate_id = "29";
+                    }
+                    else
+                    {//plc
+                        ftemplate_id = "30";
+                    }
+                    //同步工位机平板的订单资料
+                    gwjHelper.synchronizationorderandzl(model.Id, model.DD_Bianhao, model.KHname, model.NUM.ToString(), model.Ps_wlBomNO,model.YJJQtime.ToString(),"", ftemplate_id, "40003");//同步工位机平板的订单资料
                     NAHelper.Insertczjl(Id, "下单成功，直接生产", user.Id);
                     return "5";
 
@@ -1283,7 +1494,7 @@ namespace NewAsiaOASystem.Web.Controllers
                     return "1";//不存在该订单
                 //状态
                 if (model.DD_ZT != 7)//只有在代发货的状态才能完成发货和入库
-                    return "2";
+                    return "2"; 
                 //检查需求
                 if (_IDKX_ZLDataInfoDao.GetzljsonbyId(Id, "0") == null)
                     return "3";//缺少需求
@@ -1302,7 +1513,8 @@ namespace NewAsiaOASystem.Web.Controllers
                 //产品入库
                 if (model.gczl_Isyc != 1)
                 {
-                    string RkRser = Newcprk(model);
+                    //string RkRser = Newcprk(model);
+                    string RkRser = CP_PutIn(model);
                     if (RkRser == "1")//产品库存在
                     {
                         model.DD_ZT = 8;
@@ -1361,8 +1573,6 @@ namespace NewAsiaOASystem.Web.Controllers
                         cpmodel.Ps_sanduanno = model.Ps_sanduanno;
                     if (model.Ps_wlBomNO != null)
                         cpmodel.Ps_wlBomNO = model.Ps_wlBomNO;
-                    if (model.Ps_wlBomNO != null)
-                        cpmodel.Ps_wlBomNO = model.Ps_wlBomNO;
                     if (model.Ps_Serialnumber != null)
                         cpmodel.Ps_Serialnumber = model.Ps_Serialnumber;
                     if (model.Ps_DocEntry != null)
@@ -1382,20 +1592,23 @@ namespace NewAsiaOASystem.Web.Controllers
                     cpmode.Gcs_name = model.Gcs_nameId;//工程师
                     cpmode.Type = model.DD_Type;//产品类型 0 小系统 1大系统 2物联网
                     cpmode.Isft = model.DD_WLWtype;//物联网的 0 一体 1分体
+                    if (model.CONTROL_INFO_NO != "" && model.CONTROL_INFO_NO != null)
+                    {
+                        cpmode.COMPRESSOR_TYPE = model.COMPRESSOR_TYPE;
+                        cpmode.CONTROL_INFO_NO = model.CONTROL_INFO_NO;
+                    }
                     cpmode.Lytype = 0;//默认是报价系统
                     if (model.Ps_BomNO != null)
                         cpmode.Ps_BomNO = model.Ps_BomNO;
-                    if(model.Ps_sanduanno!=null)
+                    if (model.Ps_sanduanno != null)
                         cpmode.Ps_sanduanno = model.Ps_sanduanno;
-                    if(model.Ps_wlBomNO != null)
+                    if (model.Ps_wlBomNO != null)
                         cpmode.Ps_wlBomNO = model.Ps_wlBomNO;
-                    if(model.Ps_wlBomNO!=null)
-                        cpmode.Ps_wlBomNO = model.Ps_wlBomNO;
-                    if(model.Ps_Serialnumber!=null)
+                    if (model.Ps_Serialnumber != null)
                         cpmode.Ps_Serialnumber = model.Ps_Serialnumber;
-                    if(model.Ps_DocEntry!=null)
+                    if (model.Ps_DocEntry != null)
                         cpmode.Ps_DocEntry = model.Ps_DocEntry;
-                    if (model.YJcb!=null)
+                    if (model.YJcb != null)
                         cpmode.YJcb = model.YJcb;
                     cpmode.Dd_Id = model.Id;//最初的订单
                     cpmode.RK_time = DateTime.Now;//产品名称
@@ -1412,6 +1625,135 @@ namespace NewAsiaOASystem.Web.Controllers
                     }
                     string cpId = _IDKX_CPInfoDao.InsertID(cpmode);
                     //查询资料库
+                    IList<DKX_ZLDataInfoView> zlmodellist = _IDKX_ZLDataInfoDao.GetAllzldatabyId(model.Id);
+                    //循环插入资料
+                    foreach (var item in zlmodellist)
+                    {
+                        //入库资料不要照片和验收单
+                        if (item.Zl_type != 3 && item.Zl_type != 4)
+                        {
+                            DKX_RKZLDataInfoView rkzlmodel = new DKX_RKZLDataInfoView();
+                            rkzlmodel.wjName = item.wjName;//附件名称
+                            rkzlmodel.wjurl = item.url;//附件地址
+                            rkzlmodel.Zl_type = item.Zl_type;//资料类型 0 需求 1 料单 2 图纸 3 照片 4 验收单
+                            rkzlmodel.dd_Id = item.dd_Id;
+                            rkzlmodel.cpId = cpId;//产品Id
+                            rkzlmodel.Isgl = item.Isgl;//是否关联 0 附件 1关联报价系统 2 关联K3
+                            rkzlmodel.Bjno = item.Bjno;
+                            rkzlmodel.BomNo = item.Bjno;
+                            rkzlmodel.C_time = DateTime.Now;
+                            rkzlmodel.Start = 0;//启用
+                            _IDKX_RKZLDataInfoDao.Ninsert(rkzlmodel);
+                        }
+                    }
+                    return "2";
+                }
+            }
+            catch
+            {
+                return "3";//异常
+            }
+        }
+        #endregion
+
+        #region //20220331 新产品信息入库或者更新BOM和图纸资料 （通过物料号，来判断是都是新产品）
+        public string CP_PutIn(DKX_DDinfoView model)
+        {
+            try
+            {
+                if (model == null)
+                    return "0";//订单走失
+                DKX_CPInfoView cpmodel = _IDKX_CPInfoDao.Getcpdatebyps_wlno(model.Ps_wlBomNO);
+                if (cpmodel != null)
+                {
+                    cpmodel.Cpname = model.DD_DHType;//产品名称
+                    cpmodel.Power = model.POWER;//功率值
+                    cpmodel.DW = model.dw;//功率单位
+                    cpmodel.Gcs_name = model.Gcs_nameId;//工程师
+                    cpmodel.Type = model.DD_Type;//产品类型 0 小系统 1大系统 2物联网
+                    cpmodel.Isft = model.DD_WLWtype;//物联网的 0 一体 1分体
+                    cpmodel.Dd_Id = model.Id;//最后的订单
+                    cpmodel.RK_time = DateTime.Now;//最后更新入库的时间
+                    //通过产品Id 查询 产品的资料明细并且删除
+                    IList<DKX_RKZLDataInfoView> RKzllist = _IDKX_RKZLDataInfoDao.Get_ALLCPRKZL_BY_CpId(cpmodel.Id);
+                    if (RKzllist != null)
+                    {
+                        //循环逻辑删除
+                        foreach (var item in RKzllist)
+                        {
+                            item.Start = 1;
+                            _IDKX_RKZLDataInfoDao.NUpdate(item);
+                        }
+                    }
+                    //从新插入新的
+                    //查询资料库
+                    IList<DKX_ZLDataInfoView> zlmodellist = _IDKX_ZLDataInfoDao.GetAllzldatabyId(model.Id);
+                    //循环插入资料
+                    foreach (var item in zlmodellist)
+                    {
+                        //入库资料不要照片和验收单
+                        if (item.Zl_type != 3 && item.Zl_type != 4)
+                        {
+                            DKX_RKZLDataInfoView rkzlmodel = new DKX_RKZLDataInfoView();
+                            rkzlmodel.wjName = item.wjName;//附件名称
+                            rkzlmodel.wjurl = item.url;//附件地址
+                            rkzlmodel.Zl_type = item.Zl_type;//资料类型 0 需求 1 料单 2 图纸 3 照片 4 验收单
+                            rkzlmodel.dd_Id = item.dd_Id;
+                            rkzlmodel.cpId = cpmodel.Id;//产品Id
+                            rkzlmodel.Isgl = item.Isgl;//是否关联 0 附件 1关联报价系统 2 关联K3
+                            rkzlmodel.Bjno = item.Bjno;
+                            rkzlmodel.BomNo = item.Bjno;
+                            rkzlmodel.C_time = DateTime.Now;
+                            rkzlmodel.Start = 0;//启用
+                            _IDKX_RKZLDataInfoDao.Ninsert(rkzlmodel);
+                        }
+                    }
+                    _IDKX_CPInfoDao.NUpdate(cpmodel);
+
+                    return "1";
+                }
+                else//不存在
+                {
+                    DKX_CPInfoView cpmode = new DKX_CPInfoView();
+                    cpmode.Cpname = model.DD_DHType;//产品名称
+                    cpmode.Power = model.POWER;//功率值
+                    cpmode.DW = model.dw;//功率单位
+                    cpmode.Gcs_name = model.Gcs_nameId;//工程师
+                    cpmode.Type = model.DD_Type;//产品类型 0 小系统 1大系统 2物联网
+                    cpmode.Isft = model.DD_WLWtype;//物联网的 0 一体 1分体
+                    if (model.CONTROL_INFO_NO != "" && model.CONTROL_INFO_NO != null)//是否关联报价单
+                    {
+                        cpmode.COMPRESSOR_TYPE = model.COMPRESSOR_TYPE;//报价单类型
+                        cpmode.CONTROL_INFO_NO = model.CONTROL_INFO_NO;//报价单单号
+                    }
+                    cpmode.Lytype = 0;//默认是报价系统
+                    if (model.Ps_BomNO != null)
+                        cpmode.Ps_BomNO = model.Ps_BomNO;
+                    if (model.Ps_sanduanno != null)
+                        cpmode.Ps_sanduanno = model.Ps_sanduanno;
+                    if (model.Ps_wlBomNO != null)
+                        cpmode.Ps_wlBomNO = model.Ps_wlBomNO;
+                    if (model.Ps_Serialnumber != null)
+                        cpmode.Ps_Serialnumber = model.Ps_Serialnumber;
+                    if (model.Ps_DocEntry != null)
+                        cpmode.Ps_DocEntry = model.Ps_DocEntry;
+                    if (model.YJcb != null)
+                        cpmode.YJcb = model.YJcb;
+                    cpmode.Dd_Id = model.Id;//最初的订单
+                    cpmode.RK_time = DateTime.Now;//产品名称
+                    cpmode.IsDis = 0;
+                    cpmode.cpgnjs = model.gnjsstr;//产品功能简述
+                    cpmode.cplytype = 0;
+                    if (model.DXTDJ != null)
+                    {
+                        cpmode.DXTDJ = model.DXTDJ;
+                    }
+                    else
+                    {
+                        cpmode.DXTDJ = 0;
+                    }
+                    string cpId = _IDKX_CPInfoDao.InsertID(cpmode);//插入
+                     //查询资料库
                     IList<DKX_ZLDataInfoView> zlmodellist = _IDKX_ZLDataInfoDao.GetAllzldatabyId(model.Id);
                     //循环插入资料
                     foreach (var item in zlmodellist)
@@ -1470,7 +1812,7 @@ namespace NewAsiaOASystem.Web.Controllers
             return View(model);
         }
 
-        public string DDJBINFOUPEide(string Id, string ddxh, string gl, string dw, string dkxtype, string DD_WLWtype, string sl, string khname, string beizhu, string gcsId, string crjytime, string price,string gnjs)
+        public string DDJBINFOUPEide(string Id, string ddxh, string gl, string dw, string dkxtype, string DD_WLWtype, string sl, string khname, string beizhu, string gcsId, string crjytime, string price, string gnjs)
         {
             try
             {
@@ -1490,7 +1832,9 @@ namespace NewAsiaOASystem.Web.Controllers
                     model.KHname = khname;
                     model.REMARK = QRHelper.ToDBC(beizhu);
                     model.Gcs_nameId = gcsId;
-                    model.price = Convert.ToDecimal(price);
+                    if (price != "") {
+                        model.price = Convert.ToDecimal(price);
+                    }
                     model.gnjsstr = gnjs;
                     if (crjytime != "")
                     {
@@ -1557,6 +1901,7 @@ namespace NewAsiaOASystem.Web.Controllers
             }
         }
         #endregion
+
         #endregion
 
         #region //资料查看没有软件下载权限的页面
@@ -2574,6 +2919,213 @@ namespace NewAsiaOASystem.Web.Controllers
         }
         #endregion
 
+        #region //工程师点击更新从普实ERP拉数据
+        public string UPPSbomInterface(string FnumberBom,string pswlno, string ddId)
+        {
+            try
+            {
+                SessionUser Suser = Session[SessionHelper.User] as SessionUser;
+                string FnumberBomstr = FnumberBom.Replace("+", "%2B");
+                string strjson = zypushsoftHelper.GetBom_QYbywlno(pswlno);
+                if (strjson == null || strjson == "")
+                    return "0";
+                List<PSBOMjsonmodel> timemodel = getObjectByJson<PSBOMjsonmodel>(strjson);
+                //删除原来的
+                List<DKX_k3BominfoView> YLModellist = _IDKX_k3BominfoDao.GetliaodanlistbyIdandbomno(ddId, FnumberBom) as List<DKX_k3BominfoView>;
+                if (YLModellist != null)
+                {
+                    _IDKX_k3BominfoDao.NDelete(YLModellist);
+                }
+                foreach (var a in timemodel)
+                {
+                    DKX_k3BominfoView model = new DKX_k3BominfoView();
+                    //通过物料代码查询物料
+                    K3_wuliaoinfoView wlmodel = _IK3_wuliaoinfoDao.Getwuliaobyfnumber(a.ItmID);
+                    model.FnumberBom = FnumberBom;
+                    model.dd_Id = ddId;
+                    model.FNumber = a.ItmID;//物料代码
+                    model.FItemName = a.ItmName;//物料名称
+                    model.FModel = a.ItmSpec;//型号
+                    model.FBaseUnitID = wlmodel.unitname;//单位;//单位
+                    model.FAuxQty = Convert.ToDecimal(a.NetQty);//单位用量
+                    model.C_time = DateTime.Now;
+                    model.Beizhu = "";//备注
+                    _IDKX_k3BominfoDao.Ninsert(model);
+                }
+                return "2";
+
+            }
+            catch
+            {
+                return "0";
+            }
+        }
+        #endregion
+
+        #region //工程师批量更新普实ERP
+        public string UPPSbomFAKInterfacestring(DKX_CPInfoView CPModel)
+        {
+            try
+            {
+                ////查询产品
+                //DKX_CPInfoView CPModel = _IDKX_CPInfoDao.NGetModelById(cpId);
+                //if (CPModel == null)
+                //    return "2";//产品不存在
+                //查询BOM资料的记录
+                IList<DKX_RKZLDataInfoView> rkzlmodellist = _IDKX_RKZLDataInfoDao.GetRKzljsonbyId(CPModel.Id, "1");
+                if (rkzlmodellist == null)
+                    return "3";//BOM资料不存在
+                               //判断产品是否有料号
+                if (CPModel.Ps_wlBomNO == "" || CPModel.Ps_wlBomNO == null)
+                    return "4";// "该产品没有物料号" });
+                //获取ERPbom
+                string strjson = zypushsoftHelper.GetBom_QYbywlno(CPModel.Ps_wlBomNO);
+                if (strjson == null || strjson == "" || strjson == "[]")
+                    return "5";// "获取ERP中BOM清单异常" });
+                List<PSBOMjsonmodel> timemodel = getObjectByJson<PSBOMjsonmodel>(strjson);
+                //更新BOM资料的记录
+                if (CPModel.Ps_sanduanno == "0")
+                {
+                    DKX_RKZLDataInfoView zlmodel = new DKX_RKZLDataInfoView();
+                    //zlmodel = rkzlmodellist[0];
+                    //zlmodel.Bjno = CPModel.Ps_wlBomNO;
+                    //zlmodel.BomNo = CPModel.Ps_wlBomNO;
+                    //if (!_IDKX_RKZLDataInfoDao.NUpdate(zlmodel))
+                    //    return "6";// "更新BOM资料的记录异常" });
+                }
+                //删除原先的BOM
+                string dd_id = "";
+                //删除原来的
+                if (CPModel.cplytype == 1)
+                {
+                    dd_id = CPModel.Id;
+                }
+                else
+                {
+                    dd_id = CPModel.Dd_Id;
+                }
+                //删除原来的
+                List<DKX_k3BominfoView> YLModellist = _IDKX_k3BominfoDao.GetliaodanlistbyId(dd_id) as List<DKX_k3BominfoView>;
+                string NewFnumberBom = "";
+                string Newdd_Id = "";
+                if (YLModellist != null)
+                {
+                    NewFnumberBom = YLModellist[0].FnumberBom;
+                    Newdd_Id = YLModellist[0].dd_Id;
+                    _IDKX_k3BominfoDao.NDelete(YLModellist);
+                }
+                foreach (var a in timemodel)
+                {
+                    DKX_k3BominfoView model = new DKX_k3BominfoView();
+                    //通过物料代码查询物料
+                    K3_wuliaoinfoView wlmodel = _IK3_wuliaoinfoDao.Getwuliaobyfnumber(a.ItmID);
+                    //if (CPModel.Ps_sanduanno == "0") { model.FnumberBom = CPModel.Ps_wlBomNO; } else { model.FnumberBom = rkzlmodellist[0].BomNo; }
+
+                    //if (CPModel.cplytype == 1) { model.dd_Id = CPModel.Id; } else { model.dd_Id = CPModel.Dd_Id; }
+                    model.FnumberBom = NewFnumberBom;
+                    model.dd_Id = Newdd_Id;
+                    model.FNumber = a.ItmID;//物料代码
+                    model.FItemName = a.ItmName;//物料名称
+                    model.FModel = a.ItmSpec;//型号
+                    model.FBaseUnitID = wlmodel.unitname;//单位;//单位
+                    model.FAuxQty = Convert.ToDecimal(a.NetQty);//单位用量
+                    model.C_time = DateTime.Now;
+                    model.Beizhu = "";//备注
+                    _IDKX_k3BominfoDao.Ninsert(model);
+                }
+                return "0";// "更新BOM料单成功" });
+
+            }
+            catch
+            {
+                return "1";//操作异常
+            }
+        }
+        #endregion
+
+        #region //方案库中更新料单到本平台
+        public JsonResult UPPSbomFAKInterface(string cpId)
+        {
+            try
+            {
+                //查询产品
+                DKX_CPInfoView CPModel = _IDKX_CPInfoDao.NGetModelById(cpId);
+                if(CPModel==null)
+                    return Json(new { result = "error", res = "产品不存在" });
+                //查询BOM资料的记录
+                IList<DKX_RKZLDataInfoView> rkzlmodellist = _IDKX_RKZLDataInfoDao.GetRKzljsonbyId(cpId, "1");
+                if (rkzlmodellist == null)
+                    return Json(new { result = "error", res = "BOM资料不存在" });
+                //判断产品是否有料号
+                if(CPModel.Ps_wlBomNO==""||CPModel.Ps_wlBomNO==null)
+                    return Json(new { result = "error", res = "该产品没有物料号" });
+                //获取ERPbom
+                string strjson = zypushsoftHelper.GetBom_QYbywlno(CPModel.Ps_wlBomNO);
+                if (strjson == null || strjson == ""||strjson=="[]")
+                    return Json(new { result = "error", res = "获取ERP中BOM清单异常" });
+                List<PSBOMjsonmodel> timemodel = getObjectByJson<PSBOMjsonmodel>(strjson);
+                //更新BOM资料的记录
+                if (CPModel.Ps_sanduanno == "0") {
+                DKX_RKZLDataInfoView zlmodel = new DKX_RKZLDataInfoView();
+                zlmodel = rkzlmodellist[0];
+                //zlmodel.Bjno = CPModel.Ps_wlBomNO;
+                //zlmodel.BomNo = CPModel.Ps_wlBomNO;
+                //if(!_IDKX_RKZLDataInfoDao.NUpdate(zlmodel))
+                //   return Json(new { result = "error", res = "更新BOM资料的记录异常" });
+                }
+                //删除原先的BOM
+                string dd_id = "";
+                //删除原来的
+                if (CPModel.cplytype == 1)
+                {
+                    dd_id = CPModel.Id;
+                }
+                else
+                {
+                    dd_id = CPModel.Dd_Id;
+                }
+
+                List<DKX_k3BominfoView> YLModellist = _IDKX_k3BominfoDao.GetliaodanlistbyId(dd_id) as List<DKX_k3BominfoView>;
+                    string NewFnumberBom = "";
+                    string Newdd_Id = "";
+                if (YLModellist != null)
+                {
+                        NewFnumberBom = YLModellist[0].FnumberBom;
+                        Newdd_Id= YLModellist[0].dd_Id;
+                        _IDKX_k3BominfoDao.NDelete(YLModellist);
+                }
+                foreach (var a in timemodel)
+                {
+                    DKX_k3BominfoView model = new DKX_k3BominfoView();
+                    //通过物料代码查询物料
+                    K3_wuliaoinfoView wlmodel = _IK3_wuliaoinfoDao.Getwuliaobyfnumber(a.ItmID);
+                        //if (CPModel.Ps_sanduanno == "0") 
+                        // { model.FnumberBom = CPModel.Ps_wlBomNO; } 
+                        // else 
+                        // { model.FnumberBom = rkzlmodellist[0].BomNo; }
+                        //if (CPModel.cplytype ==1) 
+                        //    { model.dd_Id = CPModel.Id; } 
+                        //    else { model.dd_Id = CPModel.Dd_Id; }
+                    model.FnumberBom = NewFnumberBom;
+                    model.dd_Id = Newdd_Id;
+                    model.FNumber = a.ItmID;//物料代码
+                    model.FItemName = a.ItmName;//物料名称
+                    model.FModel = a.ItmSpec;//型号
+                    model.FBaseUnitID = wlmodel.unitname;//单位;//单位
+                    model.FAuxQty = Convert.ToDecimal(a.NetQty);//单位用量
+                    model.C_time = DateTime.Now;
+                    model.Beizhu = "";//备注
+                    _IDKX_k3BominfoDao.Ninsert(model);
+                }
+                return Json(new { result = "success", res = "更新BOM料单成功" });
+            }
+            catch(Exception x)
+            {
+                return Json(new { result = "error", res =x });
+            }
+        }
+        #endregion
+
         #region //工程师提交-主管工程师进行资料审核（新改功能 工程师提交之后直接进入待生产）
         public string GCSzltjshEide(string Id, string beizhu, string gnjsstr)
         {
@@ -2611,8 +3163,24 @@ namespace NewAsiaOASystem.Web.Controllers
                     {
                         if (model.DD_ZT == 3)
                             return "10";//待生产状态不可以修改提交
+                        //同步BOM
+                        if (model.Ps_sanduanno != "0")
+                        {//同步
+                            if (model.Ps_wlBomNO != "" || model.Ps_wlBomNO != null)
+                            {
+                                if (model.Ps_BomNO == "" || model.Ps_BomNO == null)
+                                {
+                                    string aa = NAHelper.JK_Ps_InstarBom(model.Id,model.Ps_wlBomNO);
+                                    if (aa == "0")
+                                    {
+                                        model.Ps_BomNO = model.Ps_wlBomNO;
+                                    }
+                                }
+                            }
+                        }
                         model.dqshres = 0;//待电气资料审核
                         model.dqtjshtime = DateTime.Now;//提交审核的时间
+
                         if (_IDKX_DDinfoDao.NUpdate(model))
                         {
                             //电气工程师完成制图之后-通知审核资料工程师
@@ -2633,7 +3201,21 @@ namespace NewAsiaOASystem.Web.Controllers
                     }
                     else
                     {
-
+                        //同步BOM
+                        if (model.Ps_sanduanno != "0")
+                        {//同步
+                            if (model.Ps_wlBomNO != "" || model.Ps_wlBomNO != null)
+                            {
+                                if (model.Ps_BomNO == "" || model.Ps_BomNO == null)
+                                {
+                                    string aa = NAHelper.JK_Ps_InstarBom(model.Id, model.Ps_wlBomNO);
+                                    if (aa == "0")
+                                    {
+                                        model.Ps_BomNO = model.Ps_wlBomNO;
+                                    }
+                                }
+                            }
+                        }
                         model.REMARK2 = QRHelper.ToDBC(beizhu);//工程师备注
                         model.Gstjshtime = DateTime.Now;
                         model.Gscwctime = DateTime.Now;
@@ -3042,7 +3624,7 @@ namespace NewAsiaOASystem.Web.Controllers
                                 ftemplate_id = "30";
                             }
                             //同步工位机平板的订单资料
-                            gwjHelper.synchronizationorderandzl(model.Id, model.DD_Bianhao, model.KHname, model.NUM.ToString(), model.KBomNo, ftemplate_id, "40003");//同步工位机平板的订单资料
+                            gwjHelper.synchronizationorderandzl(model.Id, model.DD_Bianhao, model.KHname, model.NUM.ToString(), model.Ps_wlBomNO,model.YJJQtime.ToString(),"", ftemplate_id, "40003");//同步工位机平板的订单资料
                             IList<Wx_FTUserbdopenIdinfoView> list = _IWx_FTUserbdopenIdinfoDao.GetwxftbmopenIdbybmtype("7");//通知生产 仓库
                             if (list != null)
                             {
@@ -3470,7 +4052,7 @@ namespace NewAsiaOASystem.Web.Controllers
                     }
                     if (_IDKX_DDinfoDao.NUpdate(model))
                     {
-                        NAHelper.Insertczjltew(Id, "生产返退-" + con + bz, Suser.Id, model.DD_Bianhao, model.Gcs_nameId, CbrId, con, bz);
+                        NAHelper.Insertczjltew(Id, "生产返退-" + con + bz, Suser.Id, model.DD_Bianhao, model.Gcs_nameId, CbrId, con, bz,"0");
                         //生产退回通知工程师
                         MassManager.FMB_FBDKXNotice(model.Gcs_nameId, Id, "3");
                         return "3";//提交成功
@@ -3644,12 +4226,15 @@ namespace NewAsiaOASystem.Web.Controllers
                         if (_IDKX_ZLDataInfoDao.GetzljsonbyId(Id, "3") == null)//不存在照片
                             return "1";
                         if (model.DD_Type > 3)
-                        {                          //检测烧录软件
-                            if (_IDKX_ZLDataInfoDao.GetzljsonbyId(Id, "8") == null)
-                                return "8-1";//检测烧录软件缺少
-                                             //检测源程序
-                            if (_IDKX_ZLDataInfoDao.GetzljsonbyId(Id, "11") == null)
-                                return "8-2";//检测源程序缺少
+                        {
+                            if (model.gczl_Isyc == 0) { //资料不异常 检查下面的材料
+                                                        //检测烧录软件
+                                if (_IDKX_ZLDataInfoDao.GetzljsonbyId(Id, "8") == null)
+                                    return "8-1";//检测烧录软件缺少
+                                                 //检测源程序
+                                if (_IDKX_ZLDataInfoDao.GetzljsonbyId(Id, "11") == null)
+                                    return "8-2";//检测源程序缺少
+                            }
                         }
 
                         //if (_IDKX_ZLDataInfoDao.GetzljsonbyId(Id, "4") == null)//不存在验收单  （验收单不强制）
@@ -3677,7 +4262,7 @@ namespace NewAsiaOASystem.Web.Controllers
                                 MassManager.FMB_FBDKXNotice(model.C_name, Id, "6");
                             }
                             //插入K3 订单编号号工程师
-                            Insterbianhaoandgcsname(model.DD_Bianhao, model.Gcs_nameId);
+                            //Insterbianhaoandgcsname(model.DD_Bianhao, model.Gcs_nameId);
 
                             return "3";//提交完成
                         }
@@ -3863,7 +4448,7 @@ namespace NewAsiaOASystem.Web.Controllers
             if (model != null)
             {
                 //只有在未发料的状态下可以出来
-                if (model.DD_ZT == 3||model.DD_ZT == 4|| model.DD_ZT == 6)
+                if (model.DD_ZT == 3 || model.DD_ZT == 4 || model.DD_ZT == 6)
                 {
                     //箱体处理
                     if (type == "0")
@@ -3872,7 +4457,7 @@ namespace NewAsiaOASystem.Web.Controllers
                         {
                             model.xtIsq = 1;//箱体缺
                             model.xtqrtime = DateTime.Now;//相同库存确认时间
-        
+
                             if (model.DD_ZT != 3)
                             {
                                 return "1-1";
@@ -4014,9 +4599,9 @@ namespace NewAsiaOASystem.Web.Controllers
             {
                 if (model.DD_ZT == 3)//只有在未发料的状态下可以确认完成发料
                 {
-                    if (model.xtIsq!=0&&model.qtIsq!=0)
+                    if (model.xtIsq != 0 && model.qtIsq != 0)
                     {
-                        if(model.Flzt==5)
+                        if (model.Flzt == 5)
                         {//待发料的情况
                             model.Flzt = 15;//完成发料
                             NAHelper.Insertczjl(Id, "完成发料", Suser.Id);
@@ -4028,7 +4613,7 @@ namespace NewAsiaOASystem.Web.Controllers
                         }
                         model.Flwxtime = DateTime.Now;//完成发料的时间-可以生产的时间
                         model.DD_ZT = 4;//可以生产
-                       
+
                         _IDKX_DDinfoDao.NUpdate(model);
                         IList<Wx_FTUserbdopenIdinfoView> list = _IWx_FTUserbdopenIdinfoDao.GetwxftbmopenIdbybmtype("7");
                         if (list != null)
@@ -4066,30 +4651,55 @@ namespace NewAsiaOASystem.Web.Controllers
         #region //品保部门的电控箱生产列表
         public ActionResult DKXDDPblist(int? pageIndex)
         {
-            PagerInfo<DKX_DDinfoView> listmodel = new PagerInfo<DKX_DDinfoView>();
             allDKXtypeDropdown(null);//电控箱类型的下来数据
             ViewBag.MyJson = getjsonalldkxtypedata();
-            if (Session[SessionHelper.DKXSerch] != null)
-            {
-                DKXDDCXTJView ssearch = Session[SessionHelper.DKXSerch] as DKXDDCXTJView;
-                ViewData["DD_Bianhao"] = ssearch.DD_Bianhao;
-                ViewData["BJno"] = ssearch.BJno;
-                ViewData["DD_Type"] = ssearch.DD_Type;
-                ViewData["KHname"] = ssearch.KHname;
-                ViewData["Lxname"] = ssearch.Lxname;
-                ViewData["Tel"] = ssearch.Tel;
-                ViewData["DD_ZT"] = ssearch.DD_ZT;
-                ViewData["startctime"] = ssearch.startctime;
-                ViewData["endctiome"] = ssearch.endctiome;
-                ViewData["DHtype"] = ssearch.DHtype;
-                listmodel = GetdkxddPBlistpage(pageIndex, ssearch.DD_Bianhao, ssearch.BJno, ssearch.DD_Type, ssearch.KHname, ssearch.Lxname, ssearch.Tel, ssearch.DD_ZT, ssearch.startctime, ssearch.endctiome, "0", ssearch.DHtype, null);
-            }
-            else
-            {
-                listmodel = GetdkxddPBlistpage(pageIndex, null, null, null, null, null, null, null, null, null, "0", null, null);
-            }
-            return View(listmodel);
+            return View();
+            //PagerInfo<DKX_DDinfoView> listmodel = new PagerInfo<DKX_DDinfoView>();
+            //allDKXtypeDropdown(null);//电控箱类型的下来数据
+            //ViewBag.MyJson = getjsonalldkxtypedata();
+            //if (Session[SessionHelper.DKXSerch] != null)
+            //{
+            //    DKXDDCXTJView ssearch = Session[SessionHelper.DKXSerch] as DKXDDCXTJView;
+            //    ViewData["DD_Bianhao"] = ssearch.DD_Bianhao;
+            //    ViewData["BJno"] = ssearch.BJno;
+            //    ViewData["DD_Type"] = ssearch.DD_Type;
+            //    ViewData["KHname"] = ssearch.KHname;
+            //    ViewData["Lxname"] = ssearch.Lxname;
+            //    ViewData["Tel"] = ssearch.Tel;
+            //    ViewData["DD_ZT"] = ssearch.DD_ZT;
+            //    ViewData["startctime"] = ssearch.startctime;
+            //    ViewData["endctiome"] = ssearch.endctiome;
+            //    ViewData["DHtype"] = ssearch.DHtype;
+            //    listmodel = GetdkxddPBlistpage(pageIndex, ssearch.DD_Bianhao, ssearch.BJno, ssearch.DD_Type, ssearch.KHname, ssearch.Lxname, ssearch.Tel, ssearch.DD_ZT, ssearch.startctime, ssearch.endctiome, "0", ssearch.DHtype, null);
+            //}
+            //else
+            //{
+            //    listmodel = GetdkxddPBlistpage(pageIndex, null, null, null, null, null, null, null, null, null, "0", null, null);
+            //}
+            //return View(listmodel);
         }
+
+        #region //获取电控箱（品保）生产单列表分页数据-20211229
+        public ActionResult Get_DKXDD_PB_LISTPager(int? page, int limit, string DD_Bianhao, string BJno, string DD_Type, string KHname, string Lxname, string Tel,
+            string DD_ZT, string startctime, string endctiome, string start, string DHtype, string YQtype)
+        {
+            SessionUser Suser = Session[SessionHelper.User] as SessionUser;
+            int CurrentPageIndex = Convert.ToInt32(page);
+            if (CurrentPageIndex == 0)
+                CurrentPageIndex = 1;
+            _IDKX_DDinfoDao.SetPagerPageIndex(CurrentPageIndex);
+            _IDKX_DDinfoDao.SetPagerPageSize(limit);
+            PagerInfo<DKX_DDinfoView> listmodel = _IDKX_DDinfoDao.GetdkxlistpagePb(DD_Bianhao, BJno, DD_Type, KHname, Lxname, Tel, DD_ZT, startctime, endctiome, start, DHtype, YQtype, Suser);
+            var result = new
+            {
+                code = 0,
+                msg = "",
+                count = listmodel.RecordCount,
+                data = listmodel.DataList,
+            };
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+        #endregion
         #endregion
 
         #region //条件查询
@@ -4155,7 +4765,7 @@ namespace NewAsiaOASystem.Web.Controllers
                 DKX_DDinfoView model = _IDKX_DDinfoDao.NGetModelById(Id);
                 if (model == null)
                     return "1";//订单不存在
-                if (model.DD_ZT == -3 || model.DD_ZT == 7)//在待品审 和 待发货的 状态下可以操作
+                if (model.DD_ZT == -3 )//在待品审 和 待发货的 状态下可以操作
                 {
                     if (type == "0")//通过
                     {
@@ -4168,7 +4778,6 @@ namespace NewAsiaOASystem.Web.Controllers
                             NAHelper.Insertczjl(model.Id, "品保审核-通过", Suser.Id);
                             //品保审核通过-通知客服- 发货
                             MassManager.FMB_FBDKXNotice(model.C_name, Id, "13");
-
                             return "3";//提交完成
                         }
                         else
@@ -4178,7 +4787,6 @@ namespace NewAsiaOASystem.Web.Controllers
                     }
                     else//不通过
                     {
-
                         model.pbshzt = 2;//品审未通过
                         model.DD_ZT = 6;//变为生产中
                         model.pbshtime = DateTime.Now;
@@ -4186,13 +4794,14 @@ namespace NewAsiaOASystem.Web.Controllers
                         model.pbshbtgyy = QRHelper.ToDBC(con);//审核不通过的原因
                         if (_IDKX_DDinfoDao.NUpdate(model))
                         {
-                            NAHelper.Insertczjl(model.Id, "品保审核-不通过", Suser.Id);
+                            // NAHelper.Insertczjl(model.Id, "品保审核-不通过", Suser.Id);
+                            NAHelper.Insertczjltew(Id, "品保审核-不通过", Suser.Id, model.DD_Bianhao, model.Gcs_nameId, "", "", con, "1");
                             //品保审核不通过通知生产 （通知生产主管/箱体/其他物料）
-                            IList<Wx_FTUserbdopenIdinfoView> list = _IWx_FTUserbdopenIdinfoDao.GetwxftbmopenIdbybmtype("7");
-                            for (int i = 0, j = list.Count; i < j; i++)
-                            {
-                                MassManager.FMB_FBDKXNotice(list[i].UserId, Id, "14");
-                            }
+                            //IList<Wx_FTUserbdopenIdinfoView> list = _IWx_FTUserbdopenIdinfoDao.GetwxftbmopenIdbybmtype("7");
+                            //for (int i = 0, j = list.Count; i < j; i++)
+                            //{
+                            //    MassManager.FMB_FBDKXNotice(list[i].UserId, Id, "14");
+                            //}
                             return "5";//提交完成
                         }
                         else
@@ -5377,6 +5986,70 @@ namespace NewAsiaOASystem.Web.Controllers
         #endregion
         #endregion
 
+        #region 普实系统料单接口
+        public string psbomInterface(string wlno, string ddId)
+        {
+            try
+            {
+                string strjson = zypushsoftHelper.GetBom_QYbywlno(wlno);
+                if(strjson==null||strjson==""|| strjson=="[]")
+                    return "1";
+                List<PSBOMjsonmodel> timemodel = getObjectByJson<PSBOMjsonmodel>(strjson);
+                foreach (var a in timemodel)
+                {
+                    DKX_k3BominfoView model = new DKX_k3BominfoView();
+                    //通过物料代码查询物料
+                    K3_wuliaoinfoView wlmodel = _IK3_wuliaoinfoDao.Getwuliaobyfnumber(a.ItmID);
+                    model.FnumberBom = wlno;
+                    model.dd_Id = ddId;
+                    model.FNumber = a.ItmID;//物料代码
+                    model.FItemName = a.ItmName;//物料名称
+                    model.FModel = a.ItmSpec;//型号
+                    model.FBaseUnitID = wlmodel.unitname;//单位;//单位
+                    model.FAuxQty = Convert.ToDecimal(a.NetQty);//单位用量
+                    model.C_time = DateTime.Now;
+                    model.Beizhu = "";//备注
+                    _IDKX_k3BominfoDao.Ninsert(model);
+                }
+                return "2";
+            }
+            catch
+            {
+                return "0";
+            }
+        }
+        #region //转换实体
+        public class PSBOMjsonmodel { 
+            public virtual string LineNum { get; set; }
+            /// <summary>
+            /// 物料号
+            /// </summary>
+            public virtual string ItmID { get; set; }
+
+            /// <summary>
+            /// 名称
+            /// </summary>
+            public virtual string ItmName { get; set; }
+
+            /// <summary>
+            /// 型号
+            /// </summary>
+            public virtual string ItmSpec { get; set; }
+
+            /// <summary>
+            /// 用量
+            /// </summary>
+            public virtual string NetQty { get; set; }
+
+            /// <summary>
+            /// 单据号
+            /// </summary>
+            public virtual string DocEntry { get; set; }
+        }
+ 
+        #endregion
+        #endregion
+
         #region //元器件请购单
 
         //元器件采购页面
@@ -5621,8 +6294,9 @@ namespace NewAsiaOASystem.Web.Controllers
             ViewBag.MyJson = getjsonalldkxtypedata();
             //判定是否有审核的权限
             ViewData["SHQX"] = Getzlshqx();
-            PagerInfo<DKX_CPInfoView> listmodel = GetDKXCPInfolistpage(pageIndex, null, null, null, null, null, null, null);
-            return View(listmodel);
+            //PagerInfo<DKX_CPInfoView> listmodel = GetDKXCPInfolistpage(pageIndex, null, null, null, null, null, null, null,null);
+            //return View(listmodel);
+            return View();
         }
         #endregion
 
@@ -5636,10 +6310,11 @@ namespace NewAsiaOASystem.Web.Controllers
             string ft = Request.Form["txtft"];//分体 0一体1 分体
             string Gcs_name = Request.Form["txtGcs_name"];//工程师
             string gnjs = Request.Form["txtgnjs"];//
+            string IsDis = Request.Form["txtIsDis"];
             int? pageIndex = 1;
             if (!string.IsNullOrEmpty(Request.Form["pageIndex"]))
                 pageIndex = Convert.ToInt32(Request.Form["pageIndex"]);
-            PagerInfo<DKX_CPInfoView> listmodel = GetDKXCPInfolistpage(pageIndex, cpname, gl, dw, Type, ft, Gcs_name, gnjs);
+            PagerInfo<DKX_CPInfoView> listmodel = GetDKXCPInfolistpage(pageIndex, cpname, gl, dw, Type, ft, Gcs_name, gnjs, IsDis);
             string PageNavigate = HtmlHelperComm.OutPutPageNavigate(listmodel.CurrentPageIndex, listmodel.PageSize, listmodel.RecordCount);
             if (listmodel != null)
                 return Json(new { result = listmodel.GetPagingDataJson, PageN = PageNavigate });
@@ -5657,7 +6332,7 @@ namespace NewAsiaOASystem.Web.Controllers
                 CurrentPageIndex = 1;
             _IDKX_CPInfoDao.SetPagerPageIndex(CurrentPageIndex);
             _IDKX_CPInfoDao.SetPagerPageSize(10);
-            PagerInfo<DKX_CPInfoView> listmodel = _IDKX_CPInfoDao.GetALLDKXcppagelist(cpname, gl, dw, Type, ft, Gcs_name, gnjs);
+            PagerInfo<DKX_CPInfoView> listmodel = _IDKX_CPInfoDao.GetALLDKXcppagelist(null,cpname, gl, dw, Type, ft, Gcs_name, gnjs,null,null);
             return listmodel;
         }
         #endregion
@@ -5739,8 +6414,7 @@ namespace NewAsiaOASystem.Web.Controllers
             AlGCSdataDropdown(null);
             allDKXtypeDropdown(null);//电控箱类型的下来数据
             ViewBag.MyJson = getjsonalldkxtypedata();
-            PagerInfo<DKX_CPInfoView> listmodel = GetDKXCPInfolistpage(pageIndex, null, null, null, null, null, null, null);
-            return View(listmodel);
+            return View();
         }
         #endregion
 
@@ -5754,10 +6428,11 @@ namespace NewAsiaOASystem.Web.Controllers
             string ft = Request.Form["txtft"];//分体 0一体1 分体
             string Gcs_name = Request.Form["txtGcs_name"];//工程师
             string gnjs = Request.Form["txtgnjs"];
+           
             int? pageIndex = 1;
             if (!string.IsNullOrEmpty(Request.Form["pageIndex"]))
                 pageIndex = Convert.ToInt32(Request.Form["pageIndex"]);
-            PagerInfo<DKX_CPInfoView> listmodel = GetDKXCPInfolistpage(pageIndex, cpname, gl, dw, Type, ft, Gcs_name, gnjs);
+            PagerInfo<DKX_CPInfoView> listmodel = GetDKXCPInfolistpage(pageIndex, cpname, gl, dw, Type, ft, Gcs_name, gnjs, null);
             string PageNavigate = HtmlHelperComm.OutPutPageNavigate(listmodel.CurrentPageIndex, listmodel.PageSize, listmodel.RecordCount);
             if (listmodel != null)
                 return Json(new { result = listmodel.GetPagingDataJson, PageN = PageNavigate });
@@ -5766,7 +6441,7 @@ namespace NewAsiaOASystem.Web.Controllers
         }
 
         #region //方案库的数据列表
-        private PagerInfo<DKX_CPInfoView> GetDKXCPInfolistpage(int? pageIndex, string cpname, string gl, string dw, string Type, string ft, string Gcs_name, string gnjs)
+        private PagerInfo<DKX_CPInfoView> GetDKXCPInfolistpage(int? pageIndex, string cpname, string gl, string dw, string Type, string ft, string Gcs_name, string gnjs, string IsDis)
         {
             SessionUser Suser = Session[SessionHelper.User] as SessionUser;
             int CurrentPageIndex = Convert.ToInt32(pageIndex);
@@ -5774,8 +6449,29 @@ namespace NewAsiaOASystem.Web.Controllers
                 CurrentPageIndex = 1;
             _IDKX_CPInfoDao.SetPagerPageIndex(CurrentPageIndex);
             _IDKX_CPInfoDao.SetPagerPageSize(10);
-            PagerInfo<DKX_CPInfoView> listmodel = _IDKX_CPInfoDao.GetALLDKXcppagelist(cpname, gl, dw, Type, ft, Gcs_name, gnjs);
+            PagerInfo<DKX_CPInfoView> listmodel = _IDKX_CPInfoDao.GetALLDKXcppagelist(null,cpname, gl, dw, Type, ft, Gcs_name, gnjs, IsDis,null);
             return listmodel;
+        }
+        #endregion
+
+        #region //202203方案库的数据列表
+        public ActionResult New_GetDKXCPInfolistpage(int? page, int limit,string wlno, string cpname, string gl, string dw, string Type, string ft, string Gcs_name, string gnjs, string IsDis)
+        {
+            SessionUser Suser = Session[SessionHelper.User] as SessionUser;
+            int CurrentPageIndex = Convert.ToInt32(page);
+            if (CurrentPageIndex == 0)
+                CurrentPageIndex = 1;
+            _IDKX_CPInfoDao.SetPagerPageIndex(CurrentPageIndex);
+            _IDKX_CPInfoDao.SetPagerPageSize(limit);
+            PagerInfo<DKX_CPInfoView> listmodel = _IDKX_CPInfoDao.GetALLDKXcppagelist(wlno, cpname, gl, dw, Type, ft, Gcs_name, gnjs, IsDis,null);
+            var result = new
+            {
+                code = 0,
+                msg = "",
+                count = listmodel.RecordCount,
+                data = listmodel.DataList,
+            };
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
         #endregion
 
@@ -5820,6 +6516,90 @@ namespace NewAsiaOASystem.Web.Controllers
         }
         #endregion
 
+        #region //通过方案的物料号查询方案的订单数据
+        /// <summary>
+        /// 通过方案的物料号查询方案的订单数据
+        /// </summary>
+        /// <param name="ItemNo">物料代码</param>
+        /// <returns></returns>
+        public ActionResult Scheme_order_detailsView(string ItemNo)
+        {
+            ViewData["ItemNo"] = ItemNo;
+            return View();
+        }
+        #endregion
+
+        #region //返回方案引用次数
+        public JsonResult Get_Scheme_ordersum(string ItemNo)
+        {
+            try
+            {
+                int qq = _IDKX_DDinfoDao.Get_Place_Order_Cunot(ItemNo);
+                return Json(new { result = "success", msg = qq + "次数" });
+            }
+            catch(Exception x)
+            {
+                return Json(new { result = "error", msg = x });
+            }
+        }
+        #endregion
+
+        #region //查询应用订单的明细
+        public ActionResult Get_Scheme_orderdetails(string itemno,string tosum)
+        {
+            IList<DKX_DDinfoView> list = _IDKX_DDinfoDao.Get_order_by_itemno(itemno,Convert.ToInt32(tosum));
+            int qq = _IDKX_DDinfoDao.Get_Place_Order_Cunot(itemno);
+            var ss = 0;
+            if (list != null)
+                ss = list.Count;
+           var result = new
+            {
+                code = 0,
+                msg = qq + "次数",
+                count = ss,
+                data = list,
+            };
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+        #endregion
+
+        #region //导出数据 【有物料号的再用的数据】
+        public FileResult dc_fangandata_yycs()
+        {
+             SessionUser Suser = Session[SessionHelper.User] as SessionUser;
+            IList<DKX_CPInfoView> listmodel = _IDKX_CPInfoDao.GetalldkxcpdataScheme_order();
+            //创建Excel文件的对象
+            NPOI.HSSF.UserModel.HSSFWorkbook book = new NPOI.HSSF.UserModel.HSSFWorkbook();
+            //添加一个sheet
+            NPOI.SS.UserModel.ISheet sheet1 = book.CreateSheet("Sheet1");
+            //给sheet1添加第一行的头部标题
+            NPOI.SS.UserModel.IRow row1 = sheet1.CreateRow(0);
+            row1.CreateCell(0).SetCellValue("物料号");
+            row1.CreateCell(1).SetCellValue("型号");
+            row1.CreateCell(2).SetCellValue("功率");
+            row1.CreateCell(3).SetCellValue("引用次数");
+            if (listmodel != null)
+            {
+                for (int i = 0, j = listmodel.Count; i < j; i++)
+                {
+                    int cs = _IDKX_DDinfoDao.Get_Place_Order_Cunot(listmodel[i].Ps_wlBomNO);
+                    NPOI.SS.UserModel.IRow rowtemp = sheet1.CreateRow(i + 1);
+                    rowtemp.CreateCell(0).SetCellValue(listmodel[i].Ps_wlBomNO);
+                    rowtemp.CreateCell(1).SetCellValue(listmodel[i].Cpname);
+                    rowtemp.CreateCell(2).SetCellValue(listmodel[i].Power + "/" + listmodel[i].DW);
+                    rowtemp.CreateCell(3).SetCellValue(cs);
+                 
+                }
+            }
+            string DataNew = DateTime.Now.ToString("yyyyMMdd");
+            // 写入到客户端 
+            System.IO.MemoryStream ms = new System.IO.MemoryStream();
+            book.Write(ms);
+            ms.Seek(0, SeekOrigin.Begin);
+            return File(ms, "application/vnd.ms-excel", DataNew + "方案应用次数.xls");
+        }
+        #endregion
+
         #endregion
 
         #region //电控箱方案库（公共）
@@ -5829,8 +6609,9 @@ namespace NewAsiaOASystem.Web.Controllers
             AlGCSdataDropdown(null);
             allDKXtypeDropdown(null);//电控箱类型的下来数据
             ViewBag.MyJson = getjsonalldkxtypedata();
-            PagerInfo<DKX_CPInfoView> listmodel = GetDKXCPInfolistpage(pageIndex, null, null, null, null, null, null, null);
-            return View(listmodel);
+            return View();
+            //PagerInfo<DKX_CPInfoView> listmodel = GetDKXCPInfolistpage(pageIndex, null, null, null, null, null, null, null,null);
+            //return View(listmodel);
         }
         #endregion
 
@@ -5847,7 +6628,7 @@ namespace NewAsiaOASystem.Web.Controllers
             int? pageIndex = 1;
             if (!string.IsNullOrEmpty(Request.Form["pageIndex"]))
                 pageIndex = Convert.ToInt32(Request.Form["pageIndex"]);
-            PagerInfo<DKX_CPInfoView> listmodel = GetDKXCPInfolistpage(pageIndex, cpname, gl, dw, Type, ft, Gcs_name, gnjs);
+            PagerInfo<DKX_CPInfoView> listmodel = GetDKXCPInfolistpage(pageIndex, cpname, gl, dw, Type, ft, Gcs_name, gnjs,null);
             string PageNavigate = HtmlHelperComm.OutPutPageNavigate(listmodel.CurrentPageIndex, listmodel.PageSize, listmodel.RecordCount);
             if (listmodel != null)
                 return Json(new { result = listmodel.GetPagingDataJson, PageN = PageNavigate });
@@ -6009,6 +6790,64 @@ namespace NewAsiaOASystem.Web.Controllers
             catch
             {
                 return "0";//提交异常
+            }
+        }
+        #endregion
+
+        #region //方案库中添加常规订单产品管理ERPbom
+        public JsonResult Fakliaodangps(string Id, string FnumberBom)
+        {
+            try
+            {
+                SessionUser Suser = Session[SessionHelper.User] as SessionUser;
+                //检查是否存在该料单
+                if (_IDKX_k3BominfoDao.GetliaodanlistbyIdandbomno(Id, FnumberBom) == null)//不存在
+                {
+                    string k3liaodan = psbomInterface(FnumberBom, Id);
+                    if (k3liaodan == "1")
+                        return Json(new { result = "error", res ="ERP中没有BOM" });
+                    if(k3liaodan=="0")
+                        return Json(new { result = "error", res = "插入BOM异常" });
+                }
+                DKX_CPInfoView cpmodel = _IDKX_CPInfoDao.NGetModelById(Id);
+                if (cpmodel != null)
+                {
+                    DKX_RKZLDataInfoView model = new DKX_RKZLDataInfoView();
+                    model = _IDKX_RKZLDataInfoDao.GetzldatamodelbyIdandtype(Id, "1");
+                    if (model == null)
+                    {
+                        model = new DKX_RKZLDataInfoView();
+                        model.BomNo = FnumberBom;
+                        model.cpId = Id;
+                        model.dd_Id = "";
+                        model.Isgl = 2;
+                        model.Zl_type = 1;//料单
+                        model.C_time = DateTime.Now;
+                        model.Start = 0;//启用
+                        _IDKX_RKZLDataInfoDao.Ninsert(model);
+                    }
+                    else
+                    {
+                        model.Start = 1;
+                        _IDKX_RKZLDataInfoDao.NUpdate(model);
+                        model = new DKX_RKZLDataInfoView();
+                        model.BomNo = FnumberBom;
+                        model.cpId = Id;
+                        model.dd_Id = "";
+                        model.Isgl = 2;
+                        model.Zl_type = 1;//料单
+                        model.C_time = DateTime.Now;
+                        model.Start = 0;//启用
+                        _IDKX_RKZLDataInfoDao.Ninsert(model);
+                    }
+                    
+                }
+                NAHelper.Insertczjl(Id, "关联ERPBOM：" + FnumberBom, Suser.Id);
+                return Json(new { result = "success", res = "操作成功" });
+            }
+            catch (Exception x)
+            {
+                return Json(new { result = "error", res = x });
             }
         }
         #endregion
@@ -6378,6 +7217,7 @@ namespace NewAsiaOASystem.Web.Controllers
                 model.cplytype = 1;
                 model.Gcs_name = gcscon;
                 model.cpgnjs = gnjsstr;
+                model.Ps_sanduanno = "0";//常规定制
                 if (_IDKX_CPInfoDao.Ninsert(model))
                     return "2";//提交成功
                 else
@@ -6521,6 +7361,25 @@ namespace NewAsiaOASystem.Web.Controllers
         }
         #endregion
 
+        #region //新的入库删除逻辑删除
+        public JsonResult New_del_rkcp(string Id)
+        {
+            try
+            {
+                DKX_CPInfoView sys = _IDKX_CPInfoDao.NGetModelById(Id);
+                sys.IsDis = 4;
+                if(_IDKX_CPInfoDao.NUpdate(sys))
+                    return Json(new { result = "success",msg="操作成功！" });
+                else
+                    return Json(new { result = "error", msg ="操作失败！" });
+            }
+            catch(Exception x)
+            {
+                return Json(new { result = "error", msg=x });
+            }
+        }
+        #endregion
+
         #region //方案库中批量更新产品BOM
         public JsonResult PLupdatecpBOMEide(string Id)
         {
@@ -6530,56 +7389,43 @@ namespace NewAsiaOASystem.Web.Controllers
             if (cpmodellist == null)
                 return Json(new { result = "error", res = "产品不存在" });
             int? gxsusNUMB = 0;
-            int? gxfailNUM = 0;//料单
-            int? wfgxnum = 0;//料单不是关联K3 的无法更新
+            //int? gxfailNUM = 0;//料单
+            //int? wfgxnum = 0;//料单不是关联K3 的无法更新
             int? ldbcz = 0;//料单不存在
+            int? wlnono = 0;//物料号不存在的
+            int? gxycNUM = 0;//更新异常
+            int? erpldk = 0;
+            int? bomzlgxyc = 0;
             foreach (var cpitme in cpmodellist)
             {
                 DKX_CPInfoView cpmodel = cpitme;
-                string ddId = "";
-                string K3LDBH = "";
 
-                //查询该产品的入库资料
-                IList<DKX_RKZLDataInfoView> cpliaodanmodel = _IDKX_RKZLDataInfoDao.GetRKzljsonbyId(cpmodel.Id, "1");
-                if (cpliaodanmodel != null)
+                string res = UPPSbomFAKInterfacestring(cpmodel);
+                if (res == "0")
                 {
-                    if (cpliaodanmodel[0].Isgl == 2)//为2的时候是关联K3 的
-                    {
-                        //判断产品是订单来的还是直接添加的
-                        if (cpmodel.cplytype == 1)
-                        {
-                            ddId = cpmodel.Id;
-                            K3LDBH = cpliaodanmodel[0].BomNo;
-                        }
-                        else
-                        {
-                            ddId = cpmodel.Dd_Id;
-                            K3LDBH = cpliaodanmodel[0].BomNo;
-                        }
-                        string GXrse = UPK3bomInterface(K3LDBH, ddId);
-                        if (GXrse == "2")//成功
-                        {
-                            gxsusNUMB = gxsusNUMB + 1;//更新成功的
-                        }
-                        else
-                        {
-                            gxfailNUM = gxfailNUM + 1;//更新失败的
-                        }
-                    }
-                    else
-                    {
-                        wfgxnum = wfgxnum + 1;//料单不是关联K3 的
-                    }
+                    gxsusNUMB = gxsusNUMB + 1;
                 }
-                else
+                if (res == "1")
                 {
-                    ldbcz = ldbcz + 1;//料单不存在的
+                    gxycNUM = gxycNUM + 1;
                 }
+                if (res == "3")
+                {
+                    ldbcz = ldbcz + 1;
+                }
+                if (res == "4") { wlnono = wlnono + 1; }
+                if (res == "5") { erpldk = erpldk + 1; }
+                if (res == "6") { bomzlgxyc = bomzlgxyc + 1; }
             }
-            return Json(new { result = "Success", res1 = gxsusNUMB, res2 = gxfailNUM, res3 = wfgxnum, res4 = ldbcz });
+        
+            return Json(new { result = "Success", res="成功："+ gxsusNUMB + "条， 料单资料不存的："+ ldbcz + "条，物料号不存在："+ wlnono +"条，更新异常："+ gxycNUM +"条，ERP料单空："+ erpldk +"条，平台BOM资料更新异常："+ bomzlgxyc +"条" });
 
 
         }
+        #endregion
+
+        #region //批量更新普实的产品
+
         #endregion
 
         #region //工程师批量完成整改
@@ -6712,6 +7558,7 @@ namespace NewAsiaOASystem.Web.Controllers
             return File(ms, "application/vnd.ms-excel", DataNew + "定制电控箱方案库数据.xls");
         }
         #endregion
+
         #endregion
 
         #endregion
@@ -7178,7 +8025,7 @@ namespace NewAsiaOASystem.Web.Controllers
         public ActionResult DKXpjdblist(int? pageIndex)
         {
             PagerInfo<DKX_pjgdbinfoView> listmodel = Getdkx_pjinfo(pageIndex, null, null);
-            return View(listmodel);
+            return View(listmodel); 
         }
         #endregion
 
@@ -7410,7 +8257,7 @@ namespace NewAsiaOASystem.Web.Controllers
         {
             try
             {
-                IList<DKX_LCCZJLinfoView> listmodel = _IDKX_LCCZJLinfoDao.Getlcczjldatabycondition(null, gcsid, ddbianhao, c_timestart, c_timeend, CBRId);
+                IList<DKX_LCCZJLinfoView> listmodel = _IDKX_LCCZJLinfoDao.Getlcczjldatabycondition(null, gcsid, ddbianhao, c_timestart, c_timeend, CBRId,"0");
                 string json = JsonConvert.SerializeObject(listmodel);
                 return json;
             }
@@ -7419,6 +8266,26 @@ namespace NewAsiaOASystem.Web.Controllers
                 return null;
             }
         }
+
+        #region //新的查询数据
+        public ActionResult GetProductionreturnRecorddataNoPage(string gcsid, string ddbianhao, string c_timestart, string c_timeend, string CBRId,string caozuotype)
+        {
+            IList<DKX_LCCZJLinfoView> modellist = _IDKX_LCCZJLinfoDao.Getlcczjldatabycondition(null, gcsid, ddbianhao, c_timestart, c_timeend, CBRId, caozuotype);
+            int countt = 0;
+            if (modellist != null)
+            {
+                countt = modellist.Count;
+            }
+            var result = new
+            {
+                code = 0,
+                msg = "",
+                count = countt,
+                data = modellist,
+            };
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+        #endregion
         #endregion
 
         #region //整理数据
@@ -7456,9 +8323,9 @@ namespace NewAsiaOASystem.Web.Controllers
 
         #region //导出生产退单记录
 
-        public FileResult DC_ProductionreturnRecordFilResult(string gcsid, string ddbianhao, string c_timestart, string c_timeend, string CBRId)
+        public FileResult DC_ProductionreturnRecordFilResult(string gcsid, string ddbianhao, string c_timestart, string c_timeend, string CBRId,string caozuotype)
         {
-            IList<DKX_LCCZJLinfoView> list = _IDKX_LCCZJLinfoDao.Getlcczjldatabycondition(null, gcsid, ddbianhao, c_timestart, c_timeend, CBRId); ;
+            IList<DKX_LCCZJLinfoView> list = _IDKX_LCCZJLinfoDao.Getlcczjldatabycondition(null, gcsid, ddbianhao, c_timestart, c_timeend, CBRId, caozuotype);
             IList<DKX_GCSinfoView> allmodell = _IDKX_GCSinfoDao.NGetList();
             //创建Excel文件的对象
             NPOI.HSSF.UserModel.HSSFWorkbook book = new NPOI.HSSF.UserModel.HSSFWorkbook();
@@ -7471,11 +8338,19 @@ namespace NewAsiaOASystem.Web.Controllers
             row1.CreateCell(2).SetCellValue("退单原因");
             row1.CreateCell(3).SetCellValue("退单时间");
             row1.CreateCell(4).SetCellValue("备注");
+            row1.CreateCell(5).SetCellValue("客户名称");
+            row1.CreateCell(6).SetCellValue("浪费生产工时（H)");
+            row1.CreateCell(7).SetCellValue("生产费用");
+            row1.CreateCell(8).SetCellValue("浪费仓库工时（H)");
+            row1.CreateCell(9).SetCellValue("仓库费用");
+            row1.CreateCell(10).SetCellValue("责任部门（团队）");
             if (list != null)//数据不为空
             {
                 for (int i = 0; i < list.Count; i++)
                 {
+                    DKX_DDinfoView ddmodel = _IDKX_DDinfoDao.GetALLDDmodelbyorderno(list[i].dd_bianhao);
                     string gscname = "";
+                    string Teamname = "";
                     if (allmodell != null)
                     {
                         foreach (var item in allmodell)
@@ -7483,6 +8358,7 @@ namespace NewAsiaOASystem.Web.Controllers
                             if (item.Id == list[i].gcs_Id)
                             {
                                 gscname = item.Name;
+                                Teamname = item.Teamname;
                             }
                         }
                         NPOI.SS.UserModel.IRow rowtemp = sheet1.CreateRow(i + 1);
@@ -7493,6 +8369,33 @@ namespace NewAsiaOASystem.Web.Controllers
                         else { rowtemp.CreateCell(2).SetCellValue(list[i].CBRName); }
                         rowtemp.CreateCell(3).SetCellValue(list[i].c_time.ToString());
                         rowtemp.CreateCell(4).SetCellValue(list[i].CBRRemarks);
+                        rowtemp.CreateCell(5).SetCellValue(ddmodel.KHname);
+                        if (list[i].SC_DWGS !=null)
+                        {
+                            var aa = list[i].SC_DWGS * 50;
+                            rowtemp.CreateCell(6).SetCellValue(list[i].SC_DWGS.ToString());
+                            rowtemp.CreateCell(7).SetCellValue(aa.ToString());
+                        }
+                        else 
+                        {
+                            rowtemp.CreateCell(6).SetCellValue("0");
+                            rowtemp.CreateCell(7).SetCellValue("0");
+                           
+                        }
+                        if (list[i].CK_DWGS != null)
+                        {
+                            var aa = list[i].CK_DWGS * 50;
+                            rowtemp.CreateCell(8).SetCellValue(list[i].CK_DWGS.ToString());
+                           
+                            rowtemp.CreateCell(9).SetCellValue(aa.ToString());
+                        }
+                        else
+                        {
+                            rowtemp.CreateCell(8).SetCellValue("0");
+                           
+                            rowtemp.CreateCell(9).SetCellValue("0");
+                        }
+                        rowtemp.CreateCell(10).SetCellValue(Teamname);
                     }
                 }
             }
@@ -7503,6 +8406,10 @@ namespace NewAsiaOASystem.Web.Controllers
             ms.Seek(0, SeekOrigin.Begin);
             return File(ms, "application/vnd.ms-excel", DataNew + "生产退单操作记录明细.xls");
         }
+        #endregion
+
+        #region //根据责任工程师
+
         #endregion
 
         #region //生产退单的旧数据修改
@@ -7543,6 +8450,106 @@ namespace NewAsiaOASystem.Web.Controllers
         #endregion
 
 
+        #region //生产退单耽误生产工时
+
+        #region //耽误工时编辑
+        public ActionResult Delay_SCtime_View(string Id)
+        {
+            DKX_LCCZJLinfoView model = _IDKX_LCCZJLinfoDao.NGetModelById(Id);
+            return View(model);
+        }
+
+        #region //耽误工时提交
+        public JsonResult update_Delay_SCtime_Eide(string Id, string time,string time2)
+        {
+            try
+            {
+                SessionUser Suser = Session[SessionHelper.User] as SessionUser;
+                DKX_LCCZJLinfoView model = _IDKX_LCCZJLinfoDao.NGetModelById(Id);
+                model.SC_DWGS = Convert.ToDecimal(time);
+                model.CK_DWGS = Convert.ToDecimal(time2);
+                model.C_BJ_userZH = Suser.UserName;
+                if (_IDKX_LCCZJLinfoDao.NUpdate(model))
+                    return Json(new { result = "success", msg = "操作成功！" });
+                else
+                    return Json(new { result = "error", msg = "操作失败！" });
+            }
+            catch(Exception x)
+            {
+                return Json(new { result = "error", msg = x });
+            }
+        }
+        #endregion
+        #endregion
+        #endregion
+
+
+        #endregion
+
+        #region //统计品保 异常退单的记录
+        public ActionResult OQA_return_Recordlist()
+        {
+            AlGCSdataDropdown(null);
+            GetSCCBRDATADropdown(null, "0");
+            ViewBag.MyJson = getgcsinfojson();
+            return View();
+        }
+
+        #region //导出品保异常记录
+        public FileResult DC_OQA_return_Record_FilResult(string gcsid, string ddbianhao, string c_timestart, string c_timeend,string caozuotype)
+        {
+            IList<DKX_LCCZJLinfoView> list = _IDKX_LCCZJLinfoDao.Getlcczjldatabycondition(null, gcsid, ddbianhao, c_timestart, c_timeend, null, caozuotype);
+            IList<DKX_GCSinfoView> allmodell = _IDKX_GCSinfoDao.NGetList();
+            //创建Excel文件的对象
+            NPOI.HSSF.UserModel.HSSFWorkbook book = new NPOI.HSSF.UserModel.HSSFWorkbook();
+            //添加一个sheet
+            NPOI.SS.UserModel.ISheet sheet1 = book.CreateSheet("Sheet1");
+            //给sheet1添加第一行的头部标题
+            NPOI.SS.UserModel.IRow row1 = sheet1.CreateRow(0);
+            row1.CreateCell(0).SetCellValue("生产批号");
+            row1.CreateCell(1).SetCellValue("责任工程师");
+            row1.CreateCell(2).SetCellValue("品保操作");
+            row1.CreateCell(3).SetCellValue("退单时间");
+            row1.CreateCell(4).SetCellValue("备注");
+            row1.CreateCell(5).SetCellValue("客户名称");
+            row1.CreateCell(6).SetCellValue("责任部门（团队）");
+            if (list != null)//数据不为空
+            {
+                for (int i = 0; i < list.Count; i++)
+                {
+                    DKX_DDinfoView ddmodel = _IDKX_DDinfoDao.GetDDmodelbyorderno(list[i].dd_bianhao);
+                    string gscname = "";
+                    string Teamname = "";
+                    if (allmodell != null)
+                    {
+                        foreach (var item in allmodell)
+                        {
+                            if (item.Id == list[i].gcs_Id)
+                            {
+                                gscname = item.Name;
+                                Teamname = item.Teamname;
+                            }
+                        }
+                        NPOI.SS.UserModel.IRow rowtemp = sheet1.CreateRow(i + 1);
+                        rowtemp.CreateCell(0).SetCellValue(list[i].dd_bianhao);
+                        rowtemp.CreateCell(1).SetCellValue(gscname);
+                        rowtemp.CreateCell(2).SetCellValue(list[i].caozuo);
+                        rowtemp.CreateCell(3).SetCellValue(list[i].c_time.ToString());
+                        rowtemp.CreateCell(4).SetCellValue(list[i].CBRRemarks);
+                        rowtemp.CreateCell(5).SetCellValue(ddmodel.KHname);
+                        rowtemp.CreateCell(6).SetCellValue(Teamname);
+                    }
+                }
+            }
+            string DataNew = DateTime.Now.ToString("yyyyMMdd");
+            // 写入到客户端 
+            System.IO.MemoryStream ms = new System.IO.MemoryStream();
+            book.Write(ms);
+            ms.Seek(0, SeekOrigin.Begin);
+            return File(ms, "application/vnd.ms-excel", DataNew + "品保异常操作记录明细.xls");
+        }
+        #endregion
+
         #endregion
 
         #region //插入K3 中订单编号和责任工程师
@@ -7581,7 +8588,8 @@ namespace NewAsiaOASystem.Web.Controllers
                 {//plc
                     ftemplate_id = "30";
                 }
-                string res = gwjHelper.synchronizationorderandzl(Id, model.DD_Bianhao, model.KHname, model.NUM.ToString(), model.KBomNo, ftemplate_id, "40003");
+                //string res = gwjHelper.synchronizationorderandzl(Id, model.DD_Bianhao, model.KHname, model.NUM.ToString(), model.KBomNo, ftemplate_id, "40003");
+                string res = gwjHelper.synchronizationorderandzl(Id, model.DD_Bianhao, model.KHname, model.NUM.ToString(), model.Ps_wlBomNO,model.YJJQtime.ToString(),"", ftemplate_id, "40003");
                 return res;
             }
             catch
@@ -7607,11 +8615,11 @@ namespace NewAsiaOASystem.Web.Controllers
                 string res = "";
                 if (ftemplate_id == "27" || ftemplate_id == "28")//非标转常规线
                 {
-                     res = gwjHelper.ESOP_fbzhuancg(ftemplate_id,Id,model.DD_Bianhao, model.KHname, model.NUM.ToString(), model.KBomNo,"40002");
+                     res = gwjHelper.ESOP_fbzhuancg(ftemplate_id,Id,model.DD_Bianhao, model.KHname, model.NUM.ToString(), model.Ps_wlBomNO, model.YJJQtime.ToString(), "", "40002");
                 }
                 else
                 {//非标线
-                     res = gwjHelper.synchronizationorderandzl(Id, model.DD_Bianhao, model.KHname, model.NUM.ToString(), model.KBomNo, ftemplate_id, "40003");
+                     res = gwjHelper.synchronizationorderandzl(Id, model.DD_Bianhao, model.KHname, model.NUM.ToString(), model.Ps_wlBomNO,model.YJJQtime.ToString(),"", ftemplate_id, "40003");
                 }
                 model.gwj_gylxId = ftemplate_id;
                 _IDKX_DDinfoDao.NUpdate(model);
@@ -8011,11 +9019,27 @@ namespace NewAsiaOASystem.Web.Controllers
                     IList<DKX_k3BominfoView> kemodellist = _IDKX_k3BominfoDao.GetliaodanlistbyIdandbomno(Id, zlmodel.Bjno);
                     foreach (var item in kemodellist)
                     {
+                        //查询物料
+                        K3_wuliaoinfoView jcwlmodel = _IK3_wuliaoinfoDao.Getwuliaobyfnumber(item.FNumber);
                         Itemsmodel wlmodel = new Itemsmodel();
                         wlmodel.ItmID = item.FNumber;
                         wlmodel.NetQty = item.FAuxQty;
                         wlmodel.ScrapRate = "0";
-                        wlmodel.LineType = "P";
+                        if (jcwlmodel != null)
+                        {
+                            if (jcwlmodel.SourceID == "制造")
+                            {
+                                wlmodel.LineType = "M";
+                            }
+                            else
+                            {
+                                wlmodel.LineType = "P";
+                            }
+                        }
+                        else
+                        {
+                            wlmodel.LineType = "P";
+                        }
                         wlmodel.OperationLine = "10";
                         wlmodel.Position = item.Beizhu;
                         wuliaolist.Add(wlmodel);
@@ -8115,12 +9139,15 @@ namespace NewAsiaOASystem.Web.Controllers
                 for (int j = modellist.Count() - 1; j >= 0; j--)
                 {
                         if (modellist[j].KBomNo != null) {
-                            if (modellist[j].KBomNo.CompareTo("BOM") >= 0)
+                            //if (modellist[j].KBomNo.IndexOf("BOM") >= 0)
+                            //{
+                            //    modellist.Remove(modellist[j]);
+                            //}
+                            if (modellist[j].Ps_sanduanno == "0")
                             {
                                 modellist.Remove(modellist[j]);
                             }
                         }
-                      
                 }
                 }
             }
@@ -8190,7 +9217,7 @@ namespace NewAsiaOASystem.Web.Controllers
         public JsonResult updateprice(string Id, string price)
         {
             DKX_DDinfoView ddmodel = _IDKX_DDinfoDao.NGetModelById(Id);
-            ddmodel.price = Convert.ToInt32(price);
+            ddmodel.price = Convert.ToDecimal(price);
             if (_IDKX_DDinfoDao.NUpdate(ddmodel))
             {
                 return Json(new { result = "success", msg = "更新成功" });
@@ -8328,6 +9355,7 @@ namespace NewAsiaOASystem.Web.Controllers
         #region //非标插入普实的销售订单
         public JsonResult Ps_InsterForderNew(string Id, string Z_JHQX, string Z_JHDD, string Z_YSFS,string yfprice,string dsprice)
         {
+            SessionUser Suser = Session[SessionHelper.User] as SessionUser;
             DKX_DDinfoView ddmodel = _IDKX_DDinfoDao.NGetModelById(Id);
             if (ddmodel != null)
             {
@@ -8339,11 +9367,16 @@ namespace NewAsiaOASystem.Web.Controllers
                         return Json(new { result = "error", msg = "客户没有维护编号" });
                     Psordermodel.CrdID = ddmodel.khkecode;
                     Psordermodel.NumAtCrd = ddmodel.Ps_orderno;
-                    Psordermodel.DocDate = Convert.ToDateTime(Convert.ToDateTime(ddmodel.C_time).ToString("yyyy-MMM-dd"));
+                    //Psordermodel.DocDate = Convert.ToDateTime(Convert.ToDateTime(ddmodel.C_time).ToString("yyyy-MMM-dd"));
+                    Psordermodel.DocDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MMM-dd"));//凭证日期
                     Psordermodel.Z_JHQX = Z_JHQX;
                     Psordermodel.Z_JHDD = Z_JHDD;
                     Psordermodel.Z_YSFS = Z_YSFS;
                     Psordermodel.DocKind = 0;
+                    if (Suser.ERP_YGNO != "" && Suser.ERP_YGNO != null)
+                    {
+                        Psordermodel.Z_OpUserSign = Suser.ERP_YGNO.ToString();
+                    }
                     //查询订单明细
                     IList<DKX_DDinfoView> ddmmodellist = _IDKX_DDinfoDao.GetAllmxbyPs_orderno(ddmodel.Ps_orderno);
                     List<pushsoftorderDetails> psmxlist = new List<pushsoftorderDetails>();
@@ -8476,6 +9509,53 @@ namespace NewAsiaOASystem.Web.Controllers
 
             public virtual string FNumber { get; set; }
         }
+
+        public string GetK3BOMYJCB(string Id)
+        {
+            try
+            {
+                DKX_DDinfoView ddmodel = _IDKX_DDinfoDao.NGetModelById(Id);
+                //查询bom
+                string json = K3Helper.Getk3bombybomno(ddmodel.KBomNo);
+                if (json != "[]")
+                {
+                    List<KBOMjsonmodel> timemodel = getObjectByJson<KBOMjsonmodel>(json);
+                    decimal cbj = 0;
+                    foreach (var a in timemodel)
+                    {
+                        if (Convert.ToDecimal(a.FOrderPrice) == 0)
+                        {
+                            var bcpcj = K3Helper.Getk3bompricebywlno(a.FNumber);
+                            if (bcpcj != "[]")
+                            {
+
+                                List<cbdjmodel> bcpcb = getObjectByJson<cbdjmodel>(bcpcj);
+                                if (bcpcb[0].Column1 != null)
+                                {
+                                    cbj = cbj + Convert.ToDecimal(Convert.ToDouble(bcpcb[0].Column1));
+                                }
+                            }
+
+                        }
+                        else
+                        {
+                            cbj = cbj + Convert.ToDecimal(Convert.ToDouble(a.FOrderPrice) * Convert.ToDouble(a.FAuxQty));
+                        }
+
+                    }
+                    cbj = Convert.ToDecimal(Convert.ToDouble(cbj) * 1.15 * 1.1);
+                    return cbj.ToString();
+                }
+                else
+                {
+                    return "0";
+                }
+            }
+            catch
+            {
+                return "0";
+            }
+        }
         #endregion
 
         #region //根据BOMNO查询物料的编号
@@ -8549,6 +9629,8 @@ namespace NewAsiaOASystem.Web.Controllers
             int IOrderNum = 10;
             foreach (var item in kemodellist)
             {
+                //查询物料
+                K3_wuliaoinfoView jcwlmodel = _IK3_wuliaoinfoDao.Getwuliaobyfnumber(item.FNumber);
                 iLineNum++;
                 FInstaerMDBomA mxmodel = new FInstaerMDBomA();
                 mxmodel.DocEntry = DocEntry;
@@ -8556,6 +9638,21 @@ namespace NewAsiaOASystem.Web.Controllers
                 mxmodel.LineNum = iLineNum.ToString();
                 mxmodel.NetQty = Convert.ToDecimal(item.FAuxQty);
                 mxmodel.OrderNum = IOrderNum;
+                if (jcwlmodel != null)
+                {
+                    if (jcwlmodel.SourceID == "制造")
+                    {
+                        mxmodel.LineType = "M";
+                    }
+                    else
+                    {
+                        mxmodel.LineType = "P";
+                    }
+                }
+                else
+                {
+                    mxmodel.LineType = "P";
+                }
                 IOrderNum = IOrderNum + 10;
                 string datejson = JsonConvert.SerializeObject(mxmodel);
                 datejson = "[" + datejson + "]";
@@ -8566,6 +9663,53 @@ namespace NewAsiaOASystem.Web.Controllers
         public class PSBOM
         {
             public virtual string DocEntry { get; set; }
+        }
+        #endregion
+
+        #region //更新方案库中常规产品的物料号
+        public JsonResult Updatecgcpwlno()
+        {
+            try
+            {
+                //查询BOM 
+                IList<DKX_RKZLDataInfoView> model = _IDKX_RKZLDataInfoDao.GetcgBom();
+                if (model != null)
+                {
+                    foreach (var item in model)
+                    {
+                        //查询产品
+                        DKX_CPInfoView cpmodel = _IDKX_CPInfoDao.NGetModelById(item.cpId);
+                        if (cpmodel != null)
+                        {
+                            if (cpmodel.Ps_wlBomNO == "" || cpmodel.Ps_wlBomNO == null)
+                            {
+                                //通过接口查询物料
+                                string json = K3Helper.GetFNumberbyFBOMNumber(item.BomNo);
+                                if (json != "[]")
+                                {
+                                    List<cbdjmodel> bcpcb = getObjectByJson<cbdjmodel>(json);
+                                    string wlmo = bcpcb[0].FNumber.ToString();
+                                    cpmodel.Ps_wlBomNO = wlmo;
+                                    cpmodel.Ps_sanduanno = "0";
+                                    _IDKX_CPInfoDao.NUpdate(cpmodel);
+                                }
+                                else
+                                {
+                                    cpmodel.Ps_sanduanno = "0";
+                                    _IDKX_CPInfoDao.NUpdate(cpmodel);
+                                }
+                            }
+                        }
+                       
+                    }
+                    //return Json(new { result = "success", msg = "操作成功" });
+                }
+                return Json(new { result = "success", msg = "没有BOM数据" });
+            }
+            catch (Exception x)
+            {
+              return  Json(new { result = "error", msg = x });
+            }
         }
         #endregion
 

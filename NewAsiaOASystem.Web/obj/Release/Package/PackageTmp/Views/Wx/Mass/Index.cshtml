@@ -1,4 +1,4 @@
-﻿@model NewAsiaOASystem.ViewModel.PagerInfo<NewAsiaOASystem.ViewModel.WX_Message_NewsView>
+﻿@*@model NewAsiaOASystem.ViewModel.PagerInfo<NewAsiaOASystem.ViewModel.WX_Message_NewsView>*@
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_SysLayout.cshtml";
@@ -8,15 +8,68 @@
     <script src="~/Scripts/Sys/SysMenu.js"></script>
     <script type="text/javascript">
         $(function () {
-            BindGrid();
+            Gettabledata();
         })
-        function BindGrid() {
+        //初始化table数据
+        function Gettabledata() {
+            var txt_Title = $("#txt_Title").val();//标题
+            var txt_Description = $("#txt_Description").val();//简介
+            layui.use(['table', 'element'], function () {
+                var table = layui.table;
+                var element = layui.element;
+                table.render({
+                    elem: '#test',
+                    url: '/Mass/GetWX_MessagePager',
+                    page: {
+                        curr: history.state != null && history.state.page != null ? history.state.page : 1
+                    },//页面缓存值为null时页码为1 否则取缓存值
+                    where: {
+                        Title: txt_Title,
+                        Description: txt_Description,
+
+                    },//设定异步数据接口的额外参数
+                    cellMinWidth: 80, //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                    cols: [[
+                        { field: 'N_Id', width: 80, title: 'ID', sort: true, },
+                        { field: 'Title', width: 200, title: '文章标题' },
+                        { field: 'Description', width: 400, title: '简介' },
+                        { field: 'PicUrl', width: 200, title: '图片URL' },
+                        { field: 'sort', width: 130, title: '排序' },
+                        { field: '', title: '操作', width: 160, fixed: 'right', toolbar: "#bar" }
+                    ]],
+                    done: function (res, curr, count) {
+                        $(".layui-table-box").find("[data-field='N_Id']").css("display", "none");
+
+                        element.render();
+                    }
+                    ,
+                    //page: true,
+                    limits: [3, 5, 10, 15, 20]  //一页选择显示3,5或10条数据
+                    , limit: 10  //一页显示10条数据
+
+                });
+                table.on('tool(test)', function (obj) {
+                    var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+                    var data = obj.data; //获得当前行 tr 的 DOM 对象（如果有的话）
+
+                    if (layEvent === 'Eide') {//信息修改
+                        NewupdateView(data.N_Id);
+                    }
+                    if (layEvent === 'del') {//删除
+                        Newdel(data.N_Id);
+                    }
+
+                })
+            })
+        }
+
+        @*function BindGrid() {
              @{
                  if (null != Model)
                  {
                      string json = Model.GetPagingDataJson;//获取json数据
-                    @: var jsonStr =@Html.Raw(json); 
-                              //  @: $("#dg").datagrid('loadData', jsonStr); 
+                    @: var jsonStr =@Html.Raw(json);
+                              //  @: $("#dg").datagrid('loadData', jsonStr);
                  }
               }
             if (typeof(jsonStr)!="undefined") {
@@ -32,67 +85,136 @@
                     html+='<td width="100">'+jsonStr[i].Description+'</td>';
                     html+='<td width="200">'+jsonStr[i].PicUrl+'</td>';
                     html+='<td width="50">'+jsonStr[i].sort+'</td>';
-                
+
                     html+="</tr>";
                 }
                 html+='</table>';
                 $(".h-table-content").append(html);
             }
+        }*@
+
+        function NewupdateView(Id) {
+
+            location.href = "../Mass/EditPage?id=" + Id;
+
         }
+
+        //删除
+        function Newdel(Id) {
+            $.messager.confirm('提示框', '你确定要删除吗?', function (data) {
+                if (data) {
+                    Id = "'" + Id + "'";
+                    location.href = "/Mass/Delete?id=" + Id;
+                }
+            })
+        }
+    </script>
+    <script type="text/html" id="bar">
+        <div class="layui-btn-group">
+
+
+            <button type="button" class="layui-btn layui-btn-xs layui-btn-warm" lay-event="Eide" title="信息修改">
+                <i class="layui-icon">&#xe642;</i>
+            </button>
+
+
+
+            <button type="button" class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del" title="删除">
+                <i class="layui-icon">&#xe640;</i>
+            </button>
+
+        </div>
     </script>
 }
 
 <!--==================================数据列表=============================-->
-<div class="h-right">
-    <div class="h-right-c">
-       @* <div class="h-right-title">您当前的位置：图文管理</div>*@
-        <div class="inquiry-input" style="margin: 10px 0 10px 10px;">
-            <span class="inquiry-input">
-                <button onclick="addClick('/Mass/addPage')">图文添加</button></span>
-            <span class="inquiry-input">
-                <button onclick="del('/Mass/Delete')">删除</button></span>
-            <span class="inquiry-input">
-                <button onclick="update('/Mass/EditPage')">编辑</button></span>
-            <span class="inquiry-input">
-                <button onclick="location.href='/Mass/Index'">刷新</button></span>
-            <span class="inquiry-input">
-                <button onclick="S_Mass('/Mass/S_ALL')">群发消息(@ViewData["SMcount"])</button></span>
-            <span class="inquiry-input">
-                <button onclick="S_jxMass('/Mass/S_bd')">绩效推送</button></span>
-
-            @* <span class="inquiry-input">
-                    <button onclick="S_jxMass('/Mass/test')">测试</button></span>*@
-        </div>
-
-        <div class="h-table">
-            <div class="h-table-content">
-                <table cellpadding="0" cellspacing="0" class="h-right-table-title1" style="border: 5px;">
-                    <tr>
-                        <td width="30">
-                            <input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" /></td>
-                        <td width="150">文章标题</td>
-                        <td width="100">简介</td>
-                        <td width="200">图片URL</td>
-                         <td width="50">排序</td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-
-    </div>
+<div class="inquiry1">
+    <fieldset>
+        <legend>查询条件：</legend>
+        <ul>
+            <li>
+                <span>标题：</span>
+                <span class="inquiry-input">
+                    <input type="text" name="txt_Title" id="txt_Title" />
+                </span>
+            </li>
+            <li>
+                <span>简介：</span>
+                <span class="inquiry-input">
+                    <input type="text" name="txt_Description" id="txt_Description" />
+                </span>
+            </li>
+            <li style="*width: 100%; *margin: -10px 0 5px 90px;">
+                <span class="inquiry-input">
+                    <button name="btnSerch" class="layui-btn" onclick="Gettabledata()"><i class="layui-icon">&#xe615;</i>查询</button>
+                </span>
+            </li>
+            <li>
+                <span class="inquiry-input">
+                    <button onclick="addClick('/Mass/addPage')">图文添加</button>
+                </span>
+                <span class="inquiry-input">
+                    <button onclick="Gettabledata()">刷新</button>
+                </span>
+                @*<span class="inquiry-input">
+                    <button onclick="S_Mass('/Mass/S_ALL')">群发消息(@ViewData["SMcount"])</button>
+                </span>*@
+               
+            </li>
+        </ul>
+    </fieldset>
 </div>
+<div style="padding:0 20px 0 20px">
+    <table class="layui-hide" id="test" lay-filter="test"></table>
+</div>
+ 
+@*<div class="h-right">
+        <div class="h-right-c">
+
+            <div class="inquiry-input" style="margin: 10px 0 10px 10px;">
+                <span class="inquiry-input">
+                    <button onclick="addClick('/Mass/addPage')">图文添加</button></span>
+                <span class="inquiry-input">
+                    <button onclick="del('/Mass/Delete')">删除</button></span>
+                <span class="inquiry-input">
+                    <button onclick="update('/Mass/EditPage')">编辑</button></span>
+                <span class="inquiry-input">
+                    <button onclick="location.href='/Mass/Index'">刷新</button></span>
+                <span class="inquiry-input">
+                    <button onclick="S_Mass('/Mass/S_ALL')">群发消息(@ViewData["SMcount"])</button></span>
+                <span class="inquiry-input">
+                    <button onclick="S_jxMass('/Mass/S_bd')">绩效推送</button></span>
+            </div>
+
+            <div class="h-table">
+                <div class="h-table-content">
+                    <table cellpadding="0" cellspacing="0" class="h-right-table-title1" style="border: 5px;">
+                        <tr>
+                            <td width="30">
+                                <input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" /></td>
+                            <td width="150">文章标题</td>
+                            <td width="100">简介</td>
+                            <td width="200">图片URL</td>
+                             <td width="50">排序</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>*@
 
 <!--==========================输出分页按钮=========================-->
 <div>
 
     <table style="width: 100%">
-        <tr>
-            <td>@Html.ShowPageNavigate(Model.CurrentPageIndex, Model.PageSize, Model.RecordCount)</td>
-        </tr>
- 
+        @*<tr>
+                <td>@Html.ShowPageNavigate(Model.CurrentPageIndex, Model.PageSize, Model.RecordCount)</td>
+            </tr>*@
+
         <tr>
             <td style="color: red; font-size:14px;">
-                 <div style="padding-left:10px;">注：</div>
+                <div style="padding-left:10px;">注：</div>
                 <div style="padding-left:30px;">1.请先添加所要推送的图文消息，然后勾选信息列表中所要推送的图文消息，最后点击【群发消息】按钮</div>
                 <div style="padding-left:30px;">2.群发消息：将图文消息推送给当前全部已关注本服务号的微信用户 </div>
                 <div style="padding-left:30px;">3.绩效推送时，只可勾选一条消息；同时将绩效信息推送至绑定系统帐号的微信用户</div>

@@ -16,7 +16,17 @@ namespace NewAsiaOASystem.IDao
         /// <param name="Id">订单Id</param>
         /// <param name="bomno">bom编号</param>
         /// <returns></returns>
-        IList<DKX_k3BominfoView> GetliaodanlistbyIdandbomno(string Id, string bomno); 
+        IList<DKX_k3BominfoView> GetliaodanlistbyIdandbomno(string Id, string bomno);
+        #endregion
+
+        
+        #region //根据订单(方案库产品)Id 查询料单
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Id">订单Id 或者产品Id</param>
+        /// <returns></returns>
+        IList<DKX_k3BominfoView> GetliaodanlistbyId(string Id); 
         #endregion
     }
 }

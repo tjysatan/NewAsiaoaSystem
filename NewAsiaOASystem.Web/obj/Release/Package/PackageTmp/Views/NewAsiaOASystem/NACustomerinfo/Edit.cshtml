@@ -5,171 +5,196 @@
 }
 
 @section HeadContent{
-     <script src="~/Scripts/NAjs/NACustomerinfo.js"></script>
-     <script src="~/Scripts/city.js"></script>
-<script type="text/javascript">
-     
+    <script src="~/Scripts/NAjs/NACustomerinfo.js"></script>
+    <script src="~/Scripts/city.js"></script>
+    <script type="text/javascript">
 
-    $(function () {
-        //赋值区县
-        var datastr = provice;
-        $("#citystr").val(datastr);
-        $('#SelectedCLData').combo({ editable: false, height: 25, panelHeight: 170 });
-        $('#Div_SelectedCLData').appendTo($('#SelectedCLData').combo('panel'));
-        $('#SelectedCLData').combo('setValue', '').combo('setText', '===请选择==');
-        GetproList();
 
-        $('#SelectedZTData').combo({ editable: false, height: 25, panelHeight: 150 });
-        $('#Div_SelectedZTData').appendTo($('#SelectedZTData').combo('panel'));
+        $(function () {
+            //赋值区县
+            var datastr = provice;
+            $("#citystr").val(datastr);
+            $('#SelectedCLData').combo({ editable: false, height: 25, panelHeight: 170 });
+            $('#Div_SelectedCLData').appendTo($('#SelectedCLData').combo('panel'));
+            $('#SelectedCLData').combo('setValue', '').combo('setText', '===请选择==');
+            GetproList();
 
-        $('#SelectedQXData').combo({ editable: false, height: 25, panelHeight: 150 });
-        $('#Div_SelectedQXData').appendTo($('#SelectedQXData').combo('panel'));
-       
-        var qyid = $("#qyId").val();
-        var qycid = $("#qyCId").val();
-        var qxname=$("#qyqxname").val();
-        if (qyid != null) {
-            SelectItem();
-        }
-        if (qycid != null) {
-            GetproxhList(qyid, "1");
-            SelectItem();
-          
-        }
-        if (qxname != null) {
-            qxGetproxhList(qxname, qycid,"1");
-            SelectItem();
-        }
+            $('#SelectedZTData').combo({ editable: false, height: 25, panelHeight: 150 });
+            $('#Div_SelectedZTData').appendTo($('#SelectedZTData').combo('panel'));
 
-    })
+            $('#SelectedQXData').combo({ editable: false, height: 25, panelHeight: 150 });
+            $('#Div_SelectedQXData').appendTo($('#SelectedQXData').combo('panel'));
+
+            var qyid = $("#qyId").val();
+            var qycid = $("#qyCId").val();
+            var qxname = $("#qyqxname").val();
+            if (qyid != null) {
+                SelectItem();
+            }
+            if (qycid != null) {
+                GetproxhList(qyid, "1");
+                SelectItem();
+
+            }
+            if (qxname != null) {
+                qxGetproxhList(qxname, qycid, "1");
+                SelectItem();
+            }
+
+        })
     </script>
-    }
+}
 
 
 @using (Html.BeginForm("Edit", "NACustomerinfo", FormMethod.Post, new { id = "form1" }))
-{   
-   
+{
+
     @Html.HiddenFor(m => m.CreateTime);
     @Html.HiddenFor(m => m.CreatePerson);
     @Html.HiddenFor(m => m.UpdateTime);
     @Html.HiddenFor(m => m.UpdatePerson)
     @Html.HiddenFor(m => m.Id)
-    @Html.HiddenFor(m=>m.qyCId)
-    @Html.HiddenFor(m=>m.qyId)
-    @Html.HiddenFor(m=>m.DsUid)
-    @Html.HiddenFor(m=>m.dycs)
-    @Html.HiddenFor(m=>m.Isds)
-     @Html.HiddenFor(m=>m.qyname)
-     @Html.HiddenFor(m=>m.qycname)
-    @Html.HiddenFor(m=>m.qyqxname)
+    @Html.HiddenFor(m => m.qyCId)
+    @Html.HiddenFor(m => m.qyId)
+    @Html.HiddenFor(m => m.DsUid)
+    @Html.HiddenFor(m => m.dycs)
+    @Html.HiddenFor(m => m.Isds)
+    @Html.HiddenFor(m => m.qyname)
+    @Html.HiddenFor(m => m.qycname)
+    @Html.HiddenFor(m => m.qyqxname)
 
     @Html.Hidden("citystr");
     <div class="infor">
         <p id="Ptitle"></p>
         <div class="system-menu-set">
             <ul class="infor-c">
-                <li><span class="infor-c-width">客户名称：</span><span class="infor-c-input">@Html.TextBoxFor(m => m.Name)</span><span style="color:red;font-size:24px;vertical-align: middle;margin-left: 8px;">*</span><span class="desc w-register">填写客户名称</span></li>
-            </ul>
-            
-             <ul class="infor-c">
-                <li><span class="infor-c-width">客户联系人：</span><span class="infor-c-input">@Html.TextBoxFor(m => m.LxrName)</span><span style="color:red;font-size:24px;vertical-align: middle;margin-left: 8px;">*</span><span class="desc w-register">填写客户联系人</span></li>
-            </ul>
-
-             <ul class="infor-c">
-                <li><span class="infor-c-width">联系电话：</span><span class="infor-c-input">@Html.TextBoxFor(m => m.Tel)</span></li>
+                <li>
+                    <span class="infor-c-width">客户名称：</span>
+                    <span class="infor-c-input">@Html.TextBoxFor(m => m.Name, new { @style = "width:220px" })</span>
+                    <span style="color:red;font-size:24px;vertical-align: middle;margin-left: 8px;">*</span>
+                    <span class="desc w-register">填写客户名称</span>
+                </li>
             </ul>
 
             <ul class="infor-c">
-                <li><span class="infor-c-width">地址：</span><span class="infor-c-input">@Html.TextBoxFor(m => m.Adress)</span></li>
+                <li>
+                    <span class="infor-c-width">客户联系人：</span>
+                    <span class="infor-c-input">@Html.TextBoxFor(m => m.LxrName, new { @style = "width:220px" })</span>
+                    <span style="color:red;font-size:24px;vertical-align: middle;margin-left: 8px;">*</span>
+                    <span class="desc w-register">填写客户联系人</span>
+                </li>
             </ul>
 
             <ul class="infor-c">
-                <li  >
-                   
-                    
-                            <span class="infor-c-width">所属省市：</span>
-                           
-                                <input id="SelectedCLData" name="SelectedCLData">
-                           
-                                <input id="SelectedZTData" name="SelectedZTData">
-                             
-                                <input id="SelectedQXData" name="SelectedQXData">  <span style="color:red">注： 不选择不能打印快递单</span>
-                             
-                   
+                <li>
+                    <span class="infor-c-width">联系电话：</span>
+                    <span class="infor-c-input">@Html.TextBoxFor(m => m.Tel, new { @style = "width:220px" })</span>
+                </li>
+            </ul>
+
+            <ul class="infor-c">
+                <li>
+                    <span class="infor-c-width">地址：</span>
+                    <span class="infor-c-input">@Html.TextBoxFor(m => m.Adress, new { @style = "width:300px" })</span>
+                </li>
+            </ul>
+
+            <ul class="infor-c">
+                <li>
+
+
+                    <span class="infor-c-width">所属省市：</span>
+
+                    <input id="SelectedCLData" name="SelectedCLData">
+
+                    <input id="SelectedZTData" name="SelectedZTData">
+
+                    <input id="SelectedQXData" name="SelectedQXData">  <span style="color:red">注： 不选择不能打印快递单</span>
+
+
 
                 </li>
 
             </ul>
             <ul class="infor-c ">
-                <li><span class="infor-c-width">经销商类别：</span>
+                <li>
+                    <span class="infor-c-width">经销商类别：</span>
                     <span>
                         <select class="add-function" name="isjxs">
                             @{
-                         
-                              if ("1".Equals(Convert.ToString(@Model.isjxs)) && null != @Model.Id)
-                              {
-                                @:<option value="0">普通经销商</option>
-                                @:<option value="2">买一送一（暂时）</option>
-                                @:<option value="1"  selected="selected">物联网经销商</option>
-                              }
-                              else if ("2".Equals(Convert.ToString(@Model.isjxs)) && null != @Model.Id)
-                              {
-                                @:<option value="0" >普通经销商</option>
-                                @:<option value="2" selected="selected">买一送一（暂时）</option>
-                                @:<option value="1">物联网经销商</option>
-                              }else
-                              {
-                                @:<option value="0" selected="selected">普通经销商</option>
-                                @:<option value="2">买一送一（暂时）</option>
-                                @:<option value="1">物联网经销商</option>
-                              }
-                                                
+
+                                if ("1".Equals(Convert.ToString(@Model.isjxs)) && null != @Model.Id)
+                                {
+                                    @:<option value="0">普通经销商</option>
+                                    @:<option value="2">买一送一（暂时）</option>
+                                    @:<option value="1" selected="selected">物联网经销商</option>
+                                }
+                                else if ("2".Equals(Convert.ToString(@Model.isjxs)) && null != @Model.Id)
+                                {
+                                    @:<option value="0">普通经销商</option>
+                                    @:<option value="2" selected="selected">买一送一（暂时）</option>
+                                    @:<option value="1">物联网经销商</option>
+                                }
+                                else
+                                {
+                                    @:<option value="0" selected="selected">普通经销商</option>
+                                    @:<option value="2">买一送一（暂时）</option>
+                                    @:<option value="1">物联网经销商</option>
+                                }
+
                             }
-                        </select></span><span class="desc w-register"> </span></li>
+                        </select>
+                    </span><span class="desc w-register"> </span>
+                </li>
             </ul>
             <ul class="infor-c">
                 <li><span class="infor-c-width">显示次序：</span><span class="infor-c-input">@Html.TextBoxFor(m => m.Sort)</span><span class="desc w-register">此区域排列顺序</span></li>
             </ul>
-          
+
             <ul class="infor-c ">
-                <li><span class="infor-c-width">状态：</span>
+                <li>
+                    <span class="infor-c-width">状态：</span>
                     <span>
                         <select class="add-function" name="Status">
                             @{
-                              if ("0".Equals(Convert.ToString(@Model.Status)) && null != @Model.Id)
-                              {
-                                @:<option value="1">启用</option>
-                                @:<option value="0" selected="selected">禁用</option>
-                                                }
-                              else
-                              {
-                                @:<option value="1"  selected="selected">启用</option>
-                                @:<option value="0">禁用</option>
-                                                }
-                                                
+                                if ("0".Equals(Convert.ToString(@Model.Status)) && null != @Model.Id)
+                                {
+                                    @:<option value="1">启用</option>
+                                    @:<option value="0" selected="selected">禁用</option>
+                                }
+                                else
+                                {
+                                    @:<option value="1" selected="selected">启用</option>
+                                    @:<option value="0">禁用</option>
+                                }
+
                             }
-                        </select></span><span class="desc w-register"> 是否启</span></li>
+                        </select>
+                    </span><span class="desc w-register"> 是否启</span>
+                </li>
             </ul>
         </div>
         <div class="inquiry-input infor-b">
             <span>
-                <button onclick="return SavaForm()">保存</button></span><span>
-                    <button onclick="return RedirectUrl('/NACustomerinfo/List')">返回</button></span>
+                <button onclick="return SavaForm()">保存</button>
+            </span><span>
+                <button onclick="return RedirectUrl('/NACustomerinfo/List')">返回</button>
+            </span>
         </div>
-    </div> 
+    </div>
 }
 
 
 
 <!--区域-->
-	<div id="Div_SelectedCLData">
-		<div style="padding:10px;font-size:14px;" id="DivContent_SelectedCLData"></div>
-	</div>
+<div id="Div_SelectedCLData">
+    <div style="padding:10px;font-size:14px;" id="DivContent_SelectedCLData"></div>
+</div>
 
-	<div id="Div_SelectedZTData">
-		<div style="padding:10px;font-size:14px;" id="DivContent_SelectedZTData"></div>
-	</div>
+<div id="Div_SelectedZTData">
+    <div style="padding:10px;font-size:14px;" id="DivContent_SelectedZTData"></div>
+</div>
 
-	<div id="Div_SelectedQXData">
-		<div style="padding:10px;font-size:14px;" id="DivContent_SelectedQXData"></div>
-	</div>
+<div id="Div_SelectedQXData">
+    <div style="padding:10px;font-size:14px;" id="DivContent_SelectedQXData"></div>
+</div>

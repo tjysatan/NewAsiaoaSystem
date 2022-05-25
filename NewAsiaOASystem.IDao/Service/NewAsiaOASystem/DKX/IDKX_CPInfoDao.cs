@@ -36,7 +36,7 @@ namespace NewAsiaOASystem.IDao
         /// <param name="ft">是否分体 0 一体 1 分体</param>
         /// <param name="Gcs_name">工程师名称</param>
         /// <returns></returns>
-        PagerInfo<DKX_CPInfoView> GetDKXcppagelist(string cpname, string gl, string dw, string Type, string ft, string Gcs_name,string gnjs); 
+        PagerInfo<DKX_CPInfoView> GetDKXcppagelist(string cpname, string gl, string dw, string Type, string ft, string Gcs_name,string gnjs);
         #endregion
 
         #region //电控箱方案库全部数据
@@ -49,8 +49,24 @@ namespace NewAsiaOASystem.IDao
         /// <param name="Type">类型 0小系统 1 大系统 2 物联网 </param>
         /// <param name="ft">是否分体 0 一体 1 分体</param>
         /// <param name="Gcs_name">工程师名称</param>
+        /// <param name="Iscgdz">是否常规定制的 0 是 1 不是 空是全部</param>
         /// <returns></returns>
-        PagerInfo<DKX_CPInfoView> GetALLDKXcppagelist(string cpname, string gl, string dw, string Type, string ft, string Gcs_name,string gnjs); 
+        PagerInfo<DKX_CPInfoView> GetALLDKXcppagelist(string wlno, string cpname, string gl, string dw, string Type, string ft, string Gcs_name,string gnjs, string IsDis, string Iscgdz);
+        #endregion
+ 
+        #region //202203 产品分页列表，通过入库时间排序
+        /// <summary>
+        /// 202203 产品分页列表，通过入库时间排序
+        /// </summary>
+        /// <param name="cpwlno">物料代码</param>
+        /// <param name="cpname">产品型号（名称）</param>
+        /// <param name="gl">功率</param>
+        /// <param name="dw">单位</param>
+        /// <param name="Type">类型 0小系统 1 大系统 2 物联网 </param>
+        /// <param name="ft">是否分体 0 一体 1 分体</param>
+        /// <param name="Gcs_name">工程师名称</param>
+        /// <returns></returns>
+        PagerInfo<DKX_CPInfoView> New_GetDKXcppagelist(string cpwlno, string cpname, string gl, string dw, string Type, string ft, string Gcs_name, string gnjs); 
         #endregion
 
         #region //通过控制器的查找产品
@@ -80,6 +96,25 @@ namespace NewAsiaOASystem.IDao
         /// <param name="Gcs_name">工程师</param>
         /// <returns></returns>
         IList<DKX_CPInfoView> GetalldkxcpbygcsId(string Gcs_name);
+        #endregion
+
+        
+        #region //20220331 根据物料号查询方案库产品信息
+        /// <summary>
+        /// 20220331 根据物料号查询方案库产品信息
+        /// </summary>
+        /// <param name="wlno"></param>
+        /// <returns></returns>
+        DKX_CPInfoView Getcpdatebyps_wlno(string wlno);
+        #endregion
+
+       
+        #region //查询正常状态的下含有物料号的数据
+        /// <summary>
+        /// 查询正常状态的下含有头物料号的数据
+        /// </summary>
+        /// <returns></returns>
+        IList<DKX_CPInfoView> GetalldkxcpdataScheme_order(); 
         #endregion
 
 

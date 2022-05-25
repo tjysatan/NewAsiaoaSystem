@@ -1,0 +1,233 @@
+﻿@{
+    ViewBag.Title = "维修分析数据";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@section HeadContent{
+    <script type="text/javascript">
+
+         $(function () {
+            Gettabledata();
+        })
+
+
+        //初始化table数据
+        function Gettabledata() {
+            var khname = $("#txt_cpname").val();//客户名称
+            var cpname = $("#txtSearch_cpname").val();//产品型号
+            var SC_PH = $("#txtSearch_scph").val();//生产批号
+            var starttime = $("#txtSearch_starttime").val();//退货时间
+            var enedtime = $("#txtSearch_enedtime").val();//退货时间
+            var wxstarttime = $("#txtwxstarttime").val();//维修时间
+            var wxendtime = $("#wxendtime").val();//维修时间
+            var r_pId = $("#txtSearch_rpid").val();//产品类型
+            var Isdz = $("#Isdz").val();//是否定责
+            var dzstarttime = $("#dzstarttime").val();
+            var dzendtime = $("#dzendtime").val();
+            layui.use(['table', 'element'], function () {
+                var table = layui.table;
+                var element = layui.element;
+                table.render({
+                    elem: '#test',
+                    url: '/NAReturnList/GetwxfxdataPager',
+                    page: {
+                        curr: history.state != null && history.state.page != null ? history.state.page : 1
+                    },//页面缓存值为null时页码为1 否则取缓存值
+                    where: {
+                        khname: khname,
+                        cpname: cpname,
+                        SC_PH: SC_PH,
+                        starttime: starttime,
+                        enedtime: enedtime,
+                        wxstarttime: wxstarttime,
+                        wxendtime: wxendtime,
+                        r_pId: r_pId,
+                        Isdz: Isdz,
+                        dzstarttime: dzstarttime,
+                        dzendtime: dzendtime
+                    },//设定异步数据接口的额外参数
+                    cellMinWidth: 80, //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                    cols: [[
+                        { field: 'Id', width: 80, title: 'ID', sort: true, },
+                        { field: 'Cpwlno', width: 130, title: '物料编码' },
+                        { field: 'Cpname', width: 130, title: '产品名称' },
+                        { field: 'Cpmode', width: 130, title: '产品型号' },
+                        { field: 'TH_Ph', width: 130, title: '生产批号' },
+                        { field: 'TH_Ph', width: 130, title: '性质' },
+                        { field: 'TH_yqjjg', width: 130, title: '元器件价格' },
+                        { field: 'TH_RGF', width: 130, title: '人工费' },
+                        { field: 'TH_BCF', width: 130, title: '包材费' },
+                        { field: 'zrbm', width: 130, title: '责任部门' },
+                        { field: 'TH_YF', width: 130, title: '运费' },
+                        
+                        { field: '', title: '操作', width: 160, fixed: 'right', toolbar: "#bar" }
+                    ]],
+                    done: function (res, curr, count) {
+                        $(".layui-table-box").find("[data-field='Id']").css("display", "none");
+                        //$("[data-field='DD_Type']").children().each(function () {
+                        //    var dd_typename = showddtype($(this).text());
+                        //    $(this).text(dd_typename)
+                        //});
+                        element.render();
+                    }
+                    ,
+                    //page: true,
+                    limits: [3, 5, 10, 15, 20]  //一页选择显示3,5或10条数据
+                    , limit: 10  //一页显示10条数据
+
+                });
+                table.on('tool(test)', function (obj) {
+                    var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+                    var data = obj.data; //获得当前行 tr 的 DOM 对象（如果有的话）
+                    if (layEvent === 'check') { //查看
+                        ziliaochakan(data.Id);
+                    }
+                    if (layEvent === 'TBPS') { //查看
+                        TBPscpOpen(data.Id);
+                    }
+                    if (layEvent === 'Eide') {//信息修改
+                        DDxiugai(data.Id, data.DD_ZT);
+                    }
+                    if (layEvent === 'checkcz') {//操作记录查看
+                        ckczji(data.Id);
+                    }
+                    if (layEvent === 'del') {//删除
+                        dddetAjax(data.Id, data.DD_ZT);
+                    }
+                    if (layEvent === 'guanlian') {//关联
+                        if (data.KBomNo) {
+                            if (data.DD_ZT == -1 || data.DD_ZT == 1) {
+                                guanlan(data.Id);
+                            } else {
+                                guanliants()
+                            }
+                        } else {
+                            guanlan(data.Id);
+                        }
+                    }
+                })
+            })
+        }
+
+        function Exportexcl() {
+            var khname = $("#txt_cpname").val();//客户名称
+            var cpname = $("#txtSearch_cpname").val();//产品型号
+            var SC_PH = $("#txtSearch_scph").val();//生产批号
+            var starttime = $("#txtSearch_starttime").val();//退货时间
+            var enedtime = $("#txtSearch_enedtime").val();//退货时间
+            var wxstarttime = $("#txtwxstarttime").val();//维修时间
+            var wxendtime = $("#wxendtime").val();//维修时间
+            var r_pId = $("#txtSearch_rpid").val();//产品类型
+            var Isdz = $("#Isdz").val();//是否定责
+            var dzstarttime = $("#dzstarttime").val();
+            var dzendtime = $("#dzendtime").val();
+            if (dzstarttime == "" || dzstarttime == null || dzendtime == "" || dzendtime == null) {
+                layer.alert("必须选择定责时间范围！", { icon: 2 });
+                return false;
+            }
+            //if (c_timestart == "" || c_timestart == null) {
+            //配置一个透明的询问框
+            layer.msg('确认导出当前时间段的维修记录码', {
+                time: 2500, //2.5s后自动关闭
+                btn: ['确定导出', '取消'],
+                yes: function () {
+                    window.location.href = "../NAReturnList/NewERWEIDATA?khname=" + khname + "&cpname=" + cpname + "&SC_PH=" + SC_PH + "&starttime=" + starttime + "&enedtime=" + enedtime + "&wxstarttime=" + wxstarttime + "&wxendtime=" + wxendtime
+                        + "&r_pId=" + r_pId + "&Isdz=" + Isdz + "&dzstarttime=" + dzstarttime + "&dzendtime=" + dzendtime;
+                }
+            });
+        }
+    </script>
+}
+
+
+<div class="inquiry1">
+    <fieldset>
+        <legend>查询条件：</legend>
+        <ul>
+            <li>
+                <span>退货客户：</span>
+                <span class="inquiry-input">
+                    <input type="text" name="txt_cpname" id="txt_cpname" />
+                </span>
+            </li>
+            <li>
+                <span>产品型号：</span>
+                <span class="inquiry-input">
+                    <input type="text" name="txtSearch_cpname" id="txtSearch_cpname" />
+                </span>
+            </li>
+            <li>
+                <span>生产批号：</span>
+                <span class="inquiry-input">
+                    <input type="text" name="txtSearch_scph" id="txtSearch_scph" />
+                </span>
+            </li>
+            <li>
+                <span>退货时间：</span>
+                <span class="inquiry-input">
+                    <input type="text" name="txtSearch_starttime" id="txtSearch_starttime" autocomplete="off" onclick="WdatePicker()" />
+                </span>
+                -
+                <span class="inquiry-input">
+                    <input type="text" name="txtSearch_enedtime" id="txtSearch_enedtime" autocomplete="off" onclick="WdatePicker()" />
+                </span>
+            </li>
+            <li>
+                <span>维修时间：</span>
+                <span class="inquiry-input">
+                    <input type="text" name="txtwxstarttime" id="txtwxstarttime" autocomplete="off" onclick="WdatePicker()" />
+                </span>
+                -
+                <span class="inquiry-input">
+                    <input type="text" name="wxendtime" id="wxendtime" autocomplete="off" onclick="WdatePicker()" />
+                </span>
+            </li>
+            <li>
+                <span>定责时间：</span>
+                <span class="inquiry-input">
+                    <input type="text" name="dzstarttime" id="dzstarttime" autocomplete="off" onclick="WdatePicker()" />
+                </span>
+                -
+                <span class="inquiry-input">
+                    <input type="text" name="dzendtime" id="dzendtime" autocomplete="off" onclick="WdatePicker()" />
+                </span>
+            </li>
+            <li>
+                <span>产品类型：</span>
+                <span class="inquiry-input">
+                    <select id="txtSearch_rpid" name="txtSearch_rpid">
+                        <option value="">全部</option>
+                        <option value="3,5">温控器（04/06）</option>
+                        <option value="4">电控箱(05)</option>
+                        <option value="0,1,2,6,7">其他(01/02/03/07/08)</option>
+                    </select>
+                </span>
+            </li>
+            <li>
+                <span>是否定责：</span>
+                <span class="inquiry-input">
+                    <select id="Isdz" name="Isdz">
+                        <option value="">全部</option>
+                        <option value="0">未定责</option>
+                        <option value="1">已定责</option>
+                    </select>
+                </span>
+            </li>
+            <li style="*width: 100%; *margin: -10px 0 5px 90px;">
+                <span class="inquiry-input">
+                    <button name="btnSerch" class="layui-btn" onclick="Gettabledata()"><i class="layui-icon">&#xe615;</i>查询</button>
+                </span>
+                <span class="inquiry-input">
+                    <button type="button" onclick="return Exportexcl()">记录导出</button>
+                </span>
+            </li>
+        </ul>
+    </fieldset>
+</div>
+
+<div style="padding:0 20px 0 20px">
+    <table class="layui-hide" id="test" lay-filter="test"></table>
+</div>
+
+
+<script src="~/Scripts/NAjs/DKXpulice.js"></script>

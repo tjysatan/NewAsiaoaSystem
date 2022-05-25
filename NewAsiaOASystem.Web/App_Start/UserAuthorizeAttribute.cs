@@ -22,7 +22,7 @@ namespace NewAsiaOASystem.Web
             string actionName = (string)filterContext.RouteData.Values["action"];
             if (ControllerName != "Weixin" && ControllerName != "DisPerformanceAppraisal"
                 && ControllerName != "Binding" && ControllerName != "Gis" && ControllerName != "FirstBack" && ControllerName != "Vote_Subject" && ControllerName != "ExpressPrinting" && ControllerName != "publicAPI"
-                && ControllerName != "activity" && ControllerName != "Act_SignNamelistinfo" && ControllerName != "Personalprofit" && ControllerName!="Iot"&& ControllerName != "Aftersale")
+                && ControllerName != "activity" && ControllerName != "Act_SignNamelistinfo" && ControllerName != "Personalprofit" && ControllerName!="Iot"&& ControllerName != "Aftersale"&&ControllerName!= "lanhe")
             {
                 if (Suser == null && ControllerName != "Login")
                 {

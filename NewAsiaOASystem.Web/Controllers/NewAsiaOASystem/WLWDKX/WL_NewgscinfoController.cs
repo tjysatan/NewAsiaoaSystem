@@ -51,7 +51,8 @@ namespace NewAsiaOASystem.Web.Controllers
                 }
             }
             string url;
-            url = "http://www.sbycjk.net/getsidsofshipment/getProjectUserByids/" + t;
+            //url = "http://www.sbycjk.net/getsidsofshipment/getProjectUserByids/" + t;
+            url = "http://106.14.14.68:8088/getsidsofshipment/getProjectUserByids/" + t;
             string result = HttpUtility11.GetData(url);
             List<Jsongcssidclass> Newgcsmodel = getObjectByJson<Jsongcssidclass>(result);
             foreach (var a in Newgcsmodel)

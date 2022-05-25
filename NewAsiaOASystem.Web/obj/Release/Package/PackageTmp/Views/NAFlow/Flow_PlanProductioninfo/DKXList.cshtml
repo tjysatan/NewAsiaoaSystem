@@ -40,20 +40,28 @@
                         html += '<td width="10%">'+jsonStr[i].scbianhao + '</td>';
                     else
                         html += '<td width="10%">-</td>';
-                    html += '<td width="10%">'+jsonStr[i].P_CPname + '</td>';
+                    html += '<td width="10%">' + jsonStr[i].P_CPname + '</td>';
+                    if (jsonStr[i].P_Model != "" && jsonStr[i].P_Model != null)
+                        html += '<td width="10%">' + jsonStr[i].P_Model + '</td>';
+                    else
+                        html += '<td width="10%">-</td>';
                     html += '<td width="10%">'+jsonStr[i].P_Pianhao + '</td>';
                     html += '<td width="5%">'+jsonStr[i].P_SCnumber + '</td>';
-                    html += '<td width="8%">'+showsczt(jsonStr[i].P_Issc) + '</td>';
-                    html += '<td width="8%">'+showDate(jsonStr[i].C_time) + '</td>';
+                    html += '<td width="5%">'+showsczt(jsonStr[i].P_Issc) + '</td>';
+                    html += '<td width="5%">'+showDate(jsonStr[i].C_time) + '</td>';
                     html+='<td width="8%">常规电控</td>';
                     if(jsonStr[i].YJdatetime!=""&&jsonStr[i].YJdatetime!=null)
-                        html+= '<td width="8%">'+showDate(jsonStr[i].YJdatetime) + '</td>';
+                        html+= '<td width="5%">'+showDate(jsonStr[i].YJdatetime) + '</td>';
                     else
-                        html+= '<td width="8%">--</td>';
+                        html+= '<td width="5%">--</td>';
                     if(jsonStr[i].wcdatetime!=""&&jsonStr[i].wcdatetime!=null)
-                        html+= '<td width="8%">'+showDate(jsonStr[i].wcdatetime) + '</td>';
+                        html+= '<td width="5%">'+showDate(jsonStr[i].wcdatetime) + '</td>';
                     else
-                        html+= '<td width="8%">--</td>';
+                        html += '<td width="5%">--</td>';
+                    if (jsonStr[i].Gwj_Istb == "1")
+                        html += '<td width="5%">同步</td>';
+                    else
+                        html += '<td width="5%">未同步</td>';
                     html+='<td width="25%">'+sccz(jsonStr[i].Id,jsonStr[i].P_Pianhao,jsonStr[i].P_SCnumber,jsonStr[i].Isprint)+'</td>';
                     html+='</tr>';
                 }
@@ -318,16 +326,19 @@
                 <table cellpadding="0" cellspacing="0" class="h-right-table-title1" style="border: none; width: 100%;">
                     <tr>
                         <td width="5%">
-                            <input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" /></td>
+                            <input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" />
+                        </td>
                         <td width="10%">编号</td>
                         <td width="10%">产品名称</td>
+                        <td width="10%">型号</td>
                         <td width="10%">代码</td>
                         <td width="5%">生产数量</td>
-                        <td width="8%">状态</td>
-                        <td width="8%">创建时间</td>
+                        <td width="5%">状态</td>
+                        <td width="5%">创建时间</td>
                         <td width="8%">类别</td>
-                        <td width="8%">预计完成</td>
-                        <td width="8%">实际完成</td>
+                        <td width="5%">预计完成</td>
+                        <td width="5%">实际完成</td>
+                        <td width="5%">是否同步</td>
                         <td width="25%">操作</td>
                     </tr>
                 </table>

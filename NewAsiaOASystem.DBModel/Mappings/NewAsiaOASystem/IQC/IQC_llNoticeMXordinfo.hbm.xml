@@ -19,5 +19,6 @@
     <property name="ZJ" column="ZJ" />
     <property name="C_time" column="C_time" />
     <property name="Isjy" column="Isjy" />
+    <property name="lytype" column="lytype" />
   </class>
 </hibernate-mapping>

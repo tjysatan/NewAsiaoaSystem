@@ -72,7 +72,7 @@ namespace NewAsiaOASystem.ViewModel
         public virtual int? Start { get; set; }
 
         /// <summary>
-        /// 是否是关联的资料 0附件 1是关联的资料
+        /// 是否是关联的资料 0附件 1是关联的资料 2 获取的报价系统的
         /// </summary>
         public virtual int? Isgl { get; set; }
 

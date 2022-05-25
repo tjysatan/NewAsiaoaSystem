@@ -1,0 +1,163 @@
+﻿@{
+    ViewBag.Title = "维修货出货扫码页面";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@section HeadContent{
+    <script type="text/javascript">
+        var loadi;
+        function ddchen() {
+            loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+        }
+        //关闭等待效果
+        function disLoading() {
+            layer.close(loadi);
+        }
+
+        function guanbi() {
+            var index = parent.layer.getFrameIndex(window.name);
+            //关闭弹出层
+            parent.layer.close(index);
+        }
+
+         $(function () {
+            $(SID).focus();
+            $("#code").val('@ViewData["code"]');
+            $("#cusname").val('@ViewData["cusname"]');
+            $("#jporderno").val('@ViewData["ROrderId"]');
+            //ajaxJPdetailjson();
+            GetsmcountbyordermxId();
+
+         })
+
+
+
+
+          function GetsmcountbyordermxId() {
+            var json;
+            $.ajax({
+                type: "POST",
+                url: "../publicAPI/GetsmCountNew",
+                data: { jpno: '@ViewData["ROrderId"]' },
+                 dataType: "json",
+                async: true,
+                beforeSend: function () {
+                    ddchen();
+                },
+                success: function (reslut) {
+                    disLoading();
+                    json = reslut.status;
+                    $("#smsl").html(json);
+                 },
+                 error: function (e) {
+                     alert("请求失败！");
+                 }
+             })
+
+        }
+
+        //关闭
+        function closeguanbi() {
+            window.location = "/publicAPI/NewSIDSMJPOrderView";
+            return false;
+        }
+
+
+        function smfhSavaForm() {
+            var sid = $("#SID").val();
+            if (sid == "") {
+                alert("SID码不为空！");
+                $(SID).focus();
+                return false;
+            }
+
+
+            if (sid == "guanbi") {
+                window.location = "/publicAPI/NewSIDSMJPOrderView";
+                return false;
+            }
+
+            //表单验证
+            var options = {
+                beforeSubmit: function () {
+                    return true;
+                },
+                dataType: "json",//这里是指控制器处理后返回的类型，这里返回json格式。
+                success: function (context) {
+                    if ("success" == context.result) {
+                        location.reload();
+                    } else if ("bcz" == context.result) {//不存在该电控箱！
+                        location.reload();
+                    } else if ("yxs" == context.result) {//此电控箱已经销售！
+                        location.reload();
+                    } else if ("fhwc" == context.result) {
+                        $.messager.alert("操作提示", '发货完成！', 'error', function () {
+                            location.href = "../publicAPI/OpenSmOrderinfoView?Id=" + $("#jporderno").val();
+                        });
+                    } else if ("error1" == context.reslut) {
+                        $.messager.alert("操作提示", 'SID扫码有误！', 'error');
+                    }
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $.messager.alert("操作提示", '操作失败！', 'error');
+                }
+            }
+            $('#form1').ajaxSubmit(options);
+            return false; //为了不刷新页面,返回false
+        }
+
+          //打开
+        function opensidView() {
+            layer.open({
+                type: 2,
+                title: ['SID明细', 'font-size:14px;'],
+                area: ['70vw', '80vh'],
+                offset: '10px',
+                fixed: false, //不固定
+                maxmin: true,
+                content: '../publicAPI/SIDinfobyjpordernoView?Id=' + '@ViewData["ROrderId"]',
+                end: function () {
+                    location.reload();
+                }
+            })
+        }
+    </script>
+    
+    }
+
+<div style="width:100vw; margin: auto; text-align:center;padding-top:20px ">
+    <div style="width:100vw; height:auto; ">
+        <blockquote class="layui-elem-quote" style="text-align:left !important">
+            <span style="font-size:14px;">客户：@ViewData["cusname"]</span>
+            @*<span style="font-size:14px;">拣配单号：@ViewData["SMOrderId"]</span><br />*@
+            <span style="font-size:20px;"> 已经扫</span>
+            <label id="smsl" style="font-size:30px; color:red"></label>
+
+            <button onclick="return opensidView()" class="layui-btn layui-btn-sm layui-btn-danger">SID明细</button>
+        </blockquote>
+
+        <div style="width:55vw; min-height:300px; margin:auto; margin-top:30px;">
+            @using (Html.BeginForm("SmEditchNew", "publicAPI", FormMethod.Post, new { id = "form1" }))
+            {
+                <input type="hidden" id="code" name="code" />
+                <input type="hidden" id="cusname" name="cusname" />
+                <input type="hidden" id="jporderno" name="jporderno" />
+                <span>
+                    输入SID码 <input type="text" name="SID" id="SID" style="width: 50vw; height: 120px; border: 1px solid #000000; " />
+                </span>
+
+                <div style="width: 50vw; padding-top:20px;">
+                    <button onclick="return smfhSavaForm()" class="layui-btn   layui-btn-sm">手动提交</button>
+                </div>
+                @*<div style="width: 50vw; padding-top:20px; ">
+                    <button onclick="return closewancheng()" class="layui-btn layui-btn-sm layui-btn-danger">确认完成</button>
+                </div>*@
+                <div style="width: 50vw; padding-top:20px;">
+                    <button onclick="return closeguanbi()" class="layui-btn layui-btn-sm layui-btn-danger">确认关闭</button>
+                </div>
+            }
+        </div>
+      
+    </div>
+
+    </div>

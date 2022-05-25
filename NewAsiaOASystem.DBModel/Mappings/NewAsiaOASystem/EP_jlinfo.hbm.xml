@@ -36,5 +36,13 @@
     <property name="logisticID" column="logisticID"/>
     <property name="uniquerRequestNumber" column="uniquerRequestNumber"/>
     <property name="arrivedOutFieldName" column="arrivedOutFieldName"/>
+
+    <property name="destRouteLabel" column="destRouteLabel"/>
+    <property name="twoDimensionCode" column="twoDimensionCode"/>
+    <property name="codingMapping" column="codingMapping"/>
+    <property name="codingMappingOut" column="codingMappingOut"/>
+    <property name="proName" column="proName"/>
+    <property name="waybillType" column="waybillType"/>
+    <property name="proCode" column="proCode"/>
   </class>
 </hibernate-mapping>

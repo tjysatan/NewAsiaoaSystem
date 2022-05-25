@@ -15,5 +15,9 @@
     <property name="C_Time" column="C_Time" />
     <property name="str1" column="str1" />
     <property name="str2" column="str2" />
+
+    <property name="OpDate" column="OpDate" />
+    <property name="WhsName" column="WhsName" />
+    <property name="SourceID" column="SourceID" />
   </class>
 </hibernate-mapping>

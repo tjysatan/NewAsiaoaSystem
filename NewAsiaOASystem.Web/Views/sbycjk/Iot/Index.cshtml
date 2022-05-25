@@ -20,30 +20,90 @@
     <!--必要样式-->
     <link rel="stylesheet" type="text/css" href="~/Content/NewM2M/Index/css/menu_elastic.css" />
     <script src="~/Content/NewM2M/Index/js/snap.svg-min.js"></script>
-    <script type="text/javascript" src="../Content/M2Mv2/js/jquery.min.js"></script>
-    <script type="text/javascript" src="../Content/M2Mv2/js/jquery.leanModal.min.js"></script>
-    <link href="../Content/M2Mv2/css/jquery.uls.css" rel="stylesheet" />
-    <link href="../Content/M2Mv2/css/jquery.uls.grid.css" rel="stylesheet" />
-    <link href="../Content/M2Mv2/css/jquery.uls.lcd.css" rel="stylesheet" />
+    @*<script type="text/javascript" src="../Content/M2Mv2/js/jquery.min.js"></script>
+        <script type="text/javascript" src="../Content/M2Mv2/js/jquery.leanModal.min.js"></script>*@
+    @*<link href="../Content/M2Mv2/css/jquery.uls.css" rel="stylesheet" />
+        <link href="../Content/M2Mv2/css/jquery.uls.grid.css" rel="stylesheet" />
+        <link href="../Content/M2Mv2/css/jquery.uls.lcd.css" rel="stylesheet" />*@
 
 
-    <script src="../Content/M2Mv2/js/jquery.uls.data.js"></script>
-    <script src="../Content/M2Mv2/js/jquery.uls.data.utils.js"></script>
-    <script src="../Content/M2Mv2/js/jquery.uls.lcd.js"></script>
-    <script src="../Content/M2Mv2/js/jquery.uls.languagefilter.js"></script>
-    <script src="../Content/M2Mv2/js/jquery.uls.regionfilter.js"></script>
-    <script src="../Content/M2Mv2/js/jquery.uls.core.js"></script>
+    @*<script src="../Content/M2Mv2/js/jquery.uls.data.js"></script>
+        <script src="../Content/M2Mv2/js/jquery.uls.data.utils.js"></script>
+        <script src="../Content/M2Mv2/js/jquery.uls.lcd.js"></script>
+        <script src="../Content/M2Mv2/js/jquery.uls.languagefilter.js"></script>
+        <script src="../Content/M2Mv2/js/jquery.uls.regionfilter.js"></script>
+        <script src="../Content/M2Mv2/js/jquery.uls.core.js"></script>*@
     <script src="../Scripts/layer/layer.js"></script>
     <script src="../Scripts/jquery-1.9.1.min.js"></script>
     <script src="../Scripts/jquery-easyui-1.4.1/jquery.easyui.min.js"></script>
     <link href="../Scripts/jquery-easyui-1.4.1/themes/default/easyui.css" rel="stylesheet" />
 
     <script src="../Scripts/jquery.form.js"></script>
+    @*<script src="../Content/js/clipboard.js"></script>
+    <script src="../Content/js/clipboard.min.js"></script>*@
+    <script>
 
-     
+    $(function () {
+        createImage('@ViewData["Id"]');
+    })
+         //生成二维码
+         function createImage(val) {
+             var content = val;
+             //ajax开始
+             $.post("/publicAPI/GetORImage/",
+                 { "content": content },
+                 function (data) {
+                     $('#imgDiv').empty();
+                     $('#imgDiv').append('<img id="ORImage" />');
+                     $("#ORImage").attr("src", data);
+                 });
+             //ajax结束
+        }
+
+        //function copyText() {
+            //var text = document.getElementById("text").innerText;
+            //var input = document.getElementById("input");
+            //input.value = text; // 修改文本框的内容
+            //input.select(); // 选中文本
+            //document.execCommand("copy"); // 执行浏览器复制命令
+            //alert("复制成功");
+            //JS里指定复制的内容
+
+        //}
+
+        function copyText() {
+            //var clipboard = new ClipboardJS(".btnlg", {
+            //    text: function () {
+            //        //寻找被激活的那个div pre元素,同时获取它下面的内容
+            //        return '11111111111111111111';
+            //    }
+            //});
+        var clipboard = new ClipboardJS('.btnlg',{text:"111111111111111"});
+
+            clipboard.on('success', function (e) {
+                alert("已复制到粘贴板！");
+                console.log(e);
+            });
+
+            clipboard.on('error', function (e) {
+                console.log(e);
+            });
+        }
+
+        function copyUrl() {
+            var copyobject = document.getElementById("url");
+            copyobject.select();
+            document.execCommand("copy");
+            alert("已复制到粘贴板！");
+
+        }
+ 
+
+/*复制成功或失败后提示，不需要可删除*/
+    </script>
     <!--[if IE]>
-<script src="js/html5.js"></script>
-<![endif]-->
+    <script src="js/html5.js"></script>
+    <![endif]-->
 </head>
 <body class="huibg">
     <div class="vipcenter">
@@ -58,7 +118,7 @@
         <div class="vipsan">
             <div class="col-xs-6 text-center">
                 <a>
-                    <h4>绑定数量：@ViewData["bdsum"]个</h4>
+                    <h4>全部消息：@ViewData["bdsum"]个</h4>
                     <p></p>
                 </a>
             </div>
@@ -71,30 +131,52 @@
         </div>
 
         <ul class="vipul">
-            <li>
-                <a href="../Iot/bindingView" >
-                    <div class="icc"><i class="iconfont icon-huodongfj"></i></div>
-                    <div class="lzz">我要绑定</div>
-                    <div class="rizi"><i class="iconfont icon-jiantouri"></i></div>
-                </a>
-            </li>
+            @*<li>
+            <a href="../Iot/bindingView" >
+                <div class="icc"><i class="iconfont icon-huodongfj"></i></div>
+                <div class="lzz">我要绑定</div>
+                <div class="rizi"><i class="iconfont icon-jiantouri"></i></div>
+            </a>
+        </li>*@
 
             <li>
                 <a href="../Iot/ACClistView">
                     <div class="icc"><i class="iconfont icon-xitongmingpian"></i></div>
-                    <div class="lzz">我的帐号</div>
+                    <div class="lzz">我的监控点</div>
                     <div class="rizi"><i class="iconfont icon-jiantouri"></i></div>
                 </a>
             </li>
             <li>
-                <a href="#" href="../Iot/NoticelistView">
+                <a href="../Iot/NoticelistView">
                     <div class="icc"><i class="iconfont icon-liebiao"></i></div>
                     <div class="lzz">最新消息</div>
                     <div class="rizi"><i class="iconfont icon-jiantouri"></i></div>
                 </a>
             </li>
 
+            <li>
+             <a href="" >
+                <div class="icc"><i class="iconfont icon-huodongfj"></i></div>
+                <div class="lzz">操作说明</div>
+                <div class="rizi"><i class="iconfont icon-jiantouri"></i></div>
+             </a>
+            </li>
+
         </ul>
+        <div>
+            <div style="text-align:center;margin-top:20px" id="imgDiv">
+            </div>
+
+            <div style="text-align:center;margin-top:20px" id="link">
+                串码：  @ViewData["Id"]
+            </div>
+            <div style="text-align:center;margin-top:20px">
+                <button type="button" class="btnlg" id="btnlg" style="background:#0094ff" onclick="copyUrl()">
+                   复制串码
+                </button>
+                <input class="xcx_url_short" type="text" id="url" style="opacity:0" value='@ViewData["Id"]' readonly="readonly" >
+            </div>
+        </div>
     </div>
 </body>
 </html>

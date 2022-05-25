@@ -19,18 +19,40 @@ namespace NewAsiaOASystem.Web.Controllers
         IWX_SendCDao _IWX_SendCDao = ContextRegistry.GetContext().GetObject("WX_SendCDao") as IWX_SendCDao;
         public static readonly string ym = WebConfigurationManager.AppSettings["ym"];
         //图文添加列表
-        public ActionResult Index(int? pageIndex)
+        public ActionResult Index()
         {
-            int CurrentPageIndex = Convert.ToInt32(pageIndex);
+            //int CurrentPageIndex = Convert.ToInt32(pageIndex);
+            //if (CurrentPageIndex == 0)
+            //    CurrentPageIndex = 1;
+            //_IWX_Message_NewsDao.SetPagerPageIndex(CurrentPageIndex);
+            //_IWX_Message_NewsDao.SetPagerPageSize(5);
+            //PagerInfo<WX_Message_NewsView> listmodel = _IWX_Message_NewsDao.Search();
+            int SMcount = _IWX_SendCDao.GetSM(0);//统计当月群发次数
+            ViewData["SMcount"] = SMcount;
+            return View(); 
+        }
+
+
+        #region //分页数据
+        public ActionResult GetWX_MessagePager(int? page, int limit, string Title, string Description)
+        {
+            SessionUser Suser = Session[SessionHelper.User] as SessionUser;
+            int CurrentPageIndex = Convert.ToInt32(page);
             if (CurrentPageIndex == 0)
                 CurrentPageIndex = 1;
             _IWX_Message_NewsDao.SetPagerPageIndex(CurrentPageIndex);
-            _IWX_Message_NewsDao.SetPagerPageSize(5);
-            PagerInfo<WX_Message_NewsView> listmodel = _IWX_Message_NewsDao.Search();
-            int SMcount = _IWX_SendCDao.GetSM(0);//统计当月群发次数
-            ViewData["SMcount"] = SMcount;
-            return View(listmodel); 
+            _IWX_Message_NewsDao.SetPagerPageSize(limit);
+            PagerInfo<WX_Message_NewsView> listmodel = _IWX_Message_NewsDao.GetCinfoList(Title, Description);
+            var result = new
+            {
+                code = 0,
+                msg = "",
+                count = listmodel.RecordCount,
+                data = listmodel.DataList,
+            };
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
+        #endregion
 
         public ActionResult JXPage()
         {

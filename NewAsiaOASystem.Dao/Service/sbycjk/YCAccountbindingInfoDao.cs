@@ -145,7 +145,7 @@ namespace NewAsiaOASystem.Dao
         /// <returns></returns>
         public IList<YCAccountbindingInfoView> GetacclistinfobyopenId(string openId)
         {
-            string HQLstr = string.Format(" from YCAccountbindingInfo where openId='{0}' order by C_time desc", openId);
+            string HQLstr = string.Format("from YCAccountbindingInfo where openId='{0}' order by C_time desc", openId);
             List<YCAccountbindingInfo> list = HibernateTemplate.Find<YCAccountbindingInfo>(HQLstr) as List<YCAccountbindingInfo>;
             IList<YCAccountbindingInfoView> listmodel = GetViewlist(list);
             if (listmodel == null)

@@ -1,0 +1,199 @@
+﻿@{
+    ViewBag.Title = "新增BOM的物料";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<div style="padding: 20px 20px 0 20px">
+    <div class="inquiry1">
+        <fieldset>
+            <legend>查询条件：</legend>
+
+            <ul>
+                <li>
+                    <span>物料代码：</span>
+                    <span class="inquiry-input">
+                        <input type="text" name="fnumber" id="fnumber" />
+                    </span>
+                </li>
+                <li>
+                    <span>名称：</span>
+                    <span class="inquiry-input">
+                        <input type="text" name="fname" id="fname" />
+                    </span>
+                </li>
+                <li>
+                    <span>型号：</span>
+                    <span class="inquiry-input">
+                        <input type="text" name="fmodel" id="fmodel" />
+                    </span>
+                </li>
+
+
+                <li style="*width: 100%; *margin: -10px 0 5px 90px;">
+                    <span class="inquiry-input">
+                        <button name="btnSerch" class="layui-btn" onclick="Gettabledata()"><i class="layui-icon">&#xe615;</i>查询</button>
+                    </span>
+                </li>
+                <li>
+                    <span class="inquiry-input">
+                        <button class="layui-btn" onclick="return myrefresh()"><i class="layui-icon">&#x1002;</i>刷新</button>
+                    </span>
+                </li>
+            </ul>
+        </fieldset>
+    </div>
+    <div style="padding:0 20px 0 20px">
+        <table class="layui-hide" id="test" lay-filter="test"></table>
+    </div>
+    <div>
+        <input type="hidden" id="wlId" name="wlId" />
+        <div class="layui-inline">
+            <label class="layui-form-label">数量</label>
+            <div class="layui-input-inline">
+                <input type="text" name="sum" id="sum"   autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">备注</label>
+            <div class="layui-input-inline">
+                <input type="text" name="beizhu" id="beizhu"  autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <div class="layui-input-inline">
+                <button type="button" class="layui-btn layui-btn-sm" onclick="addBommxEide()">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/NAjs/DKXpulice.js"></script>
+ 
+<script type="text/javascript">
+
+    //
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+    function guanbi() {
+        var index = parent.layer.getFrameIndex(window.name);
+        //关闭弹出层
+        parent.layer.close(index);
+    }
+
+    $(function () {
+        Gettabledata();
+    })
+
+    //初始化table数据
+    function Gettabledata() {
+        var fnumber = $("#fnumber").val();
+        var fname = $("#fname").val();
+        var fmodel = $("#fmodel").val();
+        layui.use('table', function () {
+            var table = layui.table;
+            table.render({
+                elem: '#test'
+                , url: '/DKX_DD/Getwuliaopage',
+                where: {
+                    fnumber: fnumber,
+                    fname: fname,
+                    fmodel: fmodel,
+                    type: "",
+                } //设定异步数据接口的额外参数
+                , cellMinWidth: 80 //全局定义常规单元格ViewData最小宽度，layui 2.2.1 新增
+                , cols: [[
+                    { type: 'radio', event: "radioJd" },
+                    { field: 'Id', width: 80, title: 'ID', sort: true, },
+                    { field: 'fnumber', width: 120, title: '物料编号', },
+                    { field: 'fname', width: 120, title: '名称', },
+                    { field: 'fmodel', width: 120, title: '类型', },
+                    { field: '', title: '操作', width: 200, fixed: 'right', toolbar: "#bar" }
+
+                ]],
+                done: function (res, curr, count) {
+                    $(".layui-table-box").find("[data-field='Id']").css("display", "none");
+                    $("[data-field='DD_Type']").children().each(function () {
+                        var dd_typename = showddtype($(this).text());
+                        $(this).text(dd_typename)
+                    });
+                }
+                , page: true
+                , limits: [3, 5, 10, 15, 20]  //一页选择显示3,5或10条数据
+                , limit: 5  //一页显示10条数据
+            });
+            table.on('tool(test)', function (obj) {
+                var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+                var data = obj.data; //获得当前行 tr 的 DOM 对象（如果有的话）
+                if (layEvent === 'radioJd') {
+                    $("#wlId").val(data.Id);
+                }
+                if (layEvent === 'check') { //查看
+                    ziliaochakan(data.Id);
+                }
+                if (layEvent === 'Eide') {//编辑
+                    ziliaobianjian(data.Id, data.DD_ZT);
+                }
+                if (layEvent === 'Back') {//返回
+                    gcsRHURL(data.Id, data.DD_ZT);
+                }
+                if (layEvent === 'zl') {//软件资料
+                    rjzlbl(data.Id, data.DD_ZT);
+                }
+                if (layEvent === 'viewJd') {//接单
+                    KFTJAJAX(data.Id);
+                }
+            })
+     
+        })
+    }
+
+    //保存
+    function addBommxEide() {
+        var wlId = $("#wlId").val();
+        var sum = $("#sum").val();
+        var beizhu = $("#beizhu").val();
+        if (wlId == "" || wlId == null) {
+            layer.alert("请选择物料", { icon: 2 });
+            return false;
+        }
+        if (sum == "" || sum == null) {
+            layer.alert("请物料用量", { icon: 2 });
+            return false;
+        }
+        else {
+            if (isNaN(sum)) {
+                layer.alert("请物料用量请填写数字！", { icon: 2 });
+                return false;
+            }
+        }
+         
+        $.ajax({
+            url: "../DKX_DD/AddBommxEide",
+            type: "POST",
+            data: { oId: '@ViewData["oId"]', FnumberBom: '@ViewData["FnumberBom"]', wlId: wlId, sum: sum, beizhu: beizhu },
+            dataType: "json",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response.result == "success") {
+                    layer.alert(response.msg, { icon: 1 }, function () { guanbi(); });
+                }
+                if (response.result == "error") {
+                    layer.alert(response.msg, { icon: 2 }, function () { location.reload(); });
+                }
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+    }
+</script>

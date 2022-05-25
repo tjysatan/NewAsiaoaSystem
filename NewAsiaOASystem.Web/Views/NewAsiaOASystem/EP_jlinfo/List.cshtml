@@ -106,9 +106,9 @@
                     else
                         html += '<td width="8%"></td>';
                     if(jsonStr[i].DHno!=null)
-                        html += '<td width="5%">' + showDate(jsonStr[i].DHno) + '</td>';
+                        html += '<td width="5%">' + jsonStr[i].DHno + '</td>';
                     else
-                        html += '<td width="5%">未录</td>';
+                        html += '<td width="5%">未录1</td>';
                     if(jsonStr[i].RL_Is!=null)
                         html += '<td width="5%">' +jlzt(jsonStr[i].RL_Is) + '</td>';
                     else
@@ -243,14 +243,15 @@
             var Source="'" + val5 + "'";
             var t = '<a href="#" onclick="InputEx('+rlis +',' + gs + ','+dh +','+Id +')">录单</a>&nbsp;';
             var s = '<a href="#" onclick="editwl(' + rlis + ',' + gs + ',' + dh + ',' + Id + ',' + tel + ')">物流</a>&nbsp;';
-            var z = '<a href="#" onclick="opendbprint(' + Id + ')">打印</a>';
+            var z = '<a href="#" onclick="opendbprint(' + Id + ',' + gs+')">打印</a>';
             if (val5 == "3") {
                 return t + s + z;
             } else { return t+s; }
            
         }
 
-        function opendbprint(id) {
+        function opendbprint(id, gs) {
+            if (gs == "db") { 
             layer.open({
                 type: 2,
                 title: ['德邦快递云下单', 'font-size:14px;'],
@@ -263,6 +264,21 @@
                     //location.reload();
                 }
             })
+            }
+            if (gs == "sf") {
+                layer.open({
+                    type: 2,
+                    title: ['顺丰云下单', 'font-size:14px;'],
+                    area: ['660px', '500px'],
+                    offset: '10px',
+                    fixed: false, //不固定
+                    maxmin: true,
+                    content: "../EP_jlinfo/sflistPrint?Id=" + id,
+                    end: function () {
+                        //location.reload();
+                    }
+                })
+            }
         }
 
         //快递单号录入

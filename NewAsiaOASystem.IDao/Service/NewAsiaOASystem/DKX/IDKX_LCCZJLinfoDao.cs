@@ -29,7 +29,7 @@ namespace NewAsiaOASystem.IDao
         /// <param name="c_timestart">创建时间</param>
         /// <param name="c_timeend"></param>
         /// <returns></returns>
-        IList<DKX_LCCZJLinfoView> Getlcczjldatabycondition( string ddid, string gcsid, string ddbianhao, string c_timestart, string c_timeend,string CBRId); 
+        IList<DKX_LCCZJLinfoView> Getlcczjldatabycondition( string ddid, string gcsid, string ddbianhao, string c_timestart, string c_timeend,string CBRId,string caozuotype); 
         #endregion
 
         #region //查询所有工程师ID为null的生产退单

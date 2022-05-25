@@ -146,7 +146,7 @@ namespace NewAsiaOASystem.Dao
                 TempHql.AppendFormat(" and gysname like '%{0}%'", gysname);
             if (!string.IsNullOrEmpty(Isscjyd))
                 TempHql.AppendFormat(" and Isjy='{0}'",Isscjyd);
-            TempHql.AppendFormat(" order by llnoticId desc,C_time asc");
+            TempHql.AppendFormat(" order by lytype desc, DDNO desc,C_time asc");
             PagerInfo<IQC_llNoticeMXordinfoView> list = Search();
             return list;
         }
@@ -182,6 +182,19 @@ namespace NewAsiaOASystem.Dao
             List<IQC_llNoticeMXordinfo> list = HibernateTemplate.Find<IQC_llNoticeMXordinfo>(hqlstr) as List<IQC_llNoticeMXordinfo>;
             IList<IQC_llNoticeMXordinfoView> listmodel = GetViewlist(list);
             return listmodel;
+        }
+        #endregion
+
+        #region //查询普实单号字段最近的数据
+        public IQC_llNoticeMXordinfoView GetllNoticeMXMaxDDNO()
+        {
+            string hqlstr = string.Format("from IQC_llNoticeMXordinfo where DDNO=(SELECT MAX(DDNO) FROM IQC_llNoticeMXordinfo where lytype='1')");
+            List<IQC_llNoticeMXordinfo> list = Session.CreateQuery(hqlstr).List<IQC_llNoticeMXordinfo>() as List<IQC_llNoticeMXordinfo>;
+            IList<IQC_llNoticeMXordinfoView> listmodel = GetViewlist(list);
+            if (listmodel != null)
+                return listmodel[0];
+            else
+                return null;
         }
         #endregion
     }

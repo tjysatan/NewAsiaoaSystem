@@ -258,7 +258,6 @@ namespace NewAsiaOASystem.DBModel
         /// </summary>
         public virtual string Bnote3 { get; set; }
 
-
         /// <summary>
         /// 箱体缺货情况（0 未 1 缺 2齐）
         /// </summary>
@@ -293,7 +292,6 @@ namespace NewAsiaOASystem.DBModel
         /// 物料都齐的时间
         /// </summary>
         public virtual DateTime? wlsqtime { get; set; }
-
 
         /// <summary>
         /// 箱体资料最新上传时间
@@ -554,6 +552,19 @@ namespace NewAsiaOASystem.DBModel
         /// 工程图纸异常出来时间
         /// </summary>
         public virtual string gczl_yccltime { get; set; }
+
+
+        public virtual string CONTROL_INFO_NO { get; set; }
+
+        /// <summary>
+        /// 报价单的机组类型
+        /// </summary>
+        public virtual string COMPRESSOR_TYPE { get; set; }
+
+        /// <summary>
+        /// 流水类型 B 下单之后 B+流水五位
+        /// </summary>
+        public virtual string liushuitype { get; set; }
     }
 }
  

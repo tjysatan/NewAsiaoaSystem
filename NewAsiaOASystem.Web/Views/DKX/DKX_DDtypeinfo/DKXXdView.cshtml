@@ -195,7 +195,6 @@
             fixed: false, //不固定
             maxmin: true,
             content: '../DKX_DDtypeinfo/CPxhxzlistView?Id=' + '@ViewData["Id"]',
-
             end: function () {
                 location.reload();
             }
@@ -214,14 +213,14 @@
                 <input class="layui-input" id="ddxh" name="ddxh" placeholder="产品型号" type="text" style="width: 200px" />
 
             </div>
-            <div class="layui-input-inline" style="width: 100px;">
-                <button class="layui-btn" lay-submit lay-filter="formDemo" onclick=" CPZX();return false">选择产品</button>
+            <div class="layui-input-inline" style="width: 100px; padding-top:5px; padding-left:10px">
+                <button class="layui-btn layui-btn-sm" lay-submit lay-filter="formDemo" onclick=" CPZX();return false">选择产品</button>
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">产品类型：</label>
             <div class="layui-input-block" style="width: 200px;">
-                <select id="Ps_sanduanno" name="Ps_sanduanno" class="layui-input" onchange = "cptypechange()" >
+                <select id="Ps_sanduanno" name="Ps_sanduanno" class="layui-input" onchange="cptypechange()">
                     <option value=''>请选择</option>
                     <option value='05.013.0001'>订做电控箱</option>
                     <option value='05.013.0002'>涡旋机组控制箱</option>
@@ -249,6 +248,12 @@
                     <option value="KW">KW</option>
                     <option value="P" disabled>P</option>
                 </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">数量：</label>
+            <div class="layui-input-block">
+                <input class="layui-input" id="sl" name="sl" placeholder="填写下单数量" type="text" style="width: 200px;" />
             </div>
         </div>
         <div class="layui-form-item" id="htdjhtml">
@@ -282,12 +287,7 @@
                 <input class="layui-input" id="cpph" name="cpph" placeholder="产品批号" type="text" style="width: 200px;" />
             </div>
         </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">数量：</label>
-            <div class="layui-input-block">
-                <input class="layui-input" id="sl" name="sl" placeholder="填写下单数量" type="text" style="width: 200px;" />
-            </div>
-        </div>
+
         <div class="layui-form-item">
             <label class="layui-form-label">功能简述：</label>
             <div class="layui-input-block">
@@ -298,7 +298,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">客户名称：</label>
             <div class="layui-input-block">
-                <input class="layui-input" id="khname" name="khname" placeholder="客户名称" type="text" autocomplete="off"  oninput="oninputajax()" />
+                <input class="layui-input" id="khname" name="khname" placeholder="客户名称" type="text" autocomplete="off" oninput="oninputajax()" />
             </div>
         </div>
         <div class="layui-form-item" style="display:none">
@@ -315,7 +315,8 @@
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">K3CODE：</label>
-            <div class="layui-input-block">readonly
+            <div class="layui-input-block">
+                readonly
                 <input class="layui-input" id="K3CODE" name="K3CODE" placeholder="K3CODE" type="text" readonly="readonly" />
             </div>
         </div>
@@ -369,6 +370,7 @@
         var dw = $("#dw").val();//功率单位
         var sl = $("#sl").val();//数量
         var price = $("#price").val();//合同单位售价
+        var txt_startctime = $("#txt_startctime").val();//承若交期
         var Ps_sanduanno = $("#Ps_sanduanno").val();
         if (Ps_sanduanno == "") {
             layer.alert("选择产品类型！", { icon: 2 });
@@ -419,6 +421,10 @@
             layer.alert("数量为纯数字！", { icon: 2 });
             return false;
         }
+        if (txt_startctime == "") {
+            layer.alert("交期不为空！", { icon: 2 });
+            return false;
+        }
 
         //表单验证
         var options = {
@@ -430,17 +436,20 @@
                 if (context == "0") {
                     layer.alert("提交成功！", { icon: 1 }, function () { guanbi(); });
                 }
-                if (context == "1") {
+                else if (context == "1") {
                     layer.alert("提交失败！", { icon: 2 }, function () { location.reload(); });
                 }
-                if (context == "2") {
+                else  if (context == "2") {
                     layer.alert("提交失败！", { icon: 2 }, function () { location.reload(); });
                 }
-                if (context == "3") {
+                else  if (context == "3") {
                     layer.alert("缺少资料，无法直接生产，已下单，请求上传相关资料！", { icon: 1 }, function () { guanbi(); });
                 }
-                if (context == "4") {
+                else  if (context == "4") {
                     layer.alert("资料齐全，下单成功-到待发料状态！", { icon: 1 }, function () { guanbi(); });
+                }
+                else {
+                    layer.alert(context, { icon: 2 }, function () { location.reload(); });
                 }
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {

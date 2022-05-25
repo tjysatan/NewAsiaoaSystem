@@ -1,4 +1,4 @@
-﻿@model NewAsiaOASystem.ViewModel.PagerInfo<NewAsiaOASystem.ViewModel.NQ_THinfoFXView>
+﻿
 @{
     ViewBag.Title = "屏保定责明细列表";
     Layout = "~/Views/Shared/_SysLayout.cshtml";
@@ -11,10 +11,12 @@
 </style>
 @section HeadContent{
     <script type="text/javascript">
+        var ids = new Array();
         $(function () {
-            $("#cpname").val('@ViewData["cpname"]');
-            $("#Isdz").val('@ViewData["Isdz"]');
-            BindGrid();
+            @*$("#cpname").val('@ViewData["cpname"]');
+            $("#Isdz").val('@ViewData["Isdz"]');*@
+            //BindGrid();
+            Gettabledata();
         })
 
         function BindGrid() {
@@ -28,8 +30,132 @@
             dataGrid(jsonStr);
         }
 
+        function Gettabledata() {
+            var cpname = $("#cpname").val();
+            var Isdz = $("#Isdz").val();
+          
+            layui.use(['table', 'element'], function () {
+                var table = layui.table;
+                var element = layui.element;
+                table.render({
+                    elem: '#test',
+                    url: '/NAReturnList/NGetdzmxlistpage',
+                    where: {
+                        cpname: cpname,
+                        Isdz: Isdz,
+                        
+                    },//设定异步数据接口的额外参数
+                    cellMinWidth: 80, //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                    cols: [[
+                        { type: 'checkbox', event: "radioJd", fixed: 'left'  },
+                        { field: 'Id', width: 80, title: 'ID', sort: true},
+                        //{ field: 'DD_Bianhao', width: 130, title: '产品名称/型号', fixed: 'left' },
+                        {
+                            field: 'P_Id', width: 280, style: 'cursor:pointer;', title: '产品名称/型号', fixed: 'left', templet: function (d) {
+                                var Perinfo = GetPerinfobyId(d.P_Id);
+                                return Perinfo.Pname + "(" + Perinfo.P_xh+")"
+                            }
+                        },
+                        { field: 'TH_Ph', width: 130, title: '生产批号' },
+                        {
+                            field: 'TH_BLXXX', width: 130, title: '不良现象', templet: function (d) {
+                                if (d.TH_BLXXX != null && d.TH_BLXXX != "") {
+                                    var blxxxmodel = ajaxNewblxxmodeljson(d.TH_BLXXX);//不良现象
+                                    return blxxxmodel.Name
+                                }
+                                else {
+                                    return "-";
+                                }
+                            }
+                        },
+                        {
+                            field: 'TH_BLYY', width: 130, title: '不良原因1', templet: function (d) {
+                                if (d.TH_BLYY != null && d.TH_BLYY != "") {
+                                    var blyymmodel = ajaxNewblyymodelbyidjson(d.TH_BLYY);//不良原因
+                                    return blyymmodel.Name
+                                }
+                                else {
+                                    return "-";
+                                }
+                            }
+                        },
+                        {
+                            field: 'TH_BLXX', width: 130, title: '不良原因2', templet: function (d) {
+                                if (d.TH_BLXX != null && d.TH_BLXX != "") {
+                                    var blxxmmodel = ajaxNewblyymodelbyidjson(d.TH_BLXX);
+                                    return blxxmmodel.Name
+                                }
+                                else {
+                                    return "-";
+                                }
+                            }
+                        },
+                        {
+                            field: 'TH_zbshj', width: 130, title: '是否在保', templet: function (d) {
+                                if (d.TH_zbshj != null && d.TH_zbshj != "") {
+
+                                    return showNewISZB(d.TH_zbshj)
+                                }
+                                else {
+                                    return "暂无";
+                                }
+                            }
+                        },
+                        { field: 'TH_bz', width: 130, title: '处理方式' },
+                        { field: 'TH_bz2', width: 130, title: '备注' },
+                        {
+                            field: 'Isdz', width: 130, title: '是否定责', templet: function (d) {
+                                if (d.Isdz != null && d.Isdz != "") {
+
+                                    return showdzzt(d.Isdz)
+                                }
+                                else {
+                                    return "暂无";
+                                }
+                            }
+                        },
+                        { field: 'zrbm', width: 130, title: '责任部门' },
+                        { field: '', title: '操作', width: 160, fixed: 'right', toolbar: "#bar" }
+                    ]],
+                    done: function (res, curr, count) {
+                        $(".layui-table-box").find("[data-field='Id']").css("display", "none");
+                        $("[data-field='DD_Type']").children().each(function () {
+                            var dd_typename = showddtype($(this).text());
+                            $(this).text(dd_typename)
+                        });
+                        element.render();
+                    }
+                    , page: true
+                    , limits: [3, 5, 10, 15, 20]  //一页选择显示3,5或10条数据
+                    , limit: 10  //一页显示10条数据
+
+                });
+                table.on('tool(test)', function (obj) {
+                    var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+                    var data = obj.data; //获得当前行 tr 的 DOM 对象（如果有的话）
+                    if (layEvent === 'dzEide') { //定责
+                        neweditdz(data.Id, data.TH_bz, data.zrbm, data.TH_bz2);
+                    }
+                    if (layEvent === 'check') { //查看资料
+                        Checktupian(data.Id);
+                    }
+                    //var checkStatus = table.checkStatus('Id');
+                    //ids.push(checkStatus.data.Id);
+                    //console.log("1111", checkStatus.data.Id);
+                })
+                table.on('checkbox(test)', function (obj) {
+                    var checkStatus = table.checkStatus('test');
+                    ids = new Array();
+                    for (var i = 0; i < checkStatus.data.length; i++) {
+                        ids.push(checkStatus.data[i].Id)
+                    }
+                  
+                });
+            })
+        }
+
         function dataGrid(jsonStr){
-        
+
             if (typeof (jsonStr) != "undefined") {
                 var html = "";
                 html = '<table class="layui-table" >';
@@ -203,8 +329,7 @@
         //批量维修
         function NewPLdz()
         {
-            var arr = GetGridSelete();
-            
+            var arr = ids;
             if(arr.length <= 0)
             {
                 $.messager.alert("操作提示", "请先最少选择一条记录后再做定责编辑！", "warning");
@@ -221,7 +346,13 @@
                     maxmin: true,
                     content: '../NAReturnList/NewMxPLdingzeView?Id='+val+'&&R_Id='+'@ViewData["RId"]',
                     end: function () {
-                        location.reload();
+                        //location.reload();
+                        //Gettabledata();
+                        layui.table.reload('test', {   //方法渲染表格里的属性 ID
+                            page: {
+                                curr: $(".layui-laypage-em").next().html()
+                            }
+                        });
                     }
                 });
             }
@@ -251,7 +382,7 @@
             }
         }
 
-        // 
+        //
         function Checktupian(id)
         {
             layer.open({
@@ -262,9 +393,7 @@
                 fixed: false, //不固定
                 maxmin: true,
                 content: '../NAReturnList/CheckwxtupianView?Id='+id,
-                end: function () {
-                    location.reload();
-                }
+               
             });
         }
 
@@ -280,7 +409,13 @@
                 maxmin: true,
                 content: '../NAReturnList/NewMxdingzeView?Id=' + id + '&&R_Id=' + '@ViewData["RId"]' + '&&clmethod=' + clmethod + '&&zrbm=' + zrbm + '&&beizhu=' + beizhu,
                 end: function () {
-                    location.reload();
+                    //location.reload();
+                   // Gettabledata();
+                    layui.table.reload('test', {   //方法渲染表格里的属性 ID
+                        page: {
+                            curr: $(".layui-laypage-em").next().html()
+                        }
+                    });
                 }
             });
         }
@@ -335,6 +470,27 @@
                 }
             });
         }
+
+    </script>
+
+    <script type="text/html" id="bar">
+
+
+        <div class="layui-btn-group">
+
+            <button type="button" class="layui-btn layui-btn-xs layui-btn-warm" lay-event="dzEide" title="定责">
+                <i class="layui-icon">&#xe642;</i>
+            </button>
+            {# if(d.TH_imgurl1!=""&&d.TH_imgurl1!=null){ }}
+            <button type="button" class="layui-btn  layui-btn-xs layui-btn-normal" lay-event="check" title="资料查看">
+                <i class="layui-icon">&#xe63c;</i>
+            </button>
+            {{}}
+           
+
+
+
+        </div>
     </script>
 }
 
@@ -345,9 +501,7 @@
     <legend style="font-size: 12px;">查询条件</legend>
 
     <div class="layui-field-box">
-        @using (Html.BeginForm("dzmxSearchList", "NAReturnList", FormMethod.Post, new { id = "form1" }))
-        {
-            @Html.Hidden("pageIndex");
+       
             <div class="layui-inline">
                 <label class="layui-form-label">产品名称：</label>
                 <div class="layui-input-block">
@@ -365,32 +519,26 @@
                 </div>
             </div>
 
-            <button class="layui-btn layui-btn-primary" onclick="return SerchList(1)">
-                <i class="layui-icon" style="font-size: 16px; color: #1E9FFF;">&#xe615;</i> 查询</button>
+            <button class="layui-btn layui-btn-primary" onclick="return Gettabledata()">
+                <i class="layui-icon" style="font-size: 16px; color: #1E9FFF;">&#xe615;</i> 查询
+            </button>
             <button class="layui-btn layui-btn-primary" onclick="NewPLdz();return  false;">
-                <i class="layui-icon" style="font-size: 16px; color: #1E9FFF;">&#xe642;</i> 批量定责</button>
+                <i class="layui-icon" style="font-size: 16px; color: #1E9FFF;">&#xe642;</i> 批量定责
+            </button>
             <button class="layui-btn layui-btn-primary" onclick="quanbudingzewancheng();return  false;">
                 <i class="layui-icon" style="font-size: 16px; color: #1E9FFF;">&#xe616;</i> 完成定责
             </button>
-          
-        }
+
+        
 
     </div>
 
 </fieldset>
 
-<div class="h-table">
-    <div class="h-table-content">
 
-        <div id="dzmxcon"></div>
-    </div>
+<div style="padding:0 20px 0 20px">
+    <table class="layui-hide" id="test" lay-filter="test"></table>
 </div>
-<!--==========================输出分页按钮=========================-->
-<div class="pagin">
-    @if (ViewBag.PageNavigate == null)
-    {
-        @Html.ShowPageNavigate(Model.CurrentPageIndex, Model.PageSize, Model.RecordCount);
-    }
-</div>
+ 
 
 <script src="~/Scripts/NAjs/NAReturnList.js"></script>

@@ -1,6 +1,6 @@
 ﻿@model NewAsiaOASystem.ViewModel.PagerInfo<NewAsiaOASystem.ViewModel.IQC_llNoticeMXordinfoView>
 @{
-    ViewBag.Title = "K3同步的来料通知单明细管理列表";
+    ViewBag.Title = "ERP同步的来料通知单明细管理列表";
     Layout = "~/Views/Shared/_SysLayout.cshtml";
 }
 
@@ -120,6 +120,33 @@
             })
         }
 
+        //同步普实数据
+        function PsTBDATA() {
+            $.ajax({
+                type: "POST",
+                url: "../IQC_Sop/PsllNoticeInterface",
+                dataType: "json",
+                async: true,
+                beforeSend: function () {
+                    ddchen();
+                },
+                success: function (reslut) {
+                    disLoading();
+                    if (reslut.result == "success") {
+                        layer.alert(reslut.msg, { icon: 1 }, function () { location.reload(); })
+                    }
+                    if (reslut.result == "error") {
+                        layer.alert(reslut.msg, { icon: 2 }, function () { location.reload(); })
+                    }
+                   
+                },
+                error: function (e) {
+                    disLoading();
+                    layer.alert("网络异常，请重试！", { icon: 2 }, function () { location.reload(); })
+                }
+            })
+        }
+
         //列表按钮
         function caozuo(Id,type,ddno)
         {
@@ -186,26 +213,20 @@
                         url: "../IQC_Sop/DGJYTZDshuaxin",
                         type: "POST",
                         data: { ddno: val},
-                        dataType: "html",
+                        dataType: "json",
                         async: true,
                         beforeSend: function () {
                             ddchen();
                         },
                         success: function (response) {
                             disLoading();
-                            if (response == "0") {
-                                layer.alert("提交异常！", { icon: 2 }, function () { location.reload(); });
+                            if (response.result == "success") {
+                                layer.alert(response.msg, { icon: 1 }, function () { location.reload(); });
                             }
-                            if (response == "1") {
-                                layer.alert("资料同步失败！", { icon: 2 }, function () { location.reload(); });
+                            if (response.result == "error") {
+                                layer.alert(response.msg, { icon: 2 });
                             }
-                            if(response=="2"){
-                                layer.alert("资料明细复制异常！", { icon: 2 }, function () { location.reload(); });
-                            }
-                            if(response=="3")
-                            {
-                                layer.alert("刷新成功！", { icon: 1 }, function () {  location.reload();  });
-                            }
+                           
                         },
                         error: function (e) {
                             disLoading();
@@ -267,61 +288,67 @@
                 @using (Html.BeginForm("llNoticeSearchList", "IQC_Sop", FormMethod.Post, new { id = "form1" }))
                 {
                     @Html.Hidden("pageIndex");
-                    <ul>
-                        <li>
-                            <span>通知单单号：</span>
-                            <span class="inquiry-input">
-                                <input type="text" name="txtddno" id="txtddno" />
-                            </span>
-                        </li>
-                        <li>
-                            <span>物料代码：</span>
-                            <span class="inquiry-input">
-                                <input type="text" name="txtyqjwl" id="txtyqjwl" />
-                            </span>
-                        </li>
-                        <li><span>物料型号：</span>
-                            <span class="inquiry-input">
-                                <input type="text" name="txtyqjname" id="txtyqjname" />
-                            </span>
-                        </li>
-                        <li><span>供应商代码：</span>
-                            <span class="inquiry-input">
-                                <input type="text" name="txtgyswl" id="txtgyswl" />
-                            </span>
-                        </li>
-                        <li><span>供应商名称：</span>
-                            <span class="inquiry-input">
-                                <input type="text" name="txtgyqname" id="txtgyqname" />
-                            </span>
-                        </li>
-                        <li>
-                            <span>生产检验单：</span>
-                            <span class="inquiry-input">
-                                <select id="txtIsscjyd" name="txtIsscjyd">
-                                    <option value="">全部</option>
-                                    <option value="0">未生成</option>
-                                    <option value="1">已生成</option>
-                                </select>
-                            </span>
-                        </li>
+            <ul>
+                <li>
+                    <span>通知单单号：</span>
+                    <span class="inquiry-input">
+                        <input type="text" name="txtddno" id="txtddno" />
+                    </span>
+                </li>
+                <li>
+                    <span>物料代码：</span>
+                    <span class="inquiry-input">
+                        <input type="text" name="txtyqjwl" id="txtyqjwl" />
+                    </span>
+                </li>
+                <li>
+                    <span>物料型号：</span>
+                    <span class="inquiry-input">
+                        <input type="text" name="txtyqjname" id="txtyqjname" />
+                    </span>
+                </li>
+                <li>
+                    <span>供应商代码：</span>
+                    <span class="inquiry-input">
+                        <input type="text" name="txtgyswl" id="txtgyswl" />
+                    </span>
+                </li>
+                <li>
+                    <span>供应商名称：</span>
+                    <span class="inquiry-input">
+                        <input type="text" name="txtgyqname" id="txtgyqname" />
+                    </span>
+                </li>
+                <li>
+                    <span>生产检验单：</span>
+                    <span class="inquiry-input">
+                        <select id="txtIsscjyd" name="txtIsscjyd">
+                            <option value="">全部</option>
+                            <option value="0">未生成</option>
+                            <option value="1">已生成</option>
+                        </select>
+                    </span>
+                </li>
 
-                        <li style="*width: 100%; *margin: -10px 0 5px 90px;"><span class="inquiry-input">
-                            <button name="btnSerch" class="layui-btn" onclick="return SerchList(1)"><i class="layui-icon">&#xe615;</i>查询</button>
-                        </span>
-                        </li>
-                    </ul>
+                <li style="*width: 100%; *margin: -10px 0 5px 90px;">
+                    <span class="inquiry-input">
+                        <button name="btnSerch" class="layui-btn" onclick="return SerchList(1)"><i class="layui-icon">&#xe615;</i>查询</button>
+                    </span>
+                </li>
+                <li>
+                    <span class="inquiry-input">
+                        <button class="layui-btn" onclick="PsTBDATA(); return false;"><i class="layui-icon">&#xe608;</i> 同步数据</button>
+                    </span>
+                    <span class="inquiry-input">
+                        <button class="layui-btn" onclick="return addClick('/IQC_Sop/llNoticelist')"><i class="layui-icon">&#x1002;</i>刷新</button>
+                    </span>
+                </li>
+            </ul>
                 }
-                <ul>
+               
 
-                    <li>
-                        <span class="inquiry-input">
-                            <button class="layui-btn" onclick="TBDATA()"><i class="layui-icon">&#xe608;</i> 同步数据</button>
-                        </span>
-                        <span class="inquiry-input">
-                            <button class="layui-btn" onclick="return addClick('/IQC_Sop/llNoticelist')"><i class="layui-icon">&#x1002;</i>刷新</button></span>
-                    </li>
-                </ul>
+       
+                 
             </fieldset>
         </div>
 

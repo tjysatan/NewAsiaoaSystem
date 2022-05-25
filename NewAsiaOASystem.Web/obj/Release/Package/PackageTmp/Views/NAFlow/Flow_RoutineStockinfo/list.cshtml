@@ -86,79 +86,317 @@
 </style>
 
 <script type="text/javascript">
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+    function guanbi() {
+        var index = parent.layer.getFrameIndex(window.name);
+        //关闭弹出层
+        parent.layer.close(index);
+    }
+
+    //初始化
     $(function () {
-        var sort = $("#Pxsort").val();
-        dataGrid(sort, "null","null");
+        //var sort = $("#Pxsort").val();
+        Updatekc();
     })
 
     function Paix() {
         var sort = $("#Pxsort").val();
         var wlsort = $("#wlsort").val();
-        var cpname = $("#cpname").val();
-        if (sort == "null" && wlsort == "null") {
+        if (sort == "" && wlsort == "") {
             $.messager.alert("操作提示", '请选择排序方式！', 'error');
             return;
         }
-        if (sort != "null" && wlsort != "null") {
+        if (sort != "" && wlsort != "") {
             $.messager.alert("操作提示", '同时只能选择一中排序方式', 'error');
             return;
         }
-        dataGrid(sort, wlsort, cpname);
+        Gettabledata();
+    }
+    //初始化订单明细的数据表格
+    function Gettabledata() {
+        var sort = $("#Pxsort").val();
+        var cpname = $("#cpname").val();
+        var wlsort = $("#wlsort").val();
+        var P_Model = $("#P_Model").val();
+
+        layui.use('table', function () {
+            var table = layui.table;
+            table.render({
+                elem: '#datacon',
+                url: '/Flow_RoutineStockinfo/New_GetCgkcJson',
+                where: {
+                    sort: sort,
+                    cpname: cpname,
+                    P_Model: P_Model,
+                    wlsort: wlsort,
+                    Category: '0'
+                },
+                cols: [[
+                    { field: 'Id', width: 80, title: 'ID', sort: true, },
+                    { field: 'P_Bianhao', width: 200, title: '物料号' },
+                    { field: 'P_Name', width: 130, title: '物料名称' },
+                    { field: 'P_Model', width: 130, title: '物料型号' },
+                    { field: 'M_Consumption', width: 75, title: '月用量' },
+                    { field: 'W_Consumption', width: 75, title: '周用量' },
+                    { field: 'wjjpsum', width: 90, title: '未清拣配' },
+                    { field: 'N_Stock', width: 90, title: '及时库存' },
+                    { field: 'A_Sum', width: 90, title: '报警数量' },
+                    {
+                        field: 'Isbj', width: 90, title: '是否异常', templet: function (d) {
+                            if (d.Isbj == "1")
+                                return '<span style="color:red">异常</span>'
+                            else
+                                return "正常"
+                        }
+                    },
+                    {
+                        field: 'Isscing', width: 100, title: '是否生产', templet: function (d) {
+                            if (d.Isscing != "0")
+                                return '<span style="color:red">生产中(' + d.Sjsc_Sum + ')</span>'
+                            else
+                                return "正常"
+                        }
+                    },
+                    { field: 'sczdsum', width: 100, title: '在线数量' },
+                    { field: 'SC_Sum', width: 90, title: '需要生产' },
+                    { field: '', title: '操作', width: 160, fixed: 'right', toolbar: "#bar" }
+                ]],
+                done: function (res, curr, count) {
+                    $(".layui-table-box").find("[data-field='Id']").css("display", "none");
+                }
+                , page: false,
+                height: 'full-110'
+
+
+            });
+            table.on('tool(datacon)', function (obj) {
+                var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+                var data = obj.data; //获得当前行 tr 的 DOM 对象（如果有的话）
+                if (layEvent === 'ylEide') { //查看
+                    UpdateConsumption(data.Id);
+                }
+                if (layEvent === 'JHEide') {
+                    MakePlan(data.Id, data.Isscing, "0")
+                }
+                if (layEvent === 'del') {
+                    DetcgsccpEide(data.Id, "0")
+                }
+            })
+        })
     }
 
-    function dataGrid(Sort, val,val1) {
-        var jsonStr;
-        jsonStr = AjxaCgPKCJSON(Sort, "0",val1,val)
-        $("#content").html("");
-        if (jsonStr != null) {
-            var html = "";
-            html += '<table style="width:100%; color:#000; font-size:13px; text-align:center;">';
-            for (var i = 0, j = jsonStr.length; i < j; i++) {
-                html += '<tr>';
-                html += '<td width="15%"  height="30px">' + jsonStr[i].P_Bianhao + '</td>';
-                html += '<td width="10%" height="30px">' + jsonStr[i].P_Name + '</td>';
-                html += '<td width="8%" height="30px">' + jsonStr[i].M_Consumption + '</td>';
-                html += '<td width="8%" height="30px">' + jsonStr[i].W_Consumption + '</td>';
-                html += '<td width="8%" height="30px">' + jsonStr[i].N_Stock + '</td>';
-                html += '<td width="8%" height="30px">' + jsonStr[i].A_Sum + '</td>';
-                if (jsonStr[i].Isbj == "1")
-                    html += '<td width="8%" height="30px" style="color:red">异常</td>';
-                else
-                    html += '<td width="8%" height="30px" color="red">正常</td>';
-                if (jsonStr[i].Isscing != "0")
-                    html += '<td width="10%" height="30px">生产中(' + jsonStr[i].Sjsc_Sum + ')</td>';
-                else
-                    html += '<td width="8%" height="30px">-</td>';
-                html += '<td width="8%" height="30px">' + jsonStr[i].SC_Sum + '</td>';
-                html += '<td width="" height="30px">' + czshow(jsonStr[i].Id, jsonStr[i].Isscing, "0") + '</td>';
-                html += '</tr>';
-            }
-            html += '</table>';
-            $("#content").html(html);
-        }
+    //$(function () {
+    //    var sort = $("#Pxsort").val();
+    //    dataGrid(sort, "null","null");
+    //})
 
-    }
+    //function Paix() {
+    //    var sort = $("#Pxsort").val();
+    //    var wlsort = $("#wlsort").val();
+    //    var cpname = $("#cpname").val();
+    //    if (sort == "null" && wlsort == "null") {
+    //        $.messager.alert("操作提示", '请选择排序方式！', 'error');
+    //        return;
+    //    }
+    //    if (sort != "null" && wlsort != "null") {
+    //        $.messager.alert("操作提示", '同时只能选择一中排序方式', 'error');
+    //        return;
+    //    }
+    //    dataGrid(sort, wlsort, cpname);
+    //}
+
+    //function dataGrid(Sort, val,val1) {
+    //    var jsonStr;
+       // jsonStr = AjxaCgPKCJSON(Sort, "0",val1,val)
+    //    $("#content").html("");
+    //    if (jsonStr != null) {
+    //        var html = "";
+    //        html += '<table style="width:100%; color:#000; font-size:13px; text-align:center;">';
+    //        for (var i = 0, j = jsonStr.length; i < j; i++) {
+    //            html += '<tr>';
+    //            html += '<td width="15%"  height="30px">' + jsonStr[i].P_Bianhao + '</td>';
+    //            html += '<td width="10%" height="30px">' + jsonStr[i].P_Name + '</td>';
+    //            if (jsonStr[i].P_Model != null && jsonStr[i].P_Model!="")
+    //                html += '<td width="10%" height="30px">' + jsonStr[i].P_Model + '</td>';
+    //            else
+    //                html += '<td width="10%" height="30px"></td>';
+    //            html += '<td width="8%" height="30px">' + jsonStr[i].M_Consumption + '</td>';
+    //            html += '<td width="8%" height="30px">' + jsonStr[i].W_Consumption + '</td>';
+    //            html += '<td width="8%" height="30px">' + jsonStr[i].N_Stock + '</td>';
+    //            html += '<td width="8%" height="30px">' + jsonStr[i].A_Sum + '</td>';
+    //            if (jsonStr[i].Isbj == "1")
+    //                html += '<td width="8%" height="30px" style="color:red">异常</td>';
+    //            else
+    //                html += '<td width="8%" height="30px" color="red">正常</td>';
+    //            if (jsonStr[i].Isscing != "0")
+    //                html += '<td width="10%" height="30px">生产中(' + jsonStr[i].Sjsc_Sum + ')</td>';
+    //            else
+    //                html += '<td width="8%" height="30px">-</td>';
+    //            html += '<td width="8%" height="30px">' + jsonStr[i].SC_Sum + '</td>';
+              //  html += '<td width="" height="30px">' + czshow(jsonStr[i].Id, jsonStr[i].Isscing, "0") + '</td>';
+    //            html += '</tr>';
+    //        }
+    //        html += '</table>';
+    //        $("#content").html(html);
+    //    }
+
+    //}
+
+    ////库存更新
+    //function Updatekc() {
+    //    $.ajax({
+    //        type: "POST",
+    //        url: "/Flow_RoutineStockinfo/Updateinventory",
+    //        data: { type: "0" },
+    //        dataType: "json",
+    //        async: false,
+    //        success: function (reslut) {
+    //            window.location = "../Flow_RoutineStockinfo/List";
+    //        },
+    //        error: function (e) {
+    //            alert("请求失败");
+    //        }
+    //    })
+    //}
+
+    //function PsUpdatekc() {
+    //    $.ajax({
+    //        type: "POST",
+    //        url: "/Flow_RoutineStockinfo/PsUpdateinventory",
+    //        data: { type: "0" },
+    //        dataType: "json",
+    //        async: false,
+    //        success: function (reslut) {
+    //            window.location = "../Flow_RoutineStockinfo/List";
+    //        },
+    //        error: function (e) {
+    //            alert("请求失败");
+    //        }
+    //    })
+    //}
 
     //库存更新
     function Updatekc() {
         $.ajax({
             type: "POST",
-            url: "/Flow_RoutineStockinfo/Updateinventory",
+            url: "/Flow_RoutineStockinfo/N_PsUpdateinventory",
             data: { type: "0" },
             dataType: "json",
-            async: false,
-            success: function (reslut) {
-                window.location = "../Flow_RoutineStockinfo/List";
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response.result == "success") {
+                    Gettabledata();
+                    //layer.alert(response.res, { icon: 1 }, function () {  });
+                }
+                if (response.result == "error") {
+                    layer.alert(response.res, { icon: 2 }, function () { location.reload(); });
+                }
             },
             error: function (e) {
-                alert("请求失败");
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
             }
         })
     }
 
-</script>
+    //用量（月，周）编辑页面
+    function UpdateConsumption(val) {
+        var id = val;
+        if (id != "") {
+            $('#windowDia').html("<iframe src=../Flow_RoutineStockinfo/UpdateConsumption?Id=" + id + " style='border:0px;' width='450px' height='230px'></iframe>");
+            $("#windowDia").window({
+                title: '用量修改',
+                modal: true,
+                closed: false,
+                width: 500,
+                height: 310,
+            });
+        }
+    }
 
-<script src="~/Scripts/Flow/Flow_RoutineStockinfo.js"></script>
+    //制定生产计划
+    function MakePlan(val, val2, val3) {
+        if (val2 == "0") {
+            var id = val;
+            if (id != "") {
+                $('#windowDia').html("<iframe src=../Flow_RoutineStockinfo/PlanproductionView?Id=" + id + "&&type=" + val3 + "&&  style='border:0px;' width='500px' height='400px'></iframe>");
+                $("#windowDia").window({
+                    title: '生产计划',
+                    modal: true,
+                    closed: false,
+                    width: 560,
+                    height: 310,
+                });
+            }
+        } else {
+            $.messager.alert("操作提示", '已经存在生产计划单，无需重复下单！', 'error');
+        }
+    }
+
+    //删除页面（禁用页面）
+    function DetcgsccpEide(Id, type) {
+        $.messager.confirm("操作提示", '确定要删除该产品吗？', function (data) {
+            if (data) {
+                var shreslut = deleteEide(Id);
+                if (shreslut == "0") {
+                    $.messager.alert("提示", '该产品已经删除！', 'info', function () {
+                        location.reload(); 
+                    });
+                }
+                else {
+                    $.messager.alert("提示", '删除失败！', 'info', function () {
+                        location.reload(); 
+                    });
+                }
+            }
+        })
+    }
+
+    //删除
+    function deleteEide(val) {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "/Flow_RoutineStockinfo/DelcgscEide",
+            data: { Id: val },
+            dataType: "html",
+            async: false,
+            success: function (reslut) {
+                json = reslut;
+            },
+            error: function (e) {
+                alert("网路异常，请重试！");
+            }
+        })
+        return json;
+    }
+
+</script>
+<script type="text/html" id="bar">
+    <div class="layui-btn-group">
+        <button type="button" class="layui-btn  layui-btn-xs layui-btn-normal" lay-event="ylEide" title="周/月用量">
+            用量
+        </button>
+        <button type="button" class="layui-btn  layui-btn-xs layui-btn-warm" lay-event="JHEide" title="计划下单">
+            计划
+        </button>
+        <button type="button" class="layui-btn  layui-btn-xs layui-btn-danger" lay-event="del" title="删除">
+            删除
+        </button>
+    </div>
+</script>
+@*<script src="~/Scripts/Flow/Flow_RoutineStockinfo.js"></script>*@
 
 <div class="infor">
     <div class="inquiry1">
@@ -168,7 +406,7 @@
                     <span>告警数排序：</span>
                     <span class="inquiry-input">
                         <select id="Pxsort" name="Pxsort">
-                            <option value="null">请选择</option>
+                            <option value="">请选择</option>
                             <option value="0">倒序</option>
                             <option value="1">正序</option>
                         </select>
@@ -178,7 +416,7 @@
                     <span>物料代码排序：</span>
                     <span class="inquiry-input">
                         <select id="wlsort" name="wlsort">
-                            <option value="null">请选择</option>
+                            <option value="">请选择</option>
                             <option value="0">倒序</option>
                             <option value="1">正序</option>
                         </select>
@@ -188,6 +426,12 @@
                     <span>产品名称：</span>
                     <span class="inquiry-input">
                         <input type="text" id="cpname" name="cpname" />
+                    </span>
+                </li>
+                <li>
+                    <span>产品型号：</span>
+                    <span class="inquiry-input">
+                        <input type="text" id="P_Model" name="P_Model" />
                     </span>
                 </li>
                 <li>
@@ -202,7 +446,7 @@
                         <button type="button" onclick="return Updatekc()">更新库存</button>
                     </span>
                     <span class="inquiry-input">
-                        <button type="button" onclick="return addClick('/Flow_RoutineStockinfo/list')">刷新</button>
+                        <button type="button" onclick="return Gettabledata()">刷新</button>
                     </span>
 
                 </li>
@@ -211,36 +455,9 @@
     </div>
 </div>
 
-<div style="width: 95%; margin: auto; margin-top: 10px; border: 1px solid #e8e5e5;">
-    <div class="add-infor-title-bg_header">
-        <table style="width: 100%; color: #000; font-size: 13px; text-align: center;">
-            <thead>
-                <tr class="a">
-                    <td width="15%">物料代码
-                    </td>
-                    <td width="10%">名称
-                    </td>
-                    <td width="8%">月用量
-                    </td>
-                    <td width="8%">周用量
-                    </td>
-                    <td width="8%">及时库存
-                    </td>
-                    <td width="8%">报警数量
-                    </td>
-                    <td width="8%">是否异常
-                    </td>
-                    <td width="8%">是否生产
-                    </td>
-                    <td width="8%">需要生产
-                    </td>
-                    <td width="">操作
-                    </td>
-                </tr>
-            </thead>
-        </table>
-    </div>
-    <div id="content" style="width: 100%;" class="mainDIV">
+<div style="width: 98%; margin: auto; margin-top: 10px;">
+    <div id="content" style="width: 100%;height:10%">
+        <table class="layui-hide" id="datacon" lay-filter="datacon"></table>
     </div>
 </div>
 

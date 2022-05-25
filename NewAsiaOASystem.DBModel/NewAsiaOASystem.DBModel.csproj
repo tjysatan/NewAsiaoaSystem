@@ -42,10 +42,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\BJSys\PAY_CONTROL_INFO.cs" />
+    <Compile Include="Model\ERP\ERP_SASalAinfo.cs" />
+    <Compile Include="Model\ERP\ERP_SASalA_FBCP_BCBWK.cs" />
+    <Compile Include="Model\ERP\Js_xz_yfcost.cs" />
     <Compile Include="Model\IQC\IQC_JYDDinfo.cs" />
     <Compile Include="Model\IQC\IQC_JYDjyconinfo.cs" />
     <Compile Include="Model\IQC\IQC_llNoticeMXordinfo.cs" />
     <Compile Include="Model\IQC\IQC_llNoticeordinfo.cs" />
+    <Compile Include="Model\lanhe\lanhe_QzCusinfo.cs" />
     <Compile Include="Model\NAFlow\Flow_DKXPlanPPrintinfo.cs" />
     <Compile Include="Model\NewAsiaOASystem\DKX\DKX_CONTROL_LIST.cs" />
     <Compile Include="Model\NewAsiaOASystem\DKX\DKX_CONTROL_LIST_DETAIL.cs" />
@@ -231,10 +236,16 @@
     <EmbeddedResource Include="Mappings\NewAsiaOASystem\DKX\NewChargebackReason.hbm.xml" />
     <EmbeddedResource Include="Mappings\NewAsiaOASystem\DKX\NA_MRPmain.hbm.xml" />
     <EmbeddedResource Include="Mappings\NewAsiaOASystem\DKX\NA_MRPdetailed.hbm.xml" />
+    <EmbeddedResource Include="Mappings\BJSys\PAY_CONTROL_INFO.hbm.xml" />
+    <EmbeddedResource Include="Mappings\lanhe\lanhe_QzCusinfo.hbm.xml" />
+    <EmbeddedResource Include="Mappings\ERP\ERP_SASalAinfo.hbm.xml" />
+    <EmbeddedResource Include="Mappings\ERP\Js_xz_yfcost.hbm.xml" />
+    <EmbeddedResource Include="Mappings\ERP\ERP_SASalA_FBCP_BCBWK.hbm.xml" />
     <Content Include="Mappings\NewAsiaOASystem\KSGZ\KS_Trackinglistinfo.hbm.xml">
       <SubType>Designer</SubType>
     </Content>
     <EmbeddedResource Include="Mappings\NewAsiaOASystem\NA_Sharealike.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewAsiaOASystem\NA_XSqitainfo.hbm.xml" />
     <Content Include="Mappings\NewAsiaOASystem\NQ_Supplier.hbm.xml" />
     <EmbeddedResource Include="Mappings\NewAsiaOASystem\NQ_SupplierAttachment.hbm.xml" />
     <EmbeddedResource Include="Mappings\Wx\Wx_configinfo.hbm.xml">

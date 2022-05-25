@@ -29,7 +29,6 @@
     <property name="gwj" column="gwj" />
     <property name="gwshi" column="gwshi" />
     <property name="scbianhao" column="scbianhao" />
-    
     <bag name="Ppurchaselist">
       <key column="P_Id"/>
       <one-to-many class="Flow_Pleasepurchaseinfo"/>
@@ -37,5 +36,9 @@
     <property name="Istbwork" column="Istbwork" />
     <property name="tbworktime" column="tbworktime" />
     <property name="Nc_time" column="Nc_time" />
+    <property name="kgdatetime" column="kgdatetime" />
+    <property name="Gwj_Istb" column="Gwj_Istb" />
+    <property name="Gwj_tbtime" column="Gwj_tbtime" />
+    <property name="orderbianhao" column="orderbianhao" />
   </class>
 </hibernate-mapping>

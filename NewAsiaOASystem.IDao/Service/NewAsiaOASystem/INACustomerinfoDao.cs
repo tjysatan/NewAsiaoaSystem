@@ -126,7 +126,17 @@ namespace NewAsiaOASystem.IDao
        /// 按照时间顺序查找全部的客户信息
        /// </summary>
        /// <returns></returns>
-       IList<NACustomerinfoView> GetAllCusinfoordertime(); 
-       #endregion
+       IList<NACustomerinfoView> GetAllCusinfoordertime();
+        #endregion
+
+       
+        #region //通过客户的编码查询客户信息
+        /// <summary>
+        /// 客户编码
+        /// </summary>
+        /// <param name="code"></param>
+        /// <returns></returns>
+        NACustomerinfoView Getcusinfobycode(string code); 
+        #endregion
     }
 }

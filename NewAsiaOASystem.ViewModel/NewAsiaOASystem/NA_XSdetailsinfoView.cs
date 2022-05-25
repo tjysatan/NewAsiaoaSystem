@@ -91,5 +91,10 @@ namespace NewAsiaOASystem.ViewModel
 
 
         public virtual string beizhu { get; set; }
+
+        /// <summary>
+        /// 电商明细排序字段
+        /// </summary>
+        public virtual int? ItemId { get; set; }
     }
 }

@@ -1,0 +1,150 @@
+﻿@{
+    ViewBag.Title = "技术小组的成本数据";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<script type="text/javascript">
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+    $(function () {
+        Getjscbcost();
+    })
+    //查询技术小组的成本数据
+    function Getjscbcost() {
+        $.ajax({
+            url: "../ERPDATA/Getjsxzcostbynameanddate",
+            type: "POST",
+            data: { name: '@ViewData["name"]', date: '@ViewData["date"]' },
+            dataType: "json",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response.result == "error") {
+                    //layer.alert(response.msg, { icon: 2 }, function () { location.reload(); });
+                }
+                if (response.result == "success") {
+                    //layer.alert(response.msg, { icon: 1 }, function () { location.reload(); });
+                    var json =eval('['+response.data+']');
+                    console.log('1111', json[0].Fy_jine1)
+                    var cost1 = json[0].Fy_jine1;
+                    var cost2 = json[0].Fy_jine2;
+                    var cost3 = json[0].Fy_jine3;
+                    $("#cost1").val(cost1);
+                    $("#cost2").val(cost2);
+                    $("#cost3").val(cost3);
+                }
+
+
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+    }
+
+    //提交成本费用设置
+    function saveorupdatecbcost() {
+        var cost1 = $("#cost1").val();
+        var cost2 = $("#cost2").val();
+        var cost3 = $("#cost3").val();
+        if (cost1 == "") {
+            layer.alert("研发人员工资福利不为空。", { icon: 2 });
+        }
+        else {
+            if (isNaN(cost1)) {
+                layer.alert("研发人员工资福利请填写数字！", { icon: 2 });
+                return false;
+            }
+        }
+        if (cost2 == "") {
+            layer.alert("研发人员费用不为空。", { icon: 2 });
+        }
+        else {
+            if (isNaN(cost2)) {
+                layer.alert("研发人员费用请填写数字！", { icon: 2 });
+                return false;
+            }
+        }
+        if (cost3 == "") {
+            layer.alert("售后费用不为空。", { icon: 2 });
+        }
+        else {
+            if (isNaN(cost3)) {
+                layer.alert("售后费用请填写数字！", { icon: 2 });
+                return false;
+            }
+        }
+        $.ajax({
+            url: "../ERPDATA/Saveorupdate_Js_xz_cbcost",
+            type: "POST",
+            data: { name: '@ViewData["name"]', date: '@ViewData["date"]', cost1: cost1, cost2: cost2, cost3: cost3 },
+            dataType: "json",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+
+                disLoading();
+                if (response.result == "success") {
+                    layer.alert(response.msg, { icon: 1 }, function () { location.reload(); });
+                }
+                if (response.result == "error") {
+                    layer.alert(response.msg, { icon: 2 });
+                }
+            }
+        })
+    }
+
+</script>
+
+<div style="padding: 20px 20px 0 20px">
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:120px;">技术小组：</label>
+        <div class="layui-input-inline" style="width:220px;line-height:38px">
+            @ViewData["name"]
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="width:120px;">数据月份：</label>
+        <div class="layui-input-inline" style="width:220px;line-height:38px">
+            @ViewData["date"]
+        </div>
+    </div>
+    <div class="layui-form" action="">
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width:120px;">研发人员工资福利</label>
+            <div class="layui-input-inline" style="width:220px">
+                <input type="text" name="cost1" id="cost1" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width:120px;">研发人员费用</label>
+            <div class="layui-input-inline" style="width:220px">
+                <input type="text" name="cost2" id="cost2" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width:120px;">售后费用</label>
+            <div class="layui-input-inline" style="width:220px">
+                <input type="text" name="cost3" id="cost3" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width:140px"> </label>
+            <div class="layui-input-block">
+                <button type="submit" class="layui-btn" lay-submit="" onclick="saveorupdatecbcost()">提交保存</button>
+            </div>
+        </div>
+    </div>
+</div>

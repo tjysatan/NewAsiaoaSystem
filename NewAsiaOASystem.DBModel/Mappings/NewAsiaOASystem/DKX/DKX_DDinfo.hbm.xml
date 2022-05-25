@@ -124,10 +124,12 @@
     <property name="YJcb" column="YJcb"/>
     <property name="Ps_orderno" column="Ps_orderno"/>
     <property name="gwj_gylxId" column="gwj_gylxId"/>
-
     <property name="gczl_Isyc" column="gczl_Isyc"/>
     <property name="gczl_ycyy" column="gczl_ycyy"/>
     <property name="gczl_yctime" column="gczl_yctime"/>
     <property name="gczl_yccltime" column="gczl_yccltime"/>
+    <property name="CONTROL_INFO_NO" column="CONTROL_INFO_NO"/>
+    <property name="COMPRESSOR_TYPE" column="COMPRESSOR_TYPE"/>
+    <property name="liushuitype" column="liushuitype"/>
   </class>
 </hibernate-mapping>

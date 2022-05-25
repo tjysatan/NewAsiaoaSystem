@@ -48,3 +48,4 @@ D:\object\NewAsiaOASystem.DBModel\obj\Debug\NewAsiaOASystem.DBModel.csproj.CoreC
 D:\object\NewAsiaOASystem.DBModel\obj\Debug\NewAsiaOASystem.DBModel.csproj.CopyComplete
 D:\object\NewAsiaOASystem.DBModel\obj\Debug\NewAsiaOASystem.DBModel.dll
 D:\object\NewAsiaOASystem.DBModel\obj\Debug\NewAsiaOASystem.DBModel.pdb
+D:\object\NewAsiaOASystem.DBModel\obj\Debug\NewAsiaOASystem.DBModel.csprojAssemblyReference.cache

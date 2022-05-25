@@ -247,6 +247,90 @@ namespace NewAsiaOASystem.Dao
         }
         #endregion
 
+        #region //返退明细列表分页数据（2022211）
+        /// <summary>
+        /// 返退明细列表分页数据
+        /// </summary>
+        /// <param name="khname">客户名称</param>
+        /// <param name="cpname">产品名称型号</param>
+        /// <param name="SC_PH">生产批次</param>
+        /// <param name="starttime">创建时间</param>
+        /// <param name="enedtime"></param>
+        /// <param name="wxstarttime">维修时间</param>
+        /// <param name="wxendtime"></param>
+        /// <param name="r_pId">产品类</param>
+        /// <param name="Isdz">定责情况</param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public PagerInfo<NQ_THinfoFXView> GetNewCinfoList(string khname, string cpname, string SC_PH, string starttime, string enedtime, string wxstarttime, string wxendtime, string r_pId, string Isdz,
+            string dzstarttime,string dzendtime, SessionUser user)
+        {
+            TempList = new List<string>();
+            TempHql = new StringBuilder();
+            if (!string.IsNullOrEmpty(khname))
+                TempHql.AppendFormat(" and u.R_Id in (select Id from NAReturnList where C_Id='{0}')", khname);
+            if (!string.IsNullOrEmpty(cpname))
+                TempHql.AppendFormat(" and u.P_Id in (select Id from NQ_productinfo where Cpmode like '%{0}%')", cpname);
+            if (!string.IsNullOrEmpty(SC_PH))
+                TempHql.AppendFormat(" and u.TH_Ph like '%{0}%'", SC_PH);
+            if (!string.IsNullOrEmpty(starttime))
+                TempHql.AppendFormat("and u.C_time>='{0}' and C_time<='{1}'", starttime + " 00:00:00", enedtime + " 23:59:59");
+            if (!string.IsNullOrEmpty(wxstarttime))
+                TempHql.AppendFormat(" and u.wx_time>='{0}' and wx_time<='{1}'", wxstarttime + " 00:00:00", wxendtime + " 23:59:59");
+            if (!string.IsNullOrEmpty(r_pId))
+                TempHql.AppendFormat("and u.P_Id in (select Id from NQ_productinfo where Nptype in ({0}))", r_pId);
+            if (!string.IsNullOrEmpty(Isdz))
+                TempHql.AppendFormat(" and u.Isdz='{0}'",Isdz);
+            if(!string.IsNullOrEmpty(dzstarttime))
+                TempHql.AppendFormat(" and u.dzdatetime>='{0}' and dzdatetime<='{1}'", dzstarttime + " 00:00:00", dzendtime + " 23:59:59");
+            TempHql.AppendFormat("order by u.C_time desc");
+            PagerInfo<NQ_THinfoFXView> list = Search();
+            return list;
+        }
+        #endregion
+
+        #region //退货明细导出数据(2022211)
+        /// <summary>
+        /// 退货明细导出数据(2022211)
+        /// </summary>
+        /// <param name="khname"></param>
+        /// <param name="cpname"></param>
+        /// <param name="SC_PH"></param>
+        /// <param name="starttime"></param>
+        /// <param name="enedtime"></param>
+        /// <param name="wxstarttime"></param>
+        /// <param name="wxendtime"></param>
+        /// <param name="r_pId"></param>
+        /// <param name="Isdz"></param>
+        /// <returns></returns>
+        public IList<NQ_THinfoFXView> NewDCWXFXDATA(string khname, string cpname, string SC_PH, string starttime, string enedtime, string wxstarttime, string wxendtime, string r_pId, string Isdz, string dzstarttime, string dzendtime)
+        {
+            TempList = new List<string>();
+            TempHql = new StringBuilder();
+            if (!string.IsNullOrEmpty(khname))
+                TempHql.AppendFormat(" and u.R_Id in (select Id from NAReturnList where C_Id='{0}')", khname);
+            if (!string.IsNullOrEmpty(cpname))
+                TempHql.AppendFormat(" and u.P_Id in (select Id from NQ_productinfo where Cpmode like '%{0}%')", cpname);
+            if (!string.IsNullOrEmpty(SC_PH))
+                TempHql.AppendFormat(" and u.TH_Ph like '%{0}%'", SC_PH);
+            if (!string.IsNullOrEmpty(starttime))
+                TempHql.AppendFormat("and u.C_time>='{0}' and C_time<='{1}'", starttime + " 00:00:00", enedtime + " 23:59:59");
+            if (!string.IsNullOrEmpty(wxstarttime))
+                TempHql.AppendFormat(" and u.wx_time>='{0}' and wx_time<='{1}'", wxstarttime + " 00:00:00", wxendtime + " 23:59:59");
+            if (!string.IsNullOrEmpty(r_pId))
+                TempHql.AppendFormat("and u.P_Id in (select Id from NQ_productinfo where Nptype in ({0}))", r_pId);
+            if (!string.IsNullOrEmpty(Isdz))
+                TempHql.AppendFormat(" and u.Isdz='{0}'", Isdz);
+            if (!string.IsNullOrEmpty(dzstarttime))
+                TempHql.AppendFormat(" and u.dzdatetime>='{0}' and dzdatetime<='{1}'", dzstarttime + " 00:00:00", dzendtime + " 23:59:59");
+            TempHql.AppendFormat("order by u.C_time desc");
+            string HQLstr = string.Format("from NQ_THinfoFX u where 1=1 {0}", TempHql.ToString());
+            List<NQ_THinfoFX> list = HibernateTemplate.Find<NQ_THinfoFX>(HQLstr) as List<NQ_THinfoFX>;
+            IList<NQ_THinfoFXView> listmodel = GetViewlist(list);
+            return listmodel;
+        }
+        #endregion
+
         #region //根据反退货流程单Id 查询出返退明细的分页数据 （维修的）
         /// <summary>
         /// 根据反退货流程单Id 查询出返退明细的分页数据

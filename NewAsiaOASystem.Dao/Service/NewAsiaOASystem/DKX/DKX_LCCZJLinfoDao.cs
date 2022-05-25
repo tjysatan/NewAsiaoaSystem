@@ -150,7 +150,7 @@ namespace NewAsiaOASystem.Dao
         /// <param name="c_timestart">创建时间</param>
         /// <param name="c_timeend"></param>
         /// <returns></returns>
-        public IList<DKX_LCCZJLinfoView> Getlcczjldatabycondition(string ddid, string gcsid, string ddbianhao, string c_timestart, string c_timeend,string CBRId)
+        public IList<DKX_LCCZJLinfoView> Getlcczjldatabycondition(string ddid, string gcsid, string ddbianhao, string c_timestart, string c_timeend,string CBRId, string caozuotype)
         {
              DateTime now = DateTime.Now;
             DateTime d1 = new DateTime(now.Year, now.Month, 1);
@@ -160,7 +160,10 @@ namespace NewAsiaOASystem.Dao
             TempList = new List<string>();
             TempHql = new StringBuilder();
             TempHql.AppendFormat(" from DKX_LCCZJLinfo where ");
-            TempHql.AppendFormat("  caozuotype='0'");
+            if(string.IsNullOrEmpty(caozuotype))
+                TempHql.AppendFormat("  caozuotype='0'");
+            else
+                TempHql.AppendFormat("  caozuotype='{0}'", caozuotype);
             if (!string.IsNullOrEmpty(ddid))
                 TempHql.AppendFormat(" and dd_Id = '{0}'", ddid);
             if (!string.IsNullOrEmpty(gcsid))
@@ -173,7 +176,7 @@ namespace NewAsiaOASystem.Dao
                 TempHql.AppendFormat("and c_time>='{0}' and c_time<='{1}'", c_timestart + " 00:00:00", c_timeend + " 23:59:59");
             else
                 TempHql.AppendFormat("and c_time>='{0}' and c_time<='{1}'", ksdate + " 00:00:00", jsdate + " 23:59:59");
-          
+            TempHql.AppendFormat(" order by c_time desc");
             List<DKX_LCCZJLinfo> list = HibernateTemplate.Find<DKX_LCCZJLinfo>(TempHql.ToString()) as List<DKX_LCCZJLinfo>;
             IList<DKX_LCCZJLinfoView> listmodel = GetViewlist(list);
             if (listmodel != null)

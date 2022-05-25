@@ -1,0 +1,180 @@
+﻿@{
+    ViewBag.Title = "产品标准工时计算";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<script type="text/javascript">
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+
+    //工时计算
+    function JSGS() {
+        var wlno = $("#wlno").val();
+        var txtxishu = $("#txtxishu").val();
+        if (wlno == "" || wlno == null) {
+            layer.alert("物料编号不为空！", { icon: 2 });
+            return false;
+        }
+        if (txtxishu == "" || txtxishu == null) {
+
+            layer.alert("系数不为空！", { icon: 2 });
+            return false;
+        }
+        else {
+            if (isNaN(txtxishu)) {
+                layer.alert("系数为纯数字！", { icon: 2 });
+                return false;
+            }
+        }
+        $.ajax({
+            url: "../K3Basicdata/GetchanpanSWH",
+            type: "POST",
+            data: { wlno: wlno, xishu: txtxishu },
+            dataType: "json",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response.result == "success") {
+                    pushHTML(response.BOMdata);
+                    hzgsHTML(response.HZGSdata)
+                     }
+             
+                 
+                else {
+                    layer.alert(response.msg, { icon: 2 }, function () { location.reload(); });
+                }
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+    }
+
+    function hzgsHTML(strjson) {
+        console.log(strjson)
+        strjson = eval("["+strjson+"]");
+        var wlno = $("#wlno").val();
+        var xh;
+        var html = "";
+        html += '<tr>';
+      
+        html += '<td>物料代码</td>';
+        html += '<td>底板装配工时</td>';
+        html += '<td>控制线工时</td>';
+        html += '<td>主回路线工时</td>';
+        html += '<td>面板装箱工时</td>';
+        html += '<td>面板接线工时</td>';
+        html += '<td>总工时（S）</td>';
+        html += '</tr>';
+        if (strjson != "" && strjson != null) {
+             
+                html += '<tr>';
+         
+            html += '<td>' + wlno + '</td>';
+            html += '<td>' + Number(strjson[0].Z_DQZZDBGS).toFixed(2) + '</td>';
+            html += '<td>' + Number(strjson[0].Z_DQZZKZXGS).toFixed(2) + '</td>';
+            html += '<td>' + Number(strjson[0].Z_DQZZZHLGS).toFixed(2) + '</td>';
+            html += '<td>' + Number(strjson[0].Z_DQZZMBZXGS).toFixed(2) + '</td>';
+            html += '<td>' + Number(strjson[0].Z_DQZZMBJXGS).toFixed(2) + '</td>';
+            html += '<td>' + Number(strjson[0].hz_gxgs).toFixed(2) + '/' + (Number(strjson[0].hz_gxgs)/60).toFixed(2)+'</td>';
+            html += '</tr>';
+            
+        }
+        $("#table_con").html(html);
+    }
+
+    function pushHTML(strjson) {
+        
+        strjson = eval(strjson);
+       
+        var xh;
+        var html = "";
+        html += '<tr>';
+        html += '<td>序号</td>';
+        html += '<td>物料代码</td>';
+        html += '<td>产品名称</td>';
+        html += '<td>规格型号</td>';
+        html += '<td>需求量</td>';
+        html += '<td>底板装配工时</td>';
+        html += '<td>控制线工时</td>';
+        html += '<td>主回路线工时</td>';
+        html += '<td>面板装箱工时</td>';
+        html += '<td>面板接线工时</td>';
+        html += '<td>总工时（S）</td>';
+        html += '</tr>';
+        if (strjson != "" && strjson != null) {
+            $("#DocEntry").val(strjson[0]["DocEntry"]);
+           
+            for (var i = 0, j = strjson.length; i < j; i++) {
+                xh = i + 1;
+                html += '<tr>';
+                html += '<td>' + strjson[i]["LineNum"] + '</td>';
+                html += '<td>' + strjson[i]["ItmID"] + '</td>';
+                html += '<td>' + strjson[i]["ItmName"] + '</td>';
+                html += '<td>' + strjson[i]["ItmSpec"] + '</td>';
+                html += '<td>' + strjson[i]["NetQty"] + '</td>';
+                html += '<td>' + Number(strjson[i]["b_Z_DQZZDBGS"]).toFixed(2) + '</td>';
+                html += '<td>' + Number(strjson[i]["b_Z_DQZZKZXGS"]).toFixed(2) + '</td>';
+                html += '<td>' + Number(strjson[i]["b_Z_DQZZZHLGS"]).toFixed(2) + '</td>';
+                html += '<td>' + Number(strjson[i]["b_Z_DQZZMBZXGS"]).toFixed(2) + '</td>';
+                html += '<td>' + Number(strjson[i]["b_Z_DQZZMBJXGS"]).toFixed(2) + '</td>';
+                html += '<td>' + Number(strjson[i]["b_zgs"]).toFixed(2) + '</td>';
+                html += '</tr>';
+            }
+        }
+        $("#table_con2").html(html);
+    }
+</script>
+
+
+<div style="width: 80%; padding: 20px 20px 0 20px">
+    <div class="layui-form-item">
+        <label class="layui-form-label">物料代码：</label>
+        <div class="layui-input-inline">
+            <input class="layui-input" id="wlno" name="wlno" placeholder="物料代码" type="text" />
+        </div>
+        <div class="layui-input-inline">
+            <input class="layui-input" id="txtxishu" name="txtxishu" placeholder="系数" type="text" />
+        </div>
+        <div class="layui-input-inline">
+            <button class="layui-btn layui-btn-sm" lay-submit="" lay-filter="demo1" onclick="return JSGS()">工时计算</button>
+        </div>
+    </div>
+</div>
+
+<div class="layui-bg-gray" style="padding: 30px;">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md5">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    工序工时汇总
+                </div>
+                <div class="layui-card-body">
+                    <table class="table_con" style="width: 98%; color: #000; font-size: 13px; margin: auto;" id="table_con">
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md7">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                   BOM明细工时
+                </div>
+                <div class="layui-card-body">
+                    <table class="table_con" style="width: 98%; color: #000; font-size: 13px; margin: auto;" id="table_con2">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,257 @@
+﻿@{
+    ViewBag.Title = "报价单列表";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+
+@section HeadContent{
+
+    <script type="text/javascript">
+        var loadi;
+        function ddchen() {
+            loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+        }
+        //关闭等待效果
+        function disLoading() {
+            layer.close(loadi);
+        }
+        $(function () {
+            Gettabledata()
+        })
+
+        //初始化table数据
+        function Gettabledata() {
+            var txt_Cusname = $("#txt_Cusname").val();
+            var txt_BJno = $("#txt_BJno").val();
+            layui.use('table', function () {
+                var table = layui.table;
+                table.render({
+                    elem: '#test',
+                    url: '/BJBasicdata/GetPager_service',
+                    where: {
+                        CUST_NAME: txt_Cusname,
+                        ORDER_NO: txt_BJno
+                    },
+                    cellMinWidth: 80, //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                    cols: [[
+                        { field: 'Id', width: 80, title: 'ID', sort: true, },
+                        { field: 'CONTROL_INFO_NO', width: 130, title: '报价单号', fixed: 'left' },
+                        { field: 'ORDER_NO', width: 130, title: '报价单号', fixed: 'left' },
+                        { field: 'CUST_NAME', width: 130, title: '客户' },
+                        { field: 'bjPrice', width: 130, title: '报价金额' },
+                        {
+                            field: 'CREATE_TIME', width: 130, title: '创建时间', templet(d) {
+                                //return layui_dateToStr(d.Ysdatetime)
+                                if (d.CREATE_TIME != "" && d.CREATE_TIME != null) {
+                                    return layui_dateToStr(d.CREATE_TIME);
+                                }
+                                else {
+                                    return "";
+                                }
+                            }
+                        },
+                        {
+                            field: 'UPDATE_TIME', width: 130, title: '更新时间', templet(d) {
+                                //return layui_dateToStr(d.Ysdatetime)
+                                if (d.UPDATE_TIME != "" && d.UPDATE_TIME != null) {
+                                    return layui_dateToStr(d.UPDATE_TIME);
+                                }
+                                else {
+                                    return "";
+                                }
+                            }
+                        },
+                        { field: '', title: '操作', width: 160, fixed: 'right', toolbar: "#bar" }
+
+                    ]],
+                    done: function (res, curr, count) {
+                        $(".layui-table-box").find("[data-field='Id']").css("display", "none");
+
+                    }
+                    , page: true
+                    , limits: [3, 5, 10, 15, 20]  //一页选择显示3,5或10条数据
+                    , limit: 10  //一页显示10条数据
+                });
+                table.on('tool(test)', function (obj) {
+                    var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+                    var data = obj.data; //获得当前行 tr 的 DOM 对象（如果有的话）
+                    if (layEvent === 'check_xq') { //需求查看
+                        xucheck(data.CONTROL_INFO_NO, data.COMPRESSOR_TYPE);
+
+                    }
+                    if (layEvent === 'check_bom') { //BOM查看
+                        bomcheck(data.CONTROL_INFO_NO);
+                    }
+                    if (layEvent === 'Eide_xd') {//信息修改
+                        OpenxdView(data.CONTROL_INFO_NO, data.ORDER_NO, data.COMPRESSOR_TYPE);
+                    }
+                    if (layEvent === 'update_bjdjg') {
+                        getbjjg(data.Id);
+                    }
+                })
+            })
+        }
+
+        //同步报价单数据
+        function Tbbjorder() {
+            $.ajax({
+                url: "../BJBasicdata/Tbbjorder",
+                type: "POST",
+                dataType: "json",
+                async: true,
+                beforeSend: function () {
+                    ddchen();
+                },
+                success: function (response) {
+                    disLoading();
+                    if (response.result == "success") {
+                        layer.alert(response.msg, { icon: 1 }, function () { location.reload(); });
+                    }
+                    if (response.result == "error") {
+                        layer.alert(response.msg, { icon: 2 }, function () { location.reload(); });
+                    }
+
+                },
+                error: function (e) {
+                    disLoading();
+                    layer.alert("操作失败！", { icon: 2 });
+                }
+            })
+        }
+
+        //重新获取报价单的价格
+        
+        function getbjjg(val) {
+            $.ajax({
+                url: "../BJBasicdata/GetBJqingdanbj",
+                type: "POST",
+                data: { Id: val },
+                dataType: "json",
+                async: true,
+                beforeSend: function () {
+                    ddchen();
+                },
+                success: function (response) {
+                    disLoading();
+                    if (response.result == "success") {
+                        layer.alert(response.msg, { icon: 1 }, function () { location.reload(); });
+                    }
+                    if (response.result == "error") {
+                        layer.alert(response.msg, { icon: 2 }, function () { location.reload(); });
+                    }
+
+                },
+                error: function (e) {
+                    disLoading();
+                    layer.alert("操作失败！", { icon: 2 });
+                }
+            })
+        }
+
+        //跳转需求
+        function xucheck(var1, var2) {
+            var xqurl = "";
+            if (var2 == "0") {
+                xqurl = 'http://106.14.40.169:7766/TZGL/XQB/BLDetail.aspx?CONTROL_NO=' + var1
+            }
+            else if (var2 == "1") {
+                xqurl = 'http://106.14.40.169:7766/TZGL/XQB/LGDetail.aspx?CONTROL_NO=' + var1
+            }
+            else if (var2 == "2") {
+                xqurl = 'http://106.14.40.169:7766/TZGL/XQB/LSDetail.aspx?CONTROL_NO=' + var1
+            }
+            else if (var2 == "3") {
+                xqurl = 'http://106.14.40.169:7766/TZGL/XQB/MDDetail2.aspx?CONTROL_NO=' + var1
+            }
+            else if (var2 == "12") {
+                xqurl = 'http://106.14.40.169:7766/TZGL/XQB/PTLDetail.aspx?CONTROL_NO=' + var1
+            } else {
+                xqurl = 'http://106.14.40.169:7766/TZGL/XQB/XXTDetail.aspx?CONTROL_NO=' + var1
+            }
+            window.open(xqurl)
+
+        }
+        //跳转料单
+        function bomcheck(var1) {
+            var xqurl = 'http://106.14.40.169:7766/TZGL/ToExcel2.aspx?NO=' + var1
+            window.open(xqurl)
+        }
+
+        //下单页面
+        function OpenxdView(val, val1,val2) {
+            layer.open({
+            type: 2,
+            title: ['根据报价单-非标下单', 'font-size:14px;'],
+            area: ['800px', '650px'],
+            fixed: false, //不固定
+                maxmin: true,
+                content: '../DKX_DD/DKXXXDbyBJView?bjno=' + val + '&bjorderno=' + val1 + '&bjtype=' + val2,
+
+            //end: function () {
+            //    location.reload();
+            //}
+        })
+        }
+
+    </script>
+    <script type="text/html" id="bar">
+        <div class="layui-btn-group">
+            <button type="button" class="layui-btn  layui-btn-xs layui-btn-normal" lay-event="check_xq" title="需求">
+                <i class="layui-icon">&#xe63c;</i>
+            </button>
+            <button type="button" class="layui-btn layui-btn-xs layui-btn-warm" lay-event="check_bom" title="报价料单">
+                <i class="layui-icon">&#xe63c;</i>
+            </button>
+            <button type="button" class="layui-btn layui-btn-xs layui-btn-normal" lay-event="Eide_xd" title="下单">
+                <i class="layui-icon">&#xe642;</i>
+            </button>
+            <button type="button" class="layui-btn layui-btn-xs layui-btn-normal" lay-event="update_bjdjg" title="刷新报价单价格">
+                <i class="layui-icon">&#xe65e;</i>
+            </button>
+        </div>
+    </script>
+
+}
+
+
+<div class="inquiry1">
+    <fieldset>
+        <legend>查询条件：</legend>
+        <ul>
+            <li>
+                <span>客户名称：</span>
+                <span class="inquiry-input">
+                    <input type="text" name="txt_Cusname" id="txt_Cusname" />
+                </span>
+            </li>
+            <li>
+                <span>报价单号：</span>
+                <span class="inquiry-input">
+                    <input type="text" name="txt_BJno" id="txt_BJno" />
+                </span>
+            </li>
+            <li style="*width: 100%; *margin: -10px 0 5px 90px;">
+                <span class="inquiry-input">
+                    <button name="btnSerch" class="layui-btn" onclick="Gettabledata()"><i class="layui-icon">&#xe615;</i>查询</button>
+                </span>
+            </li>
+
+            <li>
+                <span class="inquiry-input">
+                    <button class="layui-btn" onclick="Tbbjorder(); return false; " id="parentIframe"><i class="layui-icon">&#xe608;</i> 同步报价系统</button>
+                </span>
+                <span class="inquiry-input">
+                    <button class="layui-btn" onclick="return myrefresh()"><i class="layui-icon">&#x1002;</i>刷新</button>
+                </span>
+            </li>
+        </ul>
+    </fieldset>
+</div>
+
+
+<div style="padding:0 20px 0 20px">
+    <table class="layui-hide" id="test" lay-filter="test"></table>
+</div>
+
+
+<script src="~/Scripts/NAjs/DKXpulice.js"></script>

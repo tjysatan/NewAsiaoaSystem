@@ -107,5 +107,15 @@ namespace NewAsiaOASystem.ViewModel
         /// BOM编号
         /// </summary>
         public virtual string Bomno { get; set; }
+
+        /// <summary>
+        /// 未清拣配的数量
+        /// </summary>
+        public virtual decimal? wjjpsum { get; set; }
+
+        /// <summary>
+        /// 生产在定量
+        /// </summary>
+        public virtual decimal? sczdsum { get; set; }
     }
 }

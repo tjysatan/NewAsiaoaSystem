@@ -1,0 +1,20 @@
+2021-07-27 16:11:13,992 [72] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2021-07-27 16:11:13,992 [72] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2021-07-27 16:11:13,992 [72] ERROR ApplicationInfoLog [(null)] <(null)< - The view 'AddBmxView' or its master was not found or no view engine supports the searched locations. The following locations were searched:
+~/Views/DKX_DD/AddBmxView.cshtml
+~/Views/Shared/AddBmxView.cshtml
+~/Views/Sys/DKX_DD/AddBmxView.cshtml
+~/Views/NewAsiaOASystem/DKX_DD/AddBmxView.cshtml
+~/Views/Wx/DKX_DD/AddBmxView.cshtml
+~/Views/Vote/DKX_DD/AddBmxView.cshtml
+~/Views/NAFlow/DKX_DD/AddBmxView.cshtml
+~/Views/DKX/DKX_DD/AddBmxView.cshtml
+~/Views/KSGZ/DKX_DD/AddBmxView.cshtml
+~/Views/sbycjk/DKX_DD/AddBmxView.cshtml
+2021-07-27 16:11:13,992 [72] ERROR ApplicationInfoLog [(null)] <(null)< - System.Web.Mvc.ViewEngineResult FindView(System.Web.Mvc.ControllerContext)
+2021-07-27 16:11:13,992 [72] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================
+2021-07-27 16:57:39,987 [53] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2021-07-27 16:57:39,987 [53] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2021-07-27 16:57:39,987 [53] ERROR ApplicationInfoLog [(null)] <(null)< - There is no ViewData item of type 'IEnumerable<SelectListItem>' that has the key 'txtDD_Type'.
+2021-07-27 16:57:39,987 [53] ERROR ApplicationInfoLog [(null)] <(null)< - System.Collections.Generic.IEnumerable`1[System.Web.Mvc.SelectListItem] GetSelectData(System.Web.Mvc.HtmlHelper, System.String)
+2021-07-27 16:57:39,987 [53] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================

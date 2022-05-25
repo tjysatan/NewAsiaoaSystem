@@ -140,5 +140,23 @@ namespace NewAsiaOASystem.Dao
                 return null;
         }
         #endregion
+
+        #region //根据订单(方案库产品)Id 查询料单
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Id">订单Id 或者产品Id</param>
+        /// <returns></returns>
+        public IList<DKX_k3BominfoView> GetliaodanlistbyId(string Id)
+        {
+            string Hqlstr = string.Format("from DKX_k3Bominfo where dd_Id='{0}' order by FNumber desc ", Id);
+            List<DKX_k3Bominfo> list = HibernateTemplate.Find<DKX_k3Bominfo>(Hqlstr) as List<DKX_k3Bominfo>;
+            IList<DKX_k3BominfoView> listmodel = GetViewlist(list);
+            if (listmodel != null)
+                return listmodel;
+            else
+                return null;
+        }
+        #endregion
     }
 }

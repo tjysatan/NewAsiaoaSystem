@@ -16,7 +16,10 @@
 
     $(function () {
         //BindGrid();
-        Gettabledata()
+        Gettabledata();
+        var json = Getxsorderqtinfo();
+
+
     })
 
      //初始化订单明细的数据表格
@@ -86,7 +89,7 @@
             else {
                 if (yfprice == 0) {
                     layer.alert("调式费不能填写0", { icon: 2 });
-                    return false;
+                    return falseXs_je;
                 }
             }
         }
@@ -117,7 +120,7 @@
         layer.open({
             type: 2,
             title: ['选择其他非标订单', 'font-size:14px;'],
-            area: ['800px', '400px'],
+            area: ['95vw', '400px'],
             offset: '10px',
             fixed: false, //不固定
             maxmin: true,
@@ -189,8 +192,7 @@
             }
             else {
                 if (yfprice == 0) {
-                    layer.alert("运费不能填写0", { icon: 2 });
-                    return false;
+                    yfprice = "";
                 }
             }
         }
@@ -201,8 +203,7 @@
             }
             else {
                 if (yfprice == 0) {
-                    layer.alert("调式费不能填写0", { icon: 2 });
-                    return false;
+                    yfprice = "";
                 }
             }
         }
@@ -226,6 +227,94 @@
             }
         })
     }
+
+    //查询销售订单其他信息
+    function Getxsorderqtinfo() {
+        var json;
+         $.ajax({
+            url: "../NA_XSinfo/Getxsorderqtinfo",
+            type: "POST",
+            data: { dsorderId: '@Model.Sort'},
+            dataType: "json",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+             success: function (response) {
+                 json = eval(response);
+                 if (json == null) {
+                     var zje = parseFloat('@Model.Xs_je');
+                     var str = "";
+                     if ('@Model.PaymentTypeName' == "微信支付" || '@Model.PaymentTypeName' == "支付宝") {
+                         var xxf = zje * 0.006;
+                         str = "订单总金额：" + zje + "&nbsp;&nbsp;支付方式：" + '@Model.PaymentTypeName' + ",&nbsp;&nbsp;需要扣除" + xxf.toFixed(2) + "手续费";
+                     }
+                     else {
+                         str = "订单总金额：" + zje + "&nbsp;&nbsp;支付方式：" + '@Model.PaymentTypeName';
+                     }
+                     $("#htmlzffs").html(str);
+                 } else {
+                     $("#Z_JHDD").val(json.Dsjhdd);
+                     $("#Z_YSFS").val(json.Dsyfcd);
+                     $("#yfprice").val(json.Dsyf);
+                     var zje = parseFloat('@Model.Xs_je') + parseFloat(json.Dsyf);
+                     var str = "";
+                     if ('@Model.PaymentTypeName' == "微信支付" || '@Model.PaymentTypeName' == "支付宝") {
+                         var xxf = zje * 0.006;
+                         str = "订单总金额：" + zje + "&nbsp;&nbsp;支付方式：" + '@Model.PaymentTypeName' + ",&nbsp;&nbsp;需要扣除" + xxf.toFixed(2) + "手续费";
+                     }
+                     else {
+                         str = "订单总金额：" + zje + "&nbsp;&nbsp;支付方式：" + '@Model.PaymentTypeName';
+                     }
+                     $("#htmlzffs").html(str);
+                 }
+                 disLoading();
+            }
+         })
+        return json;
+    }
+
+    //更新销售订单其信息
+    function confirm_updatexsqtinfo() {
+         $.ajax({
+             url: "../NA_XSinfo/updatexs_qtinfo",
+            type: "POST",
+            data: { Id: '@Model.Id'},
+            dataType: "json",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response.result == "success") {
+                    layer.alert(response.msg, { icon: 1 }, function () { location.reload(); });
+                }
+                if (response.result == "error") {
+                    layer.alert(response.msg, { icon: 2 }, function () { location.reload(); });
+                }
+            }
+        })
+    }
+
+    //合同打印
+        //合同正文页面打印查看
+    function OpenhtzwView() {
+        @*layer.open({
+            type: 2,
+            title: ['合同正文查看/打印', 'font-size:14px;'],
+            area: ['90vw', '100%'],
+            offset: '10px',
+            fixed: false, //不固定
+            maxmin: true,
+            content: '../DKX_DD/FBHTZWView?Id=' + '@Model.Id',
+            //end: function () {
+            //    location.reload();
+            //}
+        })*@
+        var url = '../NA_XSinfo/XShetongView?Id=' + '@Model.Id';
+        window.open(url);
+    }
 </script>
 
 <script type="text/html" id="bar">
@@ -240,7 +329,9 @@
 </script>
 
 <div style="padding:10px 10px 10px 10px">
-
+    <div id="htmlzffs">
+      
+    </div>
     <div class="layui-form" action="">
 
         <div class="layui-form-item">
@@ -279,11 +370,11 @@
             </div>
 
         </div>
-        @*<div class="layui-form-item">
+        <div class="layui-form-item">
                 <div class="layui-input-block">
-                    <button class="layui-btn" onclick="confirm_tbxxwork()">立即同步普实</button>
+                    <button class="layui-btn" onclick="confirm_updatexsqtinfo()">更新订单其他信息</button>
                 </div>
-            </div>*@
+            </div>
     </div>
 
     <div class="layui-card">
@@ -301,6 +392,8 @@
     <div class="layui-form-item">
         <div class="layui-input-block" style="float:right; padding-right:40px">
             <button class="layui-btn" onclick="confirm_tbxxwork()">同步普实</button>
+
+            <button class="layui-btn" onclick="OpenhtzwView()">合同打印</button>
         </div>
     </div>
 </div>

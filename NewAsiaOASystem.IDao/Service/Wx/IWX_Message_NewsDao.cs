@@ -31,6 +31,11 @@ namespace NewAsiaOASystem.IDao
 
          #region //根据多个Id 查询多条记录
         IList<WX_Message_News> NGetListdata_id(string id);
-         #endregion
+        #endregion
+
+        
+        #region //查询分页数据
+        PagerInfo<WX_Message_NewsView> GetCinfoList(string Title, string Description); 
+        #endregion
     }
 }

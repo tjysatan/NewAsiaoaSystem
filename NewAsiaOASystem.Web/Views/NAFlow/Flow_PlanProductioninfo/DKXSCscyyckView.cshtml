@@ -54,27 +54,18 @@
             url: "../Flow_PlanProductioninfo/InsterGWJ",
             type: "POST",
             data: { Id: '@ViewData["Id"]',},
-            dataType: "html",
+            dataType: "json",
             async: true,
             beforeSend: function () {
                 ddchen();
             },
             success: function (response) {
                 disLoading();
-                if (response == "1") {
-                    layer.alert("操作出错！", { icon: 2 }, function () { location.reload(); });
+                if (response.result == "success") {
+                    layer.alert(response.msg, { icon: 1 }, function () { location.reload(); });
                 }
- 
-                else if (response == "0-1") {
-                    layer.alert("没有图纸资料！", { icon: 2 }, function () { location.reload(); });
-                }
-                else if (response == "1-1") {
-                    layer.alert("生成订单不存在！", { icon: 2 }, function () { location.reload(); });
-                }
-                else if (response == "1-2") {
-                    layer.alert("该产品关闭！", { icon: 2 }, function () { location.reload(); });
-                } else {
-                    layer.alert("操作成功！" + response, { icon: 1 }, function () { location.reload(); });
+                if (response.result == "error") {
+                    layer.alert(response.msg, { icon: 2 }, function () { location.reload(); });
                 }
 
             },

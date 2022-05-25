@@ -14,5 +14,6 @@
     <property name="kcType" column="kcType" />
     <property name="cpbianmao" column="cpbianmao" />
     <property name="beizhu" column="beizhu" />
+    <property name="ItemId" column="ItemId" />
   </class>
 </hibernate-mapping>

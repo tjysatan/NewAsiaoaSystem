@@ -130,7 +130,21 @@
                 //}
             })
         }
-        //
+        //修改ERP中物料的工序工时
+        function updatewuliaogxgs() {
+            layer.open({
+                type: 2,
+                title: ['批量物料工序工时（只更新ERP中）', 'font-size:14px;'],
+                area: ['550px', '350px'],
+                offset: '10px',
+                fixed: false, //不固定
+                maxmin: true,
+                content: '../K3Basicdata/BatcupdateERPMDItm_GXGSView',
+                //end: function () {
+                //    location.reload();
+                //}
+            })
+        }
         //操作按钮
         function showczbtn(val,val2) {
             var fnumber = "'" + val + "'";
@@ -143,7 +157,7 @@
         //根据物料编号更新数据的型号
         function updatebasicdatainfo(val) {
             $.ajax({
-                url: "../K3Basicdata/updatek3databyfnumber",
+                url: "../K3Basicdata/updatePsdatabyfnumber",
                 type: "POST",
                 data: { fnumber: val },
                 dataType: "json",
@@ -178,14 +192,12 @@
                 beforeSend: function () {
                     ddchen();
                 },
-
                 success: function (response) {
                     disLoading();
                     if (response.result == "success") { layer.alert(response.msg, { icon: 1 }, function () { location.reload(); }); }
                     else {
                         layer.alert(response.msg, { icon: 2 }, function () { location.reload(); });
                     }
-
                 },
                 error: function (e) {
                     disLoading();
@@ -266,16 +278,19 @@
                         <li>
 
                             <span class="inquiry-input">
-                                <button class="layui-btn" onclick="tjUpdatedate();return  false;"><i class="layui-icon">&#xe63d;</i> 更新</button>
+                                <button class="layui-btn" onclick="PstjUpdatedate();return  false;"><i class="layui-icon">&#xe63d;</i> 更新</button>
                             </span>
-                            <span class="inquiry-input">
-                                <button class="layui-btn" onclick="test();return  false;"><i class="layui-icon">&#xe63d;</i> 测试</button>
-                            </span>
+                            @*<span class="inquiry-input">
+            <button class="layui-btn" onclick="test();return  false;"><i class="layui-icon">&#xe63d;</i> 测试</button>
+        </span>*@
                             <span class="inquiry-input">
                                 <button class="layui-btn" onclick="return addClick('/K3Basicdata/TBk3wuliaoView')"><i class="layui-icon">&#x1002;</i> 刷新</button>
                             </span>
                             <span class="inquiry-input">
                                 <button class="layui-btn" onclick="updatecpname(); return false;"><i class="layui-icon">&#xe642;</i>批量修改型号</button>
+                            </span>
+                            <span class="inquiry-input">
+                                <button class="layui-btn" onclick="updatewuliaogxgs(); return false;"><i class="layui-icon">&#xe642;</i>工序工时导入</button>
                             </span>
                         </li>
                     </ul>
@@ -312,6 +327,7 @@
         layer.close(loadi);
     }
 
+    //更新K3数据
     function tjUpdatedate() {
         $.ajax({
             url: "../K3Basicdata/Getk3ajaxjson",
@@ -332,6 +348,31 @@
         })
     }
 
+    //更新普实
+    function PstjUpdatedate() {
+        $.ajax({
+            url: "../K3Basicdata/GetBMitmejson",
+            type: "POST",
+            dataType: "json",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response.result == "success") {
+                    layer.alert(response.msg, { icon: 1 });
+                }
+                if (response.result == "error") {
+                    layer.alert(response.msg, { icon: 2 });
+                }
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+    }
     //测试
     function test()
     {

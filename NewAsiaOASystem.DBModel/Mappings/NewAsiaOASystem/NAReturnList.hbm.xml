@@ -64,5 +64,6 @@
     <property name="fthbianhao" column="fthbianhao"/>
     <property name="Ps_DocEntry" column="Ps_DocEntry"/>
     <property name="Ps_DocNu" column="Ps_DocNu"/>
+    <property name="Isjsbpz" column="Isjsbpz"/>
   </class>
 </hibernate-mapping>

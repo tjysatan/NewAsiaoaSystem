@@ -31,6 +31,7 @@
       <key column="SysPersonId"></key>
       <many-to-many class="SysRole" column="SysRoleId"  not-found="ignore"></many-to-many>
     </bag>
-				
+
+    <property name="ERP_YGNO" column="ERP_YGNO"  />
 	</class>
 </hibernate-mapping>

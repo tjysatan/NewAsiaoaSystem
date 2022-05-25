@@ -1,0 +1,15 @@
+2021-07-12 16:45:46,837 [6] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2021-07-12 16:45:46,837 [6] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2021-07-12 16:45:46,837 [6] ERROR ApplicationInfoLog [(null)] <(null)< - 远程服务器返回错误: (500) 内部服务器错误。
+2021-07-12 16:45:46,837 [6] ERROR ApplicationInfoLog [(null)] <(null)< - System.Net.WebResponse GetResponse()
+2021-07-12 16:45:46,837 [6] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================
+2021-07-12 16:46:33,319 [30] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2021-07-12 16:46:33,319 [30] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2021-07-12 16:46:33,319 [30] ERROR ApplicationInfoLog [(null)] <(null)< - 远程服务器返回错误: (500) 内部服务器错误。
+2021-07-12 16:46:33,319 [30] ERROR ApplicationInfoLog [(null)] <(null)< - System.Net.WebResponse GetResponse()
+2021-07-12 16:46:33,319 [30] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================
+2021-07-12 16:47:32,578 [27] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2021-07-12 16:47:32,578 [27] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2021-07-12 16:47:32,578 [27] ERROR ApplicationInfoLog [(null)] <(null)< - 远程服务器返回错误: (500) 内部服务器错误。
+2021-07-12 16:47:32,578 [27] ERROR ApplicationInfoLog [(null)] <(null)< - System.Net.WebResponse GetResponse()
+2021-07-12 16:47:32,578 [27] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================

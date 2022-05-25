@@ -134,10 +134,19 @@ namespace NewAsiaOASystem.IDao
         /// 返回当天的电控箱的下单数量
         /// </summary>
         /// <returns></returns>
-        int GetDKXcount(); 
+        int GetDKXcount();
         #endregion
 
-	    #region //电控箱生产单数量分页数据 huizong
+         
+        #region //返回所有B的订单数量
+        /// <summary>
+        /// 返回所有B的订单没有物料代码的数量
+        /// </summary>
+        /// <returns></returns>
+        int GetDKXBcount(); 
+        #endregion
+
+        #region //电控箱生产单数量分页数据 huizong
         /// <summary>
         /// 电控箱生产单数量分页数据
         /// </summary>
@@ -294,7 +303,17 @@ namespace NewAsiaOASystem.IDao
         DKX_DDinfoView GetDDmodelbyorderno(string orderno);
         #endregion
 
-        
+
+        #region //通过订单编号查询订单的详情数据（包括被删除的）
+        /// <summary>
+        /// 通过订单编号查询订单的详情数据（包括被删除的）
+        /// </summary>
+        /// <param name="orderno">订单编号</param>
+        /// <returns></returns>
+        DKX_DDinfoView GetALLDDmodelbyorderno(string orderno);
+        #endregion
+
+
         #region //查询当天的完成发料的数据数量
         /// <summary>
         /// 查询当天的完成发料的数据数量
@@ -360,7 +379,28 @@ namespace NewAsiaOASystem.IDao
         /// </summary>
         /// <param name="pswlno"></param>
         /// <returns></returns>
-        bool checkpswlno(string pswlno); 
+        bool checkpswlno(string pswlno);
+        #endregion
+
+
+        #region //根据物料号查询下单的数量
+        /// <summary>
+        /// 根据物料号查询下单的数量
+        /// </summary>
+        /// <param name="ItemNo">物料号</param>
+        /// <returns></returns>
+        int Get_Place_Order_Cunot(string ItemNo);
+        #endregion
+
+        
+        #region //根据物料号查询最近20次下单的记录
+        /// <summary>
+        /// 根据物料号查询最近20次下单的记录
+        /// </summary>
+        /// <param name="itemno">物料代码</param>
+        /// <param name="count">查询的条数</param>
+        /// <returns></returns>
+        IList<DKX_DDinfoView> Get_order_by_itemno(string itemno, int count); 
         #endregion
     }
 }

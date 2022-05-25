@@ -157,5 +157,14 @@ namespace NewAsiaOASystem.ViewModel
             get;
             set;
         }
+
+        /// <summary>
+        /// erp中员工编号
+        /// </summary>
+        public virtual string ERP_YGNO
+        {
+            get;
+            set;
+        }
     }
 }

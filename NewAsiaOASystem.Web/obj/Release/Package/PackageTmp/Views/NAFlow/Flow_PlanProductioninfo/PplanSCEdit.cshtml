@@ -1,18 +1,17 @@
-﻿@{
+﻿@model NewAsiaOASystem.ViewModel.Flow_PlanProductioninfoView
+@{
     ViewBag.Title = "生产订单 生产管理编辑页面";
     Layout = "~/Views/Shared/_SysLayout.cshtml";
 }
 
 
 <style>
-    table
-    {
+    table {
         border-collapse: collapse;
         border: none;
     }
 
-        table td
-        {
+        table td {
             border: solid #e8e5e5 1px;
             height: 35px;
             padding: 0 0 0 5px;
@@ -86,29 +85,47 @@
             url: "../Flow_PlanProductioninfo/WKInsterGWJ",
             type: "POST",
             data: { Id: Id },
-            dataType: "html",
+            dataType: "json",
             async: true,
             beforeSend: function () {
                 ddchen();
             },
             success: function (response) {
                 disLoading();
-                if (response == "1") {
-                    layer.alert("操作出错！", { icon: 2 }, function () { location.reload(); });
+                if (response.result == "success") {
+                    layer.alert(response.msg ,{ icon: 1 }, function () { location.reload(); });
                 }
+                if (response.result == "error") {
+                    layer.alert(response.msg, { icon: 2 }, function () { location.reload(); });
+                }
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+    }
 
-                else if (response == "0-1") {
-                    layer.alert("没有图纸资料！", { icon: 2 }, function () { location.reload(); });
+    //修改生产批号
+    function updateorderno() {
+        var orderno = $("#orderno").val();
+        $.ajax({
+            url: "../Flow_PlanProductioninfo/updateordernobyId",
+            type: "POST",
+            data: { Id: '@Model.Id', orderno: orderno },
+            dataType: "json",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response.result == "success") {
+                    layer.alert(response.msg, { icon: 1 }, function () { location.reload(); });
                 }
-                else if (response == "1-1") {
-                    layer.alert("生成订单不存在！", { icon: 2 }, function () { location.reload(); });
+                if (response.result == "error") {
+                    layer.alert(response.msg, { icon: 2 }, function () { location.reload(); });
                 }
-                else if (response == "1-2") {
-                    layer.alert("该产品关闭！", { icon: 2 }, function () { location.reload(); });
-                } else {
-                    layer.alert("操作成功！" + response, { icon: 1 }, function () { location.reload(); });
-                }
-
             },
             error: function (e) {
                 disLoading();
@@ -120,48 +137,73 @@
 </script>
 
 <div class="infor">
-    <div class="layui-btn-container" align="right" style="margin-top:10px;">
-        <button type="button" class="layui-btn" onclick="TBgwj('@ViewData["Id"]')">
-            同步工位机
-        </button>
+    <div class="layui-container" style="padding:10px 20px 10px 5px;">
+        <table style="border:none; width:100%">
+            <tr style="border:none; ">
+                <td style="border:none; ">
+                    <div class="layui-inline">
+                        <label class="layui-form-label" style="text-align:left;width:60px">生产批号：</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="orderno" id="orderno" value='@Model.orderbianhao' required lay-verify="required" placeholder="生产批号" autocomplete="off" class="layui-input">
+                        </div>
+                        <div class="layui-form-mid layui-word-aux" style="float:right;margin-left:5px">
+                            <button class="layui-btn" onclick="updateorderno()">提交修改</button>
+                        </div>
+                    </div>
+                </td>
+                <td style="border:none;width:30%;text-align:right">
+                    <button type="button" class="layui-btn" onclick="TBgwj('@ViewData["Id"]')">
+                        同步工位机
+                    </button>
+                </td>
+            </tr>
+        </table>
     </div>
 
 
 
-    <div class="system-menu-set">
-            @using (Html.BeginForm("PplanSCEditUPdate", "Flow_PlanProductioninfo", FormMethod.Post, new { id = "form1" }))
-            {
-                <table style="width: 100%; color: #000; font-size: 13px;">
-                    <tr>
-                        <td>
-                            生产状态：
-                            <span class="inquiry-input">
-                                <select name="P_type" id="P_type">
-                                    <option value="0">生产中</option>
-                                    <option value="1">缺料</option>
-                                </select>
+    <div class="system-menu-set" style="padding:20px">
+        @using (Html.BeginForm("PplanSCEditUPdate", "Flow_PlanProductioninfo", FormMethod.Post, new { id = "form1" }))
+        {
+            <table style="width: 100%; color: #000; font-size: 13px;">
+                <tr>
+                    <td>
+                        生产状态：
+                        <span class="inquiry-input">
+                            <select name="P_type" id="P_type">
+                                <option value="0">生产中</option>
+                                <option value="1">缺料</option>
+                            </select>
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        开工时间：
+                        <span class="infor-c-input">
+                            <input type="text" id="kgdatetime" name="kgdatetime" onclick="WdatePicker()" autocomplete="off" />
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        预计完成：
+                        <span class="infor-c-input">
+                            <input type="text" id="yjdatetime" name="yjdatetime" onclick="WdatePicker()" autocomplete="off" />
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="inquiry-input infor-b" style="width:100px;">
+                            <span>
+                                <button>确认提交</button>
                             </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            预计完成：
-                            <span class="infor-c-input">
-                                <input type="text" id="yjdatetime" name="yjdatetime" onclick="WdatePicker()" />
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="inquiry-input infor-b" style="width:100px;">
-                                <span>
-                                    <button>确认提交</button>
-                                </span>
-                            </div>
-                        </td>
-                    </tr>
-                </table>
+                        </div>
+                    </td>
+                </tr>
+            </table>
 
-            }
+        }
     </div>
-    </div>
+</div>

@@ -52,11 +52,24 @@
                         syts="-";
                     html+='<tr>';
                     html += '<td width="5%"><input type="checkbox" name="ContentChecked" value="' + jsonStr[i].Id + '"/></td>';
-                    html += '<td width="15%">'+ jsonStr[i].WL_SSD + '</td>';
-                    if(jsonStr[i].Xs_jxsId==null||jsonStr[i].Xs_jxsId=="")
-                        html+='<td width="10%">未销售</td>';
+                    html += '<td width="15%">' + jsonStr[i].WL_SSD + '</td>';
+                    if (jsonStr[i].Is_xs == "1")
+                    {
+                        if (jsonStr[i].chtype == "2") {
+                            html += '<td width="10%">' + jsonStr[i].erp_jxsname + '</td>';
+                        }
+                        else {
+                            html += '<td width="10%">' + AjaxCust_Name(jsonStr[i].Xs_jxsId).Name + '</td>';
+                        }
+                    }
                     else
-                        html+='<td width="10%">'+AjaxCust_Name(jsonStr[i].Xs_jxsId).Name+'</td>';
+                    {
+                        html += '<td width="10%">未销售</td>';
+                    }
+                    //if(jsonStr[i].Xs_jxsId==null||jsonStr[i].Xs_jxsId=="")
+                    //    html+='<td width="10%">未销售</td>';
+                    //else
+                    //    html+='<td width="10%">'+AjaxCust_Name(jsonStr[i].Xs_jxsId).Name+'</td>';
                     if(jsonStr[i].Xs_datetime==null||jsonStr[i].Xs_datetime=="") 
                         html+='<td width="8%">未销售</td>';
                     else

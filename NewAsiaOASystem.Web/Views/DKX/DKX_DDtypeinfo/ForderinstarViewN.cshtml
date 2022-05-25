@@ -74,8 +74,8 @@
 
 
         var khkecode = $("#khkecode").val();
-         
-     
+
+
         if (khkecode == "" || khkecode == null) {
             layer.alert("请填写K3客户的code", { icon: 2 });
             return false;
@@ -200,6 +200,12 @@
             }
         })
     }
+
+    //合同打印
+    function OpenHtView() {
+        var url = '../DKX_DD/FBHTZWMOREView?Id=' + '@Model.Id';
+        window.open(url);
+    }
 </script>
 
 <script type="text/html" id="bar">
@@ -218,9 +224,9 @@
 <div style="width: 97.5%;padding: 10px 10px 0px 10px;">
     <div class="layui-card">
         @{
-            if (Model.Ps_orderDocEntry != null && Model.Ps_orderDocEntry != "")
+            if (Model.Ps_orderDocEntryNUM != null && Model.Ps_orderDocEntryNUM != "")
             {
-                <span>普实单号：</span>@Model.Ps_orderDocEntry
+                <span>普实单号：</span>@Model.Ps_orderDocEntryNUM
             }
             else
             {
@@ -252,7 +258,7 @@
             <div class="layui-inline">
                 <label class="layui-form-label">交货日期：</label>
                 <div class="layui-input-block" style="width: 120px;">
-                    <input type="text" name="Z_JHQX" id="Z_JHQX" onclick="WdatePicker()" placeholder="交货日期必填" autocomplete="off" class="layui-input">
+                    <input type="text" name="Z_JHQX" id="Z_JHQX" onclick="WdatePicker()" value="@Model.YJJQtime" placeholder="交货日期必填" autocomplete="off" class="layui-input">
                 </div>
             </div>
             <div class="layui-inline">
@@ -298,6 +304,8 @@
     <div class="layui-form-item">
         <div class="layui-input-block" style="float:right; padding-right:40px">
             <button class="layui-btn" onclick="confirm_tbxxwork()">同步普实</button>
+
+            <button class="layui-btn" onclick="OpenHtView()">合同打印</button>
         </div>
     </div>
 </div>

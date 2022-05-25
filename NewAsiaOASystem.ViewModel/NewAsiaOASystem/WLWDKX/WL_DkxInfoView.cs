@@ -150,5 +150,25 @@ namespace NewAsiaOASystem.ViewModel
         /// 站点名称
         /// </summary>
         public virtual string monitor_name { get; set; }
+
+        /// <summary>
+        /// erp 发货拣配单的单号
+        /// </summary>
+        public virtual string erp_JPorderno { get; set; }
+
+        /// <summary>
+        /// erp 拣配单客户的code
+        /// </summary>
+        public virtual string erp_jxscode { get; set; }
+
+        /// <summary>
+        /// erp 拣配单客户名称
+        /// </summary>
+        public virtual string erp_jxsname { get; set; }
+
+        /// <summary>
+        /// 出货类型 0 未销售的    1 电商销售订单  2 erp的拣配单和维修货发货
+        /// </summary>
+        public virtual int? chtype { get; set; }
     }
 }

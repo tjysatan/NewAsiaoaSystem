@@ -195,6 +195,7 @@ namespace NewAsiaOASystem.Web.WebAPI
                     {
                         Ordermodel.Fk_type = 0;//付款方式 支付宝
                     }
+                    Ordermodel.PaymentTypeName = PaymentTypeName;
                     NACustomerinfoView Custmodel = new NACustomerinfoView();//实例化 
                   
                     Custmodel = _INACustomerinfoDao.GetCustomerbyUId(userid);
@@ -458,6 +459,26 @@ namespace NewAsiaOASystem.Web.WebAPI
 
             public  string address;
         }
+        #endregion
+
+        #region //给报价系统使用的数据接口
+        #region //ERP中及时库存数据
+        [WebMethod]
+        public string Get_ERP_Materiainventory(string code, string key)
+        {
+            try
+            {
+                if (key != "00BE974F-C52D-434D-AB99-4D9E3796CD81-2")
+                    return null;
+                string resjson = zypushsoftHelper.GetBCStkbyItmID(code);
+                return resjson;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+        #endregion
         #endregion
 
 

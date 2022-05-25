@@ -145,6 +145,10 @@
     <Compile Include="Helper\ServiceConversion.cs" />
     <Compile Include="Helper\Tools.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service\BJSys\PAY_CONTROL_INFODao.cs" />
+    <Compile Include="Service\BSERP\ERP_SASalAinfoDao.cs" />
+    <Compile Include="Service\BSERP\ERP_SASalA_FBCP_BCBWKDao.cs" />
+    <Compile Include="Service\BSERP\Js_xz_yfcostDao.cs" />
     <Compile Include="Service\Iot\Bb_UpdateDao.cs" />
     <Compile Include="Service\Iot\Point_infoDao.cs" />
     <Compile Include="Service\IQC\IQC_JyconstrinfoDao.cs" />
@@ -154,6 +158,7 @@
     <Compile Include="Service\IQC\IQC_llNoticeMXordinfoDao.cs" />
     <Compile Include="Service\IQC\IQC_llNoticeordinfoDao.cs" />
     <Compile Include="Service\IQC\IQC_SopInfoDao.cs" />
+    <Compile Include="Service\lanhe\lanhe_QzCusinfoDao.cs" />
     <Compile Include="Service\NACG\CG_aqkcDao.cs" />
     <Compile Include="Service\NAFlow\Flow_AjaxtxdateDao.cs" />
     <Compile Include="Service\NAFlow\Flow_DKXPlanPPrintinfoDao.cs" />
@@ -196,6 +201,7 @@
     <Compile Include="Service\NewAsiaOASystem\NA_SharealikeDao.cs" />
     <Compile Include="Service\NewAsiaOASystem\NA_XSdetailsinfoDao.cs" />
     <Compile Include="Service\NewAsiaOASystem\NA_XSinfoDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\NA_XSqitainfoDao.cs" />
     <Compile Include="Service\NewAsiaOASystem\NQR_ProductDao.cs" />
     <Compile Include="Service\NewAsiaOASystem\NQR_ReasonDao.cs" />
     <Compile Include="Service\NewAsiaOASystem\NQ_BlinfoDao.cs" />

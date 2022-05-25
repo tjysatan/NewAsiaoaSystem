@@ -153,5 +153,25 @@ namespace NewAsiaOASystem.DBModel
         /// </summary>
         public virtual string monitor_name { get; set; }
 
+        /// <summary>
+        /// erp 发货拣配单的单号
+        /// </summary>
+        public virtual string erp_JPorderno { get; set; }
+
+        /// <summary>
+        /// erp 拣配单客户的code
+        /// </summary>
+        public virtual string erp_jxscode { get; set; }
+
+        /// <summary>
+        /// erp 拣配单客户名称
+        /// </summary>
+        public virtual string erp_jxsname { get; set; }
+
+        /// <summary>
+        /// 出货类型 0 销售订单   1 erp 发货拣配单
+        /// </summary>
+        public virtual int? chtype { get; set; }
+
     }
 }

@@ -64,7 +64,7 @@ function AjaxPuliceGcsinfo(Id) {
 //订单状态的返回// val4 电器排布图的上传审核状态  val5 电器原理图的上传审核状态 （原来其他图纸） val6 品审状态 flzt发料状态
 function showddzt(val, val2, val3, val4, val5, val6, flzt)
 {
-    console.log("FLZT", flzt)
+    
     if (val == "-1")
     {
         return '<span style="color:red">未提交</span>';
@@ -243,4 +243,13 @@ function layui_dateToStr(date) {
 
 function myrefresh() {
     window.location.reload();
+}
+
+//layui table 数据刷新保持当前页码
+function Reload_laypage(tableId) {
+    layui.table.reload(tableId, {   //方法渲染表格里的属性 ID
+        page: {
+            curr: $(".layui-laypage-em").next().html()
+        }
+    });
 }

@@ -15,5 +15,6 @@
     <property name="Beizhu" column="Beizhu"  />
     <property name="Beizhu1" column="Beizhu1"  />
     <property name="Beizhu2" column="Beizhu2"  />
+    <property name="yjcb" column="yjcb"  />
   </class>
 </hibernate-mapping>

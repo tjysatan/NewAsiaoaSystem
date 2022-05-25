@@ -22,5 +22,7 @@
     <property name="type" column="type" />
     <property name="Iswlw" column="Iswlw" />
     <property name="Bomno" column="Bomno" />
+    <property name="wjjpsum" column="wjjpsum" />
+    <property name="sczdsum" column="sczdsum" />
   </class>
 </hibernate-mapping>

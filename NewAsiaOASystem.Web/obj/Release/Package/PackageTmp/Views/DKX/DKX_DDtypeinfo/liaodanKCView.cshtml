@@ -251,11 +251,26 @@
 
     //实时库存K
     function AJAXkcbywldm(val) {
+        //var json;
+        //$.ajax({
+        //    url: "../DKX_DDtypeinfo/CKkcbywldm",
+        //    type: "POST",
+        //    data: { wldm: val },
+        //    dataType: "JSON",
+        //    async: false,
+        //    success: function (response) {
+        //        json = eval(response);
+        //    },
+        //    error: function (e) {
+        //        layer.alert("操作失败！", { icon: 2 });
+        //    }
+        //})
+        //return json;
         var json;
         $.ajax({
-            url: "../DKX_DDtypeinfo/CKkcbywldm",
+            url: "../Flow_RoutineStockinfo/GetPSKC",
             type: "POST",
-            data: { wldm: val },
+            data: { wlno: val },
             dataType: "JSON",
             async: false,
             success: function (response) {

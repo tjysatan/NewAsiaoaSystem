@@ -58,12 +58,14 @@
                         gnjs: gnjs,
                         wcstarttime: txt_wcysstartctime,
                         wcendtime: txt_wcysendctiome,
-                        POWER: txtPOWER
+                        POWER: txtPOWER,
+                        start:"0"
                     },//设定异步数据接口的额外参数
                     cellMinWidth: 80, //全局定义常规单元格的最小宽度，layui 2.2.1 新增
                     cols: [[
                         { field: 'Id', width: 80, title: 'ID', sort: true, },
                         { field: 'DD_Bianhao', width: 130, title: '生产批号', fixed: 'left' },
+                        { field: 'Ps_wlBomNO', width: 130, title: '物料编号' },
                         {
                             field: 'KBomNo', width: 130, event: "guanlian", style: 'cursor:pointer;', title: '关联号', templet: function (d) {
                                 if (d.KBomNo) {
@@ -85,7 +87,12 @@
                         { field: 'NUM', width: 60, title: '数量' },
                         {
                             field: 'Gcs_nameId', width: 80, title: '工程师', templet(d) {
-                                return AjaxPuliceGcsinfo(d.Gcs_nameId).Name;
+                                var gcsstr  =AjaxPuliceGcsinfo(d.Gcs_nameId)
+                                var gcsnamestr=""
+                                if (gcsstr != null && gcsstr != "") {
+                                    gcsnamestr = gcsstr.Name;
+                                }
+                                return gcsnamestr;
                             }
                         },
                         {
@@ -401,9 +408,9 @@
                 fixed: false, //不固定
                 maxmin: true,
                 content: '../publicAPI/LCjlckView?oId='+val,
-                end: function () {
-                    location.reload();
-                }
+                //end: function () {
+                //    location.reload();
+                //}
             })
         }
 
@@ -499,9 +506,9 @@
                 fixed: false, //不固定
                 maxmin: true,
                 content: '../publicAPI/PubZLCKView?Id='+val,
-                end: function () {
-                    location.reload();
-                }
+                //end: function () {
+                //    location.reload();
+                //}
             })
 
         }
@@ -777,14 +784,9 @@
             <button type="button" class="layui-btn  layui-btn-xs layui-btn-normal" lay-event="check" title="资料查看">
                 <i class="layui-icon">&#xe63c;</i>
             </button>
-
-          
-
             <button type="button" class="layui-btn layui-btn-xs layui-btn-normal" lay-event="checkcz" title="操作记录查看">
                 <i class="layui-icon">&#xe60e;</i>
             </button>
-
-         
         </div>
     </script>
 }
@@ -793,167 +795,7 @@
     电控箱生产情况汇总
 </blockquote>
 
-<!--<div class="h-right">
-    <div class="h-right-c" style="">-->
-<!--查询条件-->
-<!--<div class="inquiry1">
-            <fieldset>
-                <legend>查询条件：</legend>
-                @using (Html.BeginForm("DKXddSearchList", "publicAPI", FormMethod.Post, new { id = "form1" }))
-                {
-                    @Html.Hidden("pageIndex");
-                    <ul>
-                        <li>
-                            <span>生产批号：</span>
-                            <span class="inquiry-input">
-                                <input type="text" name="txt_DD_Bianhao" id="txt_DD_Bianhao" />
-                            </span>
-                        </li>
-                        <li>
-                            <span>报价单号：</span>
-                            <span class="inquiry-input">
-                                <input type="text" name="txt_BJno" id="txt_BJno" />
-                            </span>
-                        </li>
-                        <li>
-                            <span>订单类型：</span>
-                             <span class="inquiry-input">
-                                 @Html.DropDownList("txtDD_Type", ViewData["aDTlist"] as SelectList)
-                            </span>
-                        </li>
-                        <li>
-                            <span>产品型号：</span>
-                            <span class="inquiry-input">
-                                <input type="text" name="txt_DHtype" id="txt_DHtype" />
-                            </span>
-                        </li>
-                        <li>
-                            <span>工程师：</span>
-                            <span class="inquiry-input">
-                                @Html.DropDownList("txtGCS", ViewData["GCSDATA"] as SelectList)
-                            </span>
-                        </li>
-                        <li>
-                            <span>客户名称：</span>
-                            <span class="inquiry-input">
-                                <input type="text" name="txt_KHname" id="txt_KHname" />
-                            </span>
-                        </li>
-                        <li>
-                            <span>联系人：</span>
-                            <span class="inquiry-input">
-                                <input type="text" name="txt_Lxname" id="txt_Lxname" />
-                            </span>
-                        </li>
-                        <li>
-                            <span>联系电话：</span>
-                            <span class="inquiry-input">
-                                <input type="text" name="txt_Tel" id="txt_Tel" />
-                            </span>
-                        </li>
-                        <li>
-                            <span>状态：</span>
-                            <span class="inquiry-input">
-
-                                <select id="txtDD_ZT" name="txtDD_ZT">
-                                    <option value="">全部</option>
-                                    <option value="1">待制图</option>
-                                    <option value="2">制图中</option>
-                                    <option value="3">待发料</option>
-                                    <option value="4">可生产</option>
-                                    <option value="5">缺料</option>
-                                    <option value="6">生产中</option>
-                                    <option value="-3">待品审</option>
-                                    <option value="7">待发货</option>
-                                    <option value="8">完成</option>
-                                </select>
-                            </span>
-                        </li>
-                        <li>
-                            <span>电器排图：</span>
-                            <span class="inquiry-input">
-                                <select id="Isdqpb" name="Isdqpb">
-                                    <option value="">全部</option>
-                                    <option value="0">未上传</option>
-                                    <option value="1">通过</option>
-                                    <option value="2">待审核</option>
-                                    <option value="3">不通过</option>
-                                </select>
-                            </span>
-                        </li>
-                        <li>
-                            <span>电器原理图：</span>
-                            <span class="inquiry-input">
-                                <select id="Isqtt" name="Isqtt">
-                                    <option value="">全部</option>
-                                    <option value="0">未上传</option>
-                                    <option value="1">通过</option>
-                                    <option value="2">待审核</option>
-                                    <option value="3">不通过</option>
-                                </select>
-                            </span>
-                        </li>
-                        <li>
-                            <span>逾期类型：</span>
-                            <span class="inquiry-input">
-                                <select id="txtYQtype" name="txtYQtype">
-                                    <option value="">全部</option>
-                                    <option value="6">制图接单逾期</option>
-                                    <option value="5">制图逾期</option>
-                                    <option value="4">其他库存确认逾期</option>
-                                    <option value="3">箱体库存确认逾期</option>
-                                    <option value="2">生产接单逾期</option>
-                                    <option value="1">生产逾期</option>
-                                    <option value="0">发货逾期</option>
-                                </select>
-                            </span>
-                        </li>
-                        <li>
-                            <span>功能简述：</span>
-                            <span class="inquiry-input">
-                                <input type="text" name="gnjs" id="gnjs" />
-                            </span>
-                        </li>
-                        <li><span>下单时间：</span>
-                            <span class="inquiry-input">
-                                <input type="text" name="txt_startctime" id="txt_startctime" onclick="WdatePicker()" />
-                                -
-                                <input type="text" name="txt_endctiome" id="txt_endctiome" onclick="WdatePicker()" />
-                            </span>
-                        </li>
-                        <li>
-                            <span>验收时间：</span>
-                            <span class="inquiry-input">
-                                <input type="text" name="txt_wcysstartctime" id="txt_wcysstartctime" onclick="WdatePicker()" />
-                                -
-                                <input type="text" name="txt_wcysendctiome" id="txt_wcysendctiome" onclick="WdatePicker()" />
-                            </span>
-                        </li>
-                        <li style="*width: 100%; *margin: -10px 0 5px 90px;">
-                            <span class="inquiry-input">
-                                <button name="btnSerch" class="layui-btn" onclick="return SerchList(1)"><i class="layui-icon">&#xe615;</i>查询</button>
-                            </span>
-                        </li>
-                        <li style="*width: 100%; *margin: -10px 0 5px 90px;">
-                            <span class="inquiry-input">
-                                <button type="button" onclick="return ExportEPJSON()">记录导出</button>
-                            </span>
-                        </li>
-                        <li>
-                            <span class="inquiry-input">
-                                <button class="layui-btn" onclick="return addClick('/publicAPI/NewDKXhzlist')"><i class="layui-icon">&#x1002;</i>刷新</button></span>
-                        </li>
-                    </ul>
-                }
-            </fieldset>
-        </div>
-        <div class="h-table">
-            <div class="h-table-content" style="color: #9d9999;">
-                <div id="content"></div>
-            </div>
-        </div>
-    </div>
-</div>-->
+ 
 
 <div class="inquiry1">
     <fieldset>
@@ -1027,30 +869,6 @@
                     </select>
                 </span>
             </li>
-            @*<li>
-                    <span>电器排图：</span>
-                    <span class="inquiry-input">
-                        <select id="Isdqpb" name="Isdqpb">
-                            <option value="">全部</option>
-                            <option value="0">未上传</option>
-                            <option value="1">通过</option>
-                            <option value="2">待审核</option>
-                            <option value="3">不通过</option>
-                        </select>
-                    </span>
-                </li>*@
-            @*<li>
-                    <span>电器原理图：</span>
-                    <span class="inquiry-input">
-                        <select id="Isqtt" name="Isqtt">
-                            <option value="">全部</option>
-                            <option value="0">未上传</option>
-                            <option value="1">通过</option>
-                            <option value="2">待审核</option>
-                            <option value="3">不通过</option>
-                        </select>
-                    </span>
-                </li>*@
             <li>
                 <span>逾期类型：</span>
                 <span class="inquiry-input">

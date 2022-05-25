@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="NewAsiaOASystem.DBModel" assembly="NewAsiaOASystem.DBModel">
+  <class name="ERP_SASalAinfo" table="ERP_SASalAinfo">
+    <id name="Id" column="Id" type="string" unsaved-value="0">
+      <generator class="uuid.hex"/>
+    </id>
+    <property name="AbsID" column="AbsID"  />
+    <property name="CrdID" column="CrdID"  />
+    <property name="CrdName" column="CrdName"  />
+    <property name="ItmID" column="ItmID"  />
+    <property name="ItmName" column="ItmName"  />
+    <property name="ItmSpec" column="ItmSpec"  />
+    <property name="BaseQty" column="BaseQty"  />
+    <property name="Price" column="Price"  />
+    <property name="TaxAfPrice" column="TaxAfPrice"  />
+    <property name="LineSum" column="LineSum"  />
+    <property name="XSCostPrice" column="XSCostPrice"  />
+    <property name="CostPrice" column="CostPrice"  />
+    <property name="Amount" column="Amount"  />
+    <property name="EmpName" column="EmpName"  />
+    <property name="Z_EmpName" column="Z_EmpName"  />
+    <property name="C_time" column="C_time"  />
+    <property name="DocNum" column="DocNum"  />
+  </class>
+</hibernate-mapping>

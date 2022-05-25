@@ -116,8 +116,15 @@ namespace NewAsiaOASystem.Dao
         /// <returns></returns>
         public DKX_CPInfoView NGetModelById(string id)
         {
-            DKX_CPInfoView listmodel = GetView(base.GetModelById(id));
-            return listmodel;
+            try
+            {
+                DKX_CPInfoView listmodel = GetView(base.GetModelById(id));
+                return listmodel;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         #region //根据产品名称 功率值 和功率单位查询是否存在相同的产品
@@ -131,6 +138,24 @@ namespace NewAsiaOASystem.Dao
         public DKX_CPInfoView Getcpdatabynameandpowanddw(string name, string Power, string DW, string cpgnjs)
         {
             string Hqlstr = string.Format(" from DKX_CPInfo where Cpname='{0}' and Power='{1}' and DW='{2}' and cpgnjs='{3}' and IsDis!='4'", name, Power, DW,cpgnjs);
+            List<DKX_CPInfo> list = HibernateTemplate.Find<DKX_CPInfo>(Hqlstr) as List<DKX_CPInfo>;
+            IList<DKX_CPInfoView> listmodel = GetViewlist(list);
+            if (listmodel != null)
+                return listmodel[0];
+            else
+                return null;
+        }
+        #endregion
+
+        #region //20220331 根据物料号查询方案库产品信息
+        /// <summary>
+        /// 20220331 根据物料号查询方案库产品信息
+        /// </summary>
+        /// <param name="wlno"></param>
+        /// <returns></returns>
+        public DKX_CPInfoView Getcpdatebyps_wlno(string wlno)
+        {
+            string Hqlstr = string.Format(" from DKX_CPInfo where Ps_wlBomNO='{0}'", wlno);
             List<DKX_CPInfo> list = HibernateTemplate.Find<DKX_CPInfo>(Hqlstr) as List<DKX_CPInfo>;
             IList<DKX_CPInfoView> listmodel = GetViewlist(list);
             if (listmodel != null)
@@ -195,6 +220,45 @@ namespace NewAsiaOASystem.Dao
         }
         #endregion
 
+        #region //202203 产品分页列表，通过入库时间排序
+        /// <summary>
+        /// 202203 产品分页列表，通过入库时间排序
+        /// </summary>
+        /// <param name="cpwlno">物料代码</param>
+        /// <param name="cpname">产品型号（名称）</param>
+        /// <param name="gl">功率</param>
+        /// <param name="dw">单位</param>
+        /// <param name="Type">类型 0小系统 1 大系统 2 物联网 </param>
+        /// <param name="ft">是否分体 0 一体 1 分体</param>
+        /// <param name="Gcs_name">工程师名称</param>
+        /// <returns></returns>
+        public PagerInfo<DKX_CPInfoView> New_GetDKXcppagelist(string cpwlno, string cpname, string gl, string dw, string Type, string ft, string Gcs_name, string gnjs)
+        {
+            TempList = new List<string>();
+            TempHql = new StringBuilder();
+            if (!string.IsNullOrEmpty(cpwlno))
+                TempHql.AppendFormat(" and u.Ps_wlBomNO like '%{0}%'",cpwlno);
+            if (!string.IsNullOrEmpty(cpname))
+                TempHql.AppendFormat(" and u.Cpname like '%{0}%'", cpname);
+            if (!string.IsNullOrEmpty(gl))
+                TempHql.AppendFormat(" and u.Power='{0}'", gl);
+            if (!string.IsNullOrEmpty(dw))
+                TempHql.AppendFormat(" and u.DW='{0}'", dw);
+            if (!string.IsNullOrEmpty(Type))
+                TempHql.AppendFormat(" and u.Type='{0}'", Type);
+            if (!string.IsNullOrEmpty(ft))
+                TempHql.AppendFormat(" and u.Isft='{0}'", ft);
+            if (!string.IsNullOrEmpty(Gcs_name))
+                TempHql.AppendFormat(" and u.Gcs_name='{0}'", Gcs_name);
+            if (!string.IsNullOrEmpty(gnjs))
+                TempHql.AppendFormat(" and u.cpgnjs like'%{0}%'", gnjs);
+            TempHql.AppendFormat(" and u.IsDis='0'");
+            TempHql.AppendFormat("order by u.RK_time desc");
+            PagerInfo<DKX_CPInfoView> list = Search();
+            return list;
+        }
+        #endregion
+
         #region //电控箱方案库全部数据
         /// <summary>
         /// 电控箱方案库全部数据
@@ -205,11 +269,14 @@ namespace NewAsiaOASystem.Dao
         /// <param name="Type">类型 0小系统 1 大系统 2 物联网 </param>
         /// <param name="ft">是否分体 0 一体 1 分体</param>
         /// <param name="Gcs_name">工程师名称</param>
+        /// <param name="Iscgdz">是否常规定制的 0 是 1 不是 空是全部</param>
         /// <returns></returns>
-        public PagerInfo<DKX_CPInfoView> GetALLDKXcppagelist(string cpname, string gl, string dw, string Type, string ft, string Gcs_name,string gnjs)
+        public PagerInfo<DKX_CPInfoView> GetALLDKXcppagelist(string wlno, string cpname, string gl, string dw, string Type, string ft, string Gcs_name,string gnjs,string IsDis,string Iscgdz)
         {
             TempList = new List<string>();
             TempHql = new StringBuilder();
+            if (!string.IsNullOrEmpty(wlno))
+                TempHql.AppendFormat(" and u.Ps_wlBomNO like '%{0}%'", wlno);
             if (!string.IsNullOrEmpty(cpname))
                 TempHql.AppendFormat(" and u.Cpname like '%{0}%'", cpname);
             if (!string.IsNullOrEmpty(gl))
@@ -224,7 +291,17 @@ namespace NewAsiaOASystem.Dao
                 TempHql.AppendFormat(" and u.Gcs_name='{0}'", Gcs_name);
             if (!string.IsNullOrEmpty(gnjs))
                 TempHql.AppendFormat(" and u.cpgnjs like '%{0}%'",gnjs);
-            TempHql.AppendFormat(" and u.IsDis!='4'");
+            if(!string.IsNullOrEmpty(IsDis))
+                TempHql.AppendFormat(" and u.IsDis='{0}'",IsDis);
+            else
+                TempHql.AppendFormat(" and u.IsDis!='4'");
+            if (!string.IsNullOrEmpty(Iscgdz))
+            {
+                if (Iscgdz == "0")
+                    TempHql.AppendFormat(" and u.Ps_sanduanno='0'");
+                else
+                    TempHql.AppendFormat(" and u.Ps_sanduanno!='0'");
+            }
             TempHql.AppendFormat("order by u.IsDis desc, u.RK_time desc");
             PagerInfo<DKX_CPInfoView> list = Search();
             return list;
@@ -275,6 +352,20 @@ namespace NewAsiaOASystem.Dao
         public IList<DKX_CPInfoView> GetalldkxcpbygcsId(string Gcs_name)
         {
             string Hqlstr = string.Format("from DKX_CPInfo where Gcs_name='{0}'",Gcs_name);
+            List<DKX_CPInfo> list = HibernateTemplate.Find<DKX_CPInfo>(Hqlstr) as List<DKX_CPInfo>;
+            IList<DKX_CPInfoView> listmodel = GetViewlist(list);
+            return listmodel;
+        }
+        #endregion
+
+        #region //查询正常状态的下含有物料号的数据
+        /// <summary>
+        /// 查询正常状态的下含有头物料号的数据
+        /// </summary>
+        /// <returns></returns>
+        public IList<DKX_CPInfoView> GetalldkxcpdataScheme_order()
+        {
+            string Hqlstr = string.Format(" from DKX_CPInfo where IsDis!='4' and Ps_wlBomNO!=''");
             List<DKX_CPInfo> list = HibernateTemplate.Find<DKX_CPInfo>(Hqlstr) as List<DKX_CPInfo>;
             IList<DKX_CPInfoView> listmodel = GetViewlist(list);
             return listmodel;

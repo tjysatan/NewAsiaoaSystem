@@ -11,7 +11,7 @@
         getLodop();
     })
 
-        var LODOP; //声明为全局变量
+    var LODOP; //声明为全局变量
         function myPreview() {
 
             //LODOP.ADD_PRINT_SETUP_BKIMG("<img border='0' width='76px'");
@@ -21,41 +21,46 @@
             //LODOP.PRINT_INITA(0, 0, "76px", "130px", "");
             LODOP.PRINT_INIT("二级模板");
 
-	        LODOP.SET_PRINT_PAGESIZE(0,"110mm","180mm","CreateCustomPage");
+	       // LODOP.SET_PRINT_PAGESIZE(0,"110mm","180mm","CreateCustomPage");
+            LODOP.SET_PRINT_PAGESIZE(0, "76mm", "130mm", "CreateCustomPage");
             //第一块线 高度 15mm
-            LODOP.ADD_PRINT_LINE("15mm",0,"15mm","110mm",0,1);
+            LODOP.ADD_PRINT_LINE("15mm",0,"15mm","76mm",0,1);
             LODOP.ADD_PRINT_RECT(0, "35mm", 1, "15mm", 0, 0);
-            LODOP.ADD_PRINT_RECT("7.5mm", "35mm", "35mm", 1, 0, 0);
-            LODOP.ADD_PRINT_RECT(0, "70mm", 1, "15mm", 0, 0);
+            LODOP.ADD_PRINT_RECT("7.5mm", "35mm", "18mm", 1, 0, 0);
+            LODOP.ADD_PRINT_RECT(0, "53mm", 1, "15mm", 0, 0);
             //第2块线 高度 16mm
-            LODOP.ADD_PRINT_LINE("30mm", 0, "30mm", "110mm", 0, 1);
+            LODOP.ADD_PRINT_LINE("25mm", 0, "25mm", "76mm", 0, 1);
+
             //第3块线 高度 40mm
-            LODOP.ADD_PRINT_LINE("40mm", 0, "40mm", "110mm", 0, 1);
-            LODOP.ADD_PRINT_LINE("30mm", "70mm", "40mm", "70mm", 0, 1);
+            LODOP.ADD_PRINT_LINE("35mm", 0, "35mm", "76mm", 0, 1);
+
+           // LODOP.ADD_PRINT_LINE("30mm", "70mm", "40mm", "70mm", 0, 1);
+            LODOP.ADD_PRINT_LINE("25mm", "40mm", "35mm", "40mm", 0, 1);
             //第4块
-            LODOP.ADD_PRINT_LINE("60mm", 0, "60mm", "110mm", 0, 1);
-            LODOP.ADD_PRINT_LINE("40mm", "20mm", "60mm", "20mm", 0, 1);//竖线
+            LODOP.ADD_PRINT_LINE("56mm", 0, "56mm", "76mm", 0, 1);
+            LODOP.ADD_PRINT_LINE("35mm", "15mm", "56mm", "15mm", 0, 1);//竖线
             //第5块
-            LODOP.ADD_PRINT_LINE("66mm", 0, "66mm", "110mm", 0, 1);
-            LODOP.ADD_PRINT_LINE("60mm", "20mm", "66mm", "20mm", 0, 1);//竖线
+            LODOP.ADD_PRINT_LINE("62mm", 0, "62mm", "76mm", 0, 1);
+            LODOP.ADD_PRINT_LINE("56mm", "15mm", "62mm", "15mm", 0, 1);//竖线
             //第6块
-             LODOP.ADD_PRINT_LINE("90mm", 0, "90mm", "110mm", 0, 1);
+             LODOP.ADD_PRINT_LINE("80mm", 0, "80mm", "76mm", 0, 1);
             //第7块
-            LODOP.ADD_PRINT_LINE("96mm", 0, "96mm", "110mm", 0, 1);
-            LODOP.ADD_PRINT_LINE("90mm", "50mm", "96mm", "50mm", 0, 1);//竖线
+            LODOP.ADD_PRINT_LINE("86mm", 0, "86mm", "76mm", 0, 1);
+            LODOP.ADD_PRINT_LINE("80mm", "40mm", "86mm", "40mm", 0, 1);//竖线
             //第8块
-            LODOP.ADD_PRINT_LINE("110mm", 0, "110mm", "110mm", 0, 1);
-            LODOP.ADD_PRINT_LINE("96mm", "50mm", "110mm", "50mm", 0, 1);//竖线
+            LODOP.ADD_PRINT_LINE("101mm", 0, "101mm", "76mm", 0, 1);
+            LODOP.ADD_PRINT_LINE("86mm", "40mm", "101mm", "40mm", 0, 1);//竖线
 
             //第二大块
-            LODOP.ADD_PRINT_LINE("122mm", 0, "122mm", "110mm", 0, 1);
+            LODOP.ADD_PRINT_LINE("112mm", 0, "112mm", "76mm", 0, 1);
             //2 - 2
-            LODOP.ADD_PRINT_LINE("131mm", 0, "131mm", "80mm", 0, 1);
-            LODOP.ADD_PRINT_LINE("122mm", "20mm", "131mm", "20mm", 0, 1);//竖线1
-            LODOP.ADD_PRINT_LINE("122mm", "80mm", "131mm", "80mm", 0, 1);//竖线2
-            LODOP.ADD_PRINT_LINE("131mm", "20mm", "140mm", "20mm", 0, 1);//竖线1
-             LODOP.ADD_PRINT_LINE("131mm", "80mm", "140mm", "80mm", 0, 1);//竖线1
-            LODOP.ADD_PRINT_LINE("140mm", 0, "140mm", "110mm", 0, 1);
+            LODOP.ADD_PRINT_LINE("120mm", 0, "120mm", "65mm", 0, 1);
+            LODOP.ADD_PRINT_LINE("111mm", "15mm", "120mm", "15mm", 0, 1);//竖线1
+            //LODOP.ADD_PRINT_LINE("122mm", "80mm", "131mm", "80mm", 0, 1);//竖线2
+
+            LODOP.ADD_PRINT_LINE("120mm", "15mm", "129mm", "15mm", 0, 1);//竖线1
+            LODOP.ADD_PRINT_LINE("112mm", "65mm", "129mm", "65mm", 0, 1);//竖线1
+            //LODOP.ADD_PRINT_LINE("130mm", 0, "130mm", "76mm", 0, 1);
              CreateFullBill();
             //LODOP.SET_SHOW_MODE("BKIMG_IN_PREVIEW", 1); //注："BKIMG_IN_PREVIEW"-预览包含背景图 "BKIMG_IN_FIRSTPAGE"- 仅首页包含背景图
             LODOP.PREVIEW(); //打印预览
@@ -92,82 +97,142 @@
             if ('@Model.transportType' == "JZKY") { transportType = "精准空运" }
            //ADD_PRINT_TEXT("top","left","w","h")
            LODOP.SET_PRINT_STYLE('FontSize', 12);
-           LODOP.ADD_PRINT_TEXT("5mm","75mm","35mm","10mm",transportType);
+           LODOP.ADD_PRINT_TEXT("5mm","53mm","23mm","10mm",transportType);
            LODOP.SET_PRINT_STYLE('FontSize', 15);
 
-           LODOP.ADD_PRINT_TEXT("20mm","5mm", "110mm", "10mm", '@Model.arrivedOutFieldName');
+           LODOP.ADD_PRINT_TEXT("18mm","5mm", "76mm", "10mm", '@Model.arrivedOutFieldName');
 
-           var Cus_info = AjaxAddresseeinfobyCustId('@Model.SjaddId');//客户信息
-           var khinfo = AjaxCust_Name('@Model.SjId');//客户信息
-           var qxname = "【" + Cus_info.qyt + "】";
-           var sname = Cus_info.Aname;//收货人
-           var sdw = khinfo.Name;//收货单位
+           @*var Cus_info = AjaxCust_Name('@Model.SjId');//客户信息
+           var qxname = "【" + Cus_info.qyqxname + "】";
+           var sname = Cus_info.LxrName;//收货人
+           var sdw = Cus_info.Name;//收货单位
            var stel = Cus_info.Tel;//收货电话
-            var sAdress = Cus_info.Address;//收货地址
+            var sAdress = Cus_info.Adress;//收货地址*@
+            if('@Model.SjaddId'!=null&&'@Model.SjaddId'!=""){
+                var khinfo = AjaxAddresseeinfobyCustId('@Model.SjaddId');//客户信息
+                var Cus_info = AjaxCust_Name('@Model.SjId');
+           var qxname = "【" + khinfo.qyt + "】";
+           var sname = khinfo.Aname;//收货人
+           var sdw = Cus_info.Name;//收货单位
+           var stel = khinfo.Tel;//收货电话
+           var sAdress = khinfo.Address;//收货地址
+            } else {
+                 var Cus_info = AjaxCust_Name('@Model.SjId');
+              
+                var qxname = "【" + Cus_info.qyqxname + "】";
+                var sname = Cus_info.LxrName;//收货人
+                var sdw = Cus_info.Name;//收货单位
+                var stel = Cus_info.Tel;//收货电话
+                var sAdress = Cus_info.Adress;//收货地址
+            }
            //第3块
-            LODOP.SET_PRINT_STYLE('FontSize', 13);
-           LODOP.ADD_PRINT_TEXT("33mm", "5mm", "50mm", "10mm", qxname);
+           LODOP.SET_PRINT_STYLE('FontSize', 13);
+           LODOP.ADD_PRINT_TEXT("27mm", "5mm", "50mm", "10mm", qxname);
            LODOP.ADD_PRINT_TEXT("33mm", "70mm", "40mm", "10mm", '@Model.DHno');
            //第4块 收
             LODOP.SET_PRINT_STYLE('FontSize', 28);
-           LODOP.ADD_PRINT_TEXT("45mm", "5mm", "20mm", "20mm", "收");
+           LODOP.ADD_PRINT_TEXT("40mm", "2mm", "20mm", "20mm", "收");
             LODOP.SET_PRINT_STYLE('FontSize', 12);
-           LODOP.ADD_PRINT_TEXT("41mm", "25mm", "30mm", "5mm", sname);//收件人
-           LODOP.ADD_PRINT_TEXT("41mm", "55mm", "50mm", "5mm", sdw);//收件单位
-           LODOP.ADD_PRINT_TEXT("46mm", "25mm", "80mm", "5mm", stel);//收件电话
-           LODOP.ADD_PRINT_TEXT("50mm", "25mm", "80mm", "10mm", sAdress);//收件地址
+           LODOP.ADD_PRINT_TEXT("36mm", "16mm", "20mm", "5mm", sname);//收件人
+           LODOP.ADD_PRINT_TEXT("36mm", "36mm", "40mm", "5mm", sdw);//收件单位
+           LODOP.ADD_PRINT_TEXT("41mm", "16mm", "60mm", "5mm", stel);//收件电话
+           LODOP.ADD_PRINT_TEXT("46mm", "16mm", "60mm", "10mm", sAdress);//收件地址
            //第5块  寄
            var userinfo = AjaxPerson_Name('@Model.JjId');//当前登录的用户信息
            var fname = userinfo.UserName;//发货人
-             var ftel = userinfo.Tel;//发货人电话
+           var ftel = userinfo.Tel;//发货人电话
            LODOP.SET_PRINT_STYLE('FontSize', 15);
-           LODOP.ADD_PRINT_TEXT("61mm", "7mm", "13mm", "20mm", "寄");
+           LODOP.ADD_PRINT_TEXT("57mm", "4mm", "13mm", "20mm", "寄");
            LODOP.SET_PRINT_STYLE('FontSize', 12);
-           LODOP.ADD_PRINT_TEXT("61mm", "22mm", "22mm", "5mm", fname);//寄件人
-           LODOP.ADD_PRINT_TEXT("61mm", "45mm", "30mm", "5mm", ftel);//寄件电话
-           LODOP.ADD_PRINT_TEXT("61mm", "77mm", "20mm", "5mm", "实名认证");//寄件电话
+           LODOP.ADD_PRINT_TEXT("57mm", "16mm", "18mm", "5mm", fname);//寄件人
+           LODOP.ADD_PRINT_TEXT("57mm", "32mm", "30mm", "5mm", ftel);//寄件电话
+           LODOP.ADD_PRINT_TEXT("57mm", "56mm", "20mm", "5mm", "实名认证");//寄件电话
            //第6块 条形码
-           LODOP.ADD_PRINT_BARCODE("68mm", "25mm", "60mm", "15mm", "128Auto", '@Model.Kd_no');
-           LODOP.ADD_PRINT_TEXT("85mm", "80mm", "20mm", "5mm", "已验视");//
+           LODOP.ADD_PRINT_BARCODE("64mm", "5mm", "60mm", "15mm", "128Auto", '@Model.Kd_no');
+           LODOP.ADD_PRINT_TEXT("75mm", "63mm", "20mm", "5mm", "已验视");//
            //第7块
            var backSignBill = "无需返单";
            LODOP.SET_PRINT_STYLE('FontSize', 11);
-           LODOP.ADD_PRINT_TEXT("91mm", "5mm", "50mm", "5mm", "签收单返回：" + backSignBill);//
+           LODOP.ADD_PRINT_TEXT("81mm", "2mm", "40mm", "5mm", "签收单返回：" + backSignBill);//
            var insuranceValue="0.00"
            if ('@Model.insuranceValue' != 0) {
                insuranceValue='@Model.insuranceValue'
            }
-           LODOP.ADD_PRINT_TEXT("91mm", "50mm", "50mm", "5mm", "保价金额：" + insuranceValue);//
+           LODOP.ADD_PRINT_TEXT("81mm", "41mm", "40mm", "5mm", "保价金额：" + insuranceValue);//
            //第8块自定义
            var myDate = new Date().toLocaleString();
            LODOP.SET_PRINT_STYLE('FontSize', 10);
-           LODOP.ADD_PRINT_TEXT("96mm", "5mm", "50mm", "10mm", "打印时间：" + myDate +"品名："+'@Model.cargoName');//
+           LODOP.ADD_PRINT_TEXT("87mm", "2mm", "40mm", "10mm", "打印时间：" + myDate +"品名："+'@Model.cargoName');//
 
-           LODOP.ADD_PRINT_TEXT("96mm", "50mm", "50mm", "10mm", "签收栏：请检查并确认您收到的包裹是否完整，您的签字代表您已经签收此包裹。");//
+           LODOP.ADD_PRINT_TEXT("87mm", "41mm", "40mm", "10mm", "签收栏：请检查并确认您收到的包裹是否完整，您的签字代表您已经签收此包裹。");//
 
            //2-1
-            LODOP.ADD_PRINT_BARCODE("112mm", "45mm", "50mm", "10mm", "128Auto", '@Model.Kd_no');
+            LODOP.ADD_PRINT_BARCODE("102mm", "10mm", "50mm", "10mm", "128Auto", '@Model.Kd_no');
             //2-2
            LODOP.SET_PRINT_STYLE('FontSize', 15);
-           LODOP.ADD_PRINT_TEXT("123mm", "5mm", "20mm", "20mm", "收");
+           LODOP.ADD_PRINT_TEXT("113mm", "5mm", "20mm", "10mm", "收");
            LODOP.SET_PRINT_STYLE('FontSize', 8);
-           LODOP.ADD_PRINT_TEXT("122mm", "21mm", "15mm", "3mm", sname);//收件人
-           LODOP.ADD_PRINT_TEXT("122mm", "36mm", "50mm", "3mm", stel);//收件
-           LODOP.ADD_PRINT_TEXT("125mm", "21mm", "60mm", "6mm", sAdress);//收件地址
+           LODOP.ADD_PRINT_TEXT("113mm", "16mm", "15mm", "3mm", sname);//收件人
+           LODOP.ADD_PRINT_TEXT("113mm", "32mm", "40mm", "6mm", stel);//收件
+           LODOP.ADD_PRINT_TEXT("117mm", "16mm", "50mm", "6mm", sAdress);//收件地址
            LODOP.SET_PRINT_STYLE('FontSize', 15);
-           LODOP.ADD_PRINT_TEXT("132mm", "5mm", "20mm", "20mm", "寄");
+           LODOP.ADD_PRINT_TEXT("121mm", "5mm", "20mm", "20mm", "寄");
            LODOP.SET_PRINT_STYLE('FontSize', 8);
-           LODOP.ADD_PRINT_TEXT("131mm", "21mm", "15mm", "3mm", fname);//寄件人
-           LODOP.ADD_PRINT_TEXT("131mm", "36mm", "50mm", "3mm", ftel);//寄件电话
-           LODOP.ADD_PRINT_TEXT("134mm", "21mm", "60mm", "6mm", "苏州新亚科技-太仓市花墙工业区新亚路二号");//收件地址
+           LODOP.ADD_PRINT_TEXT("121mm", "16mm", "15mm", "3mm", fname);//寄件人
+           LODOP.ADD_PRINT_TEXT("121mm", "36mm", "40mm", "6mm", ftel);//寄件电话
+           LODOP.ADD_PRINT_TEXT("124mm", "16mm", "50mm", "6mm", "苏州新亚科技-太仓市花墙工业区新亚路二号");//收件地址
 
            LODOP.SET_PRINT_STYLE('FontSize', 25);
-           LODOP.ADD_PRINT_TEXT("125mm", "85mm", "20mm", "18mm", "轻");
+           LODOP.ADD_PRINT_TEXT("113mm", "66mm", "20mm", "18mm", "轻");
 
-           LODOP.SET_PRINT_STYLE('FontSize', 10);
+           @*LODOP.SET_PRINT_STYLE('FontSize', 10);
            LODOP.ADD_PRINT_TEXT("155mm", "5mm", "20mm", "18mm", "备注：");
-           LODOP.ADD_PRINT_TEXT("165mm", "5mm", "100mm", "20mm", "客户订单号："+'@Model.logisticID');
-          
+           LODOP.ADD_PRINT_TEXT("165mm", "5mm", "100mm", "20mm", "客户订单号："+'@Model.logisticID');*@
+           //LODOP.ADD_PRINT_TEXT(15,137,157,25,"交通银行（      ）");
+           //LODOP.SET_PRINT_STYLEA(2,"FontName","隶书");
+           //LODOP.SET_PRINT_STYLEA(2,"FontSize",11);
+           //LODOP.SET_PRINT_STYLEA(2,"FontColor",0);
+
+           //LODOP.SET_PRINT_STYLEA(4,"FontColor",0);
+           //LODOP.ADD_PRINT_TEXT(75,37,431,20,"机构:109110 交易代码:010110");
+           //LODOP.ADD_PRINT_TEXT(102,37,431,20,"个人网银用户签约成功！");
+           //LODOP.ADD_PRINT_TEXT(129,37,431,20,"网点名称：东城分行营业部");
+           //LODOP.ADD_PRINT_TEXT(156,37,431,20,"主卡卡号：");
+           //LODOP.ADD_PRINT_TEXT(183,37,431,20,"客户姓名：");
+           //LODOP.ADD_PRINT_TEXT(212,37,431,20,"登陆方式：用户名登陆");
+
+           //LODOP.ADD_PRINT_TEXT(249,169,221,20,"以上内容已核实确认无误，客户签名：");
+           //LODOP.ADD_PRINT_TEXT(106,484,23,127,"第二联客户留联");
+           //LODOP.SET_PRINT_STYLEA(13,"FontColor",0);
+           //LODOP.ADD_PRINT_TEXT(284,21,74,20,"授权员");
+           //LODOP.SET_PRINT_STYLEA(14,"FontColor",0);
+           //LODOP.ADD_PRINT_TEXT(284,200,74,20,"复核员");
+           //LODOP.SET_PRINT_STYLEA(15,"FontColor",0);
+           //LODOP.ADD_PRINT_TEXT(284,346,74,20,"经办员");
+           //LODOP.SET_PRINT_STYLEA(16,"FontColor",0);
+
+        @*var userinfo = AjaxPerson_Name('@ViewData["UID"]');//当前登录的用户信息
+
+        var fname = userinfo.UserName;//发货人
+        var ftel = userinfo.Tel;//发货人电话
+        LODOP.ADD_PRINT_TEXT(106, 100, 139, 25, "苏州新亚科技有限公司");
+        LODOP.ADD_PRINT_TEXT(106, 300, 75, 25, fname);
+        LODOP.ADD_PRINT_TEXT(130, 122, 154, 25, ftel);
+        LODOP.ADD_PRINT_TEXT(160, 100, 253, 45, "太仓市花墙工业区新亚路二号");
+
+        var Cus_info = AjaxCust_Name('@ViewData["Id"]');//客户信息
+        var sname = Cus_info.LxrName;//收货人
+        var sAdress = Cus_info.Adress;//收货地址
+        var sdw = Cus_info.Name;//收货单位
+        var stel = Cus_info.Tel;//收货电话
+        LODOP.ADD_PRINT_TEXT(223, 101, 137, 25, sdw);
+        LODOP.ADD_PRINT_TEXT(223, 300, 75, 25, sname);
+        LODOP.ADD_PRINT_TEXT(250, 100, 293, 25, stel);
+        LODOP.ADD_PRINT_TEXT(279, 100, 299, 65, sAdress);
+
+        var jdata = GetNewdatetimejson();//寄件日期
+        LODOP.ADD_PRINT_TEXT(293, 641, 100, 25, fname);
+        LODOP.ADD_PRINT_TEXT(318, 595, 155, 25, jdata);*@
 
     };
   var loadi;

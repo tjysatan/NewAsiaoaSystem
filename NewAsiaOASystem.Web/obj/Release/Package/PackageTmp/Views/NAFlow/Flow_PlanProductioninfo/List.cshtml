@@ -36,16 +36,26 @@
                         html += '<tr class="h-table-content-r"  id="'+jsonStr[i].Id+'">';
                     html += '<td width="5%"><input type="checkbox" name="ContentChecked" value="' + jsonStr[i].Id + '"/></td>';
                     if (jsonStr[i].scbianhao == null) {
-                        html += '<td width="10%">-</td>';
+                        html += '<td width="5%">-</td>';
                     }
                     else {
-                        html += '<td width="10%">' + jsonStr[i].scbianhao + '</td>';
+                        html += '<td width="5%">' + jsonStr[i].scbianhao + '</td>';
                     }
-                    html += '<td width="10%">'+jsonStr[i].P_CPname + '</td>';
+                    if (jsonStr[i].orderbianhao == null) {
+                        html += '<td width="5%">-</td>';
+                    }
+                    else {
+                        html += '<td width="5%">' + jsonStr[i].orderbianhao + '</td>';
+                    }
+                    html += '<td width="10%">' + jsonStr[i].P_CPname + '</td>';
+                    if (jsonStr[i].P_Model != "" && jsonStr[i].P_Model != null)
+                        html += '<td width="10%">' + jsonStr[i].P_Model + '</td>';
+                    else
+                        html += '<td width="10%">-</td>';
                     html += '<td width="10%">'+jsonStr[i].P_Pianhao + '</td>';
                     html += '<td width="5%">'+jsonStr[i].P_SCnumber + '</td>';
                     html += '<td width="5%">'+showsczt(jsonStr[i].P_Issc) + '</td>';
-                    html += '<td width="10%">' + showDate(jsonStr[i].C_time) + '</td>';
+                    html += '<td width="5%">' + showDate(jsonStr[i].C_time) + '</td>';
                     if(jsonStr[i].P_type=="0")
                         html += '<td width="5%">常规</td>';
                     else if(jsonStr[i].P_type=="1")
@@ -57,18 +67,21 @@
                     else 
                         html += '<td width="5%">——</td>';
                     if(jsonStr[i].YJdatetime!=""&&jsonStr[i].YJdatetime!=null)
-                        html+= '<td width="10%">'+showDate(jsonStr[i].YJdatetime) + '</td>';
+                        html+= '<td width="5%">'+showDate(jsonStr[i].YJdatetime) + '</td>';
                     else
-                        html+= '<td width="10%">--</td>';
+                        html+= '<td width="5%">--</td>';
                     if(jsonStr[i].wcdatetime!=""&&jsonStr[i].wcdatetime!=null)
-                        html+= '<td width="10%">'+showDate(jsonStr[i].wcdatetime) + '</td>';
+                        html+= '<td width="5%">'+showDate(jsonStr[i].wcdatetime) + '</td>';
                     else
-                        html += '<td width="10%">--</td>';
+                        html += '<td width="5%">--</td>';
                     if (jsonStr[i].Isprint == "" || jsonStr[i].Isprint == null)
                         html += '<td width="5%" style="color:red">未打印</td>';
                     else
                         html += '<td width="5%">已打印</td>';
-                  
+                    if (jsonStr[i].Gwj_Istb == "1")
+                        html += '<td width="5%">同步</td>';
+                    else
+                        html += '<td width="5%">未同步</td>';
                     html += '<td width="20%">' + sccz(jsonStr[i].Id, jsonStr[i].P_Pianhao, jsonStr[i].P_SCnumber, jsonStr[i].Isprint, jsonStr[i].P_type)+'</td>';
                     html+='</tr>';
                 }
@@ -126,7 +139,7 @@
             var s = '<a href="#" onclick="PrintPlanSC(' + Id + "," + Isprint + "," + P_type+')">打印</a>&nbsp;&nbsp;';
             var z = '<a href="#" onclick="GetEditzt(' + Id + ')">编辑</a>&nbsp;&nbsp;';
             var a = '<a href="#" onclick="openwoke(' + Id + ')">生产任务单同步</a>&nbsp;&nbsp;';
-            return t+f+s+z+a;
+            return t+f+s+z;
         }
 
         //BOM表查看
@@ -145,15 +158,7 @@
 
         //订单状态以及交期编辑
         function GetEditzt(val){
-            //$('#windowDia').html("<iframe src=../Flow_PlanProductioninfo/PplanSCEdit?Id=" + val + "&&  style='border:0px;' width='400px' height='200px'></iframe>");
-            //$("#windowDia").window({
-            //    title: '状态编辑',
-            //    modal: true,
-            //    closed: false,
-            //    width: 440,
-            //    height: 320,
-            //    top:0
-            //});
+ 
             layer.open({
                 type: 2,
                 title: ['编辑页面', 'font-size:14px;'],
@@ -173,19 +178,7 @@
         {
             if(val2=="1")//确实已经打印的
             {
-                //$.messager.confirm("操作提示", '生产通知单已经打印过了，您还需要再次打印吗？', function (data) {
-                //    if(data){
-                //        $('#windowDia').html("<iframe src=../Flow_PlanProductioninfo/PlanPrint?Id=" + val1 + "&&  style='border:0px;' width='650px' height='500px'></iframe>");
-                //        $("#windowDia").window({
-                //            title: '生产通知单打印',
-                //            modal: true,
-                //            closed: false,
-                //            width: 700,
-                //            height: 500,
-                //            top:0
-                //        });
-                //    }
-                //})
+ 
                 layer.open({
                     type: 1,
                     offset: 1 //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
@@ -375,16 +368,19 @@
                         <td width="5%">
                             <input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" />
                         </td>
-                        <td width="10%">生产批号</td>
+                        <td width="5%">订单号</td>
+                        <td width="5%">生产批号</td>
                         <td width="10%">产品名称</td>
+                        <td width="10%">型号</td>
                         <td width="10%">代码</td>
                         <td width="5%">生产数量</td>
                         <td width="5%">状态</td>
-                        <td width="10%">创建时间</td>
+                        <td width="5%">创建时间</td>
                         <td width="5%">类别</td>
-                        <td width="10%">预计完成</td>
-                        <td width="10%">实际完成</td>
+                        <td width="5%">预计完成</td>
+                        <td width="5%">实际完成</td>
                         <td width="5%">打印</td>
+                        <td width="5%">同步</td>
                         <td width="20%">操作</td>
                     </tr>
                 </table>

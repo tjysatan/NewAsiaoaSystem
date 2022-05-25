@@ -5,6 +5,14 @@
 
 @section HeadContent{
     <script type="text/javascript">
+        var loadi;
+        function ddchen() {
+            loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+        }
+        //关闭等待效果
+        function disLoading() {
+            layer.close(loadi);
+        }
         $(function () {
             Gettabledata();
         })
@@ -23,13 +31,13 @@
                     cellMinWidth: 80, //全局定义常规单元格的最小宽度，layui 2.2.1 新增
                     cols: [[
                         { field: 'Id', width: 80, title: 'ID', sort: true, },
-                         
+
                         {
                             field: 'Ordertime', width: 130, title: '订单时间', templet: function (d) {
                                 return layui_dateToStr(d.Ordertime)
                             }
                         },
-                        
+
                         { field: 'Ordersum', width: 130, title: '计算单数' },
                         {
                             field: 'c_time', width: 130, title: '计算时间', templet: function (d) {
@@ -57,6 +65,9 @@
                     if (layEvent === 'show') {//编辑
                         showMRPResult(data.Id);
                     }
+                    if (layEvent === 'del') {//删除
+                        Del_orderMrp(data.Id);
+                    }
 
                 })
             })
@@ -77,9 +88,38 @@
                 //}
             })
         }
+
+        //删除MRP订单
+        function Del_orderMrp(val) {
+             $.ajax({
+                 url: "../DKX_DD/Del_MRPorder",
+                type: "POST",
+                data: { Id: val },
+                dataType: "Json",
+                async: true,
+                beforeSend: function () {
+                    ddchen();
+                },
+                success: function (response) {
+                    disLoading();
+                    if (response.result == "error") {
+                        layer.alert(response.msg, { icon: 2 }, function () { location.reload(); });
+                    }
+                    else {
+                        layer.alert(response.msg, { icon: 1 }, function () { location.reload(); });
+                    }
+                },
+                error: function (e) {
+                    disLoading();
+                    layer.alert("操作失败！", { icon: 2 });
+                }
+            })
+        }
     </script>
     <script type="text/html" id="bar">
         <button class="layui-btn layui-btn-primary layui-btn-small" lay-event="show">查看</button>
+
+        <button class="layui-btn layui-btn-primary layui-btn-small" lay-event="del">删除</button>
     </script>
 }
 

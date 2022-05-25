@@ -92,7 +92,8 @@ namespace NewAsiaOASystem.Web.Controllers
                 }
             }
             string url;
-            url = "http://www.sbycjk.net/getsidsofshipment/getOrderByids/" + t;
+           // url = "http://www.sbycjk.net/getsidsofshipment/getOrderByids/" + t;
+            url = "http://106.14.14.68:8088/getsidsofshipment/getOrderByids/" + t;
             string result = HttpUtility11.GetData(url);
             List<JsonOrderClass> ordermodel = getObjectByJson<JsonOrderClass>(result);
             foreach (var a in ordermodel)
@@ -138,12 +139,13 @@ namespace NewAsiaOASystem.Web.Controllers
                 
                     if (isxytb == 0)
                     {
-                        int Uid = GetjsxUidbysid(a.sid);//获取Uid
-                        if (Uid != -1)
-                        {
-                            decimal jine = 50;
-                            WL_JxsfrTBdata(Uid, jine);
-                        }
+                        GetjsxUidbysid(a.sid);
+                        //int Uid = GetjsxUidbysid(a.sid);//获取Uid
+                        //if (Uid != -1)
+                        //{
+                        //    decimal jine = 50;
+                        //    WL_JxsfrTBdata(Uid, jine);
+                        //}
                     }
                 }
             }
@@ -249,12 +251,20 @@ namespace NewAsiaOASystem.Web.Controllers
             }
         }
 
-        //通过sid查找电控箱信息同时查询出经销商的Uid
+        //通过sid查找电控箱信息同步续费订单信息
         public int GetjsxUidbysid(string sid)
         {
             WL_DkxInfoView dkxmodel = _IWL_DkxInfoDao.GetDkxinfobySID(sid);
+            decimal jine = 50;
             if (dkxmodel != null)//电控箱不为空
             {
+                if (dkxmodel.chtype == 2)
+                {
+                    if (dkxmodel.erp_jxscode != "" && dkxmodel.erp_jxscode != null)
+                    {
+                        WL_JxsfrTBdatabycode(dkxmodel.erp_jxscode, jine);
+                    }
+                }
                 if (dkxmodel.Xs_jxsId != "" && dkxmodel.Xs_jxsId != null)//经销商Id不为空
                 {
                     NACustomerinfoView cusmodel = _INACustomerinfoDao.NGetModelById(dkxmodel.Xs_jxsId);
@@ -262,7 +272,10 @@ namespace NewAsiaOASystem.Web.Controllers
                     {
                         if (cusmodel.DsUid != "" && cusmodel.DsUid != null)//电商uid
                         {
-                            return Convert.ToInt32(cusmodel.DsUid);
+                           
+                            int suid= Convert.ToInt32(cusmodel.DsUid);
+                            WL_JxsfrTBdata(suid, jine);
+                            return suid;
                         }
                         else
                         {
@@ -288,13 +301,26 @@ namespace NewAsiaOASystem.Web.Controllers
         public bool WL_JxsfrTBdata(int Uid, decimal jine)
         {
             Newasia.XYOffer model = new Newasia.XYOffer();
-            bool str = model.WlwCharge(Uid, jine);
+           
+                bool str = model.WlwCharge(Uid, jine);
+           
+            return str;
+        }
+
+        #region //通过客户的编码同步续费订单
+        public bool WL_JxsfrTBdatabycode(string codeno, decimal jine)
+        {
+            Newasia.XYOffer model = new Newasia.XYOffer();
+
+            bool str = model.WlwChargeByCode(codeno, jine);
+
             return str;
         }
         #endregion
+        #endregion
 
         #region MyRegion
-        
+
         #endregion
 
         #region //根据经销商UId查找续费订单数量
@@ -307,5 +333,5 @@ namespace NewAsiaOASystem.Web.Controllers
         }
         #endregion
 
-    }
+    } 
 }

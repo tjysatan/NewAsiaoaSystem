@@ -8,6 +8,14 @@
 
 @section HeadContent{
     <script type="text/javascript">
+        var loadi;
+        function ddchen() {
+            loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+        }
+        //关闭等待效果
+        function disLoading() {
+            layer.close(loadi);
+        }
         $(function () {
             BindGrid();
         })
@@ -35,8 +43,9 @@
                 html+='<td width="5%"><input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" /></td>';
                 html+='<td width="10%">编号</td>';
                 html+='<td width="20%">客户</td>';
-                html+='<td width="10%">退货数量</td>';
-                html+='<td width="10%">返退单状态</td>';
+                html+='<td width="5%">退货数量</td>';
+                html += '<td width="10%">返退单状态</td>';
+                html += '<td width="5%">技术分析</td>';
                 html+='<td width="10%">创建时间</td>';
                 html+='<td width="25%">操作</td>';
                 html+='</tr>';
@@ -47,17 +56,17 @@
                     html += '<td width="5%"><input type="checkbox" name="ContentChecked" value="' + jsonStr[i].Id + '"/></td>';
                     html += '<td width="10%">' +jsonStr[i].fthbianhao + '</td>';
                     html += '<td width="20%">' +ShowCustName(jsonStr[i].C_Id) + '</td>';
-                    html += '<td width="10%">' + jsonStr[i].R_Number + '</td>';
-
+                    html += '<td width="5%">' + jsonStr[i].R_Number + '</td>';
                     html += '<td width="10%">' +Showl_zt(jsonStr[i].L_type)+ '</td>';
-                   
+                    html += '<td width="5%">' + showIsjsbpz(jsonStr[i].Isjsbpz)+'</td>';
                     if(jsonStr[i].CreateTime!=null)
                         html += '<td width="10%">' + showDate(jsonStr[i].CreateTime) + '</td>';
                     else
                         html += '<td width="10%"></td>';
                     html += '<td width="25%"><div class="layui-btn-group">';
                     html+='<a class="layui-btn layui-btn-primary layui-btn-small" onclick="wxiframeopen('+Id+')" ><i class="layui-icon">&#xe642;</i>明细编辑</a>';
-                    html+='<a class="layui-btn layui-btn-primary layui-btn-small" onclick="NewwxEide('+Id+')"><i class="layui-icon">&#xe642;</i>编辑</a>';
+                    html += '<a class="layui-btn layui-btn-primary layui-btn-small" onclick="NewwxEide(' + Id + ')"><i class="layui-icon">&#xe642;</i>编辑</a>';
+                    html += '<a class="layui-btn layui-btn-primary layui-btn-small" onclick="biaojiEide(' + Id + ')"><i class="layui-icon">&#xe605;</i>技术分析</a>';
                     //html+='<div class="layui-btn-group">'+wxbtnshow(jsonStr[i].Id)+'</div>';
                     html+='</div></td>';
                     html+='</tr>';
@@ -152,6 +161,63 @@
                 }
             });
         }
+
+        //显示
+        function showIsjsbpz(val) {
+            if (val == null || val == "0") {
+                return "未标记";
+            }
+            else {
+                return '<span style="color:#5FB878"> 已标记</span>';
+            }
+        }
+
+        //标记技术分析
+        function biaojiEide(val) {
+            $.ajax({
+                url: "../NAReturnList/update_biaojiaojsfx",
+                type: "POST",
+                data: { Id: val },
+                dataType: "json",
+                async: true,
+                beforeSend: function () {
+                    ddchen();
+                },
+                success: function (response) {
+                    disLoading();
+                    if (response.result == "error") {
+                        layer.alert(response.msg, { icon: 2 }, function () { location.reload(); });
+                    }
+                    if (response.result == "success") {
+                        layer.alert(response.msg, { icon: 1 }, function () { location.reload(); });
+                    }
+
+                },
+                error: function (e) {
+                    disLoading();
+                    layer.alert("操作失败！", { icon: 2 });
+                }
+            })
+        }
+
+        function Exportexcl() {
+            var khname = $("#txtSearch_Name").val();//客户名称
+            var ztstr = $("#ztstr").val();//产品型号
+            var txt_Fthbianhao = $("#txt_Fthbianhao").val();//
+            var txt_CPname = $("#txt_CPname").val();//
+            var R_PId = $("#R_PId").val();//退货时间
+            var Isjsbpz = $("#Isjsbpz").val();//维修时间
+
+            //if (c_timestart == "" || c_timestart == null) {
+            //配置一个透明的询问框
+            layer.msg('确认导出当前记录吗', {
+                time: 2500, //2.5s后自动关闭
+                btn: ['确定导出', '取消'],
+                yes: function () {
+                    window.location.href = "../NAReturnList/daochuftorder?Name=" + khname + "&Szt=" + ztstr + "&type=" + '@ViewData["roletype"]' + "&R_pId=" + R_PId + "&fthbianhao=" + txt_Fthbianhao + "&CPname=" + txt_CPname + "&Isjsbpz=" + Isjsbpz;
+                }
+            });
+        }
     </script>
 }
 
@@ -170,7 +236,7 @@
                     <ul>
                         <li><span>客户：</span>
                             <span class="inquiry-input">
-                                <input type="text" name="txtSearch_Name" /></span></li>
+                                <input type="text" name="txtSearch_Name" id="txtSearch_Name" /></span></li>
                         <li><span>状态：</span>
                             <span class="inquiry-input">
                                 <select id="ztstr" name="ztstr">
@@ -187,19 +253,29 @@
                         <li>
                             <span>编号：</span>
                             <span class="inquiry-input">
-                                <input type="text" name="txt_Fthbianhao" />
+                                <input type="text" name="txt_Fthbianhao" id="txt_Fthbianhao" />
                             </span>
                         </li>
                         <li>
                             <span>产品名称：</span>
                             <span class="inquiry-input">
-                                <input type="text" name="txt_CPname" />
+                                <input type="text" name="txt_CPname" id="txt_CPname" />
                             </span>
                         </li>
                         <li>
                             <span>返退产品：</span>
                             <span class="inquiry-input">
                                 @Html.DropDownList("R_PId", ViewData["perList"] as SelectList, new { @class = "add-function" })
+                            </span>
+                        </li>
+                        <li>
+                            <span>技术分析</span>
+                            <span class="inquiry-input">
+                                <select id="Isjsbpz" name="Isjsbpz">
+                                    <option value="">全部</option>
+                                    <option value="0">未标记</option>
+                                    <option value="5">已标记</option>
+                                </select>
                             </span>
                         </li>
                         <li style="*width: 100%; *margin: -10px 0 5px 90px;">
@@ -209,7 +285,9 @@
                                     <i class="layui-icon">&#xe615;</i> 查询
                                 </button>
                             </span>
-
+                            <span class="inquiry-input">
+                                <button type="button" onclick="Exportexcl(); return false;">记录导出</button>
+                            </span>
                         </li>
                     </ul>
                 </fieldset>

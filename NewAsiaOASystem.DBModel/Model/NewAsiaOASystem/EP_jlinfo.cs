@@ -182,5 +182,40 @@ namespace NewAsiaOASystem.DBModel
         /// </summary>
         public virtual string arrivedOutFieldName { get; set; }
 
+        /// <summary>
+        /// 顺丰 打单时的路由标签信息如果是大网的路由标签,这里的值是目的地网点代码, 如果是同城配的路由标签,这里的值是根据同城配的设置映射出来的值,不同的配置结果会不一样,不能根据-符号切分(如:上海同城配, 可能是:集散点-目的地网点-接驳点, 也有可能是目的地网代码-集散点-接驳点)
+        /// </summary>
+        public virtual string destRouteLabel { get; set; }
+
+        /// <summary>
+        /// 顺丰二维码
+        /// </summary>
+        public virtual string twoDimensionCode { get; set; }
+
+        /// <summary>
+        /// 顺丰 入港映射码 eg:S10
+        /// </summary>
+        public virtual string codingMapping { get; set; }
+
+        /// <summary>
+        /// 顺丰
+        /// </summary>
+        public virtual string codingMappingOut { get; set; }
+
+        /// <summary>
+        /// 顺丰
+        /// </summary>
+        public virtual string proName { get; set; }
+
+        /// <summary>
+        /// 顺丰 运单号类型1：母单 2 :子单 3 : 签回单
+        /// </summary>
+        public virtual string waybillType { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual string proCode { get; set; }
+
     }
 }

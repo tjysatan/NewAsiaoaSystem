@@ -51,7 +51,8 @@
         html = '<table class="table_con" style="width: 100%; color: #000; font-size: 13px; margin: auto;">';
         html += '<tr>';
         html += '<td>序号</td>';
-        html += '<td>产品型号</td>';
+        html += '<td>名称</td>';
+        html += '<td>型号</td>';
         html += '<td>生产批号</td>';
         html += '<td>时间</td>';
         html += '<td>不良现象</td>';
@@ -78,6 +79,7 @@
                 html += '<tr>';
                 html += '<td>' + xh + '</td>';
                 html += '<td>' + Perinfo.Pname + '</td>';
+                html += '<td>' + Perinfo.P_xh + '</td>';
                 if (strjson[i].TH_Ph != "" && strjson[i].TH_Ph!=null)
                     html += '<td>' + strjson[i].TH_Ph + '</td>';
                 else

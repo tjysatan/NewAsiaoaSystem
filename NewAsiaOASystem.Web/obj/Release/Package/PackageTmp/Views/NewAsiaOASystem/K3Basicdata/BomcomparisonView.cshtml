@@ -184,7 +184,7 @@ Idd            }
 
     //更新普实BOM的明细
     function updatepushiBOM(val) {
-        var DocEntry = $("#DocEntry").val();
+        var DocEntry = $("#DocEntry").val(); /*25764*/
         if (DocEntry == "" || DocEntry == null) {
             layer.alert("普实没有查出BOM的主表DocEntry", { icon: 2 });
             return false;
@@ -192,7 +192,7 @@ Idd            }
             $.ajax({
             url: "../K3Basicdata/updatePSbommx",
             type: "POST",
-            data: { wlno: val, DocEntry: DocEntry },
+                data: { wlno: val, DocEntry: DocEntry },
             dataType: "JSON",
             async: true,
             beforeSend: function () {
@@ -234,7 +234,8 @@ Idd            }
             <div class="layui-card">
                 <div class="layui-card-header">
                     普实BOM
-                    <button type="button" class="layui-btn" onclick="updatepushiBOM('@Model.fnumber')" id="updatepushi" style="display:none">更新普实BOM明细</button>
+                    @*<button type="button" class="layui-btn" onclick="updatepushiBOM('@Model.fnumber')" id="updatepushi" style="display:none">更新普实BOM明细</button>*@
+                    <button type="button" class="layui-btn" onclick="updatepushiBOM('@Model.fnumber')">更新普实BOM明细</button>
                 </div>
                 <div class="layui-card-body">
                     <table class="table_con" style="width: 98%; color: #000; font-size: 13px; margin: auto;" id="table_con2">

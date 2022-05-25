@@ -13,5 +13,6 @@
     <property name="Up_name" column="Up_name" />
     <property name="Start" column="Start" />
     <property name="Sort" column="Sort" />
+    <property name="Teamname" column="Teamname" />
   </class>
 </hibernate-mapping>

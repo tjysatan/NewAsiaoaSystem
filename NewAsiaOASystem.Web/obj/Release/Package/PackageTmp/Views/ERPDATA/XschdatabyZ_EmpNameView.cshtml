@@ -1,0 +1,122 @@
+﻿@{
+    ViewBag.Title = "技术小组的产品销售数据";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+
+<script type="text/javascript">
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+    $(function () {
+        Gettabledata();
+    })
+
+    //初始化订单明细的数据表格
+    function Gettabledata() {
+        layui.use('table', function () {
+            var table = layui.table;
+            table.render({
+                elem: '#test',
+                url: '/ERPDATA/GetXschdatabyZ_EmpName',
+                where: {
+                    AbsID: '@ViewData["AbsID"]'
+                },
+                cols: [[
+
+                    { field: 'jsfzname', width: 300, title: '技术小组' },
+                    { field: 'hzjine', width: 200, title: '产品销售含税金额' },
+                    { field: 'wsjine', width: 200, title: '产品销售未税金额' },
+                    { field: 'xscbjine', width: 200, title: '销售成本金额' },
+                    { field: '', title: '操作', width: 160, fixed: 'right', toolbar: "#bar" }
+                ]],
+                cellMinWidth: 80, //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                page: false,
+
+            });
+            table.on('tool(test)', function (obj) {
+                var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+                var data = obj.data; //获得当前行 tr 的 DOM 对象（如果有的话）
+                if (layEvent === 'yfEide') { //查看
+                    openYFcostView(data.jsfzname,'@ViewData["AbsID"]');
+                }
+                if (layEvent === 'KPIcheck') { //查看
+                    openJs_kpi_View(data.jsfzname, '@ViewData["AbsID"]', data.hzjine, data.wsjine, data.xscbjine);
+                }
+            })
+        })
+    }
+    //查询汇总技术分组的产品销售数据
+
+    //研发成本编辑
+    function openYFcostView(name, date) {
+        layer.open({
+            type: 2,
+            title: ['技术小组的研发成本', 'font-size:14px;'],
+            area: ['500px', '450px'],
+            offset: '10px',
+            fixed: false, //不固定
+            maxmin: true,
+            content: '../ERPDATA/JsxzCostView?name=' + name + '&date=' + date,
+            //end: function () {
+            //    location.reload();
+            //}
+        })
+    }
+
+    //技术小组的KPI核算报表页面
+    function openJs_kpi_View(name, date,hsjine,wsjine,xscb) {
+        layer.open({
+            type: 2,
+            title: ['技术绩效核算', 'font-size:14px;'],
+            area: ['80vw', '90vh'],
+            offset: '10px',
+            fixed: false, //不固定
+            maxmin: true,
+            content: '../ERPDATA/Js_KPI_View?name=' + name + '&date=' + date + '&hsjine=' + hsjine + '&wsjine=' + wsjine + '&cbjine=' + xscb,
+            //end: function () {
+            //    location.reload();
+            //}
+        })
+    }
+
+
+</script>
+<script type="text/html" id="bar">
+    <div class="layui-btn-group">
+        @*<button type="button" class="layui-btn  layui-btn-xs layui-btn-normal" lay-event="check" title="资料查看">
+            <i class="layui-icon">&#xe63c;</i>
+        </button>*@
+
+        <button type="button" class="layui-btn layui-btn-xs layui-btn-warm" lay-event="yfEide" title="研发成本">
+            <i class="layui-icon">&#xe642;</i>
+        </button>
+
+        <button type="button" class="layui-btn layui-btn-xs layui-btn-normal" lay-event="KPIcheck" title="KPI核算查看">
+            <i class="layui-icon">&#xe60e;</i>
+        </button>
+
+        @*<button type="button" class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del" title="删除">
+            <i class="layui-icon">&#xe640;</i>
+        </button>
+        <button type="button" class="layui-btn layui-btn-xs layui-btn-normal" lay-event="TBPS" title="同步普实">
+            <i class="layui-icon">&#xe609;</i>
+        </button>*@
+    </div>
+</script>
+
+    <div class="layui-card">
+        <div class="layui-card-header">
+            数据月份：@ViewData["AbsID"]
+
+        </div>
+        <div class="layui-card-body">
+            <table class="layui-hide" id="test" lay-filter="test"></table>
+        </div>
+    </div>
+

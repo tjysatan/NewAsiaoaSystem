@@ -59,6 +59,10 @@
                         html += '<td width="100">启用</td>';
                     else
                         html += '<td width="100">禁用</td>';
+                    if (jsonStr[i].ERP_YGNO != "" && jsonStr[i].ERP_YGNO!=null)
+                        html += '<td width="100">' + jsonStr[i].ERP_YGNO+'</td>';
+                    else
+                        html += '<td width="100">-</td>';
                     html += '<td width="100">' + showDate(jsonStr[i].CreateTime) + '</td>';
                     html+='</tr>';
                 }
@@ -131,12 +135,14 @@
                 <table cellpadding="0" cellspacing="0" class="h-right-table-title1" style="border: none;">
                     <tr>
                         <td width="30">
-                            <input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" /></td>
+                            <input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" />
+                        </td>
                         <td width="100">用户账号</td>
                         <td width="200">用户姓名</td>
-                    @*     <td width="170">所属单位</td>*@
+                        @*     <td width="170">所属单位</td>*@
                         <td width="100">角色</td>
                         <td width="100">状态</td>
+                        <td width="100">编号</td>
                         <td width="100">创建时间</td>
                     </tr>
                 </table>

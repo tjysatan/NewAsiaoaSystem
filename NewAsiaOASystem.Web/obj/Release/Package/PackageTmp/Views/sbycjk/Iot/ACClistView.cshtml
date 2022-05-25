@@ -11,7 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>我绑定的帐号</title>
+    <title>我绑定的监控点</title>
     <link rel="stylesheet" type="text/css" href="http://at.alicdn.com/t/font_1459473269_4751618.css">
     <link href="~/Content/NewM2M/Index/css/bootstrap.min.css" rel="stylesheet">
     <link href="~/Content/NewM2M/Index/css/style.css" rel="stylesheet">
@@ -20,18 +20,8 @@
     <!--必要样式-->
     <link rel="stylesheet" type="text/css" href="~/Content/NewM2M/Index/css/menu_elastic.css" />
     <script src="~/Content/NewM2M/Index/js/snap.svg-min.js"></script>
-    <script type="text/javascript" src="../Content/M2Mv2/js/jquery.min.js"></script>
-    <script type="text/javascript" src="../Content/M2Mv2/js/jquery.leanModal.min.js"></script>
-    <link href="../Content/M2Mv2/css/jquery.uls.css" rel="stylesheet" />
-    <link href="../Content/M2Mv2/css/jquery.uls.grid.css" rel="stylesheet" />
-    <link href="../Content/M2Mv2/css/jquery.uls.lcd.css" rel="stylesheet" />
-
-    <script src="../Content/M2Mv2/js/jquery.uls.data.js"></script>
-    <script src="../Content/M2Mv2/js/jquery.uls.data.utils.js"></script>
-    <script src="../Content/M2Mv2/js/jquery.uls.lcd.js"></script>
-    <script src="../Content/M2Mv2/js/jquery.uls.languagefilter.js"></script>
-    <script src="../Content/M2Mv2/js/jquery.uls.regionfilter.js"></script>
-    <script src="../Content/M2Mv2/js/jquery.uls.core.js"></script>
+  
+    
     <script src="../Scripts/layer/layer.js"></script>
     <script src="../Scripts/jquery-1.9.1.min.js"></script>
     <script src="../Scripts/jquery-easyui-1.4.1/jquery.easyui.min.js"></script>
@@ -48,7 +38,7 @@
             $.ajax({
                 url: "../Iot/GetbdzhDATAJson",
                 type: "POST",
-                data: { openId: '@ViewData["openid"]' },
+                data: { Id: '@ViewData["Id"]' },
                 dataType: "json",
                 async: true,
                 beforeSend: function () {
@@ -69,16 +59,13 @@
         //html拼接
         //拼接html
         function htmljp(val) {
-            var jsonstr = val;
+            var jsonstr = val.result;
             var html = "";
-            html += '<div class="cdv"><a href="../Iot/bindingView"><span>我要绑定</span></a></div>';
+            //html += '<div class="cdv"><a href="../Iot/bindingView"><span>我要绑定</span></a></div>';
             if (jsonstr != null && jsonstr != "") {
                 for (var i = 0, j = jsonstr.length; i < j; i++) {
                     html += '<div class="cdv dzi">';
-                    html += '<p>帐号：' + jsonstr[i].Username;
-                    html += '<button class="label label-danger pull-right" onclick="jcbdurl(&quot;' + jsonstr[i].Username + '&quot;)">解除绑定</button>&nbsp;';
-                    html += '<button class="label label-warning pull-right" onclick="jkdurl(&quot;' + jsonstr[i].Id + '&quot;)">监控点管理</button></p>';
-                    html += '<p> 绑定时间：' + jsonstr[i].C_time + '</p>';
+                    html += '<p>监控点SID：' + jsonstr[i] +'</p>';
                     html += '</div>';
                 }
             }
@@ -114,7 +101,7 @@
 <body class="huibg">
     <nav class="navbar text-center">
         <button class="topleft" onclick="javascript:history.go(-1);"><span class="iconfont icon-fanhui"></span></button>
-        <a class="navbar-tit center-block">我的远程帐号</a>
+        <a class="navbar-tit center-block">我的监控点</a>
     </nav>
 
 

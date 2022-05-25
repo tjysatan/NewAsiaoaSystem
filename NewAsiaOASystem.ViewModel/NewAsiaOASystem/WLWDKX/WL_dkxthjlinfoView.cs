@@ -39,5 +39,25 @@ namespace NewAsiaOASystem.ViewModel
         /// 退货类型 0 正常订单退货 1 扫错码 初始化退货
         /// </summary>
         public virtual int? jltype { get; set; }
+
+        /// <summary>
+        /// 拣配单 单号
+        /// </summary>
+        public virtual string Xsjpordno { get; set; }
+
+        /// <summary>
+        /// 经销商 编码
+        /// </summary>
+        public virtual string scxscuscode { get; set; }
+
+        /// <summary>
+        /// 经销商名称
+        /// </summary>
+        public virtual string scxscusname { get; set; }
+
+        /// <summary>
+        /// 扫码出货类型  2 通过拣配单 单号扫码出货
+        /// </summary>
+        public virtual int? smtype { get; set; }
     }
 }

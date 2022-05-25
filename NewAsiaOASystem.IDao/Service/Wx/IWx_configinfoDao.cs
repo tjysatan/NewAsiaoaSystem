@@ -11,5 +11,14 @@ namespace NewAsiaOASystem.IDao
     {
         //查询平台微信支付配置信息
         Wx_configinfoView Getweixinpayconfig();
+
+        
+        #region //查询蓝河微信的配置信息
+        /// <summary>
+        /// 查询蓝河微信的配置信息
+        /// </summary>
+        /// <returns></returns>
+        Wx_configinfoView Getlanheweixinpayconfig(); 
+        #endregion
     }
 }

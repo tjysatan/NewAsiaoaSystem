@@ -28,9 +28,10 @@
                 html+='<tr style="font-weight:bold;color:#000000">';
                 html+='<td width="5%"><input type="checkbox" name="TopChecked" value="0" onclick="TopChecked()" /></td>';
                 html+='<td width="5%">排序</td>';
-                html+='<td width="15%">工程师</td>';
-                html+='<td width="15%">帐号</td>';
-                html+='<td width="15%">电话</td>';
+                html += '<td width="15%">工程师</td>';
+                html += '<td width="15%">团队</td>';
+                html+='<td width="10%">帐号</td>';
+                html+='<td width="10%">电话</td>';
                 html+='<td width="10%">是否启用</td>';
                 html+='<td width="20%">操作</td>';
                 html+='</tr>';
@@ -40,9 +41,10 @@
                     html+='<tr>';
                     html += '<td width="5%"><input type="checkbox" name="ContentChecked" value="' + jsonStr[i].Id + '"/></td>';
                     html+='<td width="5%">'+jsonStr[i].Sort+'</td>';
-                    html+='<td width="15%">'+jsonStr[i].Name+'</td>';
-                    html+='<td width="15%">'+GetzhanghaojsonbyId(jsonStr[i].ZH_Id)+'</td>';
-                    html+='<td width="15%">'+jsonStr[i].Tel+'</td>';
+                    html += '<td width="15%">' + jsonStr[i].Name + '</td>';
+                    html += '<td width="15%">' + jsonStr[i].Teamname + '</td>';
+                    html+='<td width="10%">'+GetzhanghaojsonbyId(jsonStr[i].ZH_Id)+'</td>';
+                    html+='<td width="10%">'+jsonStr[i].Tel+'</td>';
                     if(jsonStr[i].Start=="0")
                         html+='<td width="10%">启用</td>';
                     else

@@ -1,0 +1,430 @@
+﻿@{
+    ViewBag.Title = "技术小组绩效核算";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<script>
+    $(function () {
+        var yfbl = 0.015;
+        if ('@ViewData["name"]' == "张骏张文杰孙微组" || '@ViewData["name"]' == "袁静铖金志浩孙中原组" || '@ViewData["name"]' == "吕正佳组")
+            yfbl = 0.05
+       //核算材料未税金额
+        var clwsjine = (@ViewData["cbjine"]* 0.85).toFixed(2);
+        $("#clwsjine").html(clwsjine);
+        //生产的工资福利
+        var scgzjine = (@ViewData["cbjine"]* 0.08).toFixed(2);
+        $("#scgzjine").html(scgzjine);
+        //智造费用
+        var zzjine = (@ViewData["cbjine"]* 0.05).toFixed(2);
+        $("#zzjine").html(zzjine);
+        //车间管理金额
+        var cjgljine = (@ViewData["cbjine"]* 0.02).toFixed(2);
+        $("#cjgljine").html(cjgljine);
+
+        //国税地税金额 （销售的未税金额-材料未税金额）*0.15
+        var gsdsjine = ((@ViewData["wsjine"]-clwsjine) * 0.15).toFixed(2);
+        $("#gsdsjine").html(gsdsjine);
+        //运费 销售的未税金额*0.05
+        var yfjine = (@ViewData["wsjine"]* yfbl).toFixed(2);
+        $("#yfjine").html(yfjine);
+
+        //销售费用 销售的未税金额*0.024
+        var scfyjine = (@ViewData["wsjine"]* 0.024).toFixed(2);
+        $("#scfyjine").html(scfyjine);
+
+        //客服人员费用 销售的未税金额*0.006
+        var kffyjine = (@ViewData["wsjine"]* 0.006).toFixed(2);
+        $("#kffyjine").html(kffyjine);
+        //市场广告非 销售的未税金额*0.01
+        var scggfjine = (@ViewData["wsjine"]* 0.01).toFixed(2);
+        $("#scggfjine").html(scggfjine);
+        //市场费用
+        var sjfyjine =(@ViewData["wsjine"]* 0.04).toFixed(2);
+        $("#sjfyjine").html(sjfyjine);
+
+        //保险费用
+        var bxfjine = (@ViewData["wsjine"]* 0.01).toFixed(2);
+        $("#bxfjine").html(bxfjine);
+         //平台费用
+        var ptfjine = (@ViewData["wsjine"]* 0.01).toFixed(2);
+        $("#ptfjine").html(ptfjine);
+
+        //成本--产品 1-9合计
+        var cpcbjine = (Number(clwsjine) + Number(scgzjine) + Number(zzjine) + Number(cjgljine) + Number(gsdsjine) + Number(yfjine) + Number(sjfyjine) + Number(bxfjine) + Number(ptfjine)).toFixed(2);
+        $("#cpcbjine").html(cpcbjine);
+
+        Getjscbcost();
+    })
+
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+    //查询小组的研发成本
+     //查询技术小组的成本数据
+    function Getjscbcost() {
+
+        $.ajax({
+            url: "../ERPDATA/Getjsxzcostbynameanddate",
+            type: "POST",
+            data: { name: '@ViewData["name"]', date: '@ViewData["date"]' },
+            dataType: "json",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response.result == "error") {
+                    //layer.alert(response.msg, { icon: 2 }, function () { location.reload(); });
+                    $("#yfgzfljine").html("0");
+                    $("#yfbmjtjine").html("0");
+                    $("#shjine").html("0");
+                    $("#yfcbjine").html("0");
+                }
+                if (response.result == "success") {
+                    //layer.alert(response.msg, { icon: 1 }, function () { location.reload(); });
+                    var json = eval('[' + response.data + ']');
+                    $("#yfgzfljine").html(json[0].Fy_jine1);
+                    $("#yfbmjtjine").html(json[0].Fy_jine2);
+                    $("#shjine").html(json[0].Fy_jine3);
+                    var heji = Number(json[0].Fy_jine1) + Number(json[0].Fy_jine2) + Number(json[0].Fy_jine3)
+                    $("#yfcbjine").html(heji);
+                    //console.log('1111', json[0].Fy_jine1)
+                    //var cost1 = json[0].Fy_jine1;
+                    //var cost2 = json[0].Fy_jine2;
+                    //var cost3 = json[0].Fy_jine3;
+                    //$("#cost1").val(cost1);
+                    //$("#cost2").val(cost2);
+                    //$("#cost3").val(cost3);
+                }
+                var cpcbjine = $("#cpcbjine").html();
+                var yfcbjine = $("#yfcbjine").html();
+                var lirunjine = (Number(@ViewData["wsjine"]) - Number(cpcbjine) - Number(yfcbjine)).toFixed(2);
+                $("#lirunjine").html(lirunjine);
+                $("#kflirunjine").html(lirunjine);
+                var kflijine = (lirunjine * 0.2).toFixed(2);
+                $("#fplr1").html(kflijine);
+                $("#fplr2").html(kflijine);
+                $("#fplr3").html(kflijine);
+                $("#fplr4").html(kflijine);
+                $("#fplr5").html(kflijine);
+
+
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+    }
+
+    //导出
+    function dcdate() {
+
+
+         var text = "是否确定导出" + '@ViewData["name"]' + "," +'@ViewData["date"]'  + "的绩效核算吗！"
+
+        layer.open({
+            type: 1,
+            offset: 1 //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
+            , id: 'layerDemo' + 1 //防止重复弹出
+            , content: '<div style="padding: 20px 100px;">' + text + '</div>'
+            , btn: ['数据导出', '关闭']
+            , btnAlign: 'c' //按钮居中
+            , shade: 0 //不显示遮罩
+            , yes: function () {
+
+                window.location.href = "/ERPDATA/dc_js_kpi_data?name=" + '@ViewData["name"]' + "&date=" + '@ViewData["date"]' + "&hsjine=" + '@ViewData["hsjine"]' + "&wsjine=" + '@ViewData["wsjine"]' + "&cbjine=" + '@ViewData["cbjine"]';
+                layer.closeAll();
+            }
+        });
+    }
+</script>
+
+<div class="add-infor-title-bg_header">
+
+    <table style="width: 100%; color: #000; font-size: 13px; text-align: center;">
+        <tr>
+            <td style="width:10%">序号</td>
+            <td style="width:20%">项目</td>
+            <td>规则</td>
+            <td style="width:20%">总金额</td>
+        </tr>
+
+    </table>
+    <div id="content" style="width: 100%;" class="mainDIV">
+        <table style="width:100%; color:#000; font-size:13px; text-align:center;">
+            <tr>
+                <td style="width:10%">一、</td>
+                <td style="width:20%">报价（销售额未税）</td>
+                <td>按照报价系统（未税价=含税价/1.13)</td>
+                <td style="width:20%">@ViewData["wsjine"]</td>
+            </tr>
+            <tr>
+                <td style="width:10%">二、</td>
+                <td style="width:20%">成本--产品</td>
+                <td>1--9合计</td>
+                <td style="width:20%" id="cpcbjine"></td>
+            </tr>
+            <tr>
+                <td style="width:10%">1、</td>
+                <td style="width:20%">材料（未税）</td>
+                <td>全部含包材</td>
+                <td style="width:20%" id="clwsjine"></td>
+            </tr>
+            <tr>
+                <td style="width:10%">2、</td>
+                <td style="width:20%">直接生产人员工资福利</td>
+                <td>孙中原工序标准</td>
+                <td style="width:20%" id="scgzjine"></td>
+            </tr>
+            <tr>
+                <td style="width:10%">3、</td>
+                <td style="width:20%">制造费用</td>
+                <td>房租、折旧、水电、工具、办公费、福利、劳保、修理费等（占销售额比例3%）</td>
+                <td style="width:20%" id="zzjine"></td>
+            </tr>
+            <tr>
+                <td style="width:10%">4、</td>
+                <td style="width:20%">车间管理人员工资福利</td>
+                <td>
+                    车间干部仓管助理等
+                    （占销售比例1.6%)
+                </td>
+                <td style="width:20%" id="cjgljine"></td>
+            </tr>
+
+            <tr>
+                <td style="width:10%">5、</td>
+                <td style="width:20%">国税增值税金及地税税金</td>
+                <td>
+                    （销售额未税-材料未税金额）*15%
+                </td>
+                <td style="width:20%" id="gsdsjine"></td>
+            </tr>
+            <tr>
+                <td style="width:10%">6、</td>
+                <td style="width:20%">运费</td>
+                <td>
+                    （重量、体积、里程（非标目前按照销售额5%）
+                </td>
+                <td style="width:20%" id="yfjine"></td>
+            </tr>
+            <tr>
+                <td style="width:10%">7、</td>
+                <td style="width:20%">市场费用</td>
+                <td>
+                    7.1+7.2+7.3
+                </td>
+                <td style="width:20%" id="sjfyjine"></td>
+            </tr>
+            <tr>
+                <td style="width:10%">7.1、</td>
+                <td style="width:20%">销售人员费用</td>
+                <td>
+                    依据占销售比例2.4%
+                </td>
+                <td style="width:20%" id="scfyjine"></td>
+            </tr>
+            <tr>
+                <td style="width:10%">7.2、</td>
+                <td style="width:20%">客服人员费用</td>
+                <td>
+                    依据占销售比例0.6%
+                </td>
+                <td style="width:20%" id="kffyjine"></td>
+            </tr>
+            <tr>
+                <td style="width:10%">7.3、</td>
+                <td style="width:20%">市场广告费</td>
+                <td>
+                    依据占销售比例1%
+                </td>
+                <td style="width:20%" id="scggfjine"></td>
+            </tr>
+            <tr>
+                <td style="width:10%">8、</td>
+                <td style="width:20%">保险费</td>
+                <td>
+                    依据占销售比例1%
+                </td>
+                <td style="width:20%" id="bxfjine"></td>
+            </tr>
+            <tr>
+                <td style="width:10%">9、</td>
+                <td style="width:20%">平台费用</td>
+                <td>
+                    依据占销售比例1%
+                </td>
+                <td style="width:20%" id="ptfjine"></td>
+            </tr>
+            <tr>
+                <td style="width:10%">三、</td>
+                <td style="width:20%">成本--研发人员</td>
+                <td>
+                    1-3合计
+                </td>
+                <td style="width:20%" id="yfcbjine"></td>
+            </tr>
+            <tr>
+                <td style="width:10%">1、</td>
+                <td style="width:20%">研发人员工资福利</td>
+                <td>
+                    按照实际
+                </td>
+                <td style="width:20%" id="yfgzfljine"></td>
+            </tr>
+            <tr>
+                <td style="width:10%">2、</td>
+                <td style="width:20%">研发人员费用</td>
+                <td>
+                    按照部门实际发生分摊
+                </td>
+                <td style="width:20%" id="yfbmjtjine"></td>
+            </tr>
+            <tr>
+                <td style="width:10%">3、</td>
+                <td style="width:20%">售后费用</td>
+                <td>
+                    差旅费、换货、赔偿等
+                </td>
+                <td style="width:20%" id="shjine"></td>
+            </tr>
+            <tr>
+                <td style="width:10%">四、</td>
+                <td style="width:20%">利润</td>
+                <td>
+                    售价-成本产品-成本研发人员
+                </td>
+                <td style="width:20%" id="lirunjine"></td>
+            </tr>
+            <tr>
+                <td style="width:10%">五、</td>
+                <td style="width:20%">可分配利润</td>
+                <td>
+                    1-5合计
+                </td>
+                <td style="width:20%" id="kflirunjine"></td>
+            </tr>
+            <tr>
+                <td style="width:10%">1、</td>
+                <td style="width:20%">技术个人、小组</td>
+                <td>
+                    利润20%
+                </td>
+                <td style="width:20%" id="fplr1"></td>
+            </tr>
+            <tr>
+                <td style="width:10%">2、</td>
+                <td style="width:20%">技术部门管理</td>
+                <td>
+                    利润20%
+                </td>
+                <td style="width:20%" id="fplr2"></td>
+            </tr>
+            <tr>
+                <td style="width:10%">3、</td>
+                <td style="width:20%">公司发展基金</td>
+                <td>
+                    利润20%
+                </td>
+                <td style="width:20%" id="fplr3"></td>
+            </tr>
+            <tr>
+                <td style="width:10%">4、</td>
+                <td style="width:20%">公司股东利益</td>
+                <td>
+                    利润20%
+                </td>
+                <td style="width:20%" id="fplr4"></td>
+            </tr>
+            <tr>
+                <td style="width:10%">5、</td>
+                <td style="width:20%">公司管理团队</td>
+                <td>
+                    利润20%
+                </td>
+                <td style="width:20%" id="fplr5"></td>
+            </tr>
+        </table>
+    </div>
+
+    <div style="padding:20px; float:right">
+        <button type="submit" class="layui-btn layui-btn-primary btn1" onclick="dcdate();return false"> <i class="layui-icon"> &#xe67d;</i> 导出excel</button>
+    </div>
+</div>
+
+<style>
+    .titletjbg2 {
+        height: 40px;
+        line-height: 40px;
+        background: #fff;
+        float: left;
+        width: 100%;
+        border-radius: 4%;
+    }
+
+    .add-infor-title-bg_tj ul {
+        padding: 10px;
+    }
+
+        .add-infor-title-bg_tj ul li {
+            width: 20%;
+            float: left;
+            font-size: 15px;
+        }
+
+    .titletjbg2 ul {
+        padding: 10px;
+    }
+
+        .titletjbg2 ul li {
+            width: 20%;
+            float: left;
+            font-size: 15px;
+        }
+
+    .add-infor-title-bg_header {
+        height: 46px;
+        line-height: 46px;
+        background: #e8e5e5;
+        float: left;
+        width: 100%;
+    }
+
+        .add-infor-title-bg_header ul {
+            /*padding: 10px;*/
+        }
+
+            .add-infor-title-bg_header ul li {
+                width: 20%;
+                float: left;
+                font-size: 18px;
+            }
+
+    #content table {
+        border-collapse: collapse;
+        border: none;
+    }
+
+        #content table td {
+            border: solid #e8e5e5 1px;
+        }
+
+    .a {
+        position: relative;
+        top: expression(this.offsetParent.scrollTop);
+        text-align: center;
+        z-index: 10;
+    }
+
+    .mainDIV {
+       /* overflow: scroll;*/
+       /* height: 380px;*/
+    }
+</style>

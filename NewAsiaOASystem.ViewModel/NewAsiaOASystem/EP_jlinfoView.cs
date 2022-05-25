@@ -143,11 +143,12 @@ namespace NewAsiaOASystem.ViewModel
 
         /// <summary>
         /// 送货方式 1、自提； 2、送货进仓； 3、送货（不含上楼）； 4、送货上楼； 5、大件上楼
+        /// 顺丰快件产品类别 （1 顺丰特快 2 顺丰标快）
         /// </summary>
         public virtual string deliveryType { get; set; }
 
         /// <summary>
-        /// 	0:发货人付款（现付） 1:收货人付款（到付） 2：发货人付款（月结） （电子运单客户不支持寄付）
+        ///0:发货人付款（现付） 1:收货人付款（到付） 2：发货人付款（月结） （电子运单客户不支持寄付） (顺丰：1:寄付 2：到付 )
         /// </summary>
         public virtual string payType { get; set; }
 
@@ -181,6 +182,41 @@ namespace NewAsiaOASystem.ViewModel
         /// 接口返回的 最终到达外场
         /// </summary>
         public virtual string arrivedOutFieldName { get; set; }
+
+        /// <summary>
+        /// 顺丰 打单时的路由标签信息如果是大网的路由标签,这里的值是目的地网点代码, 如果是同城配的路由标签,这里的值是根据同城配的设置映射出来的值,不同的配置结果会不一样,不能根据-符号切分(如:上海同城配, 可能是:集散点-目的地网点-接驳点, 也有可能是目的地网代码-集散点-接驳点)
+        /// </summary>
+        public virtual string destRouteLabel { get; set; }
+
+        /// <summary>
+        /// 顺丰二维码
+        /// </summary>
+        public virtual string twoDimensionCode { get; set; }
+
+        /// <summary>
+        /// 顺丰 入港映射码 eg:S10
+        /// </summary>
+        public virtual string codingMapping { get; set; }
+
+        /// <summary>
+        /// 顺丰
+        /// </summary>
+        public virtual string codingMappingOut { get; set; }
+
+        /// <summary>
+        /// 顺丰
+        /// </summary>
+        public virtual string proName { get; set; }
+
+        /// <summary>
+        /// 顺丰 运单号类型1：母单 2 :子单 3 : 签回单
+        /// </summary>
+        public virtual string waybillType { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public virtual string proCode { get; set; }
 
 
     }

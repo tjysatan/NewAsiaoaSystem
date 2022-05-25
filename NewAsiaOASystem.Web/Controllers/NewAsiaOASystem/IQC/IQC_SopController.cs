@@ -795,65 +795,135 @@ namespace NewAsiaOASystem.Web.Controllers
         }
         #endregion
 
-        #region //单个检验通知单刷新
-        public string DGJYTZDshuaxin(string ddno)
+        #region //获取普实的暂收送检的
+        public JsonResult PsllNoticeInterface()
         {
             try
             {
-                IQC_llNoticeordinfoView zmodel = _IIQC_llNoticeordinfoDao.GetllNoticeinfobyddno(ddno);
-                if (zmodel == null)
-                    return "1";//该通知没有同步没有办法进行刷新
-                string url;
-                url = "http://222.92.203.58:83//Baseitem.asmx/getPoByFBillNo?fbillno=" + ddno;
-                string result = HttpUtility11.GetData(url);
-                XmlDocument doc = new XmlDocument();
-                doc.LoadXml(result);
-                string sSupplier = doc.InnerText;
-                List<K3llNoticemodel> timemodel = getObjectByJson<K3llNoticemodel>(sSupplier);
-                if (timemodel == null)
-                    return "2";//同步不到该数据
-                //删除明细
-                List<IQC_llNoticeMXordinfoView> mxmodellist = _IIQC_llNoticeMXordinfoDao.Getsjdlistmodelbyddno(ddno) as List<IQC_llNoticeMXordinfoView>;
-                if (mxmodellist != null)
+                //查询当前最新的来料通知Id 普实的从7月初的数据
+                string lltzdId = "10710";
+                IQC_llNoticeMXordinfoView model = _IIQC_llNoticeMXordinfoDao.GetllNoticeMXMaxDDNO();
+                if (model != null)
+                    lltzdId = model.DDNO;
+                string result = zypushsoftHelper.GetPUTmp_DocEntry(lltzdId);
+                int xz = 0;
+                if (result != null || result != "")
                 {
-                    _IIQC_llNoticeMXordinfoDao.NDelete(mxmodellist);
+                    List<pszanshousjmodel> timemodel = getObjectByJson<pszanshousjmodel>(result);
+                    foreach (var item in timemodel)
+                    {
+                        xz = xz + 1;
+                       IQC_llNoticeMXordinfoView mxmodel = new IQC_llNoticeMXordinfoView();
+                        mxmodel = _IIQC_llNoticeMXordinfoDao.GetllnotceMXbysjdhandwldm(item.DocEntry, item.ItmID);
+                        if (mxmodel == null)
+                        {
+                            mxmodel = new IQC_llNoticeMXordinfoView();
+                            mxmodel.DDNO = item.DocEntry;//送检单号
+                            mxmodel.Yqjwldno = item.ItmID;//元器件物料
+                            mxmodel.Yqjname = item.ItmName;//
+                            mxmodel.Yqjxh = item.ItmSpec;
+                            mxmodel.gyswlno = item.CrdID;
+                            mxmodel.gysname = item.CrdName;
+                            mxmodel.Sum = Convert.ToDecimal(item.Qty);
+                            mxmodel.Dj = Convert.ToDecimal(item.TaxAfPriceFC);
+                            mxmodel.ZJ = Convert.ToDecimal(item.TaxAfLineSumFC);
+                            mxmodel.C_time = Convert.ToDateTime(item.DocDate);
+                            mxmodel.Isjy = 0;
+                            mxmodel.lytype = 1;
+                            _IIQC_llNoticeMXordinfoDao.Ninsert(mxmodel);
+                        }
+                        else
+                        {
+                            mxmodel.Sum = mxmodel.Sum + Convert.ToDecimal(item.Qty);
+                            mxmodel.ZJ = mxmodel.ZJ + Convert.ToDecimal(item.TaxAfLineSumFC);
+                            mxmodel.Isjy = 0;
+                            _IIQC_llNoticeMXordinfoDao.NUpdate(mxmodel);
+                        }
+                    }
+                    return Json(new { result = "success", msg = "新增数量：" + xz + "条" });
                 }
-                foreach (var item in timemodel)
+                else
                 {
-                    string pyddId = zmodel.Id;
-                    IQC_llNoticeMXordinfoView mxmodel = new IQC_llNoticeMXordinfoView();
-                    mxmodel = _IIQC_llNoticeMXordinfoDao.GetllnotceMXbysjdhandwldm(item.FBillNo, item.FItemNmber);
-                    if (mxmodel == null)
-                    {
-                        mxmodel = new IQC_llNoticeMXordinfoView();
-                        mxmodel.ddId = pyddId;//平台Id
-                        mxmodel.llnoticId = Convert.ToInt32(item.FInterID);
-                        mxmodel.DDNO = item.FBillNo;
-                        mxmodel.Yqjwldno = item.FItemNmber;//元器件物料
-                        mxmodel.Yqjname = item.FItemName;//
-                        mxmodel.Yqjxh = item.FModel;
-                        mxmodel.gyswlno = item.FSupplierNumber;
-                        mxmodel.gysname = item.FSupplierName;
-                        mxmodel.Sum = Convert.ToDecimal(item.FAuxQty);
-                        mxmodel.Dj = Convert.ToDecimal(item.FAuxPrice);
-                        mxmodel.ZJ = Convert.ToDecimal(item.FAmount);
-                        mxmodel.C_time = Convert.ToDateTime(item.FDate);
-                        mxmodel.Isjy = 0;
-                        _IIQC_llNoticeMXordinfoDao.Ninsert(mxmodel);
-                    }
-                    else
-                    {
-                        mxmodel.Sum = mxmodel.Sum + Convert.ToDecimal(item.FAuxQty);
-                        mxmodel.ZJ = mxmodel.ZJ + Convert.ToDecimal(item.FAmount);
-                        mxmodel.Isjy = 0;
-                        _IIQC_llNoticeMXordinfoDao.NUpdate(mxmodel);
-                    }
+                    return Json(new { result = "error", msg = "暂时没有最新数据！" });
                 }
-                return "3";
             }
             catch
             {
-                return "0";//提交异常
+                return Json(new { result = "error", msg = "调用异常！" });
+            }
+        }
+        #endregion
+
+        #region //单个检验通知单刷新
+        public JsonResult DGJYTZDshuaxin(string ddno)
+        {
+            try
+            {
+                //IQC_llNoticeordinfoView zmodel = _IIQC_llNoticeordinfoDao.GetllNoticeinfobyddno(ddno);
+                //if (zmodel == null)
+                //    return "1";//该通知没有同步没有办法进行刷新
+                //string url;
+                //url = "http://222.92.203.58:83//Baseitem.asmx/getPoByFBillNo?fbillno=" + ddno;
+                //string result = HttpUtility11.GetData(url);
+                //XmlDocument doc = new XmlDocument();
+                //doc.LoadXml(result);
+                //string sSupplier = doc.InnerText;
+                //List<K3llNoticemodel> timemodel = getObjectByJson<K3llNoticemodel>(sSupplier);
+                //if (timemodel == null)
+                //    return "2";//同步不到该数据
+                string result = zypushsoftHelper.GetPUTmpmodel_DocEntry(ddno);
+                if (result != null || result != "")
+                {
+                    //删除明细
+                    List<IQC_llNoticeMXordinfoView> mxmodellist = _IIQC_llNoticeMXordinfoDao.Getsjdlistmodelbyddno(ddno) as List<IQC_llNoticeMXordinfoView>;
+                    if (mxmodellist != null)
+                    {
+                        _IIQC_llNoticeMXordinfoDao.NDelete(mxmodellist);
+                    }
+                    List<pszanshousjmodel> timemodel = getObjectByJson<pszanshousjmodel>(result);
+                    foreach (var item in timemodel)
+                    {
+                        //string pyddId = zmodel.Id;
+                        IQC_llNoticeMXordinfoView mxmodel = new IQC_llNoticeMXordinfoView();
+                        mxmodel = _IIQC_llNoticeMXordinfoDao.GetllnotceMXbysjdhandwldm(item.DocEntry, item.ItmID);
+                        if (mxmodel == null)
+                        {
+                            mxmodel = new IQC_llNoticeMXordinfoView();
+                            //mxmodel.ddId = pyddId;//平台Id
+                            //mxmodel.llnoticId = Convert.ToInt32(item.FInterID);
+                            mxmodel.DDNO = item.DocEntry;//送检单号
+                            mxmodel.Yqjwldno = item.ItmID;//元器件物料
+                            mxmodel.Yqjname = item.ItmName;//
+                            mxmodel.Yqjxh = item.ItmSpec;
+                            mxmodel.gyswlno = item.CrdID;
+                            mxmodel.gysname = item.CrdName;
+                            mxmodel.Sum = Convert.ToDecimal(item.Qty);
+                            mxmodel.Dj = Convert.ToDecimal(item.TaxAfPriceFC);
+                            mxmodel.ZJ = Convert.ToDecimal(item.TaxAfLineSumFC);
+                            mxmodel.C_time = Convert.ToDateTime(item.DocDate);
+                            mxmodel.Isjy = 0;
+                            mxmodel.lytype = 1;
+                            _IIQC_llNoticeMXordinfoDao.Ninsert(mxmodel);
+                        }
+                        else
+                        {
+                            mxmodel.Sum = mxmodel.Sum + Convert.ToDecimal(item.Qty);
+                            mxmodel.ZJ = mxmodel.ZJ + Convert.ToDecimal(item.TaxAfLineSumFC);
+                            mxmodel.Isjy = 0;
+                            _IIQC_llNoticeMXordinfoDao.NUpdate(mxmodel);
+                        }
+                    }
+                    return Json(new { result = "success", msg = "操作成功" });
+
+                }
+                else
+                {
+                    return Json(new { result = "error", msg = "没有查询该暂收送检的数据！" });
+                }
+            }
+            catch(Exception x)
+            {
+                return Json(new { result = "error", msg = x });
             }
         }
         #endregion

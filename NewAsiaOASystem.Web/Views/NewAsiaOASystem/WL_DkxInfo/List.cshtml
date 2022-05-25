@@ -52,11 +52,22 @@
                         syts="-";
                     html+='<tr>';
                     html += '<td width="5%"><input type="checkbox" name="ContentChecked" value="' + jsonStr[i].Id + '"/></td>';
-                    html += '<td width="10%">'+ jsonStr[i].WL_SSD + '</td>';
-                    if(jsonStr[i].Xs_jxsId==null||jsonStr[i].Xs_jxsId=="")
-                        html+='<td width="10%">未销售</td>';
-                    else
-                        html+='<td width="10%">'+AjaxCust_Name(jsonStr[i].Xs_jxsId).Name+'</td>';
+                    html += '<td width="10%">' + jsonStr[i].WL_SSD + '</td>';
+                    if (jsonStr[i].Is_xs == "1") {
+                        if (jsonStr[i].chtype == "2") {
+                            html += '<td width="10%">' + jsonStr[i].erp_jxsname + '</td>';
+                        }
+                        else {
+                            html += '<td width="10%">' + AjaxCust_Name(jsonStr[i].Xs_jxsId).Name + '</td>';
+                        }
+                    }
+                    else {
+                        html += '<td width="10%">未销售</td>';
+                    }
+                    //if(jsonStr[i].Is_xs==null||jsonStr[i].Xs_jxsId=="")
+                    //    html+='<td width="10%">未销售</td>';
+                    //else
+                    //    html+='<td width="10%">'+AjaxCust_Name(jsonStr[i].Xs_jxsId).Name+'</td>';
                     if(jsonStr[i].Xs_datetime==null||jsonStr[i].Xs_datetime=="") 
                         html+='<td width="8%">未销售</td>';
                     else
@@ -90,7 +101,7 @@
                         html+='<td width="8%">'+jsonStr[i].monitor_name+'</td>';
                     else
                         html+='<td width="8%">-</td>';
-                    html+='<td width="20%"><div class="layui-btn-group">'+czshowcs(jsonStr[i].Id,jsonStr[i].OrdermxId,jsonStr[i].Is_sx,jsonStr[i].WL_SSD)+'</div></td>';
+                    html += '<td width="20%"><div class="layui-btn-group">' + czshowcs(jsonStr[i].Id, jsonStr[i].OrdermxId, jsonStr[i].Is_sx, jsonStr[i].WL_SSD, jsonStr[i].chtype)+'</div></td>';
                     html+='</tr>';
                 }
                 html += '</table>';
@@ -176,17 +187,20 @@
         //val2 订单Id
         //val3 上线状态
         //val4 sid号码
-        function czshowcs(val,val2,val3,val4) {  
+        function czshowcs(val, val2, val3, val4, chtype) {  
             var Id = "'" + val + "'";
             var orederId=null;
             if(val2){
                 orederId ="'"+val2+"'";
             } 
             var Is_sx="'"+val3+"'";
-            var sid="'"+val4+"'"
+            var sid = "'" + val4 + "'";
+            var t = "";
             var s = '<a class="layui-btn layui-btn-primary layui-btn-small" onclick="csSIDbyId(' + Id + ')">初始化</a>&nbsp;&nbsp;';
-            var z='<a class="layui-btn layui-btn-primary layui-btn-small" onclick="DangeJConline(' + Is_sx + ','+sid+')">上线</a>&nbsp;&nbsp;';
-            var t='<a class="layui-btn layui-btn-primary layui-btn-small" onclick="OrderSSID(' + orederId + ')">订单</a>&nbsp;&nbsp;';
+            var z = '<a class="layui-btn layui-btn-primary layui-btn-small" onclick="DangeJConline(' + Is_sx + ',' + sid + ')">上线</a>&nbsp;&nbsp;';
+            if (chtype != "2") { 
+                 t = '<a class="layui-btn layui-btn-primary layui-btn-small" onclick="OrderSSID(' + orederId + ')">订单</a>&nbsp;&nbsp;';
+            }
             var j='<a class="layui-btn layui-btn-primary layui-btn-small" onclick="checksidView(' + sid + ')">查看</a>&nbsp;&nbsp;';
             return s+z+t+j;
         }

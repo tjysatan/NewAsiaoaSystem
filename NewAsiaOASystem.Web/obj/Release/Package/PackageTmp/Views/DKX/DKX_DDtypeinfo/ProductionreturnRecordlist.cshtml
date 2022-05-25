@@ -15,8 +15,82 @@
         }
 
         $(function () {
-            getlistjson();
+            Gettabledata();
         })
+
+
+        function Gettabledata() {
+            var gcsid = $("#txtGCS").val();
+            var ddbianhao = $("#txt_DD_Bianhao").val();
+            var c_timestart = $("#txt_startctime").val();
+            var c_timeend = $("#txt_endctiome").val();
+            var cbrId = $("#CBRId").val()
+            layui.use('table', function () {
+                var table = layui.table;
+                table.render({
+                    elem: '#tabledata',
+                    url: '/DKX_DDtypeinfo/GetProductionreturnRecorddataNoPage',
+                    where: {
+                        gcsid: gcsid,
+                        ddbianhao: ddbianhao,
+                        c_timestart: c_timestart,
+                        c_timeend: c_timeend,
+                        CBRId: cbrId,
+                        caozuotype:'0'
+                    },
+                    cols: [[
+                        { field: 'Id', width: 80, title: 'ID', sort: true, },
+                        { field: 'dd_bianhao', width: 200, title: '生产批号' },
+                        {
+                            field: 'gcs_Id', width: 200, title: '责任工程师', templet: function (d) {
+                                return getgcsname(d.gcs_Id)
+                            }
+                        },
+                        {
+                            field: 'CBRId', width: 300, title: '退单原因', templet: function (d) {
+                                return cbrcon(d.CBRId, d.caozuo, d.CBRName)
+                            }
+                        },
+                        { field: 'CBRRemarks', width: 300, title: '备注' },
+                        {
+                            field: 'c_time', width: 120, title: '退单时间', templet: function (d) {
+                                if (d.c_time != "" && d.c_time != null) {
+                                    return layui_dateToStr(d.c_time);
+                                }
+                                else {
+                                    return "";
+                                }
+                            }
+                        },
+                        { field: 'SC_DWGS', width: 120, title: '耽误生产工时（H）' },
+                        { field: 'CK_DWGS', width: 120, title: '耽误仓库工时（H）' },
+
+                        { field: '', title: '操作', width: 160, fixed: 'right', toolbar: "#bar" }
+                    ]],
+                    done: function (res, curr, count) {
+                        $(".layui-table-box").find("[data-field='Id']").css("display", "none");
+                        console.log("count:", count);
+                        $("#tdtotle").html("当前生产退单次数： " + count+"/次");
+                    }
+                    ,
+                    page: false,
+                    height: 'full-150',
+
+
+                });
+                table.on('tool(tabledata)', function (obj) {
+                    var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+                    var data = obj.data; //获得当前行 tr 的 DOM 对象（如果有的话）
+                    if (layEvent === 'Eide') { //查看
+                        openDelay_SCtimeView(data.Id);
+                    }
+                    if (layEvent === 'JHEide') {
+                        MakePlan(data.Id, data.Isscing, "0")
+                    }
+                   
+                })
+            })
+        }
 
         function BindGrid(strjson)
         {
@@ -52,7 +126,9 @@
                     html += '<td width="10%">' + showDate(jsonStr[i].c_time) + '</td>';
                     if (jsonStr[i].CBRId == "" || jsonStr[i].CBRId == null) {
                      html += '<td width="15%">' + listbtnshow(jsonStr[i].Id) + '</td>';
-                    } else {html += '<td width="15%">-</td>';}
+                    }
+                    else
+                    { html += '<td width="15%">-</td>'; }
 
                     html += '</tr>';
                 }
@@ -104,6 +180,21 @@
             })
         }
 
+        //打开耽误工时编辑页面
+        function openDelay_SCtimeView(Id) {
+            layer.open({
+                type: 2,
+                title: ['编辑耽误生产工时', 'font-size:14px;'],
+                area: ['40vw', '60vh'],
+                offset: '10px',
+                fixed: false, //不固定
+                maxmin: true,
+                content: '../DKX_DDtypeinfo/Delay_SCtime_View?Id=' + Id,
+                end: function () {
+                    Gettabledata();
+                }
+            })
+        }
 
         //查询当前条件查询的退单操作记录数据
         function getlistjson(){
@@ -201,7 +292,7 @@
                     time: 2500, //2.5s后自动关闭
                     btn: ['确定导出', '取消'],
                     yes: function () {
-                        window.location.href = "../DKX_DDtypeinfo/DC_ProductionreturnRecordFilResult?gcsid=" + gcsid + "&ddbianhao=" + ddbianhao + "&c_timestart=" + c_timestart + "&c_timeend=" + c_timeend + "&CBRId=" + cbrId;
+                        window.location.href = "../DKX_DDtypeinfo/DC_ProductionreturnRecordFilResult?gcsid=" + gcsid + "&ddbianhao=" + ddbianhao + "&c_timestart=" + c_timestart + "&c_timeend=" + c_timeend + "&CBRId=" + cbrId +"&caozuotype=0";
                     }
                 });
             }
@@ -211,8 +302,16 @@
 
 
     </script>
+    <script type="text/html" id="bar">
+        <div class="layui-btn-group">
+            <button type="button" class="layui-btn layui-btn-xs layui-btn-warm" lay-event="Eide" title="误时编辑">
+                <i class="layui-icon">&#xe620;</i>
+            </button>
+        </div>
+    </script>
 }
-<div class="h-right">
+
+<div style="width: 98%; margin: auto; margin-top: 10px;">
     <div class="inquiry1">
         <fieldset>
             <legend>查询条件</legend>
@@ -238,17 +337,17 @@
                 <li>
                     <span>操作时间：</span>
                     <span class="inquiry-input">
-                        <input type="text" name="txt_startctime" id="txt_startctime" placeholder="默认当前自然月" onclick="WdatePicker()" />
+                        <input type="text" name="txt_startctime" id="txt_startctime" autocomplete="off" placeholder="默认当前自然月" onclick="WdatePicker()" />
                         -
-                        <input type="text" name="txt_endctiome" id="txt_endctiome" placeholder="默认当前自然月" onclick="WdatePicker()" />
+                        <input type="text" name="txt_endctiome" id="txt_endctiome" autocomplete="off" placeholder="默认当前自然月" onclick="WdatePicker()" />
                     </span>
                 </li>
                 <li style="*width: 100%; *margin: -10px 0 5px 90px;">
                     <span class="inquiry-input">
-                        <button name="btnSerch" class="layui-btn" onclick="return getlistjson()"><i class="layui-icon">&#xe615;</i>查询</button>
+                        <button name="btnSerch" class="layui-btn" onclick="return Gettabledata()"><i class="layui-icon">&#xe615;</i>查询</button>
                     </span>
                     <span class="inquiry-input">
-                        <button name="btnSerch" class="layui-btn" onclick="return addClick('/DKX_DDtypeinfo/ProductionreturnRecordlist')"><i class="layui-icon">&#xe9aa;</i>刷新</button>
+                        <button name="btnSerch" class="layui-btn" onclick="return myrefresh()"><i class="layui-icon">&#xe9aa;</i>刷新</button>
                     </span>
                     <span class="inquiry-input">
                         <button type="button" onclick="return Exportexcl()">记录导出</button>
@@ -257,11 +356,10 @@
             </ul>
         </fieldset>
     </div>
-    <div class="h-table">
-        <div class="h-table-content" style="color: #9d9999;">
-            <div id="content">
-            </div>
-        </div>
+    <div id="content" style="width: 100%;height:10%">
+        <span class="layui-badge" id="tdtotle"></span>
+        <table class="layui-hide" id="tabledata" lay-filter="tabledata"></table>
     </div>
 </div>
 
+<script src="~/Scripts/NAjs/DKXpulice.js"></script>

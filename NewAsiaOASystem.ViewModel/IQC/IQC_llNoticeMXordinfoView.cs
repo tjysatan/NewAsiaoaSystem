@@ -89,5 +89,10 @@ namespace NewAsiaOASystem.ViewModel
         /// 是否创建检验单 0 未创建 1 已经创建
         /// </summary>
         public virtual int? Isjy { get; set; }
+
+        /// <summary>
+        /// 数据来源 0 K3  1普实
+        /// </summary>
+        public virtual int? lytype { get; set; }
     }
 }

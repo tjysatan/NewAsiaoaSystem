@@ -493,11 +493,14 @@ namespace NewAsiaOASystem.Web.Controllers
         {
             WL_DkxInfoView model = new WL_DkxInfoView();
             model = _IWL_DkxInfoDao.NGetModelById(Id);//根据Id 查询电控箱信息销缴费
+            if (model.chtype != 2)
+            { 
             NA_XSinfoView xsmodel = _INA_XSinfoDao.NGetModelById(model.OrdermxId);//关联的订单信息
             if (xsmodel != null)
             {
                 xsmodel.SM_ZT = 0;
                 _INA_XSinfoDao.NUpdate(xsmodel);
+            }
             }
             model.Xs_datetime = null;//销售时间
             model.Xs_jxsId = null;//经销商
@@ -512,6 +515,13 @@ namespace NewAsiaOASystem.Web.Controllers
             model.OrdermxId = "";//销售单
             model.Is_xs = 0;//是否销售
             model.Is_sx = 0;//是否上线
+            if (model.chtype == 2)
+            {
+                model.erp_jxscode = "";
+                model.erp_jxsname = "";
+                model.erp_JPorderno = "";
+                model.chtype = 0;
+            }
             bool flay = false;
             flay = _IWL_DkxInfoDao.NUpdate(model);
             if (flay)
@@ -820,7 +830,8 @@ namespace NewAsiaOASystem.Web.Controllers
                 List<Jsonsid> model = getObjectByJson<Jsonsid>(strSID);//把查询出来的电控箱信息转换成只还有sid的list数据
                 string jsonstr = JsonConvert.SerializeObject(model);//转成成JSON数据
                 string url;
-                url = "http://www.sbycjk.net/ws/greeting/";
+                //url = "http://www.sbycjk.net/ws/greeting/";
+                url = "http://106.14.14.68:8088/ws/greeting/";
                 string result = HttpUtility11.PostUrl(url, "sid="+jsonstr); 
                 List<JsonClass> timemodel = getObjectByJson<JsonClass>(result);
                 //string sxdatetime;
@@ -869,7 +880,8 @@ namespace NewAsiaOASystem.Web.Controllers
                 foreach (var a in modellist)
                 {
                     string url;
-                    url = "http://www.sbycjk.net/ws/greeting2/" + a.WL_SSD;
+                    //url = "http://www.sbycjk.net/ws/greeting2/" + a.WL_SSD;
+                    url = "http://106.14.14.68:8088/ws/greeting2/" + a.WL_SSD;
                     string result = HttpUtility11.GetData(url);
                     if (result != "" && result != null)//已经上线
                     {
@@ -923,7 +935,8 @@ namespace NewAsiaOASystem.Web.Controllers
             {
                 string strSID = JsonConvert.SerializeObject(model);
                 string url;
-                url = "http://www.sbycjk.net/ws/greeting2/" + sid;
+                //url = "http://www.sbycjk.net/ws/greeting2/" + sid;
+                url = "http://106.14.14.68:8088/ws/greeting2/" + sid;
                 string result = HttpUtility11.GetData(url);
                 if (result != "" && result != null)
                 {
@@ -976,7 +989,8 @@ namespace NewAsiaOASystem.Web.Controllers
                 foreach (var a in modellist)
                 {
                     string url;
-                    url = "http://www.sbycjk.net/ws/greeting2/" + a.WL_SSD;
+                    //url = "http://www.sbycjk.net/ws/greeting2/" + a.WL_SSD;
+                    url = "http://106.14.14.68:8088/ws/greeting2/" + a.WL_SSD;
                     string result = HttpUtility11.GetData(url);
                     if (result != "" && result != null)
                     {
@@ -1069,7 +1083,8 @@ namespace NewAsiaOASystem.Web.Controllers
                 }
             }
             string url;
-            url = "http://www.sbycjk.net/getsidsofshipment/getByid/" + t;
+           // url = "http://www.sbycjk.net/getsidsofshipment/getByid/" + t;
+            url = "http://106.14.14.68:8088/getsidsofshipment/getByid/" + t;
             string result = HttpUtility11.GetData(url);
             List<tbsid> timemodel = getObjectByJson<tbsid>(result);
             foreach (var a in timemodel)
@@ -1111,7 +1126,8 @@ namespace NewAsiaOASystem.Web.Controllers
         {
             int t = 0;
             string url;
-            url = "http://www.sbycjk.net/getsidsofshipment/getByid/" + t;
+            //url = "http://www.sbycjk.net/getsidsofshipment/getByid/" + t;
+            url = "http://106.14.14.68:8088/getsidsofshipment/getByid/" + t;
             string result = HttpUtility11.GetData(url);
             List<tbsid> timemodel = getObjectByJson<tbsid>(result);
             foreach (var a in timemodel)
@@ -1161,7 +1177,8 @@ namespace NewAsiaOASystem.Web.Controllers
             sidxh = "52833";
             string url;
             //url = "http://192.168.10.243:8081/newasia_remotexp/getsidsofshipment/getByid/" + sidxh;
-            url = "http://www.sbycjk.net/getsidsofshipment/getByid/" + sidxh;
+            //url = "http://www.sbycjk.net/getsidsofshipment/getByid/" + sidxh;
+            url = "http://106.14.14.68:8088/getsidsofshipment/getByid/" + sidxh;
             string result = HttpUtility11.GetData(url);
             return result;
         }

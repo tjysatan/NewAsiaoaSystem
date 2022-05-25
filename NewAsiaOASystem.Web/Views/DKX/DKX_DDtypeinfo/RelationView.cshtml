@@ -17,7 +17,27 @@
                 if (xqzlstr[i].Isgl == "0") {//附件资料
                     var id = "'" + xqzlstr[i].Id + "'";
                     htmlxq += '<a  target="_blank" href="' + xqzlstr[i].url + '">' + xqzlstr[i].wjName + '</a>&nbsp;&nbsp; <a href="#" onclick="ziliaoDel(' + id + ')"><i class="layui-icon">&#xe640;</i></a>&nbsp;&nbsp;';
-                } else {//关联的资料
+                }
+                else if (xqzlstr[i].Isgl == "2") {
+                    if (ddstr.COMPRESSOR_TYPE == '0') {
+                        htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/BLDetail.aspx?CONTROL_NO=' + ddstr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                    }
+                    else if (ddstr.COMPRESSOR_TYPE == '1') {
+                        htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/LGDetail.aspx?CONTROL_NO=' + ddstr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                    }
+                    else if (ddstr.COMPRESSOR_TYPE == '2') {
+                        htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/LSDetail.aspx?CONTROL_NO=' + ddstr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                    }
+                    else if (ddstr.COMPRESSOR_TYPE == '3') {
+                        htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/MDDetail2.aspx?CONTROL_NO=' + ddstr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                    }
+                    else if (ddstr.COMPRESSOR_TYPE == '12') {
+                        htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/PTLDetail.aspx?CONTROL_NO=' + ddstr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                    } else {
+                        htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/XXTDetail.aspx?CONTROL_NO=' + ddstr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                    }
+                }
+                else {//关联的资料
 
                     var xuqiustr = AJaxxuqiujson(ddstr.BJno);
                     if (xuqiustr.COMPRESSOR_TYPE == '0') {
@@ -203,6 +223,44 @@
 
     }
 
+    //管理普实BOM
+    function GLliaodanPS() {
+        var ddno = $("#bomNo").val();
+        if (ddno == "") {
+            layer.alert("请物料号！", { icon: 2 });
+            return false;
+        }
+         $.ajax({
+             url: "../DKX_DDtypeinfo/liaodanglps",
+            type: "POST",
+             data: { Id: '@ViewData["Id"]', wlno: ddno },
+            dataType: "html",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response == "2") {
+                    layer.alert("提交成功！", { icon: 1 }, function () { location.reload(); });
+                }
+                if (response == "3") {
+                    layer.alert("普实不存在BOM！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "1") {
+                    layer.alert("电控箱生产单不存在！", { icon: 2 }, function () { location.reload(); });
+                }
+                if (response == "0") {
+                    layer.alert("提交异常！", { icon: 2 }, function () { location.reload(); });
+                }
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+            }
+         })
+    }
+
     //获取订单信息
     function AjaxGetddinfoyId() {
         var json;
@@ -267,7 +325,7 @@
             beforeSubmit: function () {
                 return true;
             },
-            dataType: "json",//这里是指控制器处理后返回的类型，这里返回json格式。  
+            dataType: "json",//这里是指控制器处理后返回的类型，这里返回json格式。
             success: function (context) {
                 if ("success" == context.result) {
                     layer.alert("保存成功！", { icon: 1 }, function () { location.reload(); });
@@ -284,7 +342,7 @@
             }
         }
         $('#form1').ajaxSubmit(options);
-        return false; //为了不刷新页面,返回false 
+        return false; //为了不刷新页面,返回false
     }
 
     //料单上传
@@ -296,7 +354,7 @@
             beforeSubmit: function () {
                 return true;
             },
-            dataType: "json",//这里是指控制器处理后返回的类型，这里返回json格式。  
+            dataType: "json",//这里是指控制器处理后返回的类型，这里返回json格式。
             success: function (context) {
                 if ("success" == context.result) {
                     layer.alert("保存成功！", { icon: 1 }, function () { location.reload(); });
@@ -313,7 +371,7 @@
             }
         }
         $('#form2').ajaxSubmit(options);
-        return false; //为了不刷新页面,返回false 
+        return false; //为了不刷新页面,返回false
     }
 
     //删除资料
@@ -461,15 +519,16 @@
             <input type="text" name="ddno" id="ddno" placeholder="请输入报价系统的订单号" autocomplete="off" class="layui-input">
         </div>
         <div class="layui-form-mid layui-word-aux">例如：C170801002</div>
-        <label class="layui-form-label">BOM编号：</label>
+        <label class="layui-form-label">物料号：</label>
         <div class="layui-input-inline">
-            <input type="text" name="bomNo" id="bomNo" placeholder="请输入K3系统的BOM编号" autocomplete="off" class="layui-input">
+            <input type="text" name="bomNo" id="bomNo" placeholder="请输入普实物料号" autocomplete="off" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
         <div class="layui-input-block">
             <button class="layui-btn" lay-submit lay-filter="formDemo" onclick="return bglajax()">关联需求</button>
-            <button class="layui-btn" lay-submit lay-filter="formDemo" onclick="return GLliaodanK3()">关联料单(K)</button>
+            @*<button class="layui-btn" lay-submit lay-filter="formDemo" onclick="return GLliaodanK3()">关联料单(K)</button>*@
+            <button class="layui-btn" lay-submit lay-filter="formDemo" onclick="return GLliaodanPS()">关联料单(BOM)</button>
             <button type="reset" class="layui-btn layui-btn-primary" onclick="guanbi()">关闭</button>
             <button class="layui-btn" lay-submit lay-filter="formDemo" onclick="return KFTJAJAX()">订单提交</button>
             <button class="layui-btn" lay-submit lay-filter="formDemo" onclick="return KFzjscTJAJAX()">提交生产</button>

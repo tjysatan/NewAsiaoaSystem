@@ -40,7 +40,12 @@ namespace NewAsiaOASystem.IDao
         /// </summary>
         /// <param name="ddno">送检单号</param>
         /// <returns></returns>
-        IList<IQC_llNoticeMXordinfoView> Getsjdlistmodelbyddno(string ddno); 
+        IList<IQC_llNoticeMXordinfoView> Getsjdlistmodelbyddno(string ddno);
+        #endregion
+
+        
+        #region //查询普实单号字段最近的数据
+        IQC_llNoticeMXordinfoView GetllNoticeMXMaxDDNO(); 
         #endregion
     }
 }

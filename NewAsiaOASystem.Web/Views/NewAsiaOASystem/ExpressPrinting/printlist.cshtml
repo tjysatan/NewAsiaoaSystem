@@ -101,7 +101,10 @@
                 }
                 if(kdgs=="sf")
                 {
-                    OpenUrl="/ExpressPrinting/sfPrint";
+                    OpenUrl ="/ExpressPrinting/sfxPrint";
+                }
+                if (kdgs == "sfy") {
+                    OpenUrl = "/ExpressPrinting/sfyPrint";
                 }
                 if(kdgs=="db")
                 {
@@ -163,7 +166,22 @@
                                     location.reload();
                                 }
                             })
-                        } else {
+                        }
+                        else if (kdgs=="sfy") {
+                            layer.open({
+                                type: 2,
+                                title: ['顺丰快递云下单', 'font-size:14px;'],
+                                area: ['660px', '500px'],
+                                offset: '10px',
+                                fixed: false, //不固定
+                                maxmin: true,
+                                content: OpenUrl,
+                                end: function () {
+                                    location.reload();
+                                }
+                            })
+                        }
+                        else {
                         //window.open(OpenUrl + "?id=" + arr[0], "news", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=yes,top=50,left=300,width=900,height=600,resizable=no")
                         $('#windowDia').html("<iframe src="+OpenUrl+"?id=" + arr[0] + " style='border:0px;' width='200px' height='100px' style='overflow:hidden'></iframe>");
                         $("#windowDia").window({
@@ -269,6 +287,7 @@
                                 <option value="0">请选择</option>
                                 <option value="sh">盛辉物流</option>
                                 <option value="sf">顺丰速运</option>
+                                <option value="sfy">顺丰速运y</option>
                                 <option value="db">德邦快递</option>
                                 <option value="dbwl">德邦物流</option>
                                 <option value="zt">中通快递</option>

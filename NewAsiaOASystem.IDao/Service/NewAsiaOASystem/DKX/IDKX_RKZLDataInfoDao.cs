@@ -36,7 +36,28 @@ namespace NewAsiaOASystem.IDao
         /// <param name="Id"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        DKX_RKZLDataInfoView GetzldatamodelbyIdandtype(string Id, string type); 
+        DKX_RKZLDataInfoView GetzldatamodelbyIdandtype(string Id, string type);
         #endregion
+
+         
+        #region //查询入库资料的常规订单的BOM 数据（整理数据）
+        /// <summary>
+        /// 查询入库资料的常规订单的BOM 数据（整理数据）
+        /// </summary>
+        /// <returns></returns>
+        IList<DKX_RKZLDataInfoView> GetcgBom();
+        #endregion
+
+        
+        #region //通过产品Id查询产品入库资料的全部明细
+        /// <summary>
+        /// 通过产品Id查询产品入库资料的全部明细
+        /// </summary>
+        /// <param name="CPID">产品Id</param>
+        /// <returns></returns>
+        IList<DKX_RKZLDataInfoView> Get_ALLCPRKZL_BY_CpId(string CPID); 
+        #endregion
+
+
     }
 }

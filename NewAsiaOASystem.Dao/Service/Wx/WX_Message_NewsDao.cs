@@ -14,6 +14,13 @@ namespace NewAsiaOASystem.Dao
 {
     public class WX_Message_NewsDao : ServiceConversion<WX_Message_NewsView, WX_Message_News>, IWX_Message_NewsDao
     {
+        //重写sql语句
+        private StringBuilder TempHql = null;
+        private List<string> TempList = null;
+        public override String GetSearchHql()
+        {
+            return string.Format(" from {0} u where 1=1 {1}", typeof(WX_Message_News).Name, TempHql.ToString());
+        }
         /// <summary>
         /// DATA 转换成 TDO  
         /// </summary>
@@ -50,10 +57,10 @@ namespace NewAsiaOASystem.Dao
         /// 覆写查询的的HQL 语句
         /// </summary>
         /// <returns></returns>
-        public override String GetSearchHql()
-        {
-            return " from WX_Message_News  where  MType='0'";
-        }
+        //public override String GetSearchHql()
+        //{
+        //    return " from WX_Message_News  where  MType='0'";
+        //}
 
         /// <summary>
         /// 插入数据
@@ -251,7 +258,22 @@ namespace NewAsiaOASystem.Dao
         public bool UpdateUrl(WX_Message_News model)
         {
             return base.Update(model);
-        } 
+        }
+        #endregion
+
+
+        #region //查询分页数据
+        public PagerInfo<WX_Message_NewsView> GetCinfoList(string Title,string Description)
+        {
+            TempList = new List<string>();
+            TempHql = new StringBuilder();
+            if (!string.IsNullOrEmpty(Title))
+                TempHql.AppendFormat(" and u.Title like '%{0}%'", Title);
+            if (!string.IsNullOrEmpty(Description))
+                TempHql.AppendFormat(" and u.Description like '%{0}%'", Description);
+            PagerInfo<WX_Message_NewsView> list = Search();
+            return list;
+        }
         #endregion
     }
 }

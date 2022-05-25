@@ -41,6 +41,10 @@
   <ItemGroup>
     <Compile Include="Helper\IBaseDao.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service\BJSys\IPAY_CONTROL_INFODao.cs" />
+    <Compile Include="Service\BSERP\IERP_SASalAinfoDao.cs" />
+    <Compile Include="Service\BSERP\IERP_SASalA_FBCP_BCBWKDao.cs" />
+    <Compile Include="Service\BSERP\IJs_xz_yfcostDao.cs" />
     <Compile Include="Service\Iot\IBb_UpdateDao.cs" />
     <Compile Include="Service\Iot\IPoint_infoDao.cs" />
     <Compile Include="Service\IQC\IIQC_JyconstrinfoDao.cs" />
@@ -50,6 +54,7 @@
     <Compile Include="Service\IQC\IIQC_llNoticeMXordinfoDao.cs" />
     <Compile Include="Service\IQC\IIQC_llNoticeordinfoDao.cs" />
     <Compile Include="Service\IQC\IIQC_SopInfoDao.cs" />
+    <Compile Include="Service\lanhe\Ilanhe_QzCusinfoDao.cs" />
     <Compile Include="Service\NACG\ICG_aqkcDao.cs" />
     <Compile Include="Service\NAFlow\IFlow_AjaxtxdateDao.cs" />
     <Compile Include="Service\NAFlow\IFlow_DKXPlanPPrintinfoDao.cs" />
@@ -89,6 +94,7 @@
     <Compile Include="Service\NewAsiaOASystem\INA_SharealikeDao.cs" />
     <Compile Include="Service\NewAsiaOASystem\INA_XSdetailsinfoDao.cs" />
     <Compile Include="Service\NewAsiaOASystem\INA_XSinfoDao.cs" />
+    <Compile Include="Service\NewAsiaOASystem\INA_XSqitainfoDao.cs" />
     <Compile Include="Service\NewAsiaOASystem\INQR_ProductDao.cs" />
     <Compile Include="Service\NewAsiaOASystem\INQR_ReasonDao.cs" />
     <Compile Include="Service\NewAsiaOASystem\INQ_BlinfoDao.cs" />

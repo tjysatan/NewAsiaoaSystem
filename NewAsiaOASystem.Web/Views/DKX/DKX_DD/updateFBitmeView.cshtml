@@ -1,0 +1,80 @@
+﻿@{
+    ViewBag.Title = "更新非标产品物料信息页面";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+
+<script>
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+   //批量更新
+    function updateerpitme() {
+        var starttime = $("#txt_startctime").val();
+        var endtime = $("#txt_endtime").val();
+        if (starttime == "" || starttime == null) {
+            layer.alert("请选择起始时间", { icon: 2 });
+            return false;
+        }
+        if (endtime == "" || endtime == null) {
+            layer.alert("请选择结束时间", { icon: 2 });
+            return false;
+        }
+        $.ajax({
+            url: "../DKX_DD/updateERP_Mitme",
+            type: "POST",
+            data: { starttime: starttime, endtime: endtime },
+            dataType: "json",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response.result == "error") {
+                    layer.alert(response.res, { icon: 2 }, function () { location.reload(); });
+                }
+                if (response.result == "success") {
+                    layer.alert(response.res, { icon: 1 }, function () { location.reload(); });
+                }
+               
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+    }
+
+    function guanbi() {
+        var index = parent.layer.getFrameIndex(window.name);
+        //关闭弹出层
+        parent.layer.close(index);
+    }
+</script>
+
+<div style="width: 80%; padding: 20px 20px 0 20px">
+    <div class="layui-form-item">
+        <label class="layui-form-label">开始时间：</label>
+        <div class="layui-input-block">
+            <input type="text" name="txt_startctime" id="txt_startctime" onclick="WdatePicker()" autocomplete="off" class="layui-input" />
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">结束时间：</label>
+        <div class="layui-input-block">
+            <input type="text" name="txt_endtime" id="txt_endtime" onclick="WdatePicker()" autocomplete="off" class="layui-input" />
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="formDemo" onclick="return updateerpitme()">确定</button>
+            <button type="reset" class="layui-btn layui-btn-primary" onclick="guanbi()">取消</button>
+        </div>
+    </div>
+</div>

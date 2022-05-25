@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using System.Data.OleDb;
 using System.Data;
 using System.IO;
+using System.Runtime.Serialization.Json;
 
 namespace NewAsiaOASystem.Web.Controllers
 {
@@ -85,30 +86,72 @@ namespace NewAsiaOASystem.Web.Controllers
         #endregion
 
         //查找非标产品信息
-        public string AJxaGetNonsdataJson(string Sort, string Category, string wldm, string Pname)
+        public string AJxaGetNonsdataJson(string Sort, string Category, string wldm, string Pname,string Pmodel)
         {
             string json = null;
-            json = JsonConvert.SerializeObject(_IFlow_NonSProductinfoDao.GetNonsdata(Sort,Category,wldm,Pname));
+            json = JsonConvert.SerializeObject(_IFlow_NonSProductinfoDao.GetNonsdata(Sort,Category,wldm,Pname, Pmodel));
             return json;
         }
 
         //库存查看页面
         public ActionResult KcckView(string wldm)
         {
-            DataTable dt = GetKcsum("'"+wldm+"'");
+            //DataTable dt = GetKcsum("'"+wldm+"'");
+            string kcjson = GetPSKC(wldm);
             string P_Bianhao = wldm;
             string count = "0.00";
-            if (dt.Rows.Count > 0)
-            {
-                P_Bianhao = dt.Rows[0]["code"].ToString();//物料代码
-                count = Convert.ToDecimal(dt.Rows[0]["count"]).ToString("0.00");//库存
-            }
+            count = kcjson;
+            //if (dt.Rows.Count > 0)
+            //{
+            //    P_Bianhao = dt.Rows[0]["code"].ToString();//物料代码
+            //    count = Convert.ToDecimal(dt.Rows[0]["count"]).ToString("0.00");//库存
+            //}
             Flow_NonSProductinfoView model = _IFlow_NonSProductinfoDao.Getmodelbywldm(wldm);
             ViewData["wldm"] = P_Bianhao;
             ViewData["kcsl"] = count;
             ViewData["cpname"] = model.Pname;
             ViewData["pmodel"] = model.Pmodel;
             return View();
+        }
+
+        //查询普实erp里面及时库存
+        public string GetPSKC(string wlno)
+        {
+            string resjson = zypushsoftHelper.GetBCStkbyItmID(wlno);
+            List<pskcmodel> timemodel = getObjectByJson<pskcmodel>(resjson);
+            if (timemodel.Count() > 0)
+            {
+                return timemodel[0].OnHand;
+            }
+            else
+            {
+                return "0";
+            }
+
+        }
+
+        //返回json数据 转换方法
+        private static List<T> getObjectByJson<T>(string jsonString)
+        {
+            // 实例化DataContractJsonSerializer对象，需要待序列化的对象类型  
+            DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(List<T>));
+            //把Json传入内存流中保存  
+            //jsonString = jsonString;
+            MemoryStream stream = new MemoryStream(Encoding.UTF8.GetBytes(jsonString));
+            // 使用ReadObject方法反序列化成对象  
+            object ob = serializer.ReadObject(stream);
+            List<T> ls = (List<T>)ob;
+            return ls;
+        }
+
+        public class pskcmodel
+        {
+            public virtual string ItmID { get; set; }
+
+            /// <summary>
+            /// 及时库存
+            /// </summary>
+            public virtual string OnHand { get; set; }
         }
 
         //检测产品是否存在库存并且返回库存数量及对应的K3 物料代码
@@ -135,17 +178,19 @@ namespace NewAsiaOASystem.Web.Controllers
             ViewData["pmodel"] = model.Pmodel;
             //ViewData["Newdatetime"] = DateTime.Now.ToString("yyyMMdd");
             ViewData["p_type"] = model.Category;
-            DataTable dt = GetKcsum("'" + model.Pbianma + "'");
-            if (dt.Rows.Count > 0)
-            {
-                string P_Bianhao = dt.Rows[0]["code"].ToString();//物料代码
-                string count = Convert.ToDecimal(dt.Rows[0]["count"]).ToString("0.00");//库存
-                ViewData["kcsl"] = count;
-            }
-            else
-            {
-                ViewData["kcsl"] = "0.00";
-            }
+            string kcjson = GetPSKC(model.Pbianma);
+            ViewData["kcsl"] = kcjson;
+            //DataTable dt = GetKcsum("'" + model.Pbianma + "'");
+            //if (dt.Rows.Count > 0)
+            //{
+            //    string P_Bianhao = dt.Rows[0]["code"].ToString();//物料代码
+            //    string count = Convert.ToDecimal(dt.Rows[0]["count"]).ToString("0.00");//库存
+            //    ViewData["kcsl"] = count;
+            //}
+            //else
+            //{
+            //    ViewData["kcsl"] = "0.00";
+            //}
             return View();
         }
 
@@ -166,12 +211,14 @@ namespace NewAsiaOASystem.Web.Controllers
             planmodel.Isprint =0;//默认没有打印
             planmodel.P_CPId = model.Id;//产品Id
             planmodel.P_CPname = model.Pname;//产品名称
+            planmodel.P_Model = model.Pmodel;
             planmodel.P_Issc = 4;//待技术确认
             planmodel.P_Pianhao = model.Pbianma;//产品编号
             planmodel.P_SCnumber = Convert.ToDecimal(scsum);//要货数量
             planmodel.P_type = Convert.ToInt32(p_type);//生产计划单的种类 0 常规  1非标（销售） 2非标（工程） 3 试产
             planmodel.Status = 0;
             planmodel.scbianhao = Getwkorderbianhao();
+            planmodel.orderbianhao = planmodel.scbianhao;
             planmodel.Nc_time= DateTime.Now;//创建时间
             string pId = _IFlow_PlanProductioninfoDao.InsertID(planmodel);
             MassManager.FMb_ProductionOrderNotice(pId);

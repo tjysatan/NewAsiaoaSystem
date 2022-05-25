@@ -10,10 +10,27 @@ namespace NewAsiaOASystem.IDao
 {
    public interface  INAReturnListDao:IBaseDao<NAReturnListView>
     {
-       PagerInfo<NAReturnListView> GetCinfoList(string Name, string Szt, string type, string R_pId, string fthbianhao, string CPname, SessionUser user);
+       PagerInfo<NAReturnListView> GetCinfoList(string Name, string Szt, string type, string R_pId, string fthbianhao, string CPname, string Isjsbpz, SessionUser user);
 
-       #region //返退货 代开出货单
-       PagerInfo<NAReturnListView> Getchinfolist(string name,string bianhao, SessionUser user);
+        
+        #region //查询反退货订单的数据
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Name"></param>
+        /// <param name="Szt"></param>
+        /// <param name="type"></param>
+        /// <param name="R_pId"></param>
+        /// <param name="fthbianhao"></param>
+        /// <param name="CPname"></param>
+        /// <param name="Isjsbpz"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        IList<NAReturnListView> Getdatelist(string Name, string Szt, string type, string R_pId, string fthbianhao, string CPname, string Isjsbpz, SessionUser user); 
+        #endregion
+
+        #region //返退货 代开出货单
+        PagerInfo<NAReturnListView> Getchinfolist(string name,string bianhao, SessionUser user);
        
        #endregion
 

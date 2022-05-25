@@ -13,6 +13,7 @@
     <property name="Xs_je" column="Xs_je" />
     <property name="Ddzt" column="Ddzt" />
     <property name="Fk_type" column="Fk_type" />
+    <property name="PaymentTypeName" column="PaymentTypeName" />
     <property name="C_datetime" column="C_datetime" />
     <property name="C_Name" column="C_Name" />
     <property name="States" column="States" />

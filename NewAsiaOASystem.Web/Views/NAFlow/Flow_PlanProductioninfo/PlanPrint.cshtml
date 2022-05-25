@@ -73,12 +73,12 @@
 
     <table class="table_con" style="width: 100%; color: #000; font-size: 13px;">
         <tr>
-            <td style="font-size: 13px; width: 3%" rowspan="4">客服部</td>
+            <td style="font-size: 13px; width: 3%" rowspan="5">客服部</td>
             <td style="font-size: 13px; width: 10%">生产批号</td>
             <td style="font-size: 13px; width: 20%">@ViewData["scpj"]</td>
             <td style="font-size: 13px; width: 10%">要货数量</td>
             <td style="font-size: 13px; width: 20%">@ViewData["yhsl"]</td>
-            <td style="font-size: 13px; width: 35%" rowspan="3">
+            <td style="font-size: 13px; width: 35%" rowspan="4">
                 @ViewData["kfBeizhu"]
             </td>
         </tr>
@@ -89,10 +89,16 @@
             <td>@ViewData["yhdate"]</td>
         </tr>
         <tr>
-            <td>产品型号</td>
+            <td>产品名称</td>
             <td>@ViewData["cpname"]</td>
             <td>电源电压</td>
             <td>@ViewData["Dydy"]</td>
+        </tr>
+        <tr>
+            <td>产品型号</td>
+            <td>@ViewData["P_Model"]</td>
+            <td>物料代码</td>
+            <td>@ViewData["P_Pianhao"]</td>
         </tr>
         <tr>
             <td>要货性质</td>

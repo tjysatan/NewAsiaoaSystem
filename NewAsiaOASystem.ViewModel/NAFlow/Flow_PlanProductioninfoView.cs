@@ -161,5 +161,25 @@ namespace NewAsiaOASystem.ViewModel
         /// 具体的排单日期 默认是创建日期
         /// </summary>
         public virtual DateTime? Nc_time { get; set; }
+
+        /// <summary>
+        /// 开工时间
+        /// </summary>
+        public virtual DateTime? kgdatetime { get; set; }
+
+        /// <summary>
+        /// 是否同步工位机 1 已经同步
+        /// </summary>
+        public virtual int? Gwj_Istb { get; set; }
+
+        /// <summary>
+        /// 工位机最近的同步时间
+        /// </summary>
+        public virtual DateTime? Gwj_tbtime { get; set; }
+
+        /// <summary>
+        /// 平台订单编号（温控）
+        /// </summary>
+        public virtual string orderbianhao { get; set; }
     }
 }

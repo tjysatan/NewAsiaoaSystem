@@ -31,5 +31,9 @@
     <property name="sidxh" column="sidxh" />
     <property name="sidc_time" column="sidc_time" />
     <property name="monitor_name" column="monitor_name" />
+    <property name="erp_JPorderno" column="erp_JPorderno" />
+    <property name="erp_jxscode" column="erp_jxscode" />
+    <property name="erp_jxsname" column="erp_jxsname" />
+    <property name="chtype" column="chtype" />
   </class>
 </hibernate-mapping>

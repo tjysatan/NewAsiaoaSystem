@@ -1,0 +1,78 @@
+﻿@{
+    ViewBag.Title = "SID的明细页面";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+@section HeadContent{
+    <script type="text/javascript">
+        var loadi;
+        function ddchen() {
+            loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+        }
+        //关闭等待效果
+        function disLoading() {
+            layer.close(loadi);
+        }
+
+        function guanbi() {
+            var index = parent.layer.getFrameIndex(window.name);
+            //关闭弹出层
+            parent.layer.close(index);
+        }
+
+           $(function () {
+         
+            ajaxJPdetailjson();
+           
+        })
+
+                //根据发货拣配单单号查找明细
+        function ajaxJPdetailjson() {
+            var json;
+            $.ajax({
+                type: "POST",
+                url: "/publicAPI/GetJpshSIDinfoinface",
+                data: { orderno: '@ViewData["SMOrderId"]' },
+                dataType: "json",
+                async: true,
+                beforeSend: function () {
+                    ddchen();
+                },
+                success: function (reslut) {
+                    disLoading();
+                    json = reslut;
+                    console.log(reslut)
+                    PJjpmxhtml(reslut)
+                },
+                error: function (e) {
+                    alert("请求失败");
+                }
+            })
+            //return json;
+        }
+
+        //拣配明细
+        function PJjpmxhtml(datajson) {
+            if (datajson != "") {
+                //console.log(datajson[0].ItmID)
+                var html = "";
+                for (var i = 0; i < datajson.length; i++) {
+                    html += '<tr>';
+                    html += '<td>' + datajson[i].WL_SSD + '</td>';
+                    html += '</tr>';
+                }
+                $("#jpmxhtml").html(html);
+            }
+        }
+    </script>
+    }
+<div style="width:100vw; margin: auto; text-align:center;padding-top:20px ">
+    <div style="width:100vw; height:auto; ">
+        <blockquote class="layui-elem-quote" style="text-align:left !important">
+            该单SID码明细
+        </blockquote>
+        <table id="jpmxhtml">
+        </table>
+    </div>
+     
+</div>

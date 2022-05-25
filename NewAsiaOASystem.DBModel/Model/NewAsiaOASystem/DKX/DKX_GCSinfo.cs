@@ -56,5 +56,10 @@ namespace NewAsiaOASystem.DBModel
         /// 排序 越小越靠前
         /// </summary>
         public virtual int Sort { get; set; }
+
+        /// <summary>
+        /// 所属团队名称
+        /// </summary>
+        public virtual string Teamname { get; set; }
     }
 }

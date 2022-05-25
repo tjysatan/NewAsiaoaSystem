@@ -608,6 +608,27 @@ namespace NewAsiaOASystem.Dao
         }
         #endregion
 
+        #region //返回所有B的订单数量
+        /// <summary>
+        /// 返回所有B的订单没有物料代码的数量
+        /// </summary>
+        /// <returns></returns>
+        public int GetDKXBcount()
+        {
+            try
+            {
+                string temHql = string.Format("  from DKX_DDinfo where liushuitype='B' and Ps_wlBomNO !=''");
+                IQuery queryCount = Session.CreateQuery(string.Format("select count(*)  {0} ", temHql));
+                int count = Convert.ToInt32(queryCount.UniqueResult());
+                return count;
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+        #endregion
+
 
         #region //电控箱生产单数量分页数据 汇总
         /// <summary>
@@ -1112,13 +1133,13 @@ namespace NewAsiaOASystem.Dao
             if (!string.IsNullOrEmpty(DD_Bianhao))
                 TempHql.AppendFormat(" and DD_Bianhao like '%{0}%'", DD_Bianhao);
             TempHql.AppendFormat(" and gczl_Isyc='1'");
-            if (user.RoleType == "0" || user.RoleType == "5")
-            {
-            }
-            else
-            {
-                TempHql.AppendFormat(" and Gcs_nameId ='{0}'", user.Id);
-            }
+            //if (user.RoleType == "0" || user.RoleType == "5")
+            //{
+            //}
+            //else
+            //{
+            //    TempHql.AppendFormat(" and Gcs_nameId ='{0}'", user.Id);
+            //}
             TempHql.AppendFormat("order by  u.C_time desc");
             PagerInfo<DKX_DDinfoView> list = Search();
             return list;
@@ -1235,6 +1256,24 @@ namespace NewAsiaOASystem.Dao
         }
         #endregion
 
+        #region //通过订单编号查询订单的详情数据（包括包括被删除的）
+        /// <summary>
+        /// 通过订单编号查询订单的详情数据（包括被删除的）
+        /// </summary>
+        /// <param name="orderno">订单编号</param>
+        /// <returns></returns>
+        public DKX_DDinfoView GetALLDDmodelbyorderno(string orderno)
+        {
+            string temHql = string.Format(" from DKX_DDinfo where   DD_Bianhao='{0}'", orderno);
+            List<DKX_DDinfo> list = HibernateTemplate.Find<DKX_DDinfo>(temHql) as List<DKX_DDinfo>;
+            IList<DKX_DDinfoView> listmodel = GetViewlist(list);
+            if (listmodel != null)
+                return listmodel[0];
+            else
+                return null;
+        }
+        #endregion
+
         #region //查询当天的完成发料的数据数量
         /// <summary>
         /// 查询当天的完成发料的数据数量
@@ -1287,8 +1326,13 @@ namespace NewAsiaOASystem.Dao
         /// <returns></returns>
         public IList<DKX_DDinfoView> Getqtmxbyk3code(string K3CODEL)
         {
-            string Hqlstr = string.Format("from  DKX_DDinfo where  khkecode='{0}' and Ps_orderno is null and Start='0'", K3CODEL);
-            List<DKX_DDinfo> list = HibernateTemplate.Find<DKX_DDinfo>(Hqlstr) as List<DKX_DDinfo>;
+            string Hqlstr = string.Format("from  DKX_DDinfo where  khkecode='{0}' and Ps_orderno is null and Start='0' ORDER BY C_time DESC", K3CODEL);
+
+            IQuery query = Session.CreateQuery(Hqlstr);
+            query.SetFirstResult(0);
+            query.SetMaxResults(40);
+            List<DKX_DDinfo> list= query.List<DKX_DDinfo>() as List<DKX_DDinfo>;
+           // List<DKX_DDinfo> list = HibernateTemplate.Find<DKX_DDinfo>(Hqlstr) as List<DKX_DDinfo>;
             IList<DKX_DDinfoView> listmodel = GetViewlist(list);
             return listmodel;
         }
@@ -1308,13 +1352,18 @@ namespace NewAsiaOASystem.Dao
             TempHql = new StringBuilder();
             TempHql.AppendFormat("and u.C_time>='{0}' and C_time<='{1}'", startctime + " 00:00:00", endctiome + " 23:59:59");
             TempHql.AppendFormat(" and u.Start='0'");
-            TempHql.AppendFormat(" and DD_ZT in ({0})", DD_ZT);
+            if (!string.IsNullOrEmpty(DD_ZT))
+                TempHql.AppendFormat(" and DD_ZT in ({0})", DD_ZT);
             TempHql.AppendFormat("order by u.DD_ZT asc,u.C_time desc");
             string HQLstr = string.Format("from DKX_DDinfo u where 1=1 {0}", TempHql.ToString());
             List<DKX_DDinfo> list = HibernateTemplate.Find<DKX_DDinfo>(HQLstr) as List<DKX_DDinfo>;
             IList<DKX_DDinfoView> listmodel = GetViewlist(list);
             return listmodel;
         }
+        #endregion
+
+        #region //
+
         #endregion
 
         #region //通过新生成的普实料号查询是否重复
@@ -1331,6 +1380,40 @@ namespace NewAsiaOASystem.Dao
                 return true;
             else
                 return false;
+        }
+        #endregion
+
+        #region //根据物料号查询下单的数量
+        /// <summary>
+        /// 根据物料号查询下单的数量
+        /// </summary>
+        /// <param name="ItemNo">物料号</param>
+        /// <returns></returns>
+        public int Get_Place_Order_Cunot(string ItemNo)
+        {
+            string tempHql =string.Format(" from DKX_DDinfo where Start='0' and DD_ZT!='-1' and Ps_wlBomNO='{0}'",ItemNo);
+            IQuery queryCount = Session.CreateQuery(string.Format("select count(*) {0}", tempHql));
+            int count = Convert.ToInt32(queryCount.UniqueResult());
+            return count;
+        }
+        #endregion
+
+        #region //根据物料号查询最近20次下单的记录
+        /// <summary>
+        /// 根据物料号查询最近20次下单的记录
+        /// </summary>
+        /// <param name="itemno">物料代码</param>
+        /// <param name="count">查询的条数</param>
+        /// <returns></returns>
+        public IList<DKX_DDinfoView> Get_order_by_itemno(string itemno, int count)
+        {
+            string Hqlstr = string.Format(" from DKX_DDinfo where  Start='0' and DD_ZT!='-1' and Ps_wlBomNO='{0}' ORDER BY C_time DESC", itemno);
+            IQuery query = Session.CreateQuery(Hqlstr);
+            query.SetFirstResult(0);
+            query.SetMaxResults(count);
+            List<DKX_DDinfo> list = query.List<DKX_DDinfo>() as List<DKX_DDinfo>;
+            IList<DKX_DDinfoView> listmodel = GetViewlist(list);
+            return listmodel;
         }
         #endregion
     }

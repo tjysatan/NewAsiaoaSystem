@@ -39,6 +39,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BJSys\PAY_CONTROL_INFOView.cs" />
+    <Compile Include="ERP\ERP_SASalAinfoView.cs" />
+    <Compile Include="ERP\ERP_SASalA_FBCP_BCBWKView.cs" />
+    <Compile Include="ERP\Js_xz_yfcostView.cs" />
     <Compile Include="IQC\IQC_JyconstrinfoView.cs" />
     <Compile Include="IQC\IQC_JYDDinfoView.cs" />
     <Compile Include="IQC\IQC_JYDjyconinfoView.cs" />
@@ -46,6 +50,7 @@
     <Compile Include="IQC\IQC_llNoticeMXordinfoView.cs" />
     <Compile Include="IQC\IQC_llNoticeordinfoView.cs" />
     <Compile Include="IQC\IQC_SopInfoView.cs" />
+    <Compile Include="lanhe\lanhe_QzCusinfoView.cs" />
     <Compile Include="NACG\CG_aqkcView.cs" />
     <Compile Include="NAFlow\Flow_AjaxtxdateView.cs" />
     <Compile Include="NAFlow\Flow_DKXPlanPPrintinfoView.cs" />
@@ -93,6 +98,7 @@
     <Compile Include="NewAsiaOASystem\NA_SharealikeView.cs" />
     <Compile Include="NewAsiaOASystem\NA_XSdetailsinfoView.cs" />
     <Compile Include="NewAsiaOASystem\NA_XSinfoView.cs" />
+    <Compile Include="NewAsiaOASystem\NA_XSqitainfoView.cs" />
     <Compile Include="NewAsiaOASystem\NQCosttypeView.cs" />
     <Compile Include="NewAsiaOASystem\NQR_ProductView.cs" />
     <Compile Include="NewAsiaOASystem\NQR_ReasonView.cs" />

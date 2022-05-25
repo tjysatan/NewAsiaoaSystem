@@ -145,8 +145,31 @@
             }
             $("#table_con").html(html);
         }
+
+        //数据导出结果
+        function ExcelExportMRP(val) {
+            var type;
+            layer.open({
+                type: 1,
+                offset: type //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
+                , id: 'layerDemo' + type //防止重复弹出
+                , content: '<div style="padding: 20px 100px;">确认导出数据吗</div>'
+                , btn: ['数据导出', '关闭']
+                , btnAlign: 'c' //按钮居中
+                , shade: 0 //不显示遮罩
+                , yes: function () {
+                   
+                    window.location.href = "/DKX_DD/ExcelExportDD?MId=" + val;
+                    layer.closeAll();
+                }
+            });
+        }
     </script>
     }
+<div style="padding:10px">
+    <button class="layui-btn" onclick="ExcelExportMRP('@ViewData["MId"]');return false">   导出excel</button>
+</div>
 
 <table class="table_con" style="width: 98%; color: #000; font-size: 13px; margin: auto;" id="table_con">
 </table>
+

@@ -90,13 +90,13 @@
 <script type="text/javascript">
 
     $(function () {
-        dataGrid("null", "0,1", "", "");
+        dataGrid("null", "0,1", "", "","");
     })
 
     //
-    function dataGrid(Sort, Category, wldm, Pname) {
+    function dataGrid(Sort, Category, wldm, Pname, Pmodel) {
         var jsonStr;
-        jsonStr = AjxaNosPind(Sort, Category, wldm, Pname);
+        jsonStr = AjxaNosPindNew(Sort, Category, wldm, Pname, Pmodel);
         $("#content").html("");
         if (jsonStr != null) {
             var html = "";
@@ -125,7 +125,27 @@
         var cptype = $("#cptype").val();
         var text_wldm = $("#text_wldm").val();//物料代码
         var text_cpname = $("#text_cpname").val();
-        dataGrid(wlsort, cptype, text_wldm, text_cpname);
+        var text_Pmodel = $("#text_Pmodel").val();
+        dataGrid(wlsort, cptype, text_wldm, text_cpname, text_Pmodel);
+    }
+
+    //产品库存情况数据
+    function AjxaNosPindNew(Sort, Category, wldm, Pname, Pmodel) {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "../Flow_NonSProductinfo/AJxaGetNonsdataJson",
+            data: { Sort: Sort, Category: Category, wldm: wldm, Pname: Pname, Pmodel: Pmodel },
+            dataType: "json",
+            async: false,
+            success: function (reslut) {
+                json = reslut;
+            },
+            error: function (e) {
+                alert("请求失败");
+            }
+        })
+        return json;
     }
 
 
@@ -205,6 +225,12 @@
                     <span>产品名称：</span>
                     <span class="inquiry-input">
                         <input type="text" id="text_cpname" name="text_cpname" />
+                    </span>
+                </li>
+                <li>
+                    <span>产品型号：</span>
+                    <span class="inquiry-input">
+                        <input type="text" id="text_Pmodel" name="text_Pmodel" />
                     </span>
                 </li>
                 <li>

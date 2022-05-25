@@ -15,5 +15,8 @@
     <property name="CBRName" column="CBRName"  />
     <property name="CBRRemarks" column="CBRRemarks"  />
     <property name="IsPdrefund" column="IsPdrefund"  />
+    <property name="SC_DWGS" column="SC_DWGS"  />
+    <property name="CK_DWGS" column="CK_DWGS"  />
+    <property name="C_BJ_userZH" column="C_BJ_userZH"  />
   </class>
 </hibernate-mapping>

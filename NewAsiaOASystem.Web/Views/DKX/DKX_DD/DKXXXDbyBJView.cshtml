@@ -1,0 +1,382 @@
+﻿@{
+    ViewBag.Title = "根据报价单下非标订单";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<script type="text/javascript">
+    // $(function () {
+    //    zdfz();
+    //})
+
+
+    function oninputajax() {
+        var khname = $("#khname").val();
+
+        //赋值
+        var json = AjaxGetCusinfo(khname);
+        if (json == "" || json == null) {
+            $("#lxrname").val("");
+            $("#tel").val("");
+            $("#K3CODE").val("");
+        }
+        else {
+            $("#lxrname").val(json.LxrName);
+            $("#tel").val(json.Tel);
+            $("#K3CODE").val(json.K3CODE);
+        }
+    }
+
+    ///赋值
+    function zdfz() {
+        
+    }
+    //客户信息
+    function AjaxGetCusinfo(khname) {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "/DKX_DDtypeinfo/GetCusinfokecodebykhname",
+            data: { khname: khname },
+            dataType: "json",
+            async: false,
+            success: function (reslut) {
+                json = eval(reslut);
+            },
+            error: function (e) {
+                alert("请求失败");
+            }
+        })
+        return json;
+    }
+
+    //订单类型选择
+    function ddtypechange() {
+        var dkxtype = $("#dkxtype").val();
+        //if (dkxtype == "1") {
+        //    $("#dxtdj").css('display', 'block');
+        //    var html;
+        //    html = '<label class="layui-form-label">系统单价：</label>';
+        //    html += '<div class="layui-input-block">';
+        //    html += ' <input class="layui-input" id="dj" name="dj" placeholder="单价" type="text" style="width: 200px;" />';
+        //    html += '</div>';
+        //    $("#dxtdj").html(html);
+        //}
+        //else {
+        //    $("#dxtdj").css('display', 'none');
+        //}
+        if (dkxtype == "2") {
+            $("#wlwtyep").css('display', 'block');
+            var html;
+            html = '<label class="layui-form-label">物联类型：</label>';
+            html += '<div class="layui-input-block">';
+            html += '<select id="DD_WLWtype" name="DD_WLWtype" class="layui-input">';
+            html += '<option value="0">一体</option>';
+            html += '<option value="1">分体</option>';
+            html += '</section>';
+            html += '</div>';
+            $("#wlwtyep").html(html);
+        }
+        else {
+            $("#wlwtyep").css('display', 'none');
+        }
+        var gcsstr = AjaxGetgcsjson(dkxtype);
+        if (gcsstr != "" && gcsstr != null) {
+            $("#gcscon").css('display', 'block');
+            var html;
+            html = '<label class="layui-form-label">工程师：</label>';
+            html += '<div class="layui-input-block">';
+            html += '<select id="gcs" name="gcs" class="layui-input">';
+            for (var i = 0; i < gcsstr.length; i++) {
+                html += '<option value="' + gcsstr[i].Id + '">' + gcsstr[i].Name + '</option>';
+            }
+            html += '</section>';
+            html += '</div>';
+            $("#gcscon").html(html);
+        }
+    }
+    //产品类型选择
+    function cptypechange() {
+        var Ps_sanduanno = $("#Ps_sanduanno").val();
+        if (Ps_sanduanno == "0") {
+            $("#htdjhtml").css('display', 'none');
+        } else {
+            $("#htdjhtml").css('display', 'block');
+        }
+    }
+
+    //获取工程师的数据
+    function AjaxGetgcsjson(val) {
+        var json;
+        $.ajax({
+            type: "POST",
+            url: "/DKX_DDtypeinfo/GetgcsjsonbydkxtypeId",
+            data: { type: val },
+            dataType: "json",
+            async: false,
+            success: function (reslut) {
+                json = eval(reslut);
+            },
+            error: function (e) {
+                alert("请求失败");
+            }
+        })
+        return json;
+    }
+</script>
+
+<div style="width: 80%; padding: 20px 20px 0 20px">
+    @using (Html.BeginForm("DKXXDEide", "DKX_DD", FormMethod.Post, new { id = "form1" }))
+    {
+        <input type="hidden" id="bjno" name="bjno" value='@ViewData["bjno"]' />
+        <input type="hidden" id="bjorderno" name="bjorderno" value='@ViewData["bjorderno"]' />
+        <input type="hidden" id="bjtype" name="bjtype" value='@ViewData["bjtype"]' />
+        <div class="layui-form-item">
+            <label class="layui-form-label">产品型号：</label>
+            <div class="layui-input-inline">
+                <input class="layui-input" id="ddxh" name="ddxh" placeholder="产品型号" type="text" style="width: 200px" />
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">产品类型：</label>
+            <div class="layui-input-block" style="width: 200px;">
+                <select id="Ps_sanduanno" name="Ps_sanduanno" class="layui-input" onchange="cptypechange()">
+                    <option value=''>请选择</option>
+                    <option value='05.013.0001'>订做电控箱</option>
+                    <option value='05.013.0002'>涡旋机组控制箱</option>
+                    <option value='05.013.0003'>活塞机组控制箱</option>
+                    <option value='05.013.0004'>螺杆机组控制箱</option>
+                    <option value='05.013.0005'>螺杆冷水机组控制箱</option>
+                    <option value='05.013.0006'>食用菌机组控制箱</option>
+                    <option value='05.013.0007'>医药机组控制箱</option>
+                    <option value='05.013.0009'>PLC1.0订做电控箱</option>
+                    <option value='05.013.NAW0008'>物联网订做电控箱</option>
+                    <option value='0'>常规定制</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">功率：</label>
+            <div class="layui-input-block">
+                <input class="layui-input" id="gl" name="gl" placeholder="功率,请选择单位" type="text" style="width: 200px;" />
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">功率单位：</label>
+            <div class="layui-input-block" style="width: 200px;">
+                <select id="dw" name="dw" class="layui-input">
+                    <option value="KW">KW</option>
+                    <option value="P" disabled>P</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">数量：</label>
+            <div class="layui-input-block">
+                <input class="layui-input" id="sl" name="sl" placeholder="填写下单数量" type="text" style="width: 200px;" />
+            </div>
+        </div>
+        <div class="layui-form-item" id="htdjhtml">
+            <label class="layui-form-label">合同售价：</label>
+            <div class="layui-input-inline">
+                <input class="layui-input" id="price" name="price" placeholder="请填写合同的单位售价" type="text" style="width: 200px;" />
+
+            </div>
+            <div class="layui-input-inline">
+                <div class="layui-form-mid layui-word-aux">台   填写一台的售价</div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">订单类型：</label>
+            <div class="layui-input-block">
+                @Html.DropDownList("dkxtype", ViewData["dkxtypeList"] as SelectList, new { @class = "layui-input", @onchange = "ddtypechange()" })
+            </div>
+        </div>
+
+
+        <div class="layui-form-item" id="wlwtyep" style="display: none">
+        </div>
+        <div class="layui-form-item" id="gcscon" style="display: none">
+        </div>
+
+        <div class="layui-form-item" id="dxtdj" style="display: none">
+        </div>
+
+        <div class="layui-form-item" style="display: none">
+            <label class="layui-form-label">产品批号：</label>
+            <div class="layui-input-block">
+                <input class="layui-input" id="cpph" name="cpph" placeholder="产品批号" type="text" style="width: 200px;" />
+            </div>
+        </div>
+
+        @*<div class="layui-form-item">
+                <label class="layui-form-label">产品简述：</label>
+
+            </div>*@
+        <div class="layui-form-item">
+            <label class="layui-form-label">功能简述：</label>
+            <div class="layui-input-block">
+                <textarea placeholder="功能简述（之前K3bom编号）" id="gnjsstr" name="gnjsstr" class="layui-textarea"></textarea>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">客户名称：</label>
+            <div class="layui-input-block">
+                <input class="layui-input" id="khname" name="khname" placeholder="客户名称" type="text" autocomplete="off" oninput="oninputajax()" />
+            </div>
+        </div>
+        <div class="layui-form-item" style="display:none">
+            <label class="layui-form-label">联系人：</label>
+            <div class="layui-input-block">
+                <input class="layui-input" id="lxrname" name="lxrname" placeholder="客户联系人" type="text" />
+            </div>
+        </div>
+        <div class="layui-form-item" style="display:none">
+            <label class="layui-form-label">电话：</label>
+            <div class="layui-input-block">
+                <input class="layui-input" id="tel" name="tel" placeholder="联系电话" type="text" />
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">K3CODE：</label>
+            <div class="layui-input-block">
+                <input class="layui-input" id="K3CODE" name="K3CODE" placeholder="K3CODE" type="text" readonly="readonly" />
+            </div>
+        </div>
+        @*<div class="layui-form-item">
+                <label class="layui-form-label">直接生产：</label>
+                <div class="layui-input-block">
+                    <select id="zjsc" name="zjsc" class="layui-input">
+                        <option value="0">否</option>
+                        <option value="1">是</option>
+                    </select>
+                </div>
+            </div>*@
+        <div class="layui-form-item">
+            <label class="layui-form-label">承若交期：</label>
+            <div class="layui-input-block">
+                <input type="text" name="txt_startctime" id="txt_startctime" onclick="WdatePicker()" autocomplete="off" class="layui-input" />
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">备注：</label>
+            <div class="layui-input-block">
+                <textarea placeholder="请输入内容" id="beizhu" name="beizhu" class="layui-textarea"></textarea>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="formDemo" onclick="return weixinAjaxform()">确定</button>
+                <button type="reset" class="layui-btn layui-btn-primary" onclick="guanbi()">取消</button>
+            </div>
+        </div>
+    }
+</div>
+
+<script type="text/javascript">
+    function guanbi() {
+        var index = parent.layer.getFrameIndex(window.name);
+        //关闭弹出层
+        parent.layer.close(index);
+    }
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+    //表单提交
+    function weixinAjaxform() {
+
+        var khname = $("#khname").val();//客户名称
+        var lxrname = $("#lxrname").val();//客户联系人
+        var tel = $("#tel").val();//联系电话
+        var dkxtype = $("#dkxtype").val();//订单类型
+        var ddxh = $("#ddxh").val();//订单型号
+        var gl = $("#gl").val();//功率
+        var dw = $("#dw").val();//功率单位
+        var sl = $("#sl").val();//数量
+        var price = $("#price").val();//合同单位售价
+        var gnjsstr = $("#gnjsstr").val();//功能简述
+        var Ps_sanduanno = $("#Ps_sanduanno").val();
+        var txt_startctime = $("#txt_startctime").val();//承若交期
+        if (Ps_sanduanno == "") {
+            layer.alert("选择产品类型！", { icon: 2 });
+            return false;
+        }
+        if (khname == "") {
+            layer.alert("客户名称不为空！", { icon: 2 });
+            return false;
+        }
+
+        if (dkxtype == "") {
+            layer.alert("请选择订单类型！", { icon: 2 });
+            return false;
+        }
+        if (ddxh == "") {
+            layer.alert("请填写订单型号！", { icon: 2 });
+            return false;
+        }
+        if (gl == "") {
+            layer.alert("请填写功率！", { icon: 2 });
+            return false;
+        }
+
+        if (Ps_sanduanno != "0") {
+            if (price == "") {
+                layer.alert("单价不为空！", { icon: 2 });
+                return false;
+            } else {
+                if (isNaN(price)) {
+                    layer.alert("合同单位售价请填写数字！", { icon: 2 });
+                    return false;
+                }
+            }
+        }
+
+        if (sl == "") {
+            layer.alert("请填写数量！", { icon: 2 });
+            return false;
+        }
+        if (isNaN(sl)) {
+            layer.alert("数量为纯数字！", { icon: 2 });
+            return false;
+        }
+        if (gnjsstr == "") {
+            layer.alert("功能简述不为空（K3bom编号）！", { icon: 2 });
+            return false;
+        }
+        if (txt_startctime == "") {
+            layer.alert("需求日期不为空！", { icon: 2 });
+            return false;
+        }
+
+        //表单验证
+        var options = {
+            beforeSubmit: function () {
+                ddchen();
+                //return true;
+            },
+            dataType: "json",//这里是指控制器处理后返回的类型，这里返回json格式。
+            success: function (context) {
+                disLoading();
+                if (context.result == "success") {
+                    layer.alert(context.res, { icon: 1 }, function () { guanbi(); });
+                }
+                if (context.result == "error") {
+                    layer.alert(context.res, { icon: 2 }, function () { location.reload(); });
+                }
+               
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $.messager.alert("操作提示", '操作失败！', 'error');
+            }
+        }
+        $('#form1').ajaxSubmit(options);
+        return false; //为了不刷新页面,返回false
+    }
+</script>

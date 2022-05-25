@@ -18,6 +18,8 @@
 
     $(function () {
         htmlstr();
+        var str = "FT:" +'@ViewData["R_Id"]';
+        createImage(str);
     })
     //html拼接出货单
     function htmlstr() {
@@ -184,7 +186,21 @@
                 //    location.reload();
                 //}
             })
-        }
+    }
+
+    //生成二维码
+    function createImage(val) {
+        var content = val;
+        //ajax开始
+        $.post("/publicAPI/GetORImage/",
+            { "content": content },
+            function (data) {
+                $('#imgDiv').empty();
+                $('#imgDiv').append('<img id="ORImage" style="width:50px" />');
+                $("#ORImage").attr("src", data);
+            });
+        //ajax结束
+    }
 </script>
 
 <style id="style1">
@@ -253,6 +269,10 @@
 </style>
 
 <div id="form1">
+    <div style=" position:absolute; right:0">
+        <div id="imgDiv" style="">
+        </div>
+    </div>
     <div class="Miantitle">
         销售出货单
     </div>

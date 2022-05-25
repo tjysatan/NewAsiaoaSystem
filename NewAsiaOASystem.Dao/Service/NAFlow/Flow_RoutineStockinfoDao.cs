@@ -188,6 +188,51 @@ namespace NewAsiaOASystem.Dao
             return listmodel;
         }
 
+        #region //温控产品的数据
+        public IList<Flow_RoutineStockinfoView> New_GetxsinfobyOrderCode(string Sort, string Category, string cpname,string P_Model, string wlSort)
+        {
+            TempHql = new StringBuilder();
+            if (!string.IsNullOrEmpty(cpname))
+                TempHql.AppendFormat("and u.P_Name like '%{0}%'", cpname);
+            if (!string.IsNullOrEmpty(Category))
+                TempHql.AppendFormat("and u.Category='{0}'", Category);
+            if (!string.IsNullOrEmpty(P_Model))
+                TempHql.AppendFormat("and u.P_Model='{0}'", P_Model);
+            TempHql.AppendFormat(" and u.state='0'");
+            TempHql.AppendFormat(" and u.type='0'");
+            if (!string.IsNullOrEmpty(Sort))
+            {
+                if (Sort == "0")
+                {
+                    TempHql.AppendFormat("order by A_Sum asc");
+                }
+                else
+                {
+                    TempHql.AppendFormat("order by A_Sum desc");
+                }
+            }
+            else if (!string.IsNullOrEmpty(wlSort))
+            {
+                if (wlSort == "0")
+                {
+                    TempHql.AppendFormat("order by P_Bianhao asc");
+                }
+                else
+                {
+                    TempHql.AppendFormat("order by P_Bianhao desc");
+                }
+            }
+            else
+            {
+                TempHql.AppendFormat("order by A_Sum asc");
+            }
+            string HQLstr = string.Format(" from Flow_RoutineStockinfo  u where 1=1 {0}", TempHql.ToString());
+            List<Flow_RoutineStockinfo> list = HibernateTemplate.Find<Flow_RoutineStockinfo>(HQLstr) as List<Flow_RoutineStockinfo>;
+            IList<Flow_RoutineStockinfoView> listmodel = GetViewlist(list);
+            return listmodel;
+        }
+        #endregion
+
         /// <summary>
         /// 根据 是否被锁定的插好 产品的库存信息
         /// </summary>
@@ -195,7 +240,13 @@ namespace NewAsiaOASystem.Dao
         /// <returns></returns>
         public IList<Flow_RoutineStockinfoView> GetCpkcInfo(string Isscing)
         {
-            string hqlstr = string.Format("from Flow_RoutineStockinfo where Isscing='{0}' and state='0' order by A_Sum DESC", Isscing);
+            TempHql = new StringBuilder();
+            if (!string.IsNullOrEmpty(Isscing))
+                TempHql.AppendFormat(" and u.Isscing ='{0}'", Isscing);
+            TempHql.AppendFormat(" and u.state='0'");
+            TempHql.AppendFormat(" and u.type='0'");
+            TempHql.AppendFormat("order by A_Sum desc");
+            string hqlstr = string.Format("from Flow_RoutineStockinfo u where 1=1 {0}", TempHql);
             List<Flow_RoutineStockinfo> list = HibernateTemplate.Find<Flow_RoutineStockinfo>(hqlstr) as List<Flow_RoutineStockinfo>;
             IList<Flow_RoutineStockinfoView> listmodel = GetViewlist(list);
             return listmodel;
@@ -226,58 +277,93 @@ namespace NewAsiaOASystem.Dao
         /// <returns></returns>
         public IList<Flow_RoutineStockinfoView> DKGetcgDATAinfo(string Sort, string Category, string cpname, string wlSort)
         {
-            string HQLstr = string.Format("from Flow_RoutineStockinfo where Category='{0}' and state='0' and type='1' order by A_Sum asc ", Category);
-            if (Sort != "null")
+            //string HQLstr = string.Format("from Flow_RoutineStockinfo where Category='{0}' and state='0' and type='1' order by A_Sum asc ", Category);
+            //if (Sort != "null")
+            //{
+            //    if (Sort == "0")
+            //    {
+            //        if (cpname != "null")
+            //        {
+            //            HQLstr = string.Format("from Flow_RoutineStockinfo where Category='{0}' and state='0' and type='1' and P_Name like '%{1}%' order by A_Sum asc ", Category, cpname);
+            //        }
+            //        else
+            //        {
+            //            HQLstr = string.Format("from Flow_RoutineStockinfo where Category='{0}' and state='0' and type='1' order by A_Sum asc ", Category);
+            //        }
+            //    }
+            //    else
+            //    {
+            //        if (cpname != "null")
+            //        {
+            //            HQLstr = string.Format("from Flow_RoutineStockinfo where Category='{0}' and state='0' and type='1' and P_Name like '%{1}%' order by A_Sum DESC ", Category, cpname);
+            //        }
+            //        else
+            //        {
+            //            HQLstr = string.Format("from Flow_RoutineStockinfo where Category='{0}' and state='0' and type='1' order by A_Sum DESC ", Category);
+            //        }
+            //    }
+            //}
+            //if (wlSort != "null")
+            //{
+            //    if (wlSort == "0")
+            //    {
+            //        if (cpname != "null")
+            //        {
+            //            HQLstr = string.Format("from Flow_RoutineStockinfo where Category='{0}' and state='0' and type='1' and P_Name like '%{1}%'  order by P_Bianhao asc ", Category, cpname);
+            //        }
+            //        else
+            //        {
+            //            HQLstr = string.Format("from Flow_RoutineStockinfo where Category='{0}' and state='0' and type='1' order by P_Bianhao asc ", Category);
+            //        }
+            //    }
+            //    else
+            //    {
+            //        if (cpname != "null")
+            //        {
+            //            HQLstr = string.Format("from Flow_RoutineStockinfo where Category='{0}' and state='0' and type='1' and P_Name like '%{1}%' order by P_Bianhao DESC ", Category, cpname);
+            //        }
+            //        else
+            //        {
+            //            HQLstr = string.Format("from Flow_RoutineStockinfo where Category='{0}' and state='0' and type='1' order by P_Bianhao DESC ", Category);
+            //        }
+            //    }
+            //}
+
+            TempHql = new StringBuilder();
+            if (!string.IsNullOrEmpty(cpname))
+                TempHql.AppendFormat("and u.P_Name like '%{0}%'", cpname);
+            if (!string.IsNullOrEmpty(Category))
+                TempHql.AppendFormat("and u.Category='{0}'", Category);
+            TempHql.AppendFormat(" and u.state='0'");
+            TempHql.AppendFormat(" and u.type='1'");
+            if (!string.IsNullOrEmpty(Sort))
             {
                 if (Sort == "0")
                 {
-                    if (cpname != "null")
-                    {
-                        HQLstr = string.Format("from Flow_RoutineStockinfo where Category='{0}' and state='0' and type='1' and P_Name like '%{1}%' order by A_Sum asc ", Category, cpname);
-                    }
-                    else
-                    {
-                        HQLstr = string.Format("from Flow_RoutineStockinfo where Category='{0}' and state='0' and type='1' order by A_Sum asc ", Category);
-                    }
+                    TempHql.AppendFormat("order by A_Sum asc");
                 }
                 else
                 {
-                    if (cpname != "null")
-                    {
-                        HQLstr = string.Format("from Flow_RoutineStockinfo where Category='{0}' and state='0' and type='1' and P_Name like '%{1}%' order by A_Sum DESC ", Category, cpname);
-                    }
-                    else
-                    {
-                        HQLstr = string.Format("from Flow_RoutineStockinfo where Category='{0}' and state='0' and type='1' order by A_Sum DESC ", Category);
-                    }
+                    TempHql.AppendFormat("order by A_Sum desc");
                 }
             }
-            if (wlSort != "null")
+            else if (!string.IsNullOrEmpty(wlSort))
             {
                 if (wlSort == "0")
                 {
-                    if (cpname != "null")
-                    {
-                        HQLstr = string.Format("from Flow_RoutineStockinfo where Category='{0}' and state='0' and type='1' and P_Name like '%{1}%'  order by P_Bianhao asc ", Category, cpname);
-                    }
-                    else
-                    {
-                        HQLstr = string.Format("from Flow_RoutineStockinfo where Category='{0}' and state='0' and type='1' order by P_Bianhao asc ", Category);
-                    }
+                    TempHql.AppendFormat("order by P_Bianhao asc");
                 }
                 else
                 {
-                    if (cpname != "null")
-                    {
-                        HQLstr = string.Format("from Flow_RoutineStockinfo where Category='{0}' and state='0' and type='1' and P_Name like '%{1}%' order by P_Bianhao DESC ", Category, cpname);
-                    }
-                    else
-                    {
-                        HQLstr = string.Format("from Flow_RoutineStockinfo where Category='{0}' and state='0' and type='12' order by P_Bianhao DESC ", Category);
-                    }
+                    TempHql.AppendFormat("order by P_Bianhao desc");
                 }
             }
+            else
+            {
+                TempHql.AppendFormat("order by A_Sum asc");
+            }
 
+            string HQLstr = string.Format(" from Flow_RoutineStockinfo  u where 1=1 {0}", TempHql.ToString());
             List<Flow_RoutineStockinfo> list = HibernateTemplate.Find<Flow_RoutineStockinfo>(HQLstr) as List<Flow_RoutineStockinfo>;
             IList<Flow_RoutineStockinfoView> listmodel = GetViewlist(list);
             return listmodel;
@@ -290,7 +376,13 @@ namespace NewAsiaOASystem.Dao
         /// <returns></returns>
         public IList<Flow_RoutineStockinfoView> DKXGetCpkcInfo(string Isscing)
         {
-            string hqlstr = string.Format("from Flow_RoutineStockinfo where Isscing='{0}' and state='0' and type='1' order by A_Sum DESC",Isscing);
+            TempHql = new StringBuilder();
+            if (!string.IsNullOrEmpty(Isscing))
+                TempHql.AppendFormat(" and u.Isscing ='{0}'", Isscing);
+            TempHql.AppendFormat(" and u.state='0'");
+            TempHql.AppendFormat(" and u.type='1'");
+            TempHql.AppendFormat("order by A_Sum desc");
+            string hqlstr = string.Format("from Flow_RoutineStockinfo u where 1=1 {0}", TempHql);
             List<Flow_RoutineStockinfo> list = HibernateTemplate.Find<Flow_RoutineStockinfo>(hqlstr) as List<Flow_RoutineStockinfo>;
             IList<Flow_RoutineStockinfoView> listmodel = GetViewlist(list);
             return listmodel;

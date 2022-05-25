@@ -363,8 +363,6 @@ C:\Users\96297\source\repos\NewRepo\NewAsiaOASystem\NewAsiaOASystem.Web\obj\Debu
 C:\Users\96297\source\repos\NewRepo\NewAsiaOASystem\NewAsiaOASystem.Web\obj\Debug\NewAsiaOASystem.Web.csproj.CopyComplete
 C:\Users\96297\source\repos\NewRepo\NewAsiaOASystem\NewAsiaOASystem.Web\obj\Debug\NewAsiaOASystem.Web.dll
 C:\Users\96297\source\repos\NewRepo\NewAsiaOASystem\NewAsiaOASystem.Web\obj\Debug\NewAsiaOASystem.Web.pdb
-D:\object\NewAsiaOASystem.Web\obj\Debug\NewAsiaOASystem.Web.csprojFakesResolveAssemblyReference.cache
-D:\object\NewAsiaOASystem.Web\obj\Debug\NewAsiaOASystem.Web.csproj.CoreCompileInputs.cache
 D:\object\NewAsiaOASystem.Web\bin\NewAsiaOASystem.Web.dll.config
 D:\object\NewAsiaOASystem.Web\bin\NewAsiaOASystem.Web.dll
 D:\object\NewAsiaOASystem.Web\bin\NewAsiaOASystem.Web.pdb
@@ -381,6 +379,8 @@ D:\object\NewAsiaOASystem.Web\bin\NewAsiaOASystem.IDao.pdb
 D:\object\NewAsiaOASystem.Web\bin\NewAsiaOASystem.ViewModel.pdb
 D:\object\NewAsiaOASystem.Web\bin\JWT.pdb
 D:\object\NewAsiaOASystem.Web\bin\JWT.xml
+D:\object\NewAsiaOASystem.Web\obj\Debug\NewAsiaOASystem.Web.csprojFakesResolveAssemblyReference.cache
+D:\object\NewAsiaOASystem.Web\obj\Debug\NewAsiaOASystem.Web.csproj.CoreCompileInputs.cache
 D:\object\NewAsiaOASystem.Web\obj\Debug\NewAsiaOASystem.Web.csproj.CopyComplete
 D:\object\NewAsiaOASystem.Web\obj\Debug\NewAsiaOASystem.Web.dll
 D:\object\NewAsiaOASystem.Web\obj\Debug\NewAsiaOASystem.Web.pdb

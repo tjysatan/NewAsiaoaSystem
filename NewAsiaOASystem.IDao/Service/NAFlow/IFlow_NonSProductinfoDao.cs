@@ -17,7 +17,7 @@ namespace NewAsiaOASystem.IDao
         /// <param name="wldm"></param>
         /// <param name="Pname"></param>
         /// <returns></returns>
-        IList<Flow_NonSProductinfoView> GetNonsdata(string Sort, string Category, string wldm, string Pname);
+        IList<Flow_NonSProductinfoView> GetNonsdata(string Sort, string Category, string wldm, string Pname,string Pmodel);
 
         /// <summary>
         /// 

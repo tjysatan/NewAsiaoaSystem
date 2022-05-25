@@ -21,6 +21,13 @@
             Gettabledata();
         })
 
+        //回车触发查询
+        $(document).keyup(function (event) {
+            if (event.keyCode == 13) {
+                Gettabledata();
+            }
+        });
+
         //初始化table数据
         function Gettabledata() {
             var txt_DD_Bianhao = $("#txt_DD_Bianhao").val();

@@ -59,7 +59,12 @@ namespace NewAsiaOASystem.IDao
         /// <param name="str1">物料前俩位</param>
         /// <param name="str2">物料中间三位</param>
         /// <returns></returns>
-        IList<K3_wuliaoinfoView> Getwuliaobyfnumber23(string str1, string str2); 
+        IList<K3_wuliaoinfoView> Getwuliaobyfnumber23(string str1, string str2);
+        #endregion
+
+        
+        #region //查询普实创建时间字段最近的数据
+        K3_wuliaoinfoView GetwuliaoMaxOpDate(); 
         #endregion
     }
 }

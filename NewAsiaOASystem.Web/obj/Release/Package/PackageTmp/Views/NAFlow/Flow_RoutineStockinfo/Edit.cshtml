@@ -11,122 +11,74 @@
     @Html.HiddenFor(m => m.Isbj);
     @Html.HiddenFor(m => m.Isscing);
     @Html.HiddenFor(m => m.A_Sum);
-    <div style="width: 80%; padding: 20px 20px 0 20px">
+<div style="width: 80%; padding: 20px 20px 0 20px">
 
-        <div class="layui-form-item">
-            <label class="layui-form-label">物料代码：</label>
-            <div class="layui-input-block">
-                @Html.TextBoxFor(m => m.P_Bianhao, new { placeholder = "物料代码", @class = "layui-input",@oninput="oninputajax()" })
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <div class="layui-input-block" style="color:red;" id="tscon">
-             
-             </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">产品名称：</label>
-            <div class="layui-input-block">
-                @Html.TextBoxFor(m => m.P_Name, new { placeholder = "产品名称", @class = "layui-input",@readonly="readonly" })
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">月用量：</label>
-            <div class="layui-input-block">
-                @Html.TextBoxFor(m => m.M_Consumption, new { placeholder = "月用量", @class = "layui-input" })
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">周用量：</label>
-            <div class="layui-input-block">
-                @Html.TextBoxFor(m => m.W_Consumption, new { placeholder = "周用量", @class = "layui-input" })
-            </div>
-        </div>
-
-        <div class="layui-form-item">
-            <label class="layui-form-label">类型：</label>
-            <div class="layui-input-block">
-                <select class="add-function" name="Category" class="layui-input">
-                    @{
-                                 if ("0".Equals(Convert.ToString(@Model.Category)) && null != @Model.Id)
-                                 {
-                        @:<option value="1" selected="selected">半成品</option>
-                        @:<option value="0" >成品</option>
-                              }
-                                 else
-                                 {
-                        @:<option value="1" >半成品</option>
-                        @:<option value="0"  selected="selected">成品</option>
-                              }
-                                                
-                    }
-                </select>
-            </div>
-        </div>
-        @*<div class="system-menu-set">
-            <ul class="infor-c">
-                <li>
-                    <span class="infor-c-width">物料代码：</span>
-                    <span class="infor-c-input">@Html.TextBoxFor(m => m.P_Bianhao)</span>
-                    <span style="color: red; font-size: 24px; vertical-align: middle; margin-left: 8px;">*</span>
-                    <span class="desc w-register">物料代码</span>
-                </li>
-            </ul>
-            <ul class="infor-c ">
-                <li>
-                    <span class="infor-c-width">产品名称：</span>
-                    <span class="infor-c-input">
-                        @Html.TextBoxFor(m => m.P_Name)
-                    </span>
-                    <span class="desc w-register">产品名称</span>
-                </li>
-            </ul>
-            <ul class="infor-c ">
-                <li>
-                    <span class="infor-c-width">月用量：</span>
-                    <span class="infor-c-input">
-                        @Html.TextBoxFor(m => m.M_Consumption)
-                    </span>
-                    <span class="desc w-register">月用量</span>
-                </li>
-            </ul>
-            <ul class="infor-c ">
-                <li>
-                    <span class="infor-c-width">周用量：</span>
-                    <span class="infor-c-input">
-                        @Html.TextBoxFor(m => m.W_Consumption)
-                    </span>
-                    <span class="desc w-register">周用量</span>
-                </li>
-            </ul>
-
-            <ul class="infor-c ">
-                <li><span class="infor-c-width">类型：</span>
-                    <span>
-                        <select class="add-function" name="Category">
-                            @{
-                                 if ("0".Equals(Convert.ToString(@Model.Category)) && null != @Model.Id)
-                                 {
-                                @:<option value="1" selected="selected">半成品</option>
-                                @:<option value="0" >成品</option>
-                              }
-                                 else
-                                 {
-                                @:<option value="1" >半成品</option>
-                                @:<option value="0"  selected="selected">成品</option>
-                                                }
-                                                
-                            }
-                        </select></span> </li>
-            </ul>
-        </div>*@
-
-        <div class="inquiry-input infor-b">
-            <span>
-                <button onclick="return SavaForm('/Flow_RoutineStockinfo/List')">保存</button></span><span>
-                    <button onclick="return RedirectUrl('/Flow_RoutineStockinfo/List')">返回</button></span>
+    <div class="layui-form-item">
+        <label class="layui-form-label">物料代码：</label>
+        <div class="layui-input-block">
+            @Html.TextBoxFor(m => m.P_Bianhao, new { placeholder = "物料代码", @class = "layui-input", @oninput = "oninputajax()" })
         </div>
     </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block" style="color:red;" id="tscon">
+
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">产品名称：</label>
+        <div class="layui-input-block">
+            @Html.TextBoxFor(m => m.P_Name, new { placeholder = "产品名称", @class = "layui-input", @readonly = "readonly" })
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">产品型号：</label>
+        <div class="layui-input-block">
+            @Html.TextBoxFor(m => m.P_Model, new { placeholder = "产品型号", @class = "layui-input", @readonly = "readonly" })
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">月用量：</label>
+        <div class="layui-input-block">
+            @Html.TextBoxFor(m => m.M_Consumption, new { placeholder = "月用量", @class = "layui-input" })
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">周用量：</label>
+        <div class="layui-input-block">
+            @Html.TextBoxFor(m => m.W_Consumption, new { placeholder = "周用量", @class = "layui-input" })
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">类型：</label>
+        <div class="layui-input-block">
+            <select class="add-function" name="Category" class="layui-input">
+                @{
+                    if ("0".Equals(Convert.ToString(@Model.Category)) && null != @Model.Id)
+                    {
+                        @:<option value="1" selected="selected">半成品</option>
+                        @:<option value="0">成品</option>
+                    }
+                    else
+                    {
+                        @:<option value="1">半成品</option>
+                        @:<option value="0" selected="selected">成品</option>
+                    }
+
+                }
+            </select>
+        </div>
+    </div>
+    
+
+    <div class="inquiry-input infor-b">
+        <span>
+            <button onclick="return SavaForm('/Flow_RoutineStockinfo/List')">保存</button>
+        </span><span>
+            <button onclick="return RedirectUrl('/Flow_RoutineStockinfo/List')">返回</button>
+        </span>
+    </div>
+</div>
 }
 
 <script type="text/javascript">
@@ -137,11 +89,13 @@
         if (json == "" || json == null) {
             $("#tscon").html("不存在该物料代码！");
             $("#P_Name").val("");
+            $("#P_Model").val("");
         }
         else {
             $("#tscon").html("");
             $("#P_Bianhao").val(json.fnumber);
-            $("#P_Name").val(json.fname)
+            $("#P_Name").val(json.fname);
+            $("#P_Model").val(json.fmodel);
         }
     }
 

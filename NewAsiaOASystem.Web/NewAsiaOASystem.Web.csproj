@@ -233,6 +233,7 @@
     <Compile Include="Controllers\Default1Controller.cs" />
     <Compile Include="Controllers\IBase64UrlEncoder.cs" />
     <Compile Include="Controllers\IJwtAlgorithm.cs" />
+    <Compile Include="Controllers\lanheController.cs" />
     <Compile Include="Controllers\NACG\CG_aqkcController.cs" />
     <Compile Include="Controllers\NAFlow\Flow_AjaxtxdateController.cs" />
     <Compile Include="Controllers\NAFlow\Flow_NonSProductinfoController.cs" />
@@ -241,6 +242,7 @@
     <Compile Include="Controllers\NAFlow\Flow_RoutineStockinfoController.cs" />
     <Compile Include="Controllers\NewAsiaOASystem\Act_SignNamelistinfoController.cs" />
     <Compile Include="Controllers\NewAsiaOASystem\AllowCrossSiteJson.cs" />
+    <Compile Include="Controllers\NewAsiaOASystem\BJ\BJBasicdataController.cs" />
     <Compile Include="Controllers\NewAsiaOASystem\CG_infoController.cs" />
     <Compile Include="Controllers\NewAsiaOASystem\DisImmuneCenterController.cs" />
     <Compile Include="Controllers\FrameController.cs" />
@@ -249,6 +251,7 @@
     <Compile Include="Controllers\NewAsiaOASystem\DKX\DKX_DDController.cs" />
     <Compile Include="Controllers\NewAsiaOASystem\DKX\DKX_DDtypeinfoController.cs" />
     <Compile Include="Controllers\NewAsiaOASystem\EP_jlinfoController.cs" />
+    <Compile Include="Controllers\NewAsiaOASystem\ERPDATAController.cs" />
     <Compile Include="Controllers\NewAsiaOASystem\ExpressPrintingController.cs" />
     <Compile Include="Controllers\NewAsiaOASystem\IQC\IQC_SopController.cs" />
     <Compile Include="Controllers\NewAsiaOASystem\JSONPResult.cs" />
@@ -325,6 +328,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helper\AcceptMessageAPI.cs" />
+    <Compile Include="Helper\BJHelper.cs" />
     <Compile Include="Helper\DBEpressinterHelper.cs" />
     <Compile Include="Helper\DynamicXml.cs" />
     <Compile Include="Helper\ExcelBase.cs" />
@@ -340,6 +344,7 @@
     <Compile Include="Helper\pushsoftHelper.cs" />
     <Compile Include="Helper\QRHelper.cs" />
     <Compile Include="Helper\SessionHelper.cs" />
+    <Compile Include="Helper\SFEpressinterHelper.cs" />
     <Compile Include="Helper\ValidateCode.cs" />
     <Compile Include="Helper\WeixinExecutor.cs" />
     <Compile Include="Helper\WxGET.cs" />
@@ -520,6 +525,8 @@
     <Content Include="Content\Img\avatar2.jpg" />
     <Content Include="Content\Img\logo.png" />
     <Content Include="Content\Img\rpw_back_n.png" />
+    <Content Include="Content\js\clipboard.js" />
+    <Content Include="Content\js\clipboard.min.js" />
     <Content Include="Content\js\common-scripts.js" />
     <Content Include="Content\js\easy-pie-chart.js" />
     <Content Include="Content\js\excanvas.js" />
@@ -2404,7 +2411,7 @@
     <Content Include="Views\NewAsiaOASystem\NACustomerinfo\ImportCusk3codeView.cshtml" />
     <Content Include="Views\NewAsiaOASystem\NA_XSinfo\TBPsorderView.cshtml" />
     <Content Include="Views\DKX\DKX_DDtypeinfo\TBPsCPView.cshtml" />
-    <Content Include="Views\NACustomerinfo\Updaetk3codeView.cshtml" />
+    <Content Include="Views\NewAsiaOASystem\NACustomerinfo\Updaetk3codeView.cshtml" />
     <Content Include="Views\DKX\DKX_DDtypeinfo\ForderinstarView.cshtml" />
     <Content Include="Views\NewAsiaOASystem\ExpressPrinting\DsjiabangPrint.cshtml" />
     <Content Include="Views\DKX\DKX_DDtypeinfo\ForderinstarViewN.cshtml" />
@@ -2426,6 +2433,36 @@
     <Content Include="Views\DKX\DKX_DD\DKXMRPorderlist.cshtml" />
     <Content Include="Views\DKX\DKX_DD\ShowMRPcountResult.cshtml" />
     <Content Include="Views\DKX\DKX_DD\GczlycView.cshtml" />
+    <Content Include="Views\publicAPI\dzcjlist.cshtml" />
+    <Content Include="Views\BJBasicdata\list.cshtml" />
+    <Content Include="Views\DKX\DKX_DD\DKXXXDbyBJView.cshtml" />
+    <Content Include="Views\DKX\DKX_DD\FBXJView.cshtml" />
+    <Content Include="Views\DKX\DKX_DD\GCSbomView.cshtml" />
+    <Content Include="Views\DKX\DKX_DD\AddBmxView.cshtml" />
+    <Content Include="Views\DKX\DKX_DD\kfzlckView.cshtml" />
+    <Content Include="Views\DKX\DKX_DD\FBhetongView.cshtml" />
+    <Content Include="Views\DKX\DKX_DD\FBHTZWView.cshtml" />
+    <Content Include="Views\DKX\DKX_DD\FBHTZWMOREView.cshtml" />
+    <Content Include="Views\NewAsiaOASystem\NA_XSinfo\XShetongView.cshtml" />
+    <Content Include="Views\DKX\DKX_DD\updateFBitmeView.cshtml" />
+    <Content Include="Views\NA_XSinfo\HTBasicsinfoSetView.cshtml" />
+    <Content Include="Views\publicAPI\NewSIDSMJPOrderView.cshtml" />
+    <Content Include="Views\publicAPI\NewSIDSMAView.cshtml" />
+    <Content Include="Views\publicAPI\SIDinfobyjpordernoView.cshtml" />
+    <Content Include="Views\lanhe\QzCuslist.cshtml" />
+    <Content Include="Views\ERPDATA\Xschdatelist.cshtml" />
+    <Content Include="Views\ERPDATA\XschdatabyZ_EmpNameView.cshtml" />
+    <Content Include="Views\ERPDATA\JsxzCostView.cshtml" />
+    <Content Include="Views\ERPDATA\Js_KPI_View.cshtml" />
+    <Content Include="Views\publicAPI\NewFT_SIDSMAView.cshtml" />
+    <Content Include="Views\NewAsiaOASystem\ExpressPrinting\sfYPrint.cshtml" />
+    <Content Include="Views\NewAsiaOASystem\EP_jlinfo\sflistPrint.cshtml" />
+    <Content Include="Views\DKX\DKX_DDtypeinfo\Delay_SCtime_View.cshtml" />
+    <Content Include="Views\DKX\DKX_DDtypeinfo\OQA_return_Recordlist.cshtml" />
+    <Content Include="Views\NewAsiaOASystem\NAReturnList\New_wxfxlistView.cshtml" />
+    <Content Include="Views\NewAsiaOASystem\K3Basicdata\BatcupdateERPMDItm_GXGSView.cshtml" />
+    <Content Include="Views\NewAsiaOASystem\K3Basicdata\CalculationSWH.cshtml" />
+    <Content Include="Views\DKX\DKX_DDtypeinfo\Scheme_order_detailsView.cshtml" />
     <None Include="Web References\localhost\Reference.map">
       <Generator>MSDiscoCodeGenerator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>

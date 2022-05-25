@@ -66,5 +66,20 @@ namespace NewAsiaOASystem.DBModel
         /// 生产退单之后操作的 1
         /// </summary>
         public virtual int? IsPdrefund { get; set; }
+
+        /// <summary>
+        /// 耽误生产的数据 单位小时（H）
+        /// </summary>
+        public virtual decimal? SC_DWGS { get; set; }
+
+        /// <summary>
+        /// 耽误仓库的数据 单位小时（H）
+        /// </summary>
+        public virtual decimal? CK_DWGS { get; set; }
+
+        /// <summary>
+        /// 最后编辑的人账号
+        /// </summary>
+        public virtual string C_BJ_userZH { get; set; }
     }
 }

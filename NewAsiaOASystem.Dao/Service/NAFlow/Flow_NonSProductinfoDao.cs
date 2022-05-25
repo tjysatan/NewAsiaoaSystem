@@ -133,7 +133,7 @@ namespace NewAsiaOASystem.Dao
         /// <param name="wldm">物料代理</param>
         /// <param name="Pname">产品名称</param>
         /// <returns></returns>
-        public IList<Flow_NonSProductinfoView> GetNonsdata(string Sort, string Category, string wldm, string Pname)
+        public IList<Flow_NonSProductinfoView> GetNonsdata(string Sort, string Category, string wldm, string Pname,string Pmodel)
         {
             //string HQLstr = string.Format("from Flow_RoutineStockinfo where Category='{0}' order by A_Sum asc ", Category);
 
@@ -144,11 +144,13 @@ namespace NewAsiaOASystem.Dao
                  TempHql.AppendFormat(" and u.Pbianma='{0}'",wldm);
              if (!string.IsNullOrEmpty(Pname))
                  TempHql.AppendFormat(" and u.Pname like '%{0}%'",Pname);
+            if (!string.IsNullOrEmpty(Pmodel))
+                TempHql.AppendFormat(" and u.Pmodel like '%{0}%'", Pmodel);
              if (Sort == "0")
                  TempHql.AppendFormat(" order by Pbianma asc");
-            if(Sort=="1")
+             if(Sort=="1")
                 TempHql.AppendFormat("order by Pbianma  desc");
-            if (Sort == "null")
+             if (Sort == "null")
                 TempHql.AppendFormat("order by C_time desc");
             string HQLstr = string.Format(" from Flow_NonSProductinfo  u where 1=1 {0}", TempHql.ToString());
             List<Flow_NonSProductinfo> list = HibernateTemplate.Find<Flow_NonSProductinfo>(HQLstr) as List<Flow_NonSProductinfo>;

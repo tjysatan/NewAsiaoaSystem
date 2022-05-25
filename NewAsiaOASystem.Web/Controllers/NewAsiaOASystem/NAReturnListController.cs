@@ -96,7 +96,7 @@ namespace NewAsiaOASystem.Web.Controllers
         {
             Session[SessionHelper.SSerch] = null;
            // Session.Remove(SessionHelper.SSerch);
-            PagerInfo<NAReturnListView> listmodel = GetListPager(pageIndex,"0",null,null,null,null,null);
+            PagerInfo<NAReturnListView> listmodel = GetListPager(pageIndex,"0",null,null,null,null,null,null);
             return View(listmodel);
         }
 
@@ -114,7 +114,7 @@ namespace NewAsiaOASystem.Web.Controllers
             int? pageIndex = 1;
             if (!string.IsNullOrEmpty(Request.Form["pageIndex"]))
                 pageIndex = Convert.ToInt32(Request.Form["pageIndex"]);
-            PagerInfo<NAReturnListView> listmodel = GetListPager(pageIndex, "0", Name, sTZ, R_PId,fthbianhao,CPname);
+            PagerInfo<NAReturnListView> listmodel = GetListPager(pageIndex, "0", Name, sTZ, R_PId,fthbianhao,CPname,null);
             string PageNavigate = HtmlHelperComm.OutPutPageNavigate(listmodel.CurrentPageIndex, listmodel.PageSize, listmodel.RecordCount);
             if (listmodel != null)
                 return Json(new { result = listmodel.GetPagingDataJson, PageN = PageNavigate });
@@ -150,6 +150,7 @@ namespace NewAsiaOASystem.Web.Controllers
                 SessionUser user = Session[SessionHelper.User] as SessionUser;
                 model = _INAReturnListDao.NGetModelById(Request.Form["R_Id"]);//根据ID查找
                 model.R_Number =Convert.ToInt32(Request.Form["zsl"]);
+                model.Isjsbpz = 0;
                 flay = _INAReturnListDao.NUpdate(model);
                 if (flay)
                 {
@@ -256,7 +257,7 @@ namespace NewAsiaOASystem.Web.Controllers
         /// <param name="pageIndex">当前页</param>
         /// <param name="Name">客户名称</param>
         /// <returns></returns>
-        private PagerInfo<NAReturnListView> GetListPager(int? pageIndex,string type, string Name,string Szt,string R_pId,string fthbianhao,string CPname)
+        private PagerInfo<NAReturnListView> GetListPager(int? pageIndex,string type, string Name,string Szt,string R_pId,string fthbianhao,string CPname, string Isjsbpz)
         {
             SessionUser Suser = Session[SessionHelper.User] as SessionUser;
             int CurrentPageIndex = Convert.ToInt32(pageIndex);
@@ -264,7 +265,7 @@ namespace NewAsiaOASystem.Web.Controllers
                 CurrentPageIndex = 1;
             _INAReturnListDao.SetPagerPageIndex(CurrentPageIndex);
             _INAReturnListDao.SetPagerPageSize(11);
-            PagerInfo<NAReturnListView> listmodel = _INAReturnListDao.GetCinfoList(Name,Szt,type,R_pId,fthbianhao,CPname,Suser);
+            PagerInfo<NAReturnListView> listmodel = _INAReturnListDao.GetCinfoList(Name,Szt,type,R_pId,fthbianhao,CPname, Isjsbpz, Suser);
             return listmodel;
         }
         #endregion
@@ -314,7 +315,7 @@ namespace NewAsiaOASystem.Web.Controllers
         #region //客服流程跟踪单管理列表
         public ActionResult kflist(int? pageIndex)
         {
-            PagerInfo<NAReturnListView> listmodel = GetListPager(pageIndex,"0", null,"0",null,null,null);
+            PagerInfo<NAReturnListView> listmodel = GetListPager(pageIndex,"0", null,"0",null,null,null,null);
             SessionUser user = Session[SessionHelper.User] as SessionUser;
             ViewData["roletype"] = user.RoleType;//获取当前登录角色的类型
             return View(listmodel);
@@ -525,7 +526,6 @@ namespace NewAsiaOASystem.Web.Controllers
                 {
                     for (int i = 0, j = modellist.Count; i < j; i++) 
                     {
-                      
                             modellist[i].Status = 1;//禁用
                             _INAReturnListDao.NUpdate(modellist[i]);
                             List<NQ_THinfoFXView> FTmxlist = _INQ_THinfoFXDao.GetTHFCinfobyR_Id(modellist[i].Id) as List<NQ_THinfoFXView>;
@@ -550,7 +550,7 @@ namespace NewAsiaOASystem.Web.Controllers
         public ActionResult wxlist(int? pageIndex)
         {
 
-            PagerInfo<NAReturnListView> listmodel = GetListPager(pageIndex, "1", null,"2",null,null,null);
+            PagerInfo<NAReturnListView> listmodel = GetListPager(pageIndex, "1", null,"2",null,null,null,null);
             SessionUser user = Session[SessionHelper.User] as SessionUser;
             ViewData["roletype"] = user.RoleType;//获取当前登录角色的类型
             cpDropdown(null);//返退产品
@@ -564,6 +564,7 @@ namespace NewAsiaOASystem.Web.Controllers
             string R_PId = Request.Form["R_PId"];
             string fthbianhao=Request.Form["txt_Fthbianhao"];
             string CPname = Request.Form["txt_CPname"];
+            string Isjsbpz = Request.Form["Isjsbpz"];
             if (Szt == "qt")
             {
                 Szt = null;
@@ -571,13 +572,71 @@ namespace NewAsiaOASystem.Web.Controllers
             int? pageIndex = 1;
             if (!string.IsNullOrEmpty(Request.Form["pageIndex"]))
                 pageIndex = Convert.ToInt32(Request.Form["pageIndex"]);
-            PagerInfo<NAReturnListView> listmodel = GetListPager(pageIndex, "1", Name, Szt, R_PId, fthbianhao,CPname);
+            PagerInfo<NAReturnListView> listmodel = GetListPager(pageIndex, "1", Name, Szt, R_PId, fthbianhao,CPname, Isjsbpz);
             string PageNavigate = HtmlHelperComm.OutPutPageNavigate(listmodel.CurrentPageIndex, listmodel.PageSize, listmodel.RecordCount);
             if (listmodel != null)
                 return Json(new { result = listmodel.GetPagingDataJson, PageN = PageNavigate });
             else
                 return Json(new { result = "", PageN = PageNavigate });
         }
+
+        #region //标记成 技术分析
+        public JsonResult update_biaojiaojsfx(string Id)
+        {
+            try
+            {
+                //查询记录
+                NAReturnListView model = _INAReturnListDao.NGetModelById(Id);
+                if(model.Isjsbpz==5)
+                    return Json(new { result = "error", msg = "已经添加标记，无需再次添加" });
+                model.Isjsbpz = 5;
+                if(_INAReturnListDao.NUpdate(model))
+                    return Json(new { result = "success", msg = "添加标记成功！" });
+                else
+                    return Json(new { result = "error", msg = "操作失败" });
+            }
+            catch (Exception x)
+            {
+                return Json(new { result = "error", msg = x });
+            }
+        }
+        #endregion
+
+        #region //数据导出功能
+        public FileResult daochuftorder(string Name, string Szt, string type, string R_pId, string fthbianhao, string CPname, string Isjsbpz)
+        {
+            SessionUser Suser = Session[SessionHelper.User] as SessionUser;
+            IList<NAReturnListView> modellist = _INAReturnListDao.Getdatelist(Name, Szt, type, R_pId, fthbianhao, CPname, Isjsbpz, Suser);
+            //创建Excel文件的对象
+            NPOI.HSSF.UserModel.HSSFWorkbook book = new NPOI.HSSF.UserModel.HSSFWorkbook();
+            //添加一个sheet
+            NPOI.SS.UserModel.ISheet sheet1 = book.CreateSheet("Sheet1");
+            //给sheet1添加第一行的头部标题
+            NPOI.SS.UserModel.IRow row1 = sheet1.CreateRow(0);
+            row1.CreateCell(0).SetCellValue("序号");
+            row1.CreateCell(1).SetCellValue("编号");
+            row1.CreateCell(2).SetCellValue("客户名称");
+            row1.CreateCell(3).SetCellValue("数量");
+            if (modellist != null)
+            {
+                int n = 0;
+                for (int i = 0; i < modellist.Count; i++)
+                {
+                    n = n + 1;
+                    NPOI.SS.UserModel.IRow rowtemp = sheet1.CreateRow(n);
+                    rowtemp.CreateCell(0).SetCellValue(n);//序号
+                    rowtemp.CreateCell(1).SetCellValue(modellist[i].fthbianhao);//编号
+                    string cusname = GetCusnameNew(modellist[i].C_Id);
+                    rowtemp.CreateCell(2).SetCellValue(cusname);//序号
+                    rowtemp.CreateCell(3).SetCellValue(modellist[i].R_Number.ToString());//数量
+                }
+            }
+            System.IO.MemoryStream ms = new System.IO.MemoryStream();
+            book.Write(ms);
+            ms.Seek(0, SeekOrigin.Begin);
+            return File(ms, "application/vnd.ms-excel", "返退货订单.xls");
+        }
+        #endregion
         #endregion
 
         #region //车间返退货维修编辑页面
@@ -719,11 +778,11 @@ namespace NewAsiaOASystem.Web.Controllers
                 ViewData["fthbianhao"] = ssearch.fthbianhao;
                 ViewData["CPname"] = ssearch.CPname;
                 ViewData["roletype"] = user.RoleType;
-                listmodel = GetListPager(pageIndex,"2",ssearch.Name,ssearch.Szt,ssearch.R_PId,ssearch.fthbianhao,ssearch.CPname);
+                listmodel = GetListPager(pageIndex,"2",ssearch.Name,ssearch.Szt,ssearch.R_PId,ssearch.fthbianhao,ssearch.CPname,null);
             }
             else
             {
-                listmodel = GetListPager(pageIndex, "2", null, "3", null, null, null);
+                listmodel = GetListPager(pageIndex, "2", null, "3", null, null, null,null);
                 ViewData["roletype"] = user.RoleType;//获取当前登录角色的类型
             }
             return View(listmodel);
@@ -752,7 +811,7 @@ namespace NewAsiaOASystem.Web.Controllers
             int? pageIndex = 1;
             if (!string.IsNullOrEmpty(Request.Form["pageIndex"]))
                 pageIndex = Convert.ToInt32(Request.Form["pageIndex"]);
-            PagerInfo<NAReturnListView> listmodel = GetListPager(pageIndex,"2",view.Name,view.Szt,view.R_PId,view.fthbianhao,view.CPname);
+            PagerInfo<NAReturnListView> listmodel = GetListPager(pageIndex,"2",view.Name,view.Szt,view.R_PId,view.fthbianhao,view.CPname,null);
             string PageNavigate = HtmlHelperComm.OutPutPageNavigate(listmodel.CurrentPageIndex, listmodel.PageSize, listmodel.RecordCount);
             if (listmodel != null)
                 return Json(new { result = listmodel.GetPagingDataJson, PageN = PageNavigate });
@@ -815,7 +874,7 @@ namespace NewAsiaOASystem.Web.Controllers
         #region //返退货产品营销中心处理意见
         public ActionResult cllist(int? pageIndex)
         {
-            PagerInfo<NAReturnListView> listmodel = GetListPager(pageIndex, "3", null,"4",null,null,null);
+            PagerInfo<NAReturnListView> listmodel = GetListPager(pageIndex, "3", null,"4",null,null,null,null);
             SessionUser user = Session[SessionHelper.User] as SessionUser;
             ViewData["roletype"] = user.RoleType;//获取当前登录角色的类型
             return View(listmodel);
@@ -835,7 +894,7 @@ namespace NewAsiaOASystem.Web.Controllers
             int? pageIndex = 1;
             if (!string.IsNullOrEmpty(Request.Form["pageIndex"]))
                 pageIndex = Convert.ToInt32(Request.Form["pageIndex"]);
-            PagerInfo<NAReturnListView> listmodel = GetListPager(pageIndex, "3", Name, Szt, R_PId, fthbianhao, CPname);
+            PagerInfo<NAReturnListView> listmodel = GetListPager(pageIndex, "3", Name, Szt, R_PId, fthbianhao, CPname,null);
             string PageNavigate = HtmlHelperComm.OutPutPageNavigate(listmodel.CurrentPageIndex, listmodel.PageSize, listmodel.RecordCount);
             if (listmodel != null)
                 return Json(new { result = listmodel.GetPagingDataJson, PageN = PageNavigate });
@@ -890,7 +949,7 @@ namespace NewAsiaOASystem.Web.Controllers
 
         public ActionResult shlist(int? pageIndex)
         {
-            PagerInfo<NAReturnListView> listmodel = GetListPager(pageIndex, "4", null,null,null,null,null);
+            PagerInfo<NAReturnListView> listmodel = GetListPager(pageIndex, "4", null,null,null,null,null,null);
             SessionUser user = Session[SessionHelper.User] as SessionUser;
             ViewData["roletype"] = user.RoleType;//获取当前登录角色的类型
             return View(listmodel);
@@ -910,7 +969,7 @@ namespace NewAsiaOASystem.Web.Controllers
             int? pageIndex = 1;
             if (!string.IsNullOrEmpty(Request.Form["pageIndex"]))
                 pageIndex = Convert.ToInt32(Request.Form["pageIndex"]);
-            PagerInfo<NAReturnListView> listmodel = GetListPager(pageIndex, "4", Name, Szt, R_PId, fthbianhao, CPname);
+            PagerInfo<NAReturnListView> listmodel = GetListPager(pageIndex, "4", Name, Szt, R_PId, fthbianhao, CPname,null);
             string PageNavigate = HtmlHelperComm.OutPutPageNavigate(listmodel.CurrentPageIndex, listmodel.PageSize, listmodel.RecordCount);
             if (listmodel != null)
                 return Json(new { result = listmodel.GetPagingDataJson, PageN = PageNavigate });
@@ -2498,7 +2557,14 @@ namespace NewAsiaOASystem.Web.Controllers
                     string[] strs = new string[dd.Length];
                     for (int i = 0; i < dd.Length; i++)
                     {
-                        strs[i] = dd[i].ToString();
+                        if (dd[i] == null)
+                        {
+                            strs[i] = "0";
+                        }
+                        else
+                        {
+                            strs[i] = dd[i].ToString();
+                        }
                     }
                     n = n + 1;
                     NPOI.SS.UserModel.IRow rowtemp = sheet1.CreateRow(n);
@@ -2535,7 +2601,7 @@ namespace NewAsiaOASystem.Web.Controllers
 
         public FileResult ExcelExportStatisticsgroupThcusIdcost(string starttime, string endtime)
         {
-            IList<Object> list = _INA_SharealikeDao.GetStatisticsgroupResdepartment(starttime, endtime);
+            IList<Object> list = _INA_SharealikeDao.GetStatisticsgroupThcusId(starttime, endtime);
             //创建Excel文件的对象
             NPOI.HSSF.UserModel.HSSFWorkbook book = new NPOI.HSSF.UserModel.HSSFWorkbook();
             //添加一个sheet
@@ -2554,19 +2620,27 @@ namespace NewAsiaOASystem.Web.Controllers
                     string[] strs = new string[dd.Length];
                     for (int i = 0; i < dd.Length; i++)
                     {
-                        strs[i] = dd[i].ToString();
+                        //strs[i] = dd[i].ToString();
+                        if (dd[i] == null)
+                        {
+                            strs[i] = "0";
+                        }
+                        else
+                        {
+                            strs[i] = dd[i].ToString();
+                        }
                     }
                     n = n + 1;
                     NPOI.SS.UserModel.IRow rowtemp = sheet1.CreateRow(n);
                     rowtemp.CreateCell(0).SetCellValue(n);//序号
                     rowtemp.CreateCell(1).SetCellValue(strs[1]);//客户名称
-                    rowtemp.CreateCell(2).SetCellValue(strs[2]);//物料代码
+                    rowtemp.CreateCell(2).SetCellValue(strs[2].ToString());//物料代码
                 }
             }
             System.IO.MemoryStream ms = new System.IO.MemoryStream();
             book.Write(ms);
             ms.Seek(0, SeekOrigin.Begin);
-            return File(ms, "application/vnd.ms-excel", "责任部门售后费用统计.xls");
+            return File(ms, "application/vnd.ms-excel", "客户售后费用统计.xls");
         }
         #endregion
 
@@ -2574,6 +2648,113 @@ namespace NewAsiaOASystem.Web.Controllers
 
         #endregion
 
+        #endregion
+
+        #region //20220211新的维修分析数据列表
+        public ActionResult New_wxfxlistView()
+        {
+            return View();
+        }
+
+        #region //分页数据
+        public ActionResult GetwxfxdataPager(int? page, int limit,string khname, string cpname, string SC_PH, string starttime, string enedtime, string wxstarttime, string wxendtime, string r_pId, string Isdz, string dzstarttime, string dzendtime)
+        {
+            SessionUser Suser = Session[SessionHelper.User] as SessionUser;
+            int CurrentPageIndex = Convert.ToInt32(page);
+            if (CurrentPageIndex == 0)
+                CurrentPageIndex = 1;
+            _INQ_THinfoFXDao.SetPagerPageIndex(CurrentPageIndex);
+            _INQ_THinfoFXDao.SetPagerPageSize(limit);
+            PagerInfo<NQ_THinfoFXView> listmodel = _INQ_THinfoFXDao.GetNewCinfoList(khname, cpname, SC_PH, starttime, enedtime, wxstarttime, wxendtime, r_pId, Isdz, dzstarttime, dzendtime,Suser);
+            var result = new
+            {
+                code = 0,
+                msg = "",
+                count = listmodel.RecordCount,
+                data = listmodel.DataList,
+            };
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+        #endregion
+
+        #region //维修数据导出
+        public FileResult NewERWEIDATA(string khname, string cpname, string SC_PH, string starttime, string enedtime, string wxstarttime, string wxendtime, string r_pId, string Isdz, string dzstarttime, string dzendtime)
+        {
+            SessionUser Suser = Session[SessionHelper.User] as SessionUser;
+            IList<NQ_THinfoFXView> modellist = _INQ_THinfoFXDao.NewDCWXFXDATA(khname, cpname, SC_PH, starttime, enedtime, wxstarttime, wxendtime, r_pId, Isdz, dzstarttime, dzendtime);
+            //创建Excel文件的对象
+            NPOI.HSSF.UserModel.HSSFWorkbook book = new NPOI.HSSF.UserModel.HSSFWorkbook();
+            //添加一个sheet
+            NPOI.SS.UserModel.ISheet sheet1 = book.CreateSheet("Sheet1");
+            //给sheet1添加第一行的头部标题
+            NPOI.SS.UserModel.IRow row1 = sheet1.CreateRow(0);
+            row1.CreateCell(0).SetCellValue("序号");
+            row1.CreateCell(1).SetCellValue("维修时间");
+            row1.CreateCell(2).SetCellValue("客户名称");
+            row1.CreateCell(3).SetCellValue("物料代码");
+            row1.CreateCell(4).SetCellValue("产品名称");
+            row1.CreateCell(5).SetCellValue("产品型号规格");
+            row1.CreateCell(6).SetCellValue("生产批号");
+            row1.CreateCell(7).SetCellValue("不良现象");
+            row1.CreateCell(8).SetCellValue("不良原因");
+            row1.CreateCell(9).SetCellValue("元器件");
+            row1.CreateCell(10).SetCellValue("元件品牌");
+            row1.CreateCell(11).SetCellValue("性质");
+            row1.CreateCell(12).SetCellValue("责任归属");
+            row1.CreateCell(13).SetCellValue("备注");
+            row1.CreateCell(14).SetCellValue("处理方式");
+            row1.CreateCell(15).SetCellValue("退货时间");
+            row1.CreateCell(16).SetCellValue("元器件价格");
+            row1.CreateCell(17).SetCellValue("人工费");
+            row1.CreateCell(18).SetCellValue("包材费");
+            row1.CreateCell(19).SetCellValue("运费");
+            row1.CreateCell(20).SetCellValue("小计");
+            if (modellist != null)
+            {
+                NAReturnListView NARMODEL = new NAReturnListView();
+                NQ_productinfoView cpmodel = new NQ_productinfoView();
+                int n = 0;
+                for (int i = 0; i < modellist.Count; i++)
+                {
+                    n = n + 1;
+                    NARMODEL = _INAReturnListDao.NGetModelById(modellist[i].R_Id);//反退货订单
+                    NPOI.SS.UserModel.IRow rowtemp = sheet1.CreateRow(n);
+                    rowtemp.CreateCell(0).SetCellValue(n);//序号
+                    rowtemp.CreateCell(1).SetCellValue(modellist[i].wx_time.ToString());//维修时间
+                    string cusname = GetCusnameNew(NARMODEL.C_Id);
+                    rowtemp.CreateCell(2).SetCellValue(cusname);//序号
+                    rowtemp.CreateCell(3).SetCellValue(modellist[i].Cpwlno);//物料代码
+                    rowtemp.CreateCell(4).SetCellValue(modellist[i].Cpname);//产品名称
+                    rowtemp.CreateCell(5).SetCellValue(modellist[i].Cpmode);//产品名称
+                    rowtemp.CreateCell(6).SetCellValue(modellist[i].TH_Ph);//生产批号
+                    string blxx = getblxx(modellist[i].TH_BLXXX);
+                    rowtemp.CreateCell(7).SetCellValue(blxx);//不良现象
+                    string blyy = getblyy(modellist[i].TH_BLXX, modellist[i].TH_BLYY);
+                    rowtemp.CreateCell(8).SetCellValue(blyy);//不良原因
+                    string yqjname = getyqj(modellist[i].TH_YQJname);
+                    rowtemp.CreateCell(9).SetCellValue(yqjname);//元器件
+                    string yqjppname = getyqjpp(modellist[i].TH_YQJname);
+                    rowtemp.CreateCell(10).SetCellValue(yqjppname);//元器件品牌
+                    string zbsj = getzbsj(modellist[i].TH_zbshj.ToString());
+                    rowtemp.CreateCell(11).SetCellValue(zbsj);
+                    rowtemp.CreateCell(12).SetCellValue(modellist[i].zrbm);//责任部门
+                    rowtemp.CreateCell(13).SetCellValue(modellist[i].TH_bz2);
+                    rowtemp.CreateCell(14).SetCellValue(modellist[i].TH_bz);
+                    rowtemp.CreateCell(15).SetCellValue(NARMODEL.R_FTdate.ToString());
+                    rowtemp.CreateCell(16).SetCellValue(modellist[i].TH_yqjjg.ToString());
+                    rowtemp.CreateCell(17).SetCellValue(modellist[i].TH_RGF.ToString());
+                    rowtemp.CreateCell(18).SetCellValue(modellist[i].TH_BCF.ToString());
+                    rowtemp.CreateCell(19).SetCellValue(modellist[i].TH_YF.ToString());
+                    rowtemp.CreateCell(20).SetCellValue(modellist[i].TH_XJ.ToString());
+
+                }
+            }
+            System.IO.MemoryStream ms = new System.IO.MemoryStream();
+            book.Write(ms);
+            ms.Seek(0, SeekOrigin.Begin);
+            return File(ms, "application/vnd.ms-excel", "维修记录表.xls");
+        }
+        #endregion
         #endregion
 
         #region //返退单 新的编辑页面(New)
@@ -2667,9 +2848,9 @@ namespace NewAsiaOASystem.Web.Controllers
                         {
                             str = Rmodel.fthbianhao + "(" + Cusmodel.Name + ")";
                         }
-                        //操作管理员或者客服主管
-                        if (user.RoleType == "1" || user.RoleType == "0")
-                        {
+                        //操作管理员或者客服主管(取消)
+                        //if (user.RoleType == "1" || user.RoleType == "0")
+                        //{
                             if (Rmodel.Kfzy != null)//客服主管不为空
                             {
                                 Rmodel.Kfzg = Rmodel.Kfzy;
@@ -2700,14 +2881,14 @@ namespace NewAsiaOASystem.Web.Controllers
                             {
                                 MassManager.FMB_FTtypeupdateNotice("2,3,4", str, Rmodel.L_type.ToString());//给维修的发送
                             }
-                        }
-                        else
-                        {
-                            Rmodel.Kfzy = Convert.ToString(user.Id);//客服专员
-                            Rmodel.ClDate = DateTime.Now;//客服专员处理日期
-                            Rmodel.L_type = 1;//待确定
-                            MassManager.FMB_FTtypeupdateNotice("1", str, Rmodel.L_type.ToString());
-                        }
+                        //}
+                        //else
+                        //{
+                            //Rmodel.Kfzy = Convert.ToString(user.Id);//客服专员
+                            //Rmodel.ClDate = DateTime.Now;//客服专员处理日期
+                            //Rmodel.L_type = 1;//待确定
+                            //MassManager.FMB_FTtypeupdateNotice("1", str, Rmodel.L_type.ToString());
+                        //}
                         flay = _INAReturnListDao.NUpdate(Rmodel);
                         if (flay)
                             return "0";//提交成功
@@ -3206,39 +3387,39 @@ namespace NewAsiaOASystem.Web.Controllers
         //定责明细分页列表
         public ActionResult Newdzmxlist(int? pageIndex, string Id)
         {
-           
-            PagerInfo<NQ_THinfoFXView> listmodel = new PagerInfo<NQ_THinfoFXView>();
-            if (Id != null && Id != "")
-            {
-                Session["RId"] = Id;
-                ViewData["RId"] = Id;
-            }
-            else
-            {
-                ViewData["RId"] = Session["RId"].ToString();
-            }
-            if (Session[SessionHelper.NSSerch] != null)
-            {
-                wxmxSearchPara ssearch = Session[SessionHelper.NSSerch] as wxmxSearchPara;
-                ViewData["cpname"] = ssearch.cpname;
-                if (pageIndex != null)
-                {
-                    ViewData["pageIndex"] = pageIndex;
-                }
-                else
-                {
-                    ViewData["pageIndex"] = ssearch.pageIndex;
-                }
-                ViewData["Isdz"] = ssearch.Iscl;
-                listmodel = Getdzmxlistpage(pageIndex, ssearch.cpname, ssearch.Iscl);
-            }
-            else
-            {
-                Session[SessionHelper.NSSerch] = null;
-                Session.Remove(SessionHelper.NSSerch);
-                listmodel = Getdzmxlistpage(pageIndex, null, null);
-            }
-            return View(listmodel);
+            Session["RId"] = Id;
+            ViewData["RId"] = Id;
+            //PagerInfo<NQ_THinfoFXView> listmodel = new PagerInfo<NQ_THinfoFXView>();
+            //if (Id != null && Id != "")
+            //{
+       
+            //}
+            //else
+            //{
+            //    ViewData["RId"] = Session["RId"].ToString();
+            //}
+            //if (Session[SessionHelper.NSSerch] != null)
+            //{
+            //    wxmxSearchPara ssearch = Session[SessionHelper.NSSerch] as wxmxSearchPara;
+            //    ViewData["cpname"] = ssearch.cpname;
+            //    if (pageIndex != null)
+            //    {
+            //        ViewData["pageIndex"] = pageIndex;
+            //    }
+            //    else
+            //    {
+            //        ViewData["pageIndex"] = ssearch.pageIndex;
+            //    }
+            //    ViewData["Isdz"] = ssearch.Iscl;
+            //    listmodel = Getdzmxlistpage(pageIndex, ssearch.cpname, ssearch.Iscl);
+            //}
+            //else
+            //{
+            //    Session[SessionHelper.NSSerch] = null;
+            //    Session.Remove(SessionHelper.NSSerch);
+            //    listmodel = Getdzmxlistpage(pageIndex, null, null);
+            //}
+            return View();
         }
 
         //屏保定责——明细查询
@@ -3262,6 +3443,27 @@ namespace NewAsiaOASystem.Web.Controllers
             else
                 return Json(new { result = "", PageN = PageNavigate });
         }
+
+        #region //新 定责返退明细分页数据
+        public ActionResult NGetdzmxlistpage(int? page, int limit, string cpname, string Isdz)
+        {
+            int CurrentPageIndex = Convert.ToInt32(page);
+            if (CurrentPageIndex == 0)
+                CurrentPageIndex = 1;
+            _INQ_THinfoFXDao.SetPagerPageIndex(CurrentPageIndex);
+            _INQ_THinfoFXDao.SetPagerPageSize(limit);
+            string RId = Session["RId"].ToString();
+            PagerInfo<NQ_THinfoFXView> listmodel = _INQ_THinfoFXDao.Getftdzmxinfopage(RId, cpname, Isdz);
+            var result = new
+            {
+                code = 0,
+                msg = "",
+                count = listmodel.RecordCount,
+                data = listmodel.DataList,
+            };
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+        #endregion
         //定责返退明细分页数据
         private PagerInfo<NQ_THinfoFXView> Getdzmxlistpage(int? pageIndex, string cpname, string Isdz)
         {
@@ -3713,7 +3915,6 @@ namespace NewAsiaOASystem.Web.Controllers
             }
         }
         #endregion
-
 
         #region //反退货出货补新同步普实销售订单
         public ActionResult TBPsfthorderView(string Id)

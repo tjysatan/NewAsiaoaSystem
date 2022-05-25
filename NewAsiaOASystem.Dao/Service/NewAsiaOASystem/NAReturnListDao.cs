@@ -133,7 +133,7 @@ namespace NewAsiaOASystem.Dao
         /// <param name="type">所需要的数据 0 全部的数据 1待维修及以后的状态的数据 2 待定责及以后状态的数据 3待处理及以后状态的数据 4 待审核及以后的数据,5 更具状态查询</param>
         /// <param name="user">当前用户</param>
         /// <returns></returns>
-        public PagerInfo<NAReturnListView> GetCinfoList(string Name, string Szt, string type, string R_pId,string fthbianhao,string CPname, SessionUser user)
+        public PagerInfo<NAReturnListView> GetCinfoList(string Name, string Szt, string type, string R_pId,string fthbianhao,string CPname,string Isjsbpz, SessionUser user)
         {
             TempList = new List<string>();
             TempHql = new StringBuilder();
@@ -161,11 +161,65 @@ namespace NewAsiaOASystem.Dao
                     TempHql.AppendFormat("and u.L_type in(5,6)");//待审核及审核好的数据
 
             }
+            if (!string.IsNullOrEmpty(Isjsbpz))
+                TempHql.AppendFormat(" and u.Isjsbpz='{0}'", Isjsbpz);
             TempHql.AppendFormat("and u.Status='0'");
-                TempHql.AppendFormat("order by u.Sort asc,CreateTime desc");
+            TempHql.AppendFormat("order by u.Sort asc,CreateTime desc");
             PagerInfo<NAReturnListView> list = Search();
             return list;
         }
+
+        #region //查询反退货订单的数据
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Name"></param>
+        /// <param name="Szt"></param>
+        /// <param name="type"></param>
+        /// <param name="R_pId"></param>
+        /// <param name="fthbianhao"></param>
+        /// <param name="CPname"></param>
+        /// <param name="Isjsbpz"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public IList<NAReturnListView> Getdatelist(string Name, string Szt, string type, string R_pId, string fthbianhao, string CPname, string Isjsbpz, SessionUser user)
+        {
+            TempList = new List<string>();
+            TempHql = new StringBuilder();
+            if (!string.IsNullOrEmpty(Name))
+                TempHql.AppendFormat(" and u.C_Id in(select Id from NACustomerinfo where Name like '%{0}%' )", Name);
+            if (!string.IsNullOrEmpty(R_pId))
+                TempHql.AppendFormat(" and u.R_pId='{0}'", R_pId);
+            if (!string.IsNullOrEmpty(fthbianhao))
+                TempHql.AppendFormat("and u.fthbianhao like '%{0}%'", fthbianhao);
+            if (!string.IsNullOrEmpty(CPname))
+                TempHql.AppendFormat(" and u.Id in (select R_Id from NQ_Thdetailinfo where P_Id in (select Id from NQ_productinfo where Pname like '%{0}%'))", CPname);
+            if (!string.IsNullOrEmpty(Szt))
+            {
+                TempHql.AppendFormat("and u.L_type in ({0})", Szt);
+            }
+            else
+            {
+                if (type == "1")
+                    TempHql.AppendFormat("and u.L_type in(2,3,4,5,6,7)");//待维修及已经维修好的数据
+                if (type == "2")
+                    TempHql.AppendFormat("and u.L_type in(3,4,5,6)");//待定责以及以后的数据
+                if (type == "3")
+                    TempHql.AppendFormat("and u.L_type in(4,5,6)");//待处理及处理好的数据
+                if (type == "4")
+                    TempHql.AppendFormat("and u.L_type in(5,6)");//待审核及审核好的数据
+
+            }
+            if (!string.IsNullOrEmpty(Isjsbpz))
+            TempHql.AppendFormat(" and u.Isjsbpz='{0}'", Isjsbpz);
+            TempHql.AppendFormat("and u.Status='0'");
+            TempHql.AppendFormat("order by u.Sort asc,CreateTime desc");
+            string HQLstr = string.Format("from NAReturnList u where 1=1 {0}", TempHql.ToString());
+            List<NAReturnList> list = HibernateTemplate.Find<NAReturnList>(HQLstr) as List<NAReturnList>;
+            IList<NAReturnListView> listmodel = GetViewlist(list);
+            return listmodel;
+        }
+        #endregion
 
         #region //可以开单出货的数据
         public PagerInfo<NAReturnListView> Getchinfolist(string name,string bianhao, SessionUser user)

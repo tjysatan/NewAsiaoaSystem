@@ -44,6 +44,10 @@ namespace NewAsiaOASystem.Web.Controllers
             {
                 model.Kdgs = "sf";
             }
+            else if (kdgs == "sfy")
+            {
+                model.Kdgs = "sf";
+            }
             else
             {
                 model.Kdgs = kdgs;//快递公司
@@ -56,13 +60,13 @@ namespace NewAsiaOASystem.Web.Controllers
             NACustomerinfoView Cusmodel = _INACustomerinfoDao.NGetModelById(sjId);
             if (Cusmodel != null)
             {
-                if (kdgs == "zt"||kdgs=="db")
+                if (kdgs == "zt"||kdgs=="db" || kdgs == "xfy")
                 {
                     if (string.IsNullOrEmpty(Cusmodel.Tel))
                         return "2";//联系方式不为空
                     if (string.IsNullOrEmpty(Cusmodel.qyqxname))
                         return "3";//区域不完整
-                    if (kdgs == "db") model.isdy = 1;//未打印
+                    if (kdgs == "db"|| kdgs == "xfy") model.isdy = 1;//未打印
                 }
                 if (Cusmodel.dycs == null)
                 {
@@ -150,7 +154,7 @@ namespace NewAsiaOASystem.Web.Controllers
             catch(Exception e)
             {
                 log4net.LogManager.GetLogger("ApplicationInfoLog").Error("已经进来=" + e);
-                return Json(new { result = "false", msg = "下单失败，" + e }); ;
+                return Json(new { result = "false", msg = "下单失败，" + e });
             }
         }
         //德邦快递订单撤销
@@ -180,6 +184,190 @@ namespace NewAsiaOASystem.Web.Controllers
             }
           
         }
+
+        #region //顺丰快递-云下单
+        //顺丰快递-打印记录列表中的打印
+        public ActionResult sflistPrint(string Id)
+        {
+            EP_jlinfoView model = new EP_jlinfoView();
+            model = _IEP_jlinfoDao.NGetModelById(Id);
+            return View(model);
+        }
+
+        //顺丰快递推送
+        [HttpPost]
+        public JsonResult SForderts(string cargoName,string totalWeight,string txtpayType,string deliveryType)
+        {
+            try
+            {
+                log4net.LogManager.GetLogger("ApplicationInfoLog").Error("sf已经进来");
+                if (Session["epId"].ToString() != "" && Session["epId"] != null)
+                {
+                    var Id = Session["epId"].ToString();
+                    EP_jlinfoView model = _IEP_jlinfoDao.NGetModelById(Id);
+                    if (model.Istscg != 0)
+                    { //订单未推送云端
+
+                        model.cargoName = cargoName;
+                        model.totalWeight = totalWeight;
+                        if (!string.IsNullOrEmpty(txtpayType))
+                            model.payType = txtpayType;
+                        if (!string.IsNullOrEmpty(deliveryType))
+                            model.deliveryType = deliveryType;
+                        _IEP_jlinfoDao.NUpdate(model);
+                    }
+                    else
+                    {
+                        return Json(new { result = "false", msg = "订单已经推送无需下单" });//订单已经推送无需下单
+                    }
+                    string res = SFEpressinterHelper.testMain(model);
+                    log4net.LogManager.GetLogger("ApplicationInfoLog").Error("返回的结构" + res);
+                    JObject jo = (JObject)JsonConvert.DeserializeObject(res);
+                    string Istscg = jo["apiResultCode"].ToString();//调用结果  A1000
+                    string apiResponseID = jo["apiResponseID"].ToString();//
+                    string apiResultData = jo["apiResultData"].ToString();//
+                    string apiErrorMsg = jo["apiErrorMsg"].ToString();
+                    if (Istscg == "A1000")
+                    {//接口调用成功
+                        JObject joe = (JObject)JsonConvert.DeserializeObject(apiResultData);
+                        string success = joe["success"].ToString();
+                        string errorMsg = joe["errorMsg"].ToString();
+                        string msgData = joe["msgData"].ToString();
+                        if (success == "True")
+                        {
+                            JObject jos = (JObject)JsonConvert.DeserializeObject(msgData);
+                            string waybillNoInfoList = jos["waybillNoInfoList"].ToString();//单号数据list
+                            List<sfxdfhmodel> DHmodel = getObjectByJson<sfxdfhmodel>(waybillNoInfoList);
+                            string waybillNo = DHmodel[0].waybillNo;//单号
+                            string waybillType = DHmodel[0].waybillType;//运单号类型1：母单 2 :子单 3 : 签回单
+                            string routeLabelInfo = jos["routeLabelInfo"].ToString();//路由标签
+                            List<routeLabelInfomodel> routedate= getObjectByJson<routeLabelInfomodel>(routeLabelInfo);
+                            model.Source = 3;
+                            model.Istscg = 0;
+                            model.Kd_no = waybillNo;
+                            model.waybillType = waybillType;
+                            model.logisticID = apiResponseID;
+                            model.destRouteLabel = routedate[0].routeLabelData.destRouteLabel;
+                            model.twoDimensionCode = routedate[0].routeLabelData.twoDimensionCode;
+                            model.codingMapping = routedate[0].routeLabelData.codingMapping;
+                            model.codingMappingOut = routedate[0].routeLabelData.codingMappingOut;
+                            model.proName = routedate[0].routeLabelData.proName;
+                            model.proCode = routedate[0].routeLabelData.proCode;
+                            _IEP_jlinfoDao.NUpdate(model);
+                            return Json(new { result = "true", msg = "下单成功，请立即打印" });
+                        }
+                        else
+                        {
+                            model.Istscg = 1;
+                            model.reason = errorMsg;
+                            _IEP_jlinfoDao.NUpdate(model);
+                            return Json(new { result = "false", msg = "下单失败，" + errorMsg });
+                        }
+                    }
+                    return Json(new { result = "false", msg = "下单接口调用失败："+ apiErrorMsg });
+                    //else
+                    //{
+                    //    model.Istscg = 1;
+                    //    model.reason = jo["apiErrorMsg"].ToString();
+                    //    _IEP_jlinfoDao.NUpdate(model);
+                    //    return Json(new { result = "false", msg = "下单失败，" + jo["apiErrorMsg"].ToString() });
+                    //}
+
+                    //return Json(new { result = "true", msg = "下单成功，请立即打印" });
+                }
+                else
+                {
+                    return Json(new { result = "false", msg = "关闭页面，重新下单打印" }); ; ;//重新打开打印页面
+                }
+            }
+            catch (Exception e)
+            {
+                log4net.LogManager.GetLogger("ApplicationInfoLog").Error("sf已经进来=" + e);
+                return Json(new { result = "false", msg = "下单失败，" + e });
+            }
+        }
+
+        #region //下单返回
+        /// <summary>
+        /// 单号list
+        /// </summary>
+        public class sfxdfhmodel
+        {
+            public virtual string waybillType { get; set; }//运单号类型1：母单 2 :子单 3 : 签回单
+
+            public virtual string waybillNo { get; set; }//单号
+        }
+
+        public class routeLabelInfomodel
+        {
+            public virtual string code { get; set; }
+
+            public virtual routeLabelInfodatamodel routeLabelData { get; set; }
+        }
+
+        //
+        public class routeLabelInfodatamodel
+        {
+            public virtual string waybillNo { get; set; }
+
+            public virtual string destRouteLabel { get; set; }
+
+            public virtual string twoDimensionCode { get; set; }
+
+            public virtual string codingMapping { get; set; }
+
+            public virtual string proCode { get; set; }
+
+            public virtual string proName { get; set; }
+
+            public virtual string codingMappingOut { get; set; }
+        }
+        #endregion
+
+        #region //顺丰快递下单撤销
+        [HttpPost]
+        public JsonResult SFrevokeorders(string Id)
+        {
+            EP_jlinfoView model = _IEP_jlinfoDao.NGetModelById(Id);
+            if (model != null)
+            {
+                string res = SFEpressinterHelper.revokeMain(model);
+                log4net.LogManager.GetLogger("ApplicationInfoLog").Error("返回的结构" + res);
+                JObject jo = (JObject)JsonConvert.DeserializeObject(res);
+                string Istscg = jo["apiResultCode"].ToString();//调用结果  A1000
+                string apiErrorMsg = jo["apiErrorMsg"].ToString();
+                string apiResultData = jo["apiResultData"].ToString();//
+                if (Istscg == "A1000")
+                {
+                    JObject joe = (JObject)JsonConvert.DeserializeObject(apiResultData);
+                    string success = joe["success"].ToString();
+                    string errorMsg = joe["errorMsg"].ToString();
+                    
+                    if (success == "True")
+                    {
+                        model.Istscg = 2;
+                        model.IsDis = 1;
+                        _IEP_jlinfoDao.NUpdate(model);
+                        return Json(new { result = "true", msg = "撤销成功" });
+                    }
+                    else
+                    {
+                        return Json(new { result = "false", msg = "撤销失败。原因：" + errorMsg });
+                    }
+                }
+                else
+                {
+                    return Json(new { result = "false", msg ="接口调用失败。原因："+ apiErrorMsg });
+                }
+            }
+            else
+            {
+                return Json(new { result = "false", msg = "订单不存在" });
+            }
+        }
+        #endregion
+        #endregion
+
         //中通订单推送
         public string ZTorderts()
         {
@@ -302,7 +490,7 @@ namespace NewAsiaOASystem.Web.Controllers
             SessionUser Suser = Session[SessionHelper.User] as SessionUser;
             model.JjId = Suser.Id;//寄货人
             model.SjId = sjId;//收件人
-            if (kdgs == "sfx")
+            if (kdgs == "sfx"||kdgs== "sfy")
             {
                 model.Kdgs = "sf";
             }
@@ -323,7 +511,7 @@ namespace NewAsiaOASystem.Web.Controllers
             if (Cusmodel != null)
             {
               
-                    if (kdgs == "zt" || kdgs == "db")
+                    if (kdgs == "zt" || kdgs == "db"|| kdgs== "xfy")
                     {
                     if (addremodel != null)
                     {
@@ -957,6 +1145,9 @@ namespace NewAsiaOASystem.Web.Controllers
                 {
                     kdnam = "中通快运";
                 }
+                else if (val == "jbwl") {
+                    kdnam = "佳邦物流";
+                }
             }
             return kdnam;
         }
@@ -1000,8 +1191,6 @@ namespace NewAsiaOASystem.Web.Controllers
             return sp.Days;
         }
         #endregion
-
-
 
     }
 }

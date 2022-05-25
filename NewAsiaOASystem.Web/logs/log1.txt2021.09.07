@@ -1,0 +1,16 @@
+2021-09-07 11:32:41,590 [12] ERROR ApplicationInfoLog [(null)] <(null)< - 保持返回订单号0ad8a60c00fb44c38a7813116d2e60e1
+2021-09-07 11:32:46,509 [12] ERROR ApplicationInfoLog [(null)] <(null)< - 已经进来
+2021-09-07 11:32:46,939 [12] ERROR ApplicationInfoLog [(null)] <(null)< - 订单号10ad8a60c00fb44c38a7813116d2e60e1
+2021-09-07 11:32:48,958 [12] ERROR ApplicationInfoLog [(null)] <(null)< - 订单号10ad8a60c00fb44c38a7813116d2e60e1
+2021-09-07 11:32:49,409 [12] ERROR ApplicationInfoLog [(null)] <(null)< - 订单号30ad8a60c00fb44c38a7813116d2e60e1
+2021-09-07 11:32:49,422 [12] ERROR ApplicationInfoLog [(null)] <(null)< - data{"orderId":"0ad8a60c00fb44c38a7813116d2e60e1","shopKey":"NTQ3QTY1NjBEQ0UwODcyNjUxNUNFQ0RBQ0Y4OTBDODI=","orderType":"0","collectionMoney":null,"receiveMan":"周平","receivePhone":"18964083235","receiveMobile":"","receiveZip":"","receiveProvince":"天津","receiveCity":"天津市","receiveCounty":"蓟县","receiveTown":"","receiveAddress":"仓库：上海市嘉定区恒永路328号4号厂房","receiveCompany":"上海宝库制冷公司","sendMan":"satan","sendPhone":"12345678765","sendMobile":"","sendProvince":"江苏省","sendCity":"苏州市","sendCounty":"太仓市","sendAddress":"花墙工业区新亚路2号","sendCompany":"苏州新亚","sendZip":"","orderDate":"2021-09-07 11:32:49","payDate":null,"payment":null,"sellerMessage":null,"buyerMessage":"","goodInfo":[{"goodsTitle":null,"goodsNum":null,"remark":null,"skuPropertiesName":null,"goodsPath":null,"unitPrice":null}]}
+2021-09-07 11:32:49,429 [12] ERROR ApplicationInfoLog [(null)] <(null)< - 订单号4http://japi.zto.cn/exposeServicePushOrderService
+2021-09-07 11:32:49,537 [12] ERROR ApplicationInfoLog [(null)] <(null)< - 订单号777{"result":null,"message":"订单入库成功","status":true,"statusCode":"A200"}
+2021-09-07 11:37:00,612 [12] ERROR ApplicationInfoLog [(null)] <(null)< - 保持返回订单号518b42eb51304e3f92784fab88008c7f
+2021-09-07 11:37:04,188 [12] ERROR ApplicationInfoLog [(null)] <(null)< - 已经进来
+2021-09-07 11:37:04,430 [12] ERROR ApplicationInfoLog [(null)] <(null)< - 订单号1518b42eb51304e3f92784fab88008c7f
+2021-09-07 11:37:06,315 [12] ERROR ApplicationInfoLog [(null)] <(null)< - 订单号1518b42eb51304e3f92784fab88008c7f
+2021-09-07 11:37:11,521 [12] ERROR ApplicationInfoLog [(null)] <(null)< - 订单号3518b42eb51304e3f92784fab88008c7f
+2021-09-07 11:37:23,050 [12] ERROR ApplicationInfoLog [(null)] <(null)< - data{"orderId":"518b42eb51304e3f92784fab88008c7f","shopKey":"NTQ3QTY1NjBEQ0UwODcyNjUxNUNFQ0RBQ0Y4OTBDODI=","orderType":"0","collectionMoney":null,"receiveMan":"周平","receivePhone":"18964083235","receiveMobile":"","receiveZip":"","receiveProvince":"天津","receiveCity":"天津市","receiveCounty":"蓟县","receiveTown":"","receiveAddress":"仓库：上海市嘉定区恒永路328号4号厂房","receiveCompany":"上海宝库制冷公司","sendMan":"satan","sendPhone":"12345678765","sendMobile":"","sendProvince":"江苏省","sendCity":"苏州市","sendCounty":"太仓市","sendAddress":"花墙工业区新亚路2号","sendCompany":"苏州新亚","sendZip":"","orderDate":"2021-09-07 11:37:20","payDate":null,"payment":null,"sellerMessage":null,"buyerMessage":"","goodInfo":[{"goodsTitle":null,"goodsNum":null,"remark":null,"skuPropertiesName":null,"goodsPath":null,"unitPrice":null}]}
+2021-09-07 11:37:26,921 [12] ERROR ApplicationInfoLog [(null)] <(null)< - 订单号4http://japi.zto.cn/exposeServicePushOrderService
+2021-09-07 11:37:27,026 [12] ERROR ApplicationInfoLog [(null)] <(null)< - 订单号777{"result":null,"message":"订单入库成功","status":true,"statusCode":"A200"}

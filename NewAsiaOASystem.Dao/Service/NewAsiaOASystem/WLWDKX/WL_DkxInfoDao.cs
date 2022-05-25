@@ -310,8 +310,34 @@ namespace NewAsiaOASystem.Dao
             IQuery queryCount = Session.CreateQuery(string.Format("select count(*)  {0} ", tempHql));
             int count = Convert.ToInt32(queryCount.UniqueResult());
             return count;
-        } 
+        }
         #endregion
+
+        #region //根据ERP拣配单单号查找出SID扫码数量
+        public int GetGetChcunotbyjpno(string jpno)
+        {
+            string tempHql = "from  WL_DkxInfo where erp_JPorderno='" + jpno + "'";
+            IQuery queryCount = Session.CreateQuery(string.Format("select count(*)  {0} ", tempHql));
+            int count = Convert.ToInt32(queryCount.UniqueResult());
+            return count;
+        }
+        #endregion
+
+        #region //根据ERP拣配单单号查询出SID明细
+        /// <summary>
+        /// sid 的明细
+        /// </summary>
+        /// <param name="jpno">拣配单单号</param>
+        /// <returns></returns>
+        public IList<WL_DkxInfoView> GetChSIDinfotbyjpno(string jpno)
+        {
+            string TmpHQL = "from  WL_DkxInfo where erp_JPorderno='" + jpno + "'";
+           
+            List<WL_DkxInfo> list = HibernateTemplate.Find<WL_DkxInfo>(TmpHQL) as List<WL_DkxInfo>;
+            IList<WL_DkxInfoView> listmodel = GetViewlist(list);
+            return listmodel;
+        }
+        #endregion 
 
         #region //省份销售数量查询 
         /// <summary>

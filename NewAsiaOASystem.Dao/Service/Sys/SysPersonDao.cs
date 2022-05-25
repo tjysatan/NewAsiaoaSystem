@@ -425,6 +425,8 @@ namespace NewAsiaOASystem.Dao
            
             //保存帐号ID
             sessionuser.Id = PersonList[0].Id;
+            //erp中员工的编号
+            sessionuser.ERP_YGNO = PersonList[0].ERP_YGNO;
             //通过用户名查询ID
             string value = getusetID(name);
             sessionuser.MenuLeft = _ISysMenuDao.GetRole_Menu(value);//保存左边菜单数据
@@ -606,6 +608,31 @@ namespace NewAsiaOASystem.Dao
                 List<SysPerson> list = Session.CreateQuery(tempHql).List<SysPerson>() as List<SysPerson>;
                 IList<SysPersonView> listmodel = GetViewlist(list);
                 return listmodel;
+            }
+            catch (Exception e)
+            {
+                log4net.LogManager.GetLogger("ApplicationInfoLog").Error(e);
+                return null;
+            }
+        }
+        #endregion
+
+        #region //通过账户的联系方式查询账户信息中ERP的账户编号
+        /// <summary>
+        /// 通过账户的联系方式查询账户信息中ERP的账户编号
+        /// </summary>
+        /// <param name="tel">电话</param>
+        /// <returns></returns>
+        public string GetERP_NObytel(string tel)
+        {
+            string tempHql = string.Format(" from  SysPerson  where  Tel = '{0}'", tel);
+            try
+            {
+                List<SysPerson> list = Session.CreateQuery(tempHql).List<SysPerson>() as List<SysPerson>;
+                if (list == null)
+                    return null;
+                else
+                    return list[0].ERP_YGNO;
             }
             catch (Exception e)
             {

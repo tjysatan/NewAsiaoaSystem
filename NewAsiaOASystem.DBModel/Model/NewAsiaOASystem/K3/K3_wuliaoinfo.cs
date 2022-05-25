@@ -71,5 +71,20 @@ namespace NewAsiaOASystem.DBModel
         /// 物料中间三位
         /// </summary>
         public virtual string str2 { get; set; }
+
+        /// <summary>
+        /// 普实的物料创建时间
+        /// </summary>
+        public virtual DateTime? OpDate { get; set; }
+
+        /// <summary>
+        /// 仓库名称
+        /// </summary>
+        public virtual string WhsName { get; set; }
+
+        /// <summary>
+        /// 制造/采购
+        /// </summary>
+        public virtual string SourceID { get; set; }
     }
 }

@@ -25,7 +25,15 @@ namespace NewAsiaOASystem.Web
         {
             //tanjianyun
             //token
+
             var author=actionContext.Request.Headers.Authorization;
+            if (actionContext.ActionDescriptor.GetCustomAttributes<AllowAnonymousAttribute>().Count() == 2)
+            {
+                return;
+            }
+
+
+
             if (author==null)
             {
                 actionContext.Response = new HttpResponseMessage(HttpStatusCode.Unauthorized) { Content = new StringContent(UnauthorizedMessage, Encoding.UTF8) };

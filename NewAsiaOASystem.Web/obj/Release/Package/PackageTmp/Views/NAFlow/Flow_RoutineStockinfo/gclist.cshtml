@@ -116,6 +116,10 @@
                 html += '<tr>';
                 html += '<td width="15%"  height="30px">' + jsonStr[i].P_Bianhao + '</td>';
                 html += '<td width="10%" height="30px">' + jsonStr[i].P_Name + '</td>';
+                if (jsonStr[i].P_Model != null && jsonStr[i].P_Model != "")
+                    html += '<td width="10%" height="30px">' + jsonStr[i].P_Model + '</td>';
+                else
+                    html += '<td width="10%" height="30px"></td>';
                 html += '<td width="8%" height="30px">' + jsonStr[i].M_Consumption + '</td>';
                 html += '<td width="8%" height="30px">' + jsonStr[i].W_Consumption + '</td>';
                 html += '<td width="8%" height="30px">' + jsonStr[i].N_Stock + '</td>';
@@ -143,7 +147,7 @@
     function Updatekc() {
         $.ajax({
             type: "POST",
-            url: "/Flow_RoutineStockinfo/Updateinventory",
+            url: "/Flow_RoutineStockinfo/PsUpdateinventory",
             data: { type: "1" },
             dataType: "json",
             async: false,
@@ -214,25 +218,38 @@
     <div class="add-infor-title-bg_header">
         <table style="width: 100%; color: #000; font-size: 13px; text-align: center;">
             <tr>
-                <td width="15%">物料代码
+                <td width="15%">
+                    物料代码
                 </td>
-                <td width="10%">名称
+                <td width="10%">
+                    名称
                 </td>
-                <td width="8%">月用量
+                <td width="10%">
+                    型号
                 </td>
-                <td width="8%">周用量
+                <td width="8%">
+                    月用量
                 </td>
-                <td width="8%">及时库存
+                <td width="8%">
+                    周用量
                 </td>
-                <td width="8%">报警数量
+                <td width="8%">
+                    及时库存
                 </td>
-                <td width="8%">是否异常
+                <td width="8%">
+                    报警数量
                 </td>
-                <td width="8%">是否生产
+                <td width="8%">
+                    是否异常
                 </td>
-                <td width="8%">需要生产
+                <td width="8%">
+                    是否生产
                 </td>
-                <td width="">操作
+                <td width="8%">
+                    需要生产
+                </td>
+                <td width="">
+                    操作
                 </td>
             </tr>
         </table>

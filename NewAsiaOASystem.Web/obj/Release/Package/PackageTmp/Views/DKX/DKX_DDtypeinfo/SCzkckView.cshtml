@@ -8,16 +8,24 @@
     $(function () {
         var ddstr = AjaxGetddinfoyId();
         if (ddstr.Ps_wlBomNO == "" || ddstr.Ps_wlBomNO == null) {
-            $("#cpwlno").html("尚未同步")
+            $("#cpwlno").html(" 普实物料：尚未同步")
         } else {
             $("#cpwlno").html(ddstr.Ps_wlBomNO)
         }
 
         if (ddstr.Ps_BomNO == "" || ddstr.Ps_BomNO == null) {
-            $("#bomno").html("尚未同步")
+            $("#bomno").html(" 普实BOM：尚未同步")
         } else {
             $("#bomno").html(ddstr.Ps_BomNO)
         }
+        if (ddstr.Ps_orderDocEntryNUM == "" || ddstr.Ps_orderDocEntryNUM== null)
+    {
+            $("#ps_xsorderno").html("销售订单号:销售订单尚未同步")
+    }else
+    {
+        $("#ps_xsorderno").html(ddstr.Ps_orderDocEntryNUM)
+    }
+
         if (ddstr.gczl_Isyc == "1") {
             $("#cybiaoj").show();
         } else {
@@ -99,7 +107,26 @@
                         if (xqzlstr[i].Isgl == "0") {//附件资料
                             var id = "'" + xqzlstr[i].Id + "'";
                             htmlxq += '<a  target="_blank" href="' + xqzlstr[i].url + '">' + xqzlstr[i].wjName + '</a>&nbsp;&nbsp;';
-                        } else {//关联的资料
+                        } else if (xqzlstr[i].Isgl == "2") {
+                            if (ddstr.COMPRESSOR_TYPE == '0') {
+                                htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/BLDetail.aspx?CONTROL_NO=' + ddstr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                            }
+                            else if (ddstr.COMPRESSOR_TYPE == '1') {
+                                htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/LGDetail.aspx?CONTROL_NO=' + ddstr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                            }
+                            else if (ddstr.COMPRESSOR_TYPE == '2') {
+                                htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/LSDetail.aspx?CONTROL_NO=' + ddstr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                            }
+                            else if (ddstr.COMPRESSOR_TYPE == '3') {
+                                htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/MDDetail2.aspx?CONTROL_NO=' + ddstr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                            }
+                            else if (ddstr.COMPRESSOR_TYPE == '12') {
+                                htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/PTLDetail.aspx?CONTROL_NO=' + ddstr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                            } else {
+                                htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/XXTDetail.aspx?CONTROL_NO=' + ddstr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                            }
+                        }
+                        else {//关联的资料
                             var xuqiustr = AJaxxuqiujson(xqzlstr[i].Bjno);
                             if (xuqiustr.COMPRESSOR_TYPE == '0') {
                                 htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/BLDetail.aspx?CONTROL_NO=' + xuqiustr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
@@ -136,7 +163,8 @@
                             htmlliaodan += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/ToExcel2.aspx?NO=' + xuqiustr.CONTROL_INFO_NO + '&TYPE=' + xuqiustr.CONTROL_TYPE + '">料单</a>';
                         }
                         if (liaodanstr[z].Isgl == "2") {//k3数据
-                            htmlliaodan += '<a  target="_blank" href="../DKX_DDtypeinfo/NewliaodanView?oId=' + ddstr.Id + '">K料单</a>';
+                            htmlliaodan += '<a  target="_blank" href="../DKX_DDtypeinfo/NewliaodanView?oId=' + ddstr.Id + '">B料单</a>';
+                            //htmlliaodan += '<a  target="_blank" href="../DKX_DD/GCSbomView?Id=' + ddstr.Id + '">BOM料单</a>';
                         }
                     }
                     $("#liaodancon").html(htmlliaodan)
@@ -610,38 +638,50 @@
 
     //标记工程资料异常
     function ModifyGczlyc(id) {
-        var type;
         layer.open({
-            type: 1,
-            offset: type //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
-            , id: 'layerDemo' + type //防止重复弹出
-            , content: '<div style="padding: 20px 100px;">确定要标记工程数据异常吗</div>'
-            , btn: ['确定', '关闭']
-            , btnAlign: 'c' //按钮居中
-            , shade: 0 //不显示遮罩
-            , yes: function () {
-                $.ajax({
-                    url: "../DKX_DD/ModifyGczlycbyorderId",
-                    type: "POST",
-                    data: { Id: id },
-                    dataType: "json",
-                    async: true,
-                    beforeSend: function () {
-                        ddchen();
-                    },
-                    success: function (response) {
-                        disLoading();
-                        if (response.result == "success") {
-                            layer.alert(response.msg, { icon: 1 }, function () { location.reload(); });
-                        }
-                        if (response.result == "error") {
-                            layer.alert(response.msg, { icon: 2 });
-                        }
-                    }
-                })
-                layer.closeAll();
+            type: 2,
+            title: ['工程资料异常', 'font-size:14px;'],
+            area: ['600px', '250px'],
+            offset: '10px',
+            fixed: false, //不固定
+            maxmin: true,
+            content: '../DKX_DD/GczlycView?Id=' + id,
+            end: function () {
+                location.reload();
             }
-        });
+        })
+        //var type;
+        //layer.open({
+        //    type: 1,
+        //    offset: type //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
+        //    , id: 'layerDemo' + type //防止重复弹出
+        //    , content: '<div style="padding: 20px 100px;">确定要标记工程数据异常吗</div>'
+        //    , btn: ['确定', '关闭']
+        //    , btnAlign: 'c' //按钮居中
+        //    , shade: 0 //不显示遮罩
+        //    , yes: function () {
+        //        $.ajax({
+        //            url: "../DKX_DD/ModifyGczlycbyorderId",
+        //            type: "POST",
+        //            data: { Id: id },
+        //            dataType: "json",
+        //            async: true,
+        //            beforeSend: function () {
+        //                ddchen();
+        //            },
+        //            success: function (response) {
+        //                disLoading();
+        //                if (response.result == "success") {
+        //                    layer.alert(response.msg, { icon: 1 }, function () { location.reload(); });
+        //                }
+        //                if (response.result == "error") {
+        //                    layer.alert(response.msg, { icon: 2 });
+        //                }
+        //            }
+        //        })
+        //        layer.closeAll();
+        //    }
+        //});
     }
 </script>
 
@@ -677,7 +717,10 @@
         <button class="layui-btn" onclick="TBPscpOpen('@ViewData["Id"]')">同步普实非标产品</button>
         普实物料：<span id="cpwlno" style="font-size:12px"></span>
         <button class="layui-btn" onclick="TBpushsofeBom()">同步普实BOM</button>
-        普实BOM：<span id="bomno" style="font-size:12px"></span>
+        普实BOM：<span id="bomno" style="font-size:12px;padding-right:10px"></span>
+
+        销售订单号:
+        <span id="ps_xsorderno" name="ps_xsorderno" style="font-size:12px"></span>
     </div>
         <div class="layui-row layui-col-space15">
             <div class="layui-col-xs6">

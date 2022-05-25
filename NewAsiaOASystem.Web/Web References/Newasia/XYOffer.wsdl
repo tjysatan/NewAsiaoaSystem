@@ -301,6 +301,32 @@
           </s:sequence>
         </s:complexType>
       </s:element>
+      <s:element name="WlwChargeByCode">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="userCode" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="money" type="s:decimal" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="WlwChargeByCodeResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="WlwChargeByCodeResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UsrInfo" nillable="true" type="tns:UsrInfo" />
+      <s:element name="DataTable" nillable="true">
+        <s:complexType>
+          <s:sequence>
+            <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+            <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="string" nillable="true" type="s:string" />
+      <s:element name="boolean" type="s:boolean" />
     </s:schema>
   </wsdl:types>
   <wsdl:message name="GetUsrInfoSoapIn">
@@ -393,6 +419,196 @@
   <wsdl:message name="WlwChargeSoapOut">
     <wsdl:part name="parameters" element="tns:WlwChargeResponse" />
   </wsdl:message>
+  <wsdl:message name="WlwChargeByCodeSoapIn">
+    <wsdl:part name="parameters" element="tns:WlwChargeByCode" />
+  </wsdl:message>
+  <wsdl:message name="WlwChargeByCodeSoapOut">
+    <wsdl:part name="parameters" element="tns:WlwChargeByCodeResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetUsrInfoHttpGetIn">
+    <wsdl:part name="id" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUsrInfoHttpGetOut">
+    <wsdl:part name="Body" element="tns:UsrInfo" />
+  </wsdl:message>
+  <wsdl:message name="GetOrdersHttpGetIn">
+    <wsdl:part name="orderId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetOrdersHttpGetOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
+  <wsdl:message name="GetOrderByIDHttpGetIn">
+    <wsdl:part name="orderId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetOrderByIDHttpGetOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
+  <wsdl:message name="GetOrderByOrderCodeHttpGetIn">
+    <wsdl:part name="orderCode" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetOrderByOrderCodeHttpGetOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
+  <wsdl:message name="GetOrderShipInfoByIDHttpGetIn">
+    <wsdl:part name="orderId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetOrderShipInfoByIDHttpGetOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
+  <wsdl:message name="GetNewOrdersHttpGetIn" />
+  <wsdl:message name="GetNewOrdersHttpGetOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
+  <wsdl:message name="GetUserProvinceCityHttpGetIn" />
+  <wsdl:message name="GetUserProvinceCityHttpGetOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
+  <wsdl:message name="GetUserProvinceCityByUserIdHttpGetIn">
+    <wsdl:part name="userId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserProvinceCityByUserIdHttpGetOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
+  <wsdl:message name="GetUserInfoByUserIdHttpGetIn">
+    <wsdl:part name="userId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserInfoByUserIdHttpGetOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
+  <wsdl:message name="GetUsersHttpGetIn">
+    <wsdl:part name="username" type="s:string" />
+    <wsdl:part name="pwd" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUsersHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="GetKuCunHttpGetIn">
+    <wsdl:part name="codes" type="s:string" />
+    <wsdl:part name="key" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetKuCunHttpGetOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
+  <wsdl:message name="GetBomHttpGetIn">
+    <wsdl:part name="bomId" type="s:string" />
+    <wsdl:part name="key" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetBomHttpGetOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
+  <wsdl:message name="UpdateOrderNumberHttpGetIn">
+    <wsdl:part name="id" type="s:string" />
+    <wsdl:part name="orderId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="UpdateOrderNumberHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="WlwChargeHttpGetIn">
+    <wsdl:part name="userId" type="s:string" />
+    <wsdl:part name="money" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="WlwChargeHttpGetOut">
+    <wsdl:part name="Body" element="tns:boolean" />
+  </wsdl:message>
+  <wsdl:message name="WlwChargeByCodeHttpGetIn">
+    <wsdl:part name="userCode" type="s:string" />
+    <wsdl:part name="money" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="WlwChargeByCodeHttpGetOut">
+    <wsdl:part name="Body" element="tns:boolean" />
+  </wsdl:message>
+  <wsdl:message name="GetUsrInfoHttpPostIn">
+    <wsdl:part name="id" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUsrInfoHttpPostOut">
+    <wsdl:part name="Body" element="tns:UsrInfo" />
+  </wsdl:message>
+  <wsdl:message name="GetOrdersHttpPostIn">
+    <wsdl:part name="orderId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetOrdersHttpPostOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
+  <wsdl:message name="GetOrderByIDHttpPostIn">
+    <wsdl:part name="orderId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetOrderByIDHttpPostOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
+  <wsdl:message name="GetOrderByOrderCodeHttpPostIn">
+    <wsdl:part name="orderCode" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetOrderByOrderCodeHttpPostOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
+  <wsdl:message name="GetOrderShipInfoByIDHttpPostIn">
+    <wsdl:part name="orderId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetOrderShipInfoByIDHttpPostOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
+  <wsdl:message name="GetNewOrdersHttpPostIn" />
+  <wsdl:message name="GetNewOrdersHttpPostOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
+  <wsdl:message name="GetUserProvinceCityHttpPostIn" />
+  <wsdl:message name="GetUserProvinceCityHttpPostOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
+  <wsdl:message name="GetUserProvinceCityByUserIdHttpPostIn">
+    <wsdl:part name="userId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserProvinceCityByUserIdHttpPostOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
+  <wsdl:message name="GetUserInfoByUserIdHttpPostIn">
+    <wsdl:part name="userId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserInfoByUserIdHttpPostOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
+  <wsdl:message name="GetUsersHttpPostIn">
+    <wsdl:part name="username" type="s:string" />
+    <wsdl:part name="pwd" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUsersHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="GetKuCunHttpPostIn">
+    <wsdl:part name="codes" type="s:string" />
+    <wsdl:part name="key" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetKuCunHttpPostOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
+  <wsdl:message name="GetBomHttpPostIn">
+    <wsdl:part name="bomId" type="s:string" />
+    <wsdl:part name="key" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetBomHttpPostOut">
+    <wsdl:part name="Body" element="tns:DataTable" />
+  </wsdl:message>
+  <wsdl:message name="UpdateOrderNumberHttpPostIn">
+    <wsdl:part name="id" type="s:string" />
+    <wsdl:part name="orderId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="UpdateOrderNumberHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="WlwChargeHttpPostIn">
+    <wsdl:part name="userId" type="s:string" />
+    <wsdl:part name="money" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="WlwChargeHttpPostOut">
+    <wsdl:part name="Body" element="tns:boolean" />
+  </wsdl:message>
+  <wsdl:message name="WlwChargeByCodeHttpPostIn">
+    <wsdl:part name="userCode" type="s:string" />
+    <wsdl:part name="money" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="WlwChargeByCodeHttpPostOut">
+    <wsdl:part name="Body" element="tns:boolean" />
+  </wsdl:message>
   <wsdl:portType name="XYOfferSoap">
     <wsdl:operation name="GetUsrInfo">
       <wsdl:input message="tns:GetUsrInfoSoapIn" />
@@ -453,6 +669,134 @@
     <wsdl:operation name="WlwCharge">
       <wsdl:input message="tns:WlwChargeSoapIn" />
       <wsdl:output message="tns:WlwChargeSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="WlwChargeByCode">
+      <wsdl:input message="tns:WlwChargeByCodeSoapIn" />
+      <wsdl:output message="tns:WlwChargeByCodeSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="XYOfferHttpGet">
+    <wsdl:operation name="GetUsrInfo">
+      <wsdl:input message="tns:GetUsrInfoHttpGetIn" />
+      <wsdl:output message="tns:GetUsrInfoHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetOrders">
+      <wsdl:input message="tns:GetOrdersHttpGetIn" />
+      <wsdl:output message="tns:GetOrdersHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetOrderByID">
+      <wsdl:input message="tns:GetOrderByIDHttpGetIn" />
+      <wsdl:output message="tns:GetOrderByIDHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetOrderByOrderCode">
+      <wsdl:input message="tns:GetOrderByOrderCodeHttpGetIn" />
+      <wsdl:output message="tns:GetOrderByOrderCodeHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetOrderShipInfoByID">
+      <wsdl:input message="tns:GetOrderShipInfoByIDHttpGetIn" />
+      <wsdl:output message="tns:GetOrderShipInfoByIDHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetNewOrders">
+      <wsdl:input message="tns:GetNewOrdersHttpGetIn" />
+      <wsdl:output message="tns:GetNewOrdersHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserProvinceCity">
+      <wsdl:input message="tns:GetUserProvinceCityHttpGetIn" />
+      <wsdl:output message="tns:GetUserProvinceCityHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserProvinceCityByUserId">
+      <wsdl:input message="tns:GetUserProvinceCityByUserIdHttpGetIn" />
+      <wsdl:output message="tns:GetUserProvinceCityByUserIdHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserInfoByUserId">
+      <wsdl:input message="tns:GetUserInfoByUserIdHttpGetIn" />
+      <wsdl:output message="tns:GetUserInfoByUserIdHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUsers">
+      <wsdl:input message="tns:GetUsersHttpGetIn" />
+      <wsdl:output message="tns:GetUsersHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetKuCun">
+      <wsdl:input message="tns:GetKuCunHttpGetIn" />
+      <wsdl:output message="tns:GetKuCunHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetBom">
+      <wsdl:input message="tns:GetBomHttpGetIn" />
+      <wsdl:output message="tns:GetBomHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateOrderNumber">
+      <wsdl:input message="tns:UpdateOrderNumberHttpGetIn" />
+      <wsdl:output message="tns:UpdateOrderNumberHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="WlwCharge">
+      <wsdl:input message="tns:WlwChargeHttpGetIn" />
+      <wsdl:output message="tns:WlwChargeHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="WlwChargeByCode">
+      <wsdl:input message="tns:WlwChargeByCodeHttpGetIn" />
+      <wsdl:output message="tns:WlwChargeByCodeHttpGetOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="XYOfferHttpPost">
+    <wsdl:operation name="GetUsrInfo">
+      <wsdl:input message="tns:GetUsrInfoHttpPostIn" />
+      <wsdl:output message="tns:GetUsrInfoHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetOrders">
+      <wsdl:input message="tns:GetOrdersHttpPostIn" />
+      <wsdl:output message="tns:GetOrdersHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetOrderByID">
+      <wsdl:input message="tns:GetOrderByIDHttpPostIn" />
+      <wsdl:output message="tns:GetOrderByIDHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetOrderByOrderCode">
+      <wsdl:input message="tns:GetOrderByOrderCodeHttpPostIn" />
+      <wsdl:output message="tns:GetOrderByOrderCodeHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetOrderShipInfoByID">
+      <wsdl:input message="tns:GetOrderShipInfoByIDHttpPostIn" />
+      <wsdl:output message="tns:GetOrderShipInfoByIDHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetNewOrders">
+      <wsdl:input message="tns:GetNewOrdersHttpPostIn" />
+      <wsdl:output message="tns:GetNewOrdersHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserProvinceCity">
+      <wsdl:input message="tns:GetUserProvinceCityHttpPostIn" />
+      <wsdl:output message="tns:GetUserProvinceCityHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserProvinceCityByUserId">
+      <wsdl:input message="tns:GetUserProvinceCityByUserIdHttpPostIn" />
+      <wsdl:output message="tns:GetUserProvinceCityByUserIdHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserInfoByUserId">
+      <wsdl:input message="tns:GetUserInfoByUserIdHttpPostIn" />
+      <wsdl:output message="tns:GetUserInfoByUserIdHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUsers">
+      <wsdl:input message="tns:GetUsersHttpPostIn" />
+      <wsdl:output message="tns:GetUsersHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetKuCun">
+      <wsdl:input message="tns:GetKuCunHttpPostIn" />
+      <wsdl:output message="tns:GetKuCunHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetBom">
+      <wsdl:input message="tns:GetBomHttpPostIn" />
+      <wsdl:output message="tns:GetBomHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateOrderNumber">
+      <wsdl:input message="tns:UpdateOrderNumberHttpPostIn" />
+      <wsdl:output message="tns:UpdateOrderNumberHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="WlwCharge">
+      <wsdl:input message="tns:WlwChargeHttpPostIn" />
+      <wsdl:output message="tns:WlwChargeHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="WlwChargeByCode">
+      <wsdl:input message="tns:WlwChargeByCodeHttpPostIn" />
+      <wsdl:output message="tns:WlwChargeByCodeHttpPostOut" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="XYOfferSoap" type="tns:XYOfferSoap">
@@ -585,6 +929,15 @@
     </wsdl:operation>
     <wsdl:operation name="WlwCharge">
       <soap:operation soapAction="http://tempuri.org/WlwCharge" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="WlwChargeByCode">
+      <soap:operation soapAction="http://tempuri.org/WlwChargeByCode" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -730,6 +1083,291 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="WlwChargeByCode">
+      <soap12:operation soapAction="http://tempuri.org/WlwChargeByCode" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="XYOfferHttpGet" type="tns:XYOfferHttpGet">
+    <http:binding verb="GET" />
+    <wsdl:operation name="GetUsrInfo">
+      <http:operation location="/GetUsrInfo" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetOrders">
+      <http:operation location="/GetOrders" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetOrderByID">
+      <http:operation location="/GetOrderByID" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetOrderByOrderCode">
+      <http:operation location="/GetOrderByOrderCode" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetOrderShipInfoByID">
+      <http:operation location="/GetOrderShipInfoByID" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetNewOrders">
+      <http:operation location="/GetNewOrders" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserProvinceCity">
+      <http:operation location="/GetUserProvinceCity" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserProvinceCityByUserId">
+      <http:operation location="/GetUserProvinceCityByUserId" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserInfoByUserId">
+      <http:operation location="/GetUserInfoByUserId" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUsers">
+      <http:operation location="/GetUsers" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetKuCun">
+      <http:operation location="/GetKuCun" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetBom">
+      <http:operation location="/GetBom" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateOrderNumber">
+      <http:operation location="/UpdateOrderNumber" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="WlwCharge">
+      <http:operation location="/WlwCharge" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="WlwChargeByCode">
+      <http:operation location="/WlwChargeByCode" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="XYOfferHttpPost" type="tns:XYOfferHttpPost">
+    <http:binding verb="POST" />
+    <wsdl:operation name="GetUsrInfo">
+      <http:operation location="/GetUsrInfo" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetOrders">
+      <http:operation location="/GetOrders" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetOrderByID">
+      <http:operation location="/GetOrderByID" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetOrderByOrderCode">
+      <http:operation location="/GetOrderByOrderCode" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetOrderShipInfoByID">
+      <http:operation location="/GetOrderShipInfoByID" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetNewOrders">
+      <http:operation location="/GetNewOrders" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserProvinceCity">
+      <http:operation location="/GetUserProvinceCity" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserProvinceCityByUserId">
+      <http:operation location="/GetUserProvinceCityByUserId" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserInfoByUserId">
+      <http:operation location="/GetUserInfoByUserId" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUsers">
+      <http:operation location="/GetUsers" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetKuCun">
+      <http:operation location="/GetKuCun" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetBom">
+      <http:operation location="/GetBom" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateOrderNumber">
+      <http:operation location="/UpdateOrderNumber" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="WlwCharge">
+      <http:operation location="/WlwCharge" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="WlwChargeByCode">
+      <http:operation location="/WlwChargeByCode" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
   </wsdl:binding>
   <wsdl:service name="XYOffer">
     <wsdl:port name="XYOfferSoap" binding="tns:XYOfferSoap">
@@ -737,6 +1375,12 @@
     </wsdl:port>
     <wsdl:port name="XYOfferSoap12" binding="tns:XYOfferSoap12">
       <soap12:address location="http://www.chinanewasia.com/offer/XYOffer.asmx" />
+    </wsdl:port>
+    <wsdl:port name="XYOfferHttpGet" binding="tns:XYOfferHttpGet">
+      <http:address location="http://www.chinanewasia.com/offer/XYOffer.asmx" />
+    </wsdl:port>
+    <wsdl:port name="XYOfferHttpPost" binding="tns:XYOfferHttpPost">
+      <http:address location="http://www.chinanewasia.com/offer/XYOffer.asmx" />
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

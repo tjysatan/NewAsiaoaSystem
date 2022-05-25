@@ -1,0 +1,760 @@
+﻿@model NewAsiaOASystem.ViewModel.DKX_DDinfoView
+@{
+    ViewBag.Title = "非标合同打印多订单打印";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+<script src="~/Scripts/NAjs/DKXpulice.js"></script>
+<script src="~/Scripts/Printjs/LodopFuncs.js" type="text/javascript"></script>
+<script language="javascript" type="text/javascript">
+    var LODOP; //声明为全局变量
+    function myPreview1() {
+        LODOP = getLodop();
+        var strBodyStyle = "<style>" + document.getElementById("style1").innerHTML + "</style>";
+        var strFormHtml = strBodyStyle + "<body>" + document.getElementById("form1").innerHTML + "</body>";
+        LODOP.ADD_PRINT_HTM(25, 10, 778, 1110, strFormHtml);
+        LODOP.PREVIEW();
+    };
+
+     $(function () {
+        Getcusinfobykcode();
+        //计算总价
+        @*var zj = '@Model.NUM' * '@Model.price';
+
+        $("#zjprice").html(zj)
+        $("#hjzjprice").html(zj)
+        var jinehanzi = changeNumMoneyToChinese(zj);
+        $("#jinehanzi").html(" 销售金额（大写）：" + jinehanzi);*@
+         Getorderlist();
+        gethtjcinfo();//基本信息
+        var TJnamestr = AjaxPerson_Name('@Model.C_name');
+        if (TJnamestr != null)
+            $("#tel").html(TJnamestr.Tel)
+        else
+            $("#tel").html("0512-53108673")
+        var qddate = showDate('@Model.C_time');
+        $("#qddate").html(qddate)
+     })
+
+     //通过查询公司名称
+    function Getcusinfobykcode() {
+        $.ajax({
+            url: "../DKX_DD/Getcusinfobycode",
+            type: "POST",
+            data: { code: '@Model.khkecode' },
+            dataType: "Json",
+            async: false,
+            success: function (response) {
+                if (response != null) {
+                    $("#gfname").html(response.Name)
+                } else {
+                    $("#gfname").html('@Model.KHname')
+                }
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+    }
+
+    //基本信息
+       //查询合同基础信息
+    function gethtjcinfo() {
+
+        var json
+         $.ajax({
+            url: "../NA_XSinfo/Getxsorderqtinfo",
+            type: "POST",
+            data: { dsorderId: '@Model.Id'},
+             dataType: "json",
+             async: false,
+
+             success: function (response) {
+                   json = eval(response);
+                  if (json == null) {
+                     $("#Dsjhqx").html("合同确认后7个工作日发货");
+                     $("#Dsyfcd").html("供方承担");
+                     $("#Dsjhdd").html("通过快递公司到达贵司");
+                     $("#DsJSFS").html("月结30天");
+
+                 } else {
+                     $("#Dsjhqx").html(json.Dsjhqx);
+                     $("#Dsyfcd").html(json.Dsyfcd);
+                     $("#Dsjhdd").html(json.Dsjhdd);
+                     $("#DsJSFS").html(json.DsJSFS);
+                 }
+
+                 //disLoading();
+            }
+         })
+
+        return json;
+    }
+
+    //查询关联的订单
+    function Getorderlist() {
+         $.ajax({
+             url: "../DKX_DD/Getorderlistbypsorderno",
+             type: "POST",
+             data: { psorderno: '@Model.Ps_orderno' },
+             dataType: "json",
+             async: false,
+             success: function (response) {
+                   json = eval(response);
+                 htmlpj(json);
+            }
+         })
+    }
+
+    //订单拼接
+    function htmlpj(str) {
+        var html = "";
+        html += '<table style="font-size: 15px; width:95%" class="tabProduct">';
+        html += '<tr>';
+        html += '<td width="25%">产品名称</td >';
+        html += '<td width="8%">规格型号</td >';
+        html += '<td width="5%">单位</td >';
+        html += '<td width="6%">数量</td >';
+        html += '<td width="10%">单价（元）</td >';
+        html += '<td width="13%">合计（元）</td >';
+        html += '<td width="31%">备注</td >';
+        html += '</tr>';
+        var hejin=0
+        for (var i = 0, j = str.length; i < j; i++) {
+            var zjprice = str[i].NUM * str[i].price;
+            hejin = hejin + zjprice;
+            html += '<tr>';
+            if (str[i].Ps_sanduanno == "05.013.0001") {
+                html += '<td>订做电控箱</td >';
+            } else if (str[i].Ps_sanduanno == "05.013.0002") {
+                html += '<td>涡旋机组控制箱</td >';
+            } else if (str[i].Ps_sanduanno == "05.013.0003") {
+                html += '<td>活塞机组控制箱</td >';
+            } else if (str[i].Ps_sanduanno == "05.013.0004") {
+                html += '<td>螺杆机组控制箱</td >';
+            } else if (str[i].Ps_sanduanno == "05.013.0005") {
+                html += '<td>螺杆冷水机组控制箱</td >';
+            }
+            else if (str[i].Ps_sanduanno == "05.013.0006") {
+                html += '<td>食用菌机组控制箱</td >';
+            } else if (str[i].Ps_sanduanno == "05.013.0007") {
+                html += '<td>医药机组控制箱</td >';
+            } else if (str[i].Ps_sanduanno == "05.013.0009") {
+                html += '<td>PLC1.0订做电控箱</td >';
+            }
+            else if (str[i].Ps_sanduanno == "05.013.NAW0008") {
+                html += '<td>物联网订做电控箱</td >';
+            } else {
+                html += '<td>' + str[i].DD_DHType + '</td>';
+            }
+
+            html += '<td>' + str[i].POWER + '' + str[i].dw + '</td>';
+            html += '<td>套</td>';
+            html += '<td>' + str[i].NUM + '</td>';
+            html += '<td>' + str[i].price + '</td>';
+            html += '<td>' + zjprice + '</td>';
+            if (str[i].gnjsstr == "" || str[i].gnjsstr == null)
+            {
+                html += '<td></td>';
+            }
+            else { html += '<td>' + str[i].gnjsstr + '</td>'; }
+            
+            html += '</tr>';
+        }
+        var jinehanzi = changeNumMoneyToChinese(hejin);
+        html += '<tr>';
+        html += ' <td colspan="2"></td>';
+        html += '<td></td >';
+        html += '<td></td >';
+        html += '<td></td >';
+        html += '<td>' + hejin+'</td >';
+        html += '<td></td >';
+        html += '</tr>';
+        html += '<tr>';
+        html += '<td colspan="7" align="left"> 销售金额（大写）：' + jinehanzi + '</td>';
+        html += '</tr>';
+        html += '</table>';
+
+        $("#orderhtml").html(html);
+    }
+
+    //公账隐藏显示
+    function ycxsgz(val) {
+        if (val == "false") {//掩藏
+            $("#yc").hide();
+            $("#xs").show();
+            $("#gongzhang").hide();
+        }
+        if (val == "true") {
+            $("#yc").show();
+            $("#xs").hide();
+            $("#gongzhang").show();
+        }
+    }
+</script>
+
+<style id="style1">
+    table {
+        FONT-SIZE: 15px;
+        FONT-FAMILY: Arial, Helvetica, sans-serif,'宋体',tahoma, Srial, helvetica, sans-serif;
+    }
+
+    td {
+        LINE-HEIGHT: 130%;
+        FONT-FAMILY: Arial, Helvetica, sans-serif,'宋体',tahoma, Srial, helvetica, sans-serif;
+        word-break: break-all;
+    }
+
+    P {
+        FONT-SIZE: 15px;
+        LINE-HEIGHT: 130%;
+        FONT-FAMILY: Arial, Helvetica, sans-serif,'宋体',tahoma, Srial, helvetica, sans-serif;
+        margin: 0px;
+    }
+
+    .blue {
+        COLOR: #256fb8
+    }
+
+    A:link {
+        COLOR: #296ebb;
+        TEXT-DECORATION: none
+    }
+
+    A:visited {
+        COLOR: black;
+        TEXT-DECORATION: none
+    }
+
+    .cvtitle {
+        font-weight: 700;
+        color: #256fb8;
+        font-size: 14px;
+        padding-top: 5px;
+    }
+
+    .blue1 {
+        COLOR: #ff7400
+    }
+
+    .blue1 {
+        color: #256fb8;
+    }
+
+    .blue2 {
+        COLOR: #ff7400
+    }
+
+    .font14 {
+        font-size: 14px;
+    }
+
+    .graybutton {
+        color: #676767;
+    }
+
+    .v_table001 {
+        width: 710px;
+        line-height: 22px;
+        margin: 0 0 10px 10px;
+        padding: 0px;
+        text-align: left;
+    }
+
+    .titleLineB {
+        border-bottom: #256fb8 4px solid;
+        height: 32px;
+        line-height: 32px;
+        margin: 0px;
+        padding: 0px;
+    }
+
+    .titleLineR {
+        border-bottom: #cbcdcc 4px solid;
+        height: 32px;
+        line-height: 32px;
+        margin: 0px;
+        padding: 0px;
+    }
+
+    .traitLabel {
+        background-color: #ffdfc1;
+        color: #5a5a5a;
+        border: #f0f0f0 1px solid;
+        font-size: 12px;
+        padding: 2px 6px;
+        height: 22px;
+        line-height: 22px;
+        margin-right: 6px;
+        display: inline-block;
+        ` box-shadow:1px 1px 1px #b8b8b8;
+        -moz-box-shadow: 1px 1px 1px #b8b8b8;
+        -webkit-box-shadow: 1px 1px 1px #b8b8b8;
+    }
+
+    .TextinTable {
+        line-height: 32px;
+        word-break: break-all;
+    }
+
+    .textCard {
+        padding: 4px 20px;
+        margin: 10px auto 10px 0px;
+        border: #ccc 1px solid;
+    }
+    /*评价*/
+    .textComment {
+        border: #b8dcfe 1px solid;
+        padding: 10px;
+        margin-top: 0px auto 0px 0px;
+    }
+
+        .textComment h4 {
+            margin: 0px;
+            font-size: 14px;
+        }
+
+            .textComment h4 span {
+                color: #0275e8;
+                font-size: 14px;
+                font-weight: normal;
+            }
+
+            .textComment h4 img {
+                vertical-align: middle;
+            }
+
+        .textComment p {
+            font-size: 12px;
+            line-height: 20px;
+            margin: 0px;
+        }
+
+    .textCommentLine {
+        border-bottom: #b8dcfe 1px dashed;
+        height: 1px;
+        margin-top: 6px;
+    }
+
+    .tabProduct {
+        border: 1px;
+        border-collapse: collapse;
+        border-spacing: 0;
+        text-align: center;
+    }
+
+        .tabProduct td {
+            border: #333 1px solid
+        }
+
+    .tabSign td {
+        LINE-HEIGHT: 100%;
+    }
+
+    .sign {
+        background: url(http://www.chinanewasia.com/Areas/Shop/Themes/M1/Content/imagesXY/sign.gif) no-repeat 500px 10px;
+        display: inherit;
+    }
+</style>
+
+
+<div id="form1">
+    <table width="778" border="0" cellpadding="0" align="center" style="margin:auto">
+        <tr>
+            <td align="center" colspan="3">
+                <p style="font-size: 18px; font-weight: bold;">
+                    苏州新亚科技有限公司
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td width="33%">
+                <p style="font-size: 12px;">
+                    NA/QR-8.2-18
+                </p>
+            </td>
+            <td width="33%" align="center">
+                <p style="font-size: 18px; font-weight: bold;">
+                    供货合同
+                </p>
+            </td>
+            <td width="33%">
+                NO：B/0
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <div style="float: left;">
+                    需方：
+                </div>
+                <div style="height: 22px; width: 350px; float: left; border-bottom: 1px solid #333;
+                    padding: 2px;" id="gfname">
+
+                </div>
+            </td>
+            <td>
+                <div style="float: left;">
+                    合同编号：
+                </div>
+                <div style="height: 20px; width: 200px; float: left; border-bottom: 1px solid #333;
+                    padding: 2px;">
+                    NEWASIA @Model.Ps_orderno
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <div style="float: left;">
+                    供方：
+                </div>
+                <div style="height: 22px; width: 400px; float: left; border-bottom: 1px solid #333;
+                    padding: 2px;">
+                    苏州新亚科技有限公司
+                </div>
+            </td>
+            <td>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                1、产品名称：
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3" id="orderhtml">
+                <table style="font-size: 15px; width:95%" class="tabProduct">
+                    <tr>
+                        <td width="37%">
+                            产品名称
+                        </td>
+                        <td width="8%">
+                            规格型号
+                        </td>
+                        <td width="5%">
+                            单位
+                        </td>
+                        <td width="6%">
+                            数量
+                        </td>
+                        <td width="10%">
+                            单价（元）
+                        </td>
+                        <td width="13%">
+                            合计（元）
+                        </td>
+                        <td width="19%">
+                            备注
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @if (Model.Ps_sanduanno == "05.013.0001")
+                            {
+                                <span>订做电控箱</span>
+                            }
+                            else if (Model.Ps_sanduanno == "05.013.0002")
+                            {
+                                <span>涡旋机组控制箱</span>
+                            }
+                            else if (Model.Ps_sanduanno == "05.013.0003")
+                            {
+                                <span>活塞机组控制箱</span>
+                            }
+                            else if (Model.Ps_sanduanno == "05.013.0004")
+                            {
+                                <span>螺杆机组控制箱</span>
+                            }
+                            else if (Model.Ps_sanduanno == "05.013.0005")
+                            {
+                                <span>螺杆冷水机组控制箱</span>
+                            }
+                            else if (Model.Ps_sanduanno == "05.013.0006")
+                            {
+                                <span>食用菌机组控制箱</span>
+                            }
+                            else if (Model.Ps_sanduanno == "05.013.0007")
+                            {
+                                <span>医药机组控制箱</span>
+                            }
+                            else if (Model.Ps_sanduanno == "05.013.0009")
+                            {
+                                <span>PLC1.0订做电控箱</span>
+                            }
+                            else if (Model.Ps_sanduanno == "05.013.NAW0008")
+                            {
+                                <span>物联网订做电控箱</span>
+                            }
+                            else
+                            {
+                                @Model.DD_DHType
+                            }
+
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                            套
+                        </td>
+                        <td>
+                            @Model.NUM
+                        </td>
+                        <td>
+                            @Model.price
+                        </td>
+                        <td id="zjprice">
+                        </td>
+                        <td>
+                            @Model.gnjsstr
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                        </td>
+                        <td id="hjzjprice">
+                        </td>
+                        <td>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="7" align="left" id="jinehanzi">
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <div style="float: left;">
+                    2、交（提）货地点、方式：
+                </div>
+                <div style="height: 22px; float: left; border-bottom: 1px solid #333; padding: 2px;" id="Dsjhdd">
+                    通过快递到达贵司
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <div style="float: left;">
+                    3、交货期限：
+                </div>
+                <div style="height: 22px; float: left; border-bottom: 1px solid #333; padding: 2px;" id="Dsjhqx">
+                    合同确认后7个工作日发货
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <div style="float: left;">
+                    4、运输方式及费用承担：
+                </div>
+                <div style="height: 22px; float: left; border-bottom: 1px solid #333; padding: 2px;" id="Dsyfcd">
+                    供方承担
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <div style="float: left;">
+                    5、验收方式：
+                </div>
+                <div style="height: 22px; float: left; text-decoration:underline;  padding: 2px;">
+                    <span>按照供方的企业标准中的相关检测条款或双方共同协商并认可的检验标准执行。</span>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <div style="float: left;">
+                    6、提出异议期限：需方收到货后7日内，就产品规格、数量、外观向供方提出书面异议，否则视为需方验收合格
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <div style="float: left;">
+                    7、结算方式及期限：
+                </div>
+                <div style="height: 22px; float: left; border-bottom: 1px solid #333; padding: 2px;" id="DsJSFS">
+                    月结30天
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                8、产品选型出错及违规操作，所产生的费用由需方负担。
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                9、本合同一旦签订，视为需方对供方的《质量服务承诺书》认可。
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                10、非本公司直接出口产品，我司只负责国内换货运费。
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                11、如需提供担保，另立合同担保书，作为本合同的附件。
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                12、违约责任：供需一方或双方构成违约的，依《中华人民共和国民法典》有关规定处理。
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                13、解决合同纠纷的方式：若发生合同纠纷，由供、需方协商解决，如协商不果，由供方所在地方法院裁判解决。
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                14、本合同复印件及传真等同于有效合同。
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                15、 合同内容里包含嵌入式软件收入。
+            </td>
+        </tr>
+        <tr>
+            <td class="tabSign" colspan="3">
+                <div style="float: right;margin-right: 140px; height:150px">
+
+                    <img src="http://www.chinanewasia.com/Areas/Shop/Themes/M1/Content/imagesXY/sign.gif" id="gongzhang" />
+
+                </div>
+                <div style="width: 100%; float: left; margin-top: -100px; z-index: 999;">
+                    <table style="width: 100%;">
+                        <tr>
+                            <td style="width: 90px;">
+                                需&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;方
+                            </td>
+                            <td width="298">
+                            </td>
+                            <td style="width: 90px;">
+                                供&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;方
+                            </td>
+                            <td width="298">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan=" 2">
+                                单位名称（章）：
+                            </td>
+                            <td colspan=" 2">
+                                单位名称（章）：苏州新亚科技有限公司
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                经&nbsp;&nbsp;办&nbsp;&nbsp;人：
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                                经&nbsp;&nbsp;办&nbsp;&nbsp;人：
+                            </td>
+                            <td>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                单位地址：
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                                单位地址：
+                            </td>
+                            <td>
+                                太仓市花墙工业园区新亚路2号
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                开户银行：
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                                开户银行：
+                            </td>
+                            <td>
+                                交通银行股份有限公司太仓分行
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                帐&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                                帐&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：
+                            </td>
+                            <td>
+                                392688601018170076339
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                税&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                                电&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;话：
+                            </td>
+                            <td id="tel">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                电&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;话：
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                                传&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;真：
+                            </td>
+                            <td>
+                                0512-53115285
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                传&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;真：
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                                签订日期：
+                            </td>
+                            <td id="qddate">
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div style="width: 200px; height: 80px; overflow: hidden;float:right; margin-right:100px">
+    <div class="inquiry-input infor-b">
+        <span>
+            <button onclick="return myPreview1()">打印</button>
+            <button onclick='return ycxsgz("false")' id="yc">隐藏公章</button>
+            <button onclick='return ycxsgz("true")' id="xs" style="display:none">显示公章</button>
+        </span>
+    </div>
+</div>

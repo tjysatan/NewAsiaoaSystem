@@ -29,7 +29,7 @@ namespace NewAsiaOASystem.Web.Controllers
         public ActionResult Index(string code)
         {
             log4net.LogManager.GetLogger("ApplicationInfoLog").Error("code" + code);
-            Wx_configinfoView model = _IWx_configinfoDao.Getweixinpayconfig();
+            Wx_configinfoView model = _IWx_configinfoDao.Getlanheweixinpayconfig();//蓝河的
             if (model != null)
             {
                 NewConfig config = new NewConfig();
@@ -43,7 +43,7 @@ namespace NewAsiaOASystem.Web.Controllers
                 Session[SessionHelper.Wpayconfig] = config;
             }
             JObject obj = (JObject)Getaccess_tokenbycodeinface(code);
-            log4net.LogManager.GetLogger("ApplicationInfoLog").Error("obj:" + obj+",obj2:"+obj.Count);
+            log4net.LogManager.GetLogger("ApplicationInfoLog").Error("obj:" + obj + ",obj2:" + obj.Count);
             if (obj.Count == 2)
             {
                 NewConfig config = Session[SessionHelper.Wpayconfig] as NewConfig;
@@ -65,23 +65,72 @@ namespace NewAsiaOASystem.Web.Controllers
             else
             {
                 NewConfig config = Session[SessionHelper.Wpayconfig] as NewConfig;
-                Wx_openIdinfoView modelopenId = _IWx_openIdinfoDao.Getnewcusinfobyiccid(obj["openid"].ToString(),"");
+                Wx_openIdinfoView modelopenId = _IWx_openIdinfoDao.Getnewcusinfobyiccid(obj["openid"].ToString(), "");
+                JObject obj1 = (JObject)GetYHiNFOinface(obj["access_token"].ToString(), obj["openid"].ToString());
+                //生成串码
+                AutomaticgenerationYCnoticeM(obj["openid"].ToString());
                 if (modelopenId == null)//不存在-插入
                 {
-                    JObject obj1 = (JObject)GetYHiNFOinface(obj["access_token"].ToString(), obj["openid"].ToString());
                     InsertOPenid(obj1, "");
+                   
+                }
+                else
+                {//存在更新
+                    updateOPenid(obj1, modelopenId);
                 }
                 log4net.LogManager.GetLogger("ApplicationInfoLog").Error("openid:" + obj["openid"].ToString());
                 Session["Openid"] = obj["openid"].ToString();
                 Wx_openIdinfoView openIdmodel = _IWx_openIdinfoDao.GetwxcusinfobyopenId(Session["Openid"].ToString());
+                IList<YCAccountbindingInfoView> modellist = _IYCAccountbindingInfoDao.GetacclistinfobyopenId(Session["Openid"].ToString());
                 ViewData["TXURL"] = openIdmodel.headimgurl;
                 ViewData["nickname"] = openIdmodel.nickname;
                 ViewData["bdsum"] = _IYCAccountbindingInfoDao.bdzhcountbyopenId(obj["openid"].ToString()).ToString();
                 ViewData["fssum"] = _IYCnoticeinfoDao.GetTodayFXsum(obj["openid"].ToString()).ToString();
+                ViewData["Id"] = modellist[0].Id;
                 return View();
             }
 
+            ////本地测试
+            //Wx_openIdinfoView openIdmodel = _IWx_openIdinfoDao.Getnewcusinfobyiccid("ol6V6t-M-QUOkjLqQ8_wgSZ9jYMs", "");
+            ////查询绑定的账户
+            //////通过openid查询
+            //IList<YCAccountbindingInfoView> modellist = _IYCAccountbindingInfoDao.GetacclistinfobyopenId("ol6V6t-M-QUOkjLqQ8_wgSZ9jYMs");
+            ////if (modellist.Count == 0)
+            ////{
+
+            ////}
+            //Session["Openid"] = "ol6V6t-M-QUOkjLqQ8_wgSZ9jYMs";
+
+            //ViewData["TXURL"] = openIdmodel.headimgurl;
+            //ViewData["nickname"] = openIdmodel.nickname;
+            //ViewData["bdsum"] = _IYCAccountbindingInfoDao.bdzhcountbyopenId("ol6V6t-M-QUOkjLqQ8_wgSZ9jYMs").ToString();
+            //ViewData["fssum"] = _IYCnoticeinfoDao.GetTodayFXsum("ol6V6t-M-QUOkjLqQ8_wgSZ9jYMs").ToString();
+            //ViewData["Id"] = modellist[0].Id;
+            //return View();
         }
+
+        #region //生成串码
+        public void AutomaticgenerationYCnoticeM(string OPENDID)
+        {
+            try
+            {
+                //通过openid查询
+                IList<YCAccountbindingInfoView> modellist=  _IYCAccountbindingInfoDao.GetacclistinfobyopenId(OPENDID);
+                if (modellist == null)
+                {
+                    YCAccountbindingInfoView model = new YCAccountbindingInfoView();
+                    model.openId = OPENDID;
+                    model.C_time = DateTime.Now;
+                    _IYCAccountbindingInfoDao.Ninsert(model);
+                }
+            }
+            catch (Exception e)
+            {
+                log4net.LogManager.GetLogger("ApplicationInfoLog").Error("=========================生成窜码异常===================================");
+                log4net.LogManager.GetLogger("ApplicationInfoLog").Error("11:" + e);
+            }
+        }
+        #endregion
 
         #region //显示绑定数量和当天通知数量
         public string GetbdsumandtzsumbyopenId(string openId)
@@ -225,14 +274,30 @@ namespace NewAsiaOASystem.Web.Controllers
             }
         }
 
-
+        //更新微信访问的客户信息
+        public void updateOPenid(object obj, Wx_openIdinfoView modelopenId)
+        {
+            try
+            {
+                JObject NEWobj = (JObject)obj;
+                modelopenId.nickname = NEWobj["nickname"].ToString();//昵称
+                modelopenId.headimgurl = NEWobj["headimgurl"].ToString();//头像地址
+                _IWx_openIdinfoDao.NUpdate(modelopenId);
+            }
+            catch (Exception e)
+            {
+                log4net.LogManager.GetLogger("ApplicationInfoLog").Error("=========================插入openid 错误===================================");
+                log4net.LogManager.GetLogger("ApplicationInfoLog").Error("11:" + e);
+            }
+        }
 
         #region //绑定帐号查看页面
         public ActionResult ACClistView()
         {
             if (Session["Openid"] != null)
             {
-                ViewData["openid"] = Session["Openid"].ToString();
+                IList<YCAccountbindingInfoView> modellist = _IYCAccountbindingInfoDao.GetacclistinfobyopenId(Session["Openid"].ToString());
+                ViewData["Id"] = modellist[0].Id;
                 return View();
             }
             else
@@ -242,11 +307,17 @@ namespace NewAsiaOASystem.Web.Controllers
         }
 
         #region //openId绑定的帐号数据json
-        public string GetbdzhDATAJson(string openId)
+        public string GetbdzhDATAJson(string Id)
         {
-            string json = "";
-            json = JsonConvert.SerializeObject(_IYCAccountbindingInfoDao.GetacclistinfobyopenId(openId));
-            return json;
+            //string json = "";
+            //json = JsonConvert.SerializeObject(_IYCAccountbindingInfoDao.GetacclistinfobyopenId(openId));
+            //return json;
+            string str = string.Empty;
+            str += "https://app2021.sbycjk.net/newasia-server/";
+            str += "info/getSidByStrCode?strCode=" + Id;
+            string result = null;
+            result = HttpUtility11.GetData(str);
+            return result;
         }
         #endregion
         #endregion
@@ -350,7 +421,7 @@ namespace NewAsiaOASystem.Web.Controllers
         public string JCZHinfece(string username, string pwd)
         {
             string str = string.Empty;
-            str += "http://www.sbycjk.net/";
+            str += "http://106.14.14.68:8088/";
             str += "userconfirm?username=" + username;
             str += "&password=" + pwd;
             string result = null;
@@ -414,7 +485,7 @@ namespace NewAsiaOASystem.Web.Controllers
                 log4net.LogManager.GetLogger("ApplicationInfoLog").Error("监控点接口异常:" + e);
                 return null;
             }
-        }
+        } 
         #endregion
 
         #region json转换model

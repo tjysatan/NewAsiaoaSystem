@@ -40,19 +40,23 @@
                      else {
                          html += '<td width="10%">' + jsonStr[i].scbianhao + '</td>';
                      }
-                     html += '<td width="10%">'+jsonStr[i].P_CPname + '</td>';
-                     html += '<td width="10%">'+jsonStr[i].P_Pianhao + '</td>';
+                     html += '<td width="10%">' + jsonStr[i].P_CPname + '</td>';
+                     if (jsonStr[i].P_Model != "" && jsonStr[i].P_Model != null)
+                         html += '<td width="10%">' + jsonStr[i].P_Model + '</td>';
+                     else
+                         html += '<td width="10%">-</td>';
+                     html += '<td width="10%">' + jsonStr[i].P_Pianhao + '</td>';
                      html += '<td width="5%">'+jsonStr[i].P_SCnumber + '</td>';
-                     html += '<td width="10%">'+showsczt(jsonStr[i].P_Issc) + '</td>';
-                     html += '<td width="10%">'+showDate(jsonStr[i].C_time) + '</td>';
+                     html += '<td width="5%">'+showsczt(jsonStr[i].P_Issc) + '</td>';
+                     html += '<td width="5%">'+showDate(jsonStr[i].C_time) + '</td>';
                      if(jsonStr[i].YJdatetime!=""&&jsonStr[i].YJdatetime!=null)
-                         html+= '<td width="10%">'+showDate(jsonStr[i].YJdatetime) + '</td>';
+                         html+= '<td width="5%">'+showDate(jsonStr[i].YJdatetime) + '</td>';
                      else
-                         html+= '<td width="10%">--</td>';
+                         html+= '<td width="5%">--</td>';
                      if(jsonStr[i].wcdatetime!=""&&jsonStr[i].wcdatetime!=null)
-                         html+= '<td width="10%">'+showDate(jsonStr[i].wcdatetime) + '</td>';
+                         html+= '<td width="5%">'+showDate(jsonStr[i].wcdatetime) + '</td>';
                      else
-                         html+= '<td width="10%">--</td>';
+                         html+= '<td width="5%">--</td>';
                      html+='<td width="20%">'+sccz(jsonStr[i].Id,jsonStr[i].P_Pianhao,jsonStr[i].P_SCnumber,jsonStr[i].Isprint,jsonStr[i].P_Issc)+'</td>';
                      html+='</tr>';
                  }
@@ -273,12 +277,13 @@
                         </td>
                         <td width="10%">生产批号</td>
                         <td width="10%">产品名称</td>
+                        <td width="10%">型号</td>
                         <td width="10%">代码</td>
                         <td width="5%">生产数量</td>
-                        <td width="10%">状态</td>
-                        <td width="10%">创建时间</td>
-                        <td width="10%">预计完成</td>
-                        <td width="10%">实际完成</td>
+                        <td width="5%">状态</td>
+                        <td width="5%">创建时间</td>
+                        <td width="5%">预计完成</td>
+                        <td width="5%">实际完成</td>
                         <td width="20%">操作</td>
                     </tr>
                 </table>

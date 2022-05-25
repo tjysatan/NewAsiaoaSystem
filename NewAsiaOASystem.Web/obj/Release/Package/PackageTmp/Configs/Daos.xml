@@ -246,6 +246,10 @@
     <property name="SessionFactory" ref="SessionFactory" />
   </object>
 
+  <object id="NA_XSqitainfoDao" type="NewAsiaOASystem.Dao.NA_XSqitainfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+
   <object id="XSFXdqinfoDao" type="NewAsiaOASystem.Dao.XSFXdqinfoDao,NewAsiaOASystem.Dao">
     <property name="SessionFactory" ref="SessionFactory" />
   </object>
@@ -512,6 +516,24 @@
     <property name="SessionFactory" ref="SessionFactory" />
   </object>
   <object id="NA_MRPdetailedDao" type="NewAsiaOASystem.Dao.NA_MRPdetailedDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+  <!--报价系统基础数据-->
+  <object id="PAY_CONTROL_INFODao" type="NewAsiaOASystem.Dao.PAY_CONTROL_INFODao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+  <!--蓝河-->
+  <object id="lanhe_QzCusinfoDao" type="NewAsiaOASystem.Dao.lanhe_QzCusinfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+  <!--普实erp-->
+  <object id="ERP_SASalAinfoDao" type="NewAsiaOASystem.Dao.ERP_SASalAinfoDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+  <object id="ERP_SASalA_FBCP_BCBWKDao" type="NewAsiaOASystem.Dao.ERP_SASalA_FBCP_BCBWKDao,NewAsiaOASystem.Dao">
+    <property name="SessionFactory" ref="SessionFactory" />
+  </object>
+  <object id="Js_xz_yfcostDao" type="NewAsiaOASystem.Dao.Js_xz_yfcostDao,NewAsiaOASystem.Dao">
     <property name="SessionFactory" ref="SessionFactory" />
   </object>
 </objects>

@@ -83,7 +83,26 @@
                         if (xqzlstr[i].Isgl == "0") {//附件资料
                             var id = "'" + xqzlstr[i].Id + "'";
                             htmlxq += '<a  target="_blank" href="' + xqzlstr[i].url + '">' + xqzlstr[i].wjName + '</a>&nbsp;&nbsp;';
-                        } else {//关联的资料
+                        } else if (xqzlstr[i].Isgl == "2") {
+                            if (ddstr.COMPRESSOR_TYPE == '0') {
+                                htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/BLDetail.aspx?CONTROL_NO=' + ddstr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                            }
+                            else if (ddstr.COMPRESSOR_TYPE == '1') {
+                                htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/LGDetail.aspx?CONTROL_NO=' + ddstr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                            }
+                            else if (ddstr.COMPRESSOR_TYPE == '2') {
+                                htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/LSDetail.aspx?CONTROL_NO=' + ddstr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                            }
+                            else if (ddstr.COMPRESSOR_TYPE == '3') {
+                                htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/MDDetail2.aspx?CONTROL_NO=' + ddstr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                            }
+                            else if (ddstr.COMPRESSOR_TYPE == '12') {
+                                htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/PTLDetail.aspx?CONTROL_NO=' + ddstr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                            } else {
+                                htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/XXTDetail.aspx?CONTROL_NO=' + ddstr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                            }
+                        }
+                        else {//关联的资料
                             var xuqiustr = AJaxxuqiujson(xqzlstr[i].Bjno);
                             if (xuqiustr.COMPRESSOR_TYPE == '0') {
                                 htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/BLDetail.aspx?CONTROL_NO=' + xuqiustr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
@@ -307,23 +326,36 @@
         //关闭弹出层
         parent.layer.close(index);
     }
-
+    //标记工程资料异常
+    function ModifyGczlyc(id) {
+        layer.open({
+            type: 2,
+            title: ['工程资料异常', 'font-size:14px;'],
+            area: ['600px', '250px'],
+            offset: '10px',
+            fixed: false, //不固定
+            maxmin: true,
+            content: '../DKX_DD/GczlycView?Id=' + id,
+            end: function () {
+                location.reload();
+            }
+        })
+    }
     //品保审核提交
-
-    function PBshEide(val) {
-        var shtype = $("#shtype").val();
+    function PBshEide(val,type) {
+        //var shtype = $("#shtype").val();
         var FTyy = $("#FTyy").val();
-        if (shtype == "1")
+        if (type != "0")
         {
             if (FTyy == "") {
-                layer.alert("不通过原因不为空！", { icon: 2 });
+                layer.alert("请填写异常原因！", { icon: 2 });
                 return false;
             }
         }
         $.ajax({
             url: "../DKX_DDtypeinfo/PbshEide",
             type: "POST",
-            data: { Id: val, type: shtype, con: FTyy },
+            data: { Id: val, type: type, con: FTyy },
             dataType: "html",
             async: true,
             beforeSend: function () {
@@ -339,13 +371,13 @@
                 }
 
                 if (response == "3") {
-                    layer.alert("提交成功！", { icon: 1 }, function () { location.reload(); });
+                    layer.alert("提交成功！", { icon: 1 }, function () { guanbi(); });
                 }
                 if (response == "4") {
                     layer.alert("提交失败,请重新提交！", { icon: 2 }, function () { location.reload(); });
                 }
                 if (response == "5") {
-                    layer.alert("提交成功！", { icon: 1 }, function () { location.reload(); });
+                    layer.alert("提交成功！", { icon: 1 }, function () { guanbi(); });
                 }
                 if (response == "6") {
                     layer.alert("提交失败,请重新提交！", { icon: 2 }, function () { location.reload(); });
@@ -361,129 +393,168 @@
             }
         })
     }
+
 </script>
 
 <div style="width: 90%; padding: 20px 20px 0 20px">
 
-    <div class="layui-row layui-col-space15">
-        <div class="layui-col-xs6">
-            <fieldset class="layui-elem-field">
-                <legend style="font-size:12px">需求</legend>
-                <div class="layui-field-box" id="xuqiucon">
-                </div>
-            </fieldset>
-        </div>
-        <div class="layui-col-xs6">
-            <fieldset class="layui-elem-field">
-                <legend style="font-size:12px">料单</legend>
-                <div class="layui-field-box" id="liaodancon">
-                </div>
-            </fieldset>
-        </div>
-    </div>
+    <div  align="right">
+        @*<div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">异常原因：</label>
+            <div class="layui-input-block" style="width: 300px">
+                <input class="layui-input" id="FTyy" name="FTyy" placeholder="异常原因" type="text" />
+            </div>
+        </div>*@
 
-    <div class="layui-row layui-col-space15">
-        <div class="layui-col-xs6">
-            <fieldset class="layui-elem-field">
-                <legend style="font-size:12px">箱体图</legend>
-                <div class="layui-field-box" id="tuzhicon">
-                </div>
-            </fieldset>
-        </div>
-        <div class="layui-col-xs6">
-            <fieldset class="layui-elem-field">
-                <legend style="font-size:12px">电器排布图</legend>
-                <div class="layui-field-box" id="dqpbtuzhi">
-                </div>
-            </fieldset>
-        </div>
-    </div>
 
-    <div class="layui-row layui-col-space15">
-        <div class="layui-col-xs6">
-            <fieldset class="layui-elem-field">
-                <legend style="font-size:12px">电器原理图</legend>
-                <div class="layui-field-box" id="qttuzhicon">
-                </div>
-            </fieldset>
-        </div>
-        <div class="layui-col-xs6">
-            <fieldset class="layui-elem-field">
-                <legend style="font-size:12px">线号表</legend>
-                <div class="layui-field-box" id="xhbtuzhicon">
-                </div>
-            </fieldset>
-        </div>
-    </div>
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs4">
 
-    <div class="layui-row layui-col-space15" id="rjcon">
-        <div class="layui-col-xs6">
-            <fieldset class="layui-elem-field">
-                <legend style="font-size:12px">烧录软件</legend>
-                <div class="layui-field-box" id="rjcxcon">
-                </div>
-            </fieldset>
-        </div>
-        <div class="layui-col-xs6">
-            <fieldset class="layui-elem-field">
-                <legend style="font-size:12px">源程序</legend>
-                <div class="layui-field-box" id="rjycxcon">
-                </div>
-            </fieldset>
-        </div>
-    </div>
-    <div class="layui-row layui-col-space15" id="czsccon">
-        <div class="layui-col-xs12">
-            <fieldset class="layui-elem-field">
-                <legend style="font-size:12px">操作手册</legend>
-                <div class="layui-field-box" id="czsctuzhicon">
-                </div>
-            </fieldset>
-        </div>
-    </div>
-    <div class="layui-row layui-col-space15">
-        <div class="layui-col-xs6">
-            <fieldset class="layui-elem-field">
-                <legend style="font-size:12px">调试单</legend>
-                <div class="layui-field-box" id="yanshoudancon">
-                </div>
-            </fieldset>
-        </div>
-        <div class="layui-col-xs6">
-            <fieldset class="layui-elem-field">
-                <legend style="font-size:12px">照片</legend>
-                <div class="layui-field-box" id="zhaoiancon">
-                </div>
-            </fieldset>
-        </div>
-    </div>
+                @*<label class="layui-form-label">异常原因：</label>*@
 
-    <hr class="layui-bg-blue">
+                <input class="layui-input" id="FTyy" name="FTyy" placeholder="异常原因(异常状态的时候必填)" type="text" width="200px" />
 
-    <div class="layui-form-item layui-form-text">
-        <label class="layui-form-label">审核：</label>
-        <div class="layui-input-block" style="width: 300px">
-            @*  <input class="layui-input" id="beizhu" name="beizhu" placeholder="备注" type="text" />*@
-            <select class="layui-input" id="shtype" name="shtype">
-                <option value="0">通过</option>
-                <option value="1">不通过</option>
-            </select>
-        </div>
-    </div>
-    <div class="layui-form-item layui-form-text">
-        <label class="layui-form-label">异常原因：</label>
-        <div class="layui-input-block" style="width: 300px">
-            <input class="layui-input" id="FTyy" name="FTyy" placeholder="异常原因" type="text" />
-        </div>
-    </div>
+    
+            </div>
+            <div class="layui-col-xs2">
+                <button type="button" class="layui-btn  layui-btn-danger" onclick="PBshEide('@ViewData["Id"]','1')">
+                    生产异常，退回生产中
+                </button>
+            </div>
+                <div class="layui-col-xs6">
 
-    <div class="layui-form-item" style="margin: auto">
-        <div class="layui-input-block">
-            <button class="layui-btn" lay-submit="" lay-filter="demo1" onclick="PBshEide('@ViewData["Id"]')">提交</button>
-            <button type="reset" class="layui-btn layui-btn-primary" onclick="guanbi()">取消</button>
+                    <button type="button" class="layui-btn  layui-btn-danger" onclick="ModifyGczlyc('@ViewData["Id"]')">
+                        工程资料异常
+                    </button>
+
+                    <button type="button" class="layui-btn" onclick="PBshEide('@ViewData["Id"]','0')">通过</button>
+                </div>
+            </div>
+
         </div>
+
+        <hr class="layui-bg-blue">
+
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs6">
+                <fieldset class="layui-elem-field">
+                    <legend style="font-size:12px">需求</legend>
+                    <div class="layui-field-box" id="xuqiucon">
+                    </div>
+                </fieldset>
+            </div>
+            <div class="layui-col-xs6">
+                <fieldset class="layui-elem-field">
+                    <legend style="font-size:12px">料单</legend>
+                    <div class="layui-field-box" id="liaodancon">
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs6">
+                <fieldset class="layui-elem-field">
+                    <legend style="font-size:12px">箱体图</legend>
+                    <div class="layui-field-box" id="tuzhicon">
+                    </div>
+                </fieldset>
+            </div>
+            <div class="layui-col-xs6">
+                <fieldset class="layui-elem-field">
+                    <legend style="font-size:12px">电器排布图</legend>
+                    <div class="layui-field-box" id="dqpbtuzhi">
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs6">
+                <fieldset class="layui-elem-field">
+                    <legend style="font-size:12px">电器原理图</legend>
+                    <div class="layui-field-box" id="qttuzhicon">
+                    </div>
+                </fieldset>
+            </div>
+            <div class="layui-col-xs6">
+                <fieldset class="layui-elem-field">
+                    <legend style="font-size:12px">线号表</legend>
+                    <div class="layui-field-box" id="xhbtuzhicon">
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+
+        <div class="layui-row layui-col-space15" id="rjcon">
+            <div class="layui-col-xs6">
+                <fieldset class="layui-elem-field">
+                    <legend style="font-size:12px">烧录软件</legend>
+                    <div class="layui-field-box" id="rjcxcon">
+                    </div>
+                </fieldset>
+            </div>
+            <div class="layui-col-xs6">
+                <fieldset class="layui-elem-field">
+                    <legend style="font-size:12px">源程序</legend>
+                    <div class="layui-field-box" id="rjycxcon">
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+
+        <div class="layui-row layui-col-space15" id="czsccon">
+            <div class="layui-col-xs12">
+                <fieldset class="layui-elem-field">
+                    <legend style="font-size:12px">操作手册</legend>
+                    <div class="layui-field-box" id="czsctuzhicon">
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs6">
+                <fieldset class="layui-elem-field">
+                    <legend style="font-size:12px">调试单</legend>
+                    <div class="layui-field-box" id="yanshoudancon">
+                    </div>
+                </fieldset>
+            </div>
+            <div class="layui-col-xs6">
+                <fieldset class="layui-elem-field">
+                    <legend style="font-size:12px">照片</legend>
+                    <div class="layui-field-box" id="zhaoiancon">
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+
+        @*<hr class="layui-bg-blue">*@
+        <!--<div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">审核：</label>
+            <div class="layui-input-block" style="width: 300px">-->
+                @*  <input class="layui-input" id="beizhu" name="beizhu" placeholder="备注" type="text" />*@
+                <!--<select class="layui-input" id="shtype" name="shtype">
+                    <option value="0">通过</option>
+                    <option value="1">不通过</option>
+                </select>
+            </div>
+        </div>-->
+
+        @*<div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">异常原因：</label>
+            <div class="layui-input-block" style="width: 300px">
+                <input class="layui-input" id="FTyy" name="FTyy" placeholder="异常原因" type="text" />
+            </div>
+        </div>*@
+        @*<div class="layui-form-item" style="margin: auto">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit="" lay-filter="demo1" onclick="PBshEide('@ViewData["Id"]')">提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary" onclick="guanbi()">取消</button>
+            </div>
+        </div>*@
     </div>
-</div>
 
 <link href="~/Scripts/viewer/css/viewer.min.css" rel="stylesheet" />
 <style>

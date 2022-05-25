@@ -20,124 +20,7 @@
         }
         var xqzlstr = AJaxziliaojson(cpstr.Id);//入库资料
         pjziliaohtml(xqzlstr, cpstr)
-        //var xqzlstr = AJaxziliaojson(cpstr.Id, "0");//需求
-        //var htmlxq;
-        //htmlxq = "";
-        //if (xqzlstr != "" && xqzlstr != null) {
-        //    for (var i = 0, j = xqzlstr.length; i < j; i++) {
-        //        if (xqzlstr[i].Isgl == "0") {//附件资料
-        //            var id = "'" + xqzlstr[i].Id + "'";
-        //            htmlxq += '<a  target="_blank" href="' + xqzlstr[i].wjurl + '">' + xqzlstr[i].wjName + '</a>&nbsp;&nbsp;';
-        //        } else {//关联的资料
-        //            var xuqiustr = AJaxxuqiujson(xqzlstr[i].Bjno);
-        //            htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/MDDetail.aspx?CONTROL_NO=' + xuqiustr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
-        //        }
-        //    }
-        //}
-        //else {
-        //    htmlxq += '<span style="color:red">暂无需求</span>';
-        //}
-        //$("#xuqiucon").html(htmlxq);
-
-        //var liaodanstr = AJaxziliaojson(cpstr.Id, "1");//料单
-        //var htmlliaodan = "";
-        //if (liaodanstr != "" && liaodanstr != null) {
-        //    for (var z = 0, s = liaodanstr.length; z < s; z++) {
-        //        if (liaodanstr[z].Isgl == "0") {//附件资料
-        //            var id = "'" + liaodanstr[z].Id + "'";
-        //            htmlliaodan += '<a  target="_blank" href="' + liaodanstr[z].wjurl + '">' + liaodanstr[z].wjName + '</a>&nbsp;&nbsp;';
-        //        }
-        //        if (liaodanstr[z].Isgl == "1") {
-        //            var xuqiustr = AJaxxuqiujson(liaodanstr[z].Bjno);
-        //            htmlliaodan += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/ToExcel2.aspx?NO=' + xuqiustr.CONTROL_INFO_NO + '&TYPE=' + xuqiustr.CONTROL_TYPE + '">料单</a>';
-        //        }
-        //        if (liaodanstr[z].Isgl == "2") {//k3数据
-        //            if (cpstr.cplytype == "1") {
-        //                //订单Id和k3料单编号赋值
-        //                $("#ddId").val(cpstr.Id);
-        //                $("#K3LDBH").val(liaodanstr[z].BomNo);
-        //                htmlliaodan += '<a  target="_blank" href="../DKX_DDtypeinfo/FAKliaodanView?cpId=' + cpstr.Id + '">K料单</a>';
-        //            }
-        //            else {
-        //                $("#ddId").val(cpstr.Dd_Id);
-        //                $("#K3LDBH").val(liaodanstr[z].BomNo);
-        //                htmlliaodan += '<a  target="_blank" href="../DKX_DDtypeinfo/NewliaodanView?oId=' + cpstr.Dd_Id + '">K料单</a>';
-        //            }
-        //        }
-        //    }
-        //}
-        //else {
-        //    htmlliaodan += '<span style="color:red">暂无料单</span>';
-        //}
-        //$("#liaodancon").html(htmlliaodan);
-
-        ////图纸
-        //var tuzhistr = AJaxziliaojson(cpstr.Id, "2");//图纸（箱体图）
-        //var htmltuzhi = "";
-        //if (tuzhistr != "" && tuzhistr != null) {
-        //    for (var i = 0, j = tuzhistr.length; i < j; i++) {
-        //        var id = "'" + tuzhistr[i].Id + "'";
-        //        htmltuzhi += '<a  target="_blank" href="' + tuzhistr[i].wjurl + '">' + tuzhistr[i].wjName + '</a>&nbsp;&nbsp; <a href="#" onclick="ziliaoDel(' + id + ')"><i class="layui-icon">&#xe640;</i></a>&nbsp;&nbsp;';
-        //    }
-        //}
-        //else {
-        //    htmltuzhi += '<span style="color:red">暂无图纸(箱体图)</span>';
-        //}
-        //$("#tuzhicon").html(htmltuzhi);
-        ////电器排布图
-        //var dqpbtuzhistr = AJaxziliaojson(cpstr.Id, "6");//图纸（电器排布图）
-        //var htmldqpbtuzhi = "";
-        //if (dqpbtuzhistr != "" && dqpbtuzhistr != null) {
-        //    for (var i = 0, j = dqpbtuzhistr.length; i < j; i++) {
-        //        var id = "'" + dqpbtuzhistr[i].Id + "'";
-        //        htmldqpbtuzhi += '<a  target="_blank" href="' + dqpbtuzhistr[i].wjurl + '">' + dqpbtuzhistr[i].wjName + '</a>&nbsp;&nbsp; <a href="#" onclick="ziliaoDel(' + id + ')"><i class="layui-icon">&#xe640;</i></a>&nbsp;&nbsp;';
-        //    }
-        //}
-        //else {
-        //    htmldqpbtuzhi += '<span style="color:red">暂无图纸(电器排布图)</span>';
-        //}
-        //$("#dqpbtuzhi").html(htmldqpbtuzhi);
-        ////其他图纸
-        //var QTtuzhistr = AJaxziliaojson(cpstr.Id, "5");//图纸（其他图纸）
-        //var htmlqttuzhi = "";
-        //if (QTtuzhistr != "" && QTtuzhistr != null) {
-        //    for (var i = 0, j = QTtuzhistr.length; i < j; i++) {
-        //        var id = "'" + QTtuzhistr[i].Id + "'";
-        //        htmlqttuzhi += '<a  target="_blank" href="' + QTtuzhistr[i].wjurl + '">' + QTtuzhistr[i].wjName + '</a>&nbsp;&nbsp; <a href="#" onclick="ziliaoDel(' + id + ')"><i class="layui-icon">&#xe640;</i></a>&nbsp;&nbsp;';
-        //    }
-        //}
-        //else {
-        //    htmlqttuzhi += '<span style="color:red">暂无图纸(其他图)</span>';
-        //}
-        //$("#qttuzhicon").html(htmlqttuzhi);
-
-        ////系统简图
-        //var XTJTtuzhistr = AJaxziliaojson(cpstr.Id, "7");//图纸（系统简图）
-        //var htmlxtjttuzhi = "";
-        //if (XTJTtuzhistr != "" && XTJTtuzhistr != null) {
-        //    for (var i = 0, j = XTJTtuzhistr.length; i < j; i++) {
-        //        var id = "'" + XTJTtuzhistr[i].Id + "'";
-        //        htmlxtjttuzhi += '<a  target="_blank" href="' + XTJTtuzhistr[i].wjurl + '">' + XTJTtuzhistr[i].wjName + '</a>&nbsp;&nbsp; <a href="#" onclick="ziliaoDel(' + id + ')"><i class="layui-icon">&#xe640;</i></a>&nbsp;&nbsp;';
-        //    }
-        //}
-        //else {
-        //    htmlxtjttuzhi += '<span style="color:red">暂无图纸(系统简图)</span>';
-        //}
-        //$("#xtjtcon").html(htmlxtjttuzhi);
-
-        ////软件程序
-        //var rjcxTtuzhistr = AJaxziliaojson(cpstr.Id, "8");//软件程序
-        //var htmlrjcxtuzhi = "";
-        //if (rjcxTtuzhistr != "" && rjcxTtuzhistr != null) {
-        //    for (var i = 0, j = rjcxTtuzhistr.length; i < j; i++) {
-        //        var id = "'" + rjcxTtuzhistr[i].Id + "'";
-        //        htmlrjcxtuzhi += '<a  target="_blank" href="' + rjcxTtuzhistr[i].url + '">' + rjcxTtuzhistr[i].wjName + '</a>&nbsp;&nbsp; <a href="#" onclick="ziliaoDel(' + id + ')"><i class="layui-icon">&#xe640;</i></a>&nbsp;&nbsp;';
-        //    }
-        //}
-        //else {
-        //    htmlrjcxtuzhi += '<span style="color:red">暂无软件程序</span>';
-        //}
-        //$("#rjxctcon").html(htmlrjcxtuzhi);
+        
     })
         //拼接资料html
     function pjziliaohtml(strjson, ddstr) {
@@ -195,7 +78,27 @@
                     if (xqzlstr[i].Isgl == "0") {//附件资料
                         var id = "'" + xqzlstr[i].Id + "'";
                         htmlxq += '<a  target="_blank" href="' + xqzlstr[i].wjurl + '">' + xqzlstr[i].wjName + '</a>';
-                    } else {//关联的资料
+                    }
+                    else if (xqzlstr[i].Isgl == "2") {
+                        if (ddstr.COMPRESSOR_TYPE == '0') {
+                            htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/BLDetail.aspx?CONTROL_NO=' + ddstr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                        }
+                        else if (ddstr.COMPRESSOR_TYPE == '1') {
+                            htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/LGDetail.aspx?CONTROL_NO=' + ddstr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                        }
+                        else if (ddstr.COMPRESSOR_TYPE == '2') {
+                            htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/LSDetail.aspx?CONTROL_NO=' + ddstr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                        }
+                        else if (ddstr.COMPRESSOR_TYPE == '3') {
+                            htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/MDDetail2.aspx?CONTROL_NO=' + ddstr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                        }
+                        else if (ddstr.COMPRESSOR_TYPE == '12') {
+                            htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/PTLDetail.aspx?CONTROL_NO=' + ddstr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                        } else {
+                            htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/XXTDetail.aspx?CONTROL_NO=' + ddstr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                        }
+                    }
+                    else {//关联的资料
                         var xuqiustr = AJaxxuqiujson(xqzlstr[i].Bjno);
                         var id = "'" + xqzlstr[i].Id + "'";
                         htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/MDDetail.aspx?CONTROL_NO=' + xuqiustr.CONTROL_INFO_NO + '">需求</a>';
@@ -219,7 +122,7 @@
                         htmlliaodan += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/ToExcel2.aspx?NO=' + xuqiustr.CONTROL_INFO_NO + '&TYPE=' + xuqiustr.CONTROL_TYPE + '">料单</a>';
                     }
                     if (liaodanstr[z].Isgl == "2") {//k3数据
-                         $("#ddId").val(ddstr.Id);
+                        $("#ddId").val(ddstr.Id);
                         $("#K3LDBH").val(liaodanstr[z].BomNo);
                        //if (ddstr.cplytype == "1") {
                             htmlliaodan += '<a  target="_blank" href="../DKX_DDtypeinfo/FAKliaodanView?cpId=' + ddstr.Id + '">K料单</a>';
@@ -520,6 +423,35 @@
             }
         })
     }
+
+    //料单更新至平台
+    function AjaxUpPsData() {
+        var ddId = $("#ddId").val();
+        $.ajax({
+            url: "../DKX_DDtypeinfo/UPPSbomFAKInterface",
+            type: "POST",
+            data: { cpId:ddId },
+            dataType: "json",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response.result == "success") {
+                    layer.alert(response.res, { icon: 1 }, function () { location.reload(); });
+                }
+                if (response.result == "error") {
+                    layer.alert(response.res, { icon: 2 }, function () { location.reload(); });
+                }
+
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+    }
 </script>
 
 <input type="hidden" id="ddId" name="ddId" />
@@ -658,7 +590,7 @@
     <div class="layui-form-item" style="margin: auto">
         <div class="layui-input-block">
             <button class="layui-btn" lay-submit="" lay-filter="demo1" onclick="ajaxwczgtjsheide('@ViewData["Id"]')">完成整改</button>
-            <button class="layui-btn" lay-submit="" lay-filter="demo1" onclick="AjaxUpk3LDData()">更新料单</button>
+            <button class="layui-btn" lay-submit="" lay-filter="demo1" onclick="AjaxUpPsData()">料单更新至本平台</button>
         </div>
     </div>
 </div>

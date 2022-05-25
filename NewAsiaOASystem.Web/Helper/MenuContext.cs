@@ -17,6 +17,9 @@ namespace NewAsiaOASystem.Web
     {
         public static readonly string AppId = WebConfigurationManager.AppSettings["WeixinAppId"];//与微信公众账号后台的AppId设置保持一致，区分大小写。
         public static readonly string AppSecret = WebConfigurationManager.AppSettings["WeixinAppSecret"];
+
+        public static readonly string AppIdlh = WebConfigurationManager.AppSettings["WeixinAppIdlh"];//与微信公众账号后台的AppId设置保持一致，区分大小写。
+        public static readonly string AppSecretlh = WebConfigurationManager.AppSettings["WeixinAppSecretlh"];
         private static DateTime GetAccessToken_Time;
         /// <summary>
         /// 过期时间为7200秒
@@ -26,6 +29,8 @@ namespace NewAsiaOASystem.Web
         /// 
         /// </summary>
         private static string mAccessToken;
+
+        private static string mAccessTokenlh;
         /// <summary>
         /// 
         /// </summary>
@@ -43,6 +48,23 @@ namespace NewAsiaOASystem.Web
                 return mAccessToken;
             }
         }
+
+        public static string AccessTokenlh
+        {
+            get
+            {
+                //如果为空，或者过期，需要重新获取
+                if (string.IsNullOrEmpty(mAccessTokenlh) || HasExpired())
+                {
+                    //获取
+                    mAccessTokenlh = GetAccessToken(AppIdlh, AppSecretlh);
+                }
+
+                return mAccessTokenlh;
+            }
+        }
+
+
 
         /// <summary>
         /// 

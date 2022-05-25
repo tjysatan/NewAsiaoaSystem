@@ -1,0 +1,96 @@
+﻿@model NewAsiaOASystem.ViewModel.NA_XSqitainfoView
+@{
+    ViewBag.Title = "销售订单合同基础条款编辑";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<script>
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+
+    layui.use('form', function () {
+        var form = layui.form; //只有执行了这一步，部分表单元素才会自动修饰成功
+        let str2 = "<option value=''>请选择</option>";
+        str2 += "<option value='供方承担'>供方承担</option>";
+        str2 += "<option value='需方承担'>需方承担</option>";
+        //jquery赋值方式
+        $("#Dsyfcd").html(str2);
+        if ('@Model.Dsyfcd' != null) {
+            $("#Dsyfcd").val('@Model.Dsyfcd');
+        } else {
+            $("#Dsyfcd").val("供方承担");
+        }
+        form.render();
+        //重新渲染生效
+        //form.render();
+    })
+
+    //提交修改
+    function TJ_Eide()
+    {
+        var Dsjhqx = $("#Dsjhqx").val();
+        var Dsyfcd = $("#Dsyfcd").val();
+        var Dsjhdd = $("#Dsjhdd").val();
+        var DsJSFS = $("#DsJSFS").val();
+         $.ajax({
+             url: "../NA_XSinfo/HTBasicsinfoSetEide",
+            type: "POST",
+             data: { orderId: '@ViewData["orderId"]', Dsjhqx: Dsjhqx, Dsyfcd: Dsyfcd, Dsjhdd: Dsjhdd, DsJSFS: DsJSFS},
+            dataType: "json",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response.result == "success") {
+                    layer.alert(response.msg, { icon: 1 }, function () { location.reload(); });
+                }
+                if (response.result == "error") {
+                    layer.alert(response.msg, { icon: 2 }, function () { location.reload(); });
+                }
+            }
+        })
+    }
+</script>
+<div style="padding: 20px 20px 0 20px">
+    <div class="layui-form" action="">
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width:140px">交货期限</label>
+            <div class="layui-input-inline" style="width:320px">
+                <input type="text" name="Dsjhqx" id="Dsjhqx" value="@Model.Dsjhqx" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width:140px">运输方式和费用负担</label>
+            <div class="layui-input-inline" style="width:320px">
+                <select name="Dsyfcd" id="Dsyfcd" lay-filter="Dsyfcd" value="@Model.Dsyfcd">
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width:140px">交货地点、方式:</label>
+            <div class="layui-input-inline" style="width:320px">
+                <input type="text" name="Dsjhdd" id="Dsjhdd" class="layui-input" value="@Model.Dsjhdd">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width:140px">结算方式和期限：</label>
+            <div class="layui-input-inline" style="width:320px">
+                <input type="text" name="DsJSFS" id="DsJSFS" class="layui-input" value="@Model.DsJSFS">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width:140px"> </label>
+            <div class="layui-input-block">
+                <button type="submit" class="layui-btn" lay-submit="" onclick="TJ_Eide()">提交保存</button>
+            </div>
+        </div>
+    </div>
+</div>

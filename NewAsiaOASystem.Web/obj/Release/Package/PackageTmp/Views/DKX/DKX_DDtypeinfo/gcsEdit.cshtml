@@ -9,6 +9,15 @@
     <link href="~/Scripts/zTree_v3/css/zTreeStyle/zTreeStyle.css" rel="stylesheet" />
     <script src="~/Scripts/zTree_v3/js/jquery.ztree.core-3.5.min.js"></script>
     <script src="~/Scripts/zTree_v3/js/jquery.ztree.excheck-3.5.min.js"></script>
+    <script>
+        $(function () {
+            $("#TeamnameId").val("@Model.Teamname");
+        })
+        function Teamnamechange() {
+            var Teamname = $("#TeamnameId").val();
+            $("#Teamname").val(Teamname);
+        }
+    </script>
 
 }
 
@@ -21,70 +30,85 @@
         @Html.HiddenFor(m => m.C_name);
         @Html.HiddenFor(m => m.Up_time);
         @Html.HiddenFor(m => m.Up_name);
+        @Html.HiddenFor(m => m.Up_name);
+        @Html.HiddenFor(m => m.Teamname);
         @Html.Hidden("SelectComm");//用于保存选中的电控箱种类的Id
-        
+
         <div class="layui-form-item">
             <label class="layui-form-label">工程师：</label>
             <div class="layui-input-block">
                 @Html.TextBoxFor(m => m.Name, new { placeholder = "工程师", @class = "layui-input" })
             </div>
         </div>
-        
+
         <div class="layui-form-item">
             <label class="layui-form-label">电话：</label>
             <div class="layui-input-block">
                 @Html.TextBoxFor(m => m.Tel, new { placeholder = "电话", @class = "layui-input" })
             </div>
         </div>
-        
-  
-        
+
+
+
         <div class="layui-form-item">
             <label class="layui-form-label">排序：</label>
             <div class="layui-input-block">
                 @Html.TextBoxFor(m => m.Sort, new { placeholder = "排序 越小越空前", @class = "layui-input" })
             </div>
         </div>
-        
-        
-        
+
+
+
         <div class="layui-form-item">
             <label class="layui-form-label">帐号：</label>
             <div class="layui-input-block">
                 @Html.DropDownList("zhListData", ViewData["getADList"] as SelectList, new { @class = "layui-input" })
             </div>
         </div>
-        
+
         <div class="layui-form-item">
             <label class="layui-form-label">类型：</label>
             <div class="layui-input-block">
                 <input id="sel_Comm" class="layui-input" type="text" readonly="readonly" onclick="showMenu();" />
             </div>
         </div>
-        
-        
+        <div class="layui-form-item">
+            <label class="layui-form-label">所属团队：</label>
+            <div class="layui-input-block">
+                <select class="layui-input" name="TeamnameId" id="TeamnameId" onchange="Teamnamechange()">
+                    <option value="">请选择</option>
+                    <option value="张骏张文杰孙微组">张骏张文杰孙微组</option>
+                    <option value="袁静铖金志浩孙中原组">袁静铖金志浩孙中原组</option>
+                    <option value="柳琪组">柳琪组</option>
+                    <option value="李凤进组">李凤进组</option>
+                    <option value="何健林超周旸组">何健林超周旸组</option>
+                    <option value="彭菊王韧组">彭菊王韧组</option>
+                </select>
+            </div>
+        </div>
+
         <div class="layui-form-item">
             <label class="layui-form-label">是否启用：</label>
             <div class="layui-input-block">
                 <select class="layui-input" name="Start">
                     @{
-                                  if ("0".Equals(Convert.ToString(@Model.Start)) && null != @Model.Id)
-                                  {
-                        @:<option value="1">禁用</option>
-                        @:<option value="0" selected="selected">启用</option>
-                                                }
-                                  else
-                                  {
-                        @:<option value="0"  selected="selected">启用</option>
-                        @:<option value="1">禁用</option>
-                                                }
-                                                
+                        if ("0".Equals(Convert.ToString(@Model.Start)) && null != @Model.Id)
+                        {
+                            @:<option value="1">禁用</option>
+                            @:<option value="0" selected="selected">启用</option>
+                        }
+                        else
+                        {
+                            @:<option value="0" selected="selected">启用</option>
+                            @:<option value="1">禁用</option>
+                        }
+
                     }
                 </select>
             </div>
         </div>
- 
-        
+
+
         <div class="layui-form-item">
             <div class="layui-input-block">
                 <button class="layui-btn" lay-submit lay-filter="formDemo" onclick="return weixinAjaxform()">确定</button>

@@ -16,7 +16,12 @@ namespace NewAsiaOASystem.IDao
         #endregion
 
         #region //根据订单明细Id 查找出货数量
-        int GetChcunotbyorderId(string OrdermxId); 
+        int GetChcunotbyorderId(string OrdermxId);
+        #endregion
+
+       
+        #region //根据ERP拣配单单号查找出SID扫码数量
+        int GetGetChcunotbyjpno(string jpno); 
         #endregion
 
         #region //根据订单Id 查询SID
@@ -164,7 +169,16 @@ namespace NewAsiaOASystem.IDao
         /// </summary>
         /// <param name="jxsId">经销商Id</param>
         /// <returns></returns>
-        IList<WL_DkxInfoView> GetSIDlistbyjxsId(string jxsId); 
+        IList<WL_DkxInfoView> GetSIDlistbyjxsId(string jxsId);
+        #endregion
+
+        #region //根据ERP拣配单单号查询出SID明细
+        /// <summary>
+        /// sid 的明细
+        /// </summary>
+        /// <param name="jpno">拣配单单号</param>
+        /// <returns></returns>
+        IList<WL_DkxInfoView> GetChSIDinfotbyjpno(string jpno); 
         #endregion
     }
 }

@@ -73,10 +73,45 @@
                     if (xqzlstr[i].Isgl == "0") {//附件资料
                         var id = "'" + xqzlstr[i].Id + "'";
                         htmlxq += '<a  target="_blank" href="' + xqzlstr[i].wjurl + '">' + xqzlstr[i].wjName + '</a><a href="#" onclick="ziliaoDel(' + id + ')"><i class="layui-icon">&#xe640;</i></a>&nbsp;&nbsp;';
-                    } else {//关联的资料
+                    }
+                    else if (xqzlstr[i].Isgl == "2") {
+                        if (ddstr.COMPRESSOR_TYPE == '0') {
+                            htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/BLDetail.aspx?CONTROL_NO=' + ddstr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                        }
+                        else if (ddstr.COMPRESSOR_TYPE == '1') {
+                            htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/LGDetail.aspx?CONTROL_NO=' + ddstr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                        }
+                        else if (ddstr.COMPRESSOR_TYPE == '2') {
+                            htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/LSDetail.aspx?CONTROL_NO=' + ddstr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                        }
+                        else if (ddstr.COMPRESSOR_TYPE == '3') {
+                            htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/MDDetail2.aspx?CONTROL_NO=' + ddstr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                        }
+                        else if (ddstr.COMPRESSOR_TYPE == '12') {
+                            htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/PTLDetail.aspx?CONTROL_NO=' + ddstr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                        } else {
+                            htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/XXTDetail.aspx?CONTROL_NO=' + ddstr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                        }
+                    }
+                    else {//关联的资料
                         var xuqiustr = AJaxxuqiujson(xqzlstr[i].Bjno);
-                        var id = "'" + xqzlstr[i].Id + "'";
-                        htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/MDDetail.aspx?CONTROL_NO=' + xuqiustr.CONTROL_INFO_NO + '">需求</a><a href="#" onclick="ziliaoDel(' + id + ')"><i class="layui-icon">&#xe640;</i></a>&nbsp;&nbsp;';
+                        if (xuqiustr.COMPRESSOR_TYPE == '0') {
+                            htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/BLDetail.aspx?CONTROL_NO=' + xuqiustr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                        }
+                        else if (xuqiustr.COMPRESSOR_TYPE == '1') {
+                            htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/LGDetail.aspx?CONTROL_NO=' + xuqiustr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                        }
+                        else if (xuqiustr.COMPRESSOR_TYPE == '2') {
+                            htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/LSDetail.aspx?CONTROL_NO=' + xuqiustr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                        }
+                        else if (xuqiustr.COMPRESSOR_TYPE == '3') {
+                            htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/MDDetail2.aspx?CONTROL_NO=' + xuqiustr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                        }
+                        else if (xuqiustr.COMPRESSOR_TYPE == '12') {
+                            htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/PTLDetail.aspx?CONTROL_NO=' + xuqiustr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                        } else {
+                            htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/XXTDetail.aspx?CONTROL_NO=' + xuqiustr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                        }
                     }
                 }
                 $("#xuqiucon").html(htmlxq)
@@ -97,7 +132,7 @@
                         htmlliaodan += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/ToExcel2.aspx?NO=' + xuqiustr.CONTROL_INFO_NO + '&TYPE=' + xuqiustr.CONTROL_TYPE + '">料单</a>';
                     }
                     if (liaodanstr[z].Isgl == "2") {//k3数据
-                        //htmlliaodan += '<a  target="_blank" href="../DKX_DDtypeinfo/NewliaodanView?oId=' + ddstr.Id + '">K料单</a>';
+                      
                          htmlliaodan += '<a  target="_blank" href="../DKX_DDtypeinfo/FAKliaodanView?cpId=' + ddstr.Id + '">K料单</a>';
                     }
                 }
@@ -290,31 +325,25 @@
     function GLliaodanK3() {
         var ddno = $("#bomNo").val();
         if (ddno == "") {
-            layer.alert("请填入K3BOM表编号！", { icon: 2 });
+            layer.alert("请填入ERP中物料号！", { icon: 2 });
             return false;
         }
         $.ajax({
-            url: "../DKX_DDtypeinfo/FAKliaodanglk3",
+            url: "../DKX_DDtypeinfo/Fakliaodangps",
             type: "POST",
             data: { Id: '@ViewData["Id"]', FnumberBom: ddno },
-            dataType: "html",
+            dataType: "json",
             async: true,
             beforeSend: function () {
                 ddchen();
             },
             success: function (response) {
                 disLoading();
-                if (response == "2") {
-                    layer.alert("提交成功！", { icon: 1 }, function () { location.reload(); });
+                if (response.result == "success") {
+                    layer.alert(response.res , { icon: 1 }, function () { location.reload(); });
                 }
-                if (response == "3") {
-                    layer.alert("该料单BOM编号不存在,请检查K3BOM编号！", { icon: 2 }, function () { location.reload(); });
-                }
-                if (response == "1") {
-                    layer.alert("该产品不存在！", { icon: 2 }, function () { location.reload(); });
-                }
-                if (response == "0") {
-                    layer.alert("提交异常！", { icon: 2 }, function () { location.reload(); });
+                if (response.result == "error") {
+                    layer.alert(response.res, { icon: 2 }, function () { location.reload(); });
                 }
             },
             error: function (e) {
@@ -436,9 +465,9 @@
             <td width="100px">料单：</td>
             <td width="270px">
                 <div class="layui-input-inline">
-                    <input type="text" name="bomNo" id="bomNo" placeholder="请输入K3系统的BOM编号" autocomplete="off" class="layui-input">
+                    <input type="text" name="bomNo" id="bomNo" placeholder="请输入普实ERP物料号" autocomplete="off" class="layui-input">
                 </div>
-                <button type="button" class="layui-btn" onclick="GLliaodanK3()">关联K3</button>
+                <button type="button" class="layui-btn" onclick="GLliaodanK3()">获取BOM</button>
             </td>
             <td id="liaodancon"></td>
         </tr>

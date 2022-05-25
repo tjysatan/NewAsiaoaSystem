@@ -68,7 +68,7 @@ namespace NewAsiaOASystem.ViewModel
         public virtual string Dd_Id { get; set; }
 
         /// <summary>
-        /// 是否禁用 0 启用 1 禁用(异常) 2 待审核 3 未提交审核 4
+        /// 是否禁用 0 启用 1 禁用(异常) 2 待审核 3 未提交审核 4 删除
          /// </summary>
         public virtual int? IsDis { get; set; }
 
@@ -131,6 +131,16 @@ namespace NewAsiaOASystem.ViewModel
         /// 硬件成本
         /// </summary>
         public virtual decimal? YJcb { get; set; }
+
+        /// <summary>
+        /// 报价单 Id
+        /// </summary>
+        public virtual string CONTROL_INFO_NO { get; set; }
+
+        /// <summary>
+        /// 报价单类型
+        /// </summary>
+        public virtual string COMPRESSOR_TYPE { get; set; }
 
     }
 }

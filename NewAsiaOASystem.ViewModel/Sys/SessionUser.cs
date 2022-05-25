@@ -62,5 +62,10 @@ namespace NewAsiaOASystem.ViewModel
        public string RoleType { get; set; }
 
        //public List<string> PersonId { get; set; } //保存当前角色可管理的所有用户ID
+
+        /// <summary>
+        /// erp 中员工编号
+        /// </summary>
+       public string ERP_YGNO { get; set; }
     }
 }

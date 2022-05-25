@@ -552,5 +552,10 @@ namespace NewAsiaOASystem.DBModel
         /// 
         /// </summary>
         public virtual string Ps_DocNu { get; set; }
+
+        /// <summary>
+        /// 是否需要技术部判断 空/0 未设置   5 需要 
+        /// </summary>
+        public virtual int? Isjsbpz { get; set; }
     } 
 }

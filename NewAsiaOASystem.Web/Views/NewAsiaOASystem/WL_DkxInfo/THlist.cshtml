@@ -39,8 +39,14 @@
                 for (var i = 0, j = jsonStr.length; i < j; i++) {
                     html+='<tr>';
                     html += '<td width="5%"><input type="checkbox" name="ContentChecked" value="' + jsonStr[i].Id + '"/></td>';
-                    html += '<td width="10%">'+ jsonStr[i].SID + '</td>';
-                    html += '<td width="20%">'+ AjaxGetCusbyorderId(jsonStr[i].XsordId) + '</td>';
+                    html += '<td width="10%">' + jsonStr[i].SID + '</td>';
+                    if (jsonStr[i].smtype == "2") {
+                        html += '<td width="20%">' + jsonStr[i].scxscusname + '</td>';
+                    }
+                    else {
+                        html += '<td width="20%">' + AjaxGetCusbyorderId(jsonStr[i].XsordId) + '</td>';
+                    }
+                    //html += '<td width="20%">'+ AjaxGetCusbyorderId(jsonStr[i].XsordId) + '</td>';
                     html += '<td width="10%">'+ showDate(jsonStr[i].scxsdtetime) + '</td>';
                     html += '<td width="10%">'+ showDate(jsonStr[i].THdatetime) + '</td>';
                     html+='<td width="35%">-</td>';

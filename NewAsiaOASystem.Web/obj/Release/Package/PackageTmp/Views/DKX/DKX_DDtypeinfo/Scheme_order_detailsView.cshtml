@@ -1,0 +1,72 @@
+﻿@{
+    ViewBag.Title = "方案产品被引用的次数和订单明细";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<script type="text/javascript">
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+
+    $(function () {
+        Gettabledata();
+    })
+
+    function Gettabledata() {
+ 
+        layui.use('table', function () {
+            var table = layui.table;
+            table.render({
+                elem: '#tabledata',
+                url: '/DKX_DDtypeinfo/Get_Scheme_orderdetails',
+                where: {
+                    itemno: '@ViewData["ItemNo"]',
+                    tosum: 20,
+ 
+                },
+                cols: [[
+                    { field: 'Id', width: 80, title: 'ID', sort: true, },
+                    { field: 'DD_Bianhao', width: 200, title: '生产批号' },
+                    
+                     
+                    
+                ]],
+                done: function (res, curr, count) {
+                    $(".layui-table-box").find("[data-field='Id']").css("display", "none");
+                    console.log("count:", count);
+                    $("#tdtotle").html("一共引用： " + count );
+                }
+                ,
+                page: false,
+                height: 'full-150',
+
+
+            });
+            table.on('tool(tabledata)', function (obj) {
+                var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+               var data = obj.data; //获得当前行 tr 的 DOM 对象（如果有的话）
+                 
+
+            })
+        })
+    }
+
+</script>
+
+<blockquote class="layui-elem-quote">
+    <span style="color:red;">
+        注：引用统计数据，从使用普实之后可是引用的订单明细取最新前20条
+    </span>
+</blockquote>
+
+<div style="width: 98%; margin: auto; margin-top: 10px;">
+    <div id="content" style="width: 100%;height:10%">
+        <span class="layui-badge" id="tdtotle"></span>
+        <table class="layui-hide" id="tabledata" lay-filter="tabledata"></table>
+    </div>
+</div>

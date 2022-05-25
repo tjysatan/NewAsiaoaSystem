@@ -28,10 +28,18 @@ namespace NewAsiaOASystem.Web
         /// <summary>
         /// 微信后台验证地址（使用Get），微信后台的“接口配置信息”的Url
         /// </summary>
+        //[HttpGet]
+        //[ActionName("Index")]
+        //public ActionResult Get(string echostr)
+        //{
+        //    return Content(echostr);
+        //}
+
         [HttpGet]
         [ActionName("Index")]
-        public ActionResult Get(string echostr)
+        public ActionResult Get(string signature, string timestamp, string nonce, string echostr)
         {
+
             return Content(echostr);
         }
 
@@ -53,7 +61,27 @@ namespace NewAsiaOASystem.Web
             };
 
         }
-     }
+
+        //[HttpPost]
+        //[ActionName("Index")]
+        //public ActionResult Post(string signature, string timestamp, string nonce, string echostr)
+        //{
+        //    Stream requestStream = System.Web.HttpContext.Current.Request.InputStream;
+        //    byte[] requestByte = new byte[requestStream.Length];
+        //    requestStream.Read(requestByte, 0, (int)requestStream.Length);
+        //    string requestStr = Encoding.UTF8.GetString(requestByte);
+
+        //    return new ContentResult
+        //    {
+        //        Content = requestStr,
+        //        ContentType = "text/xml",
+        //        ContentEncoding = System.Text.UTF8Encoding.UTF8
+        //    };
+
+
+
+        //}
+    }
 }
 
    

@@ -133,5 +133,21 @@ namespace NewAsiaOASystem.Dao
             return listmodel[0];
         }
         #endregion
+
+        #region //查询蓝河微信的配置信息
+        /// <summary>
+        /// 查询蓝河微信的配置信息
+        /// </summary>
+        /// <returns></returns>
+        public Wx_configinfoView Getlanheweixinpayconfig()
+        {
+            string HQLstr = string.Format("from Wx_configinfo where Type='1'");
+            List<Wx_configinfo> list = HibernateTemplate.Find<Wx_configinfo>(HQLstr) as List<Wx_configinfo>;
+            IList<Wx_configinfoView> listmodel = GetViewlist(list);
+            if (listmodel == null)
+                return null;
+            return listmodel[0];
+        }
+        #endregion
     }
 }

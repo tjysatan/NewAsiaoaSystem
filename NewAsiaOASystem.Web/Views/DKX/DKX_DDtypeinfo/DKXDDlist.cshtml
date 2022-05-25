@@ -5,11 +5,16 @@
 }
 
 @section HeadContent{
- 
+
     <script type="text/javascript">
         var alldkxtypejson;
         $(function () {
-            Gettabledata()
+            Gettabledata();
+            if (@ViewData["RoleType"]== "0") {
+                $("#GL_btn").show();
+            } else {
+                $("#GL_btn").hide();
+            }
         })
 
 
@@ -34,11 +39,15 @@
             var txtbeizhu2 = $("#txtbeizhu2").val();//工程师备注
             var gnjs = $("#gnjs").val();//功能简述
             var txtPOWER = $("#txtPOWER").val();//功率
-            layui.use('table', function () {
+            layui.use(['table','element'], function () {
                 var table = layui.table;
+                var element = layui.element;
                 table.render({
                     elem: '#test',
                     url: '/DKX_DDtypeinfo/Getdkxorderlist_customerservice',
+                    page: {
+                        curr: history.state != null && history.state.page != null ? history.state.page : 1
+                    },//页面缓存值为null时页码为1 否则取缓存值
                     where: {
                         DD_Bianhao: txt_DD_Bianhao,
                         BJno: txt_BJno,
@@ -88,14 +97,54 @@
                                 return showddzt(d.DD_ZT, d.xtIsq, d.qtIsq, d.Bnote2, d.Bnote1, d.pbshzt, d.Flzt);
                             }
                         },
+                        {
+                            field: 'Jindu', width: 230, title: '进度', templet(d) {
+                                var aa = 50;
+                                if (d.DD_ZT == "-1") {
+                                    aa = 0;
+                                }
+                                if (d.DD_ZT == "1") {
+                                    aa = 10;
+                                }
+                                if (d.DD_ZT == "2") {
+                                    aa = 20;
+                                }
+                                if (d.DD_ZT == "-2") {
+                                    aa = 30;
+                                }
+                                if (d.DD_ZT == "3") {
+                                    aa = 40;
+                                }
+                                if (d.DD_ZT == "4") {
+                                    aa = 50;
+                                }
+                                if (d.DD_ZT == "6") {
+                                    aa = 60;
+                                }
+                                if (d.DD_ZT == "-3") {
+                                    aa = 80;
+                                }
+                                if (d.DD_ZT == "7") {
+                                    aa = 90;
+                                }
+                                if (d.DD_ZT == "8") {
+                                    aa = 100;
+                                }
+                                var html = "";
+                                html += ' <div class="layui-progress layui-progress-big" lay-showpercent="true"   style="margin-top:5px">';
+                                html += '  <div class="layui-progress-bar" lay-percent="' + aa + '%"></div>';
+                                html += ' </div >';
+                                return html;
+                            }
+                        },
                         { field: 'REMARK', width: 80, title: '客服备注' },
                         { field: 'gnjsstr', width: 230, title: '功能简述' },
 
-                       
+
                         { field: 'DD_Type', width: 130, title: '类型' },
-                        
-                      
-                       
+
+
+
                         {
                             field: 'C_name', width: 80, title: '下单人', templet(d) {
                                 return AjaxPerson_Name(d.C_name).UserName
@@ -106,13 +155,13 @@
                                 return AjaxGcsinfo(d.Gcs_nameId).Name;
                             }
                         },
-                       
+
                         {
                             field: 'Bnote', width: 80, title: '箱体图', templet: function (d) {
                                 return Isxtshow(d.Bnote);
                             }
                         },
-                      
+
                         { field: 'REMARK2', width: 100, title: '工程师备注' },
                         { field: 'gcsfh', width: 80, title: '退回原因' },
                         {
@@ -153,7 +202,8 @@
                         },
                         {
                             field: 'yq', width: 160, title: '是否逾期', templet(d) {
-                                return ShowYQtyleandtianshu(d.DD_ZT, d.xtIsq, d.qtIsq, d.Ysdatetime, d.Scjdtime, d.wlsqtime, d.Gscwctime, d.Gscjdtime, d.C_time, d.Gstjshtime)
+                                //return ShowYQtyleandtianshu(d.DD_ZT, d.xtIsq, d.qtIsq, d.Ysdatetime, d.Scjdtime, d.wlsqtime, d.Gscwctime, d.Gscjdtime, d.C_time, d.Gstjshtime)
+                                return "";
                             }
                         },
                         {
@@ -168,7 +218,7 @@
                         {
                             field: 'Ps_orderDocEntry', width: 80, title: '普实单号', templet: function (d) {
                                 if (d.Ps_orderDocEntry != '' && d.Ps_orderDocEntry != null) {
-                                    return d.Ps_orderDocEntry + "/" + d.Ps_orderDocEntryNUM
+                                    return  d.Ps_orderDocEntryNUM
                                 } else {
                                     return "暂未设置"
                                 }
@@ -182,9 +232,11 @@
                             var dd_typename = showddtype($(this).text());
                             $(this).text(dd_typename)
                         });
+                        element.render();
                     }
-                    , page: true
-                    , limits: [3, 5, 10, 15, 20]  //一页选择显示3,5或10条数据
+                    ,
+                    //page: true,
+                     limits: [3, 5, 10, 15, 20]  //一页选择显示3,5或10条数据
                     , limit: 10  //一页显示10条数据
 
                 });
@@ -562,7 +614,7 @@
             layer.open({
                 type: 2,
                 title: ['生产下单', 'font-size:14px;'],
-                area: ['900px', '450px'],
+                area: ['900px', '90vh'],
                 offset: '10px',
                 fixed: false, //不固定
                 maxmin: true,
@@ -664,14 +716,20 @@
             layer.open({
                 type: 2,
                 title: ['资料查看', 'font-size:14px;'],
-                area: ['900px', '450px'],
+                area: ['90vw', '90vh'],
                 offset: '10px',
                 fixed: false, //不固定
                 maxmin: true,
-                content: '../DKX_DDtypeinfo/gcszlckView?Id='+val,
-                //end: function () {
-                //    location.reload();
-                //}
+                content: '../DKX_DD/kfzlckView?Id='+val,
+                end: function () {
+                    //Gettabledata();
+                    //layui.table.reload('test', { page: { curr: $(".layui-laypage-em").next().html() } })
+                    layui.table.reload('test', {   //方法渲染表格里的属性 ID
+                        page: {
+                            curr: $(".layui-laypage-em").next().html()
+                        }
+                    });
+                }
             })
 
         }
@@ -741,6 +799,11 @@
                 return '<span style="color:#00ff21">已上传</span>';
             }
             return "";
+        }
+
+        //进度
+        function jindu() {
+            return '<div class="layui-progress" lay-showpercent="true"><div class="layui-progress-bar layui-bg-red" lay-percent="20%"></div></div>';
         }
 
         //显示逾期类型和逾期天数
@@ -974,10 +1037,24 @@
                 //}
             })
         }
+
+        //更新ERP中非标数据
+        function OpenupdateerpitmeView() {
+            layer.open({
+                type: 2,
+                title: ['非标信息更到ERP中', 'font-size:14px;'],
+                area: ['900px', '550px'],
+                offset: '10px',
+                fixed: false, //不固定
+                maxmin: true,
+                content: '../DKX_DD/updateFBitmeView',
+                //end: function () {
+                //    location.reload();
+                //}
+            })
+        }
     </script>
     <script type="text/html" id="bar">
-       
-
         <div class="layui-btn-group">
             <button type="button" class="layui-btn  layui-btn-xs layui-btn-normal" lay-event="check" title="资料查看">
                 <i class="layui-icon">&#xe63c;</i>
@@ -1161,6 +1238,9 @@
                 <span class="inquiry-input">
                     <button class="layui-btn" onclick="xinjian(); return false; " id="parentIframe"><i class="layui-icon">&#xe608;</i> 新建</button>
                 </span>
+                @*<span class="inquiry-input" id="GL_btn">
+                    <button class="layui-btn" onclick="OpenupdateerpitmeView(); return false; "><i class="layui-icon">&#xe608;</i>更新到ERP</button>
+                </span>*@
                 <span class="inquiry-input">
                     <button class="layui-btn" onclick="return myrefresh()"><i class="layui-icon">&#x1002;</i>刷新</button>
                 </span>
@@ -1172,11 +1252,6 @@
 <div style="padding:0 20px 0 20px">
     <table class="layui-hide" id="test" lay-filter="test"></table>
 </div>
-
-<!--<div class="h-right">
-    <div class="h-right-c">--> 
-<!--查询条件-->
-
 
 
 <script src="~/Scripts/NAjs/DKXpulice.js"></script>

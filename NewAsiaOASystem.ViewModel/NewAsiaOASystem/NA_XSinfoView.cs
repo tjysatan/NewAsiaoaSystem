@@ -98,6 +98,11 @@ namespace NewAsiaOASystem.ViewModel
         }
 
         /// <summary>
+        /// 付款方式名称
+        /// </summary>
+        public virtual string PaymentTypeName { get; set; }
+
+        /// <summary>
         /// 创建时间
         /// </summary>
         public virtual DateTime C_datetime

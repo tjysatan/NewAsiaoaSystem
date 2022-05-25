@@ -1,0 +1,227 @@
+﻿@{
+    ViewBag.Title = "erp销售出货数据";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+
+@section HeadContent{
+    <script type="text/javascript">
+        var loadi;
+        function ddchen() {
+            loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+        }
+        //关闭等待效果
+        function disLoading() {
+            layer.close(loadi);
+        }
+
+         $(function () {
+            Gettabledata();
+           
+        })
+
+        //同步erp 销售出货数据
+        function TBupdate(val) {
+            var DATEM = $("#DATEM").val();
+            if (DATEM == "") {
+                layer.alert("日期不为空！", { icon: 2 });
+                return false;
+            }
+            $.ajax({
+                url: "../ERPDATA/GetXSCHDATA",
+                type: "POST",
+                data: { DATEM: DATEM },
+                dataType: "json",
+                async: true,
+                beforeSend: function () {
+                    ddchen();
+                },
+                success: function (response) {
+                    disLoading();
+                    if (response.result == "error") {
+                        layer.alert(response.msg, { icon: 2 }, function () { location.reload(); });
+                    }
+                    if (response.result == "success") {
+                        layer.alert(response.msg, { icon: 1 }, function () { location.reload(); });
+                    }
+
+
+                },
+                error: function (e) {
+                    disLoading();
+                    layer.alert("操作失败！", { icon: 2 });
+                }
+            })
+        }
+
+        //初始化table数据
+        function Gettabledata() {
+            var DATEM = $("#DATEM").val();//出货日期
+            var CrdName = $("#CrdName").val();//客户名称
+            var ItmID = $("#ItmID").val();//物料代码
+            var ItmName = $("#ItmName").val();//物料名称
+            var ItmSpec = $("#txt_KHname").val();//物料型号
+
+            layui.use(['table', 'element'], function () {
+                var table = layui.table;
+                var element = layui.element;
+                table.render({
+                    elem: '#test',
+                    url: '/ERPDATA/GetSASalAPagerInfo',
+                    where: {
+                        AbsID: DATEM,
+                        CrdName: CrdName,
+                        ItmID: ItmID,
+                        ItmName: ItmName,
+                        ItmSpec: ItmSpec
+
+                    },//设定异步数据接口的额外参数
+                    cellMinWidth: 80, //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                    cols: [[
+                        { field: 'Id', width: 80, title: 'ID', sort: true, },
+                        //{ field: 'AbsID', width: 130, title: '日期', fixed: 'left' },
+                        { field: 'AbsID', width: 130, title: '日期' },
+                        { field: 'DocNum', width:80, title: '发票号' },
+                        { field: 'CrdName', width: 200, title: '客户' },
+                        { field: 'ItmID', width: 200, title: '物料代码' },
+                        { field: 'ItmName', width: 200, title: '物料名称' },
+                        { field: 'ItmSpec', width: 200, title: '物料型号' },
+                        { field: 'BaseQty', width: 200, title: '数量' },
+                        { field: 'TaxAfPrice', width: 200, title: '含税单价' },
+                        { field: 'XSCostPrice', width: 200, title: '含税金额' },
+                        { field: 'Amount', width: 200, title: '销售成本' },
+                        { field: 'Z_EmpName', width: 200, title: '责任工程师' }
+                       
+
+                    ]],
+                    done: function (res, curr, count) {
+                        $(".layui-table-box").find("[data-field='Id']").css("display", "none");
+                        $("[data-field='DD_Type']").children().each(function () {
+                            var dd_typename = showddtype($(this).text());
+                            $(this).text(dd_typename)
+                        });
+                        element.render();
+                    }
+                    , page: true
+                    , limits: [3, 5, 10, 15, 20]  //一页选择显示3,5或10条数据
+                    , limit: 10  //一页显示10条数据
+
+                });
+                table.on('tool(test)', function (obj) {
+                    var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+                    var data = obj.data; //获得当前行 tr 的 DOM 对象（如果有的话）
+
+                })
+            })
+        }
+
+        //技术各组的产品的销售金额页面
+        function OpenView() {
+            var DATEM = $("#DATEM").val();
+            if (DATEM == "") {
+                layer.alert("日期不为空！", { icon: 2 });
+                return false;
+            }
+            layer.open({
+                type: 2,
+                title: ['技术小组的产品销售数据', 'font-size:14px;'],
+                area: ['70vw', '80vh'],
+                offset: '10px',
+                fixed: false, //不固定
+                maxmin: true,
+                content: '../ERPDATA/XschdatabyZ_EmpNameView?AbsID=' + DATEM,
+                //end: function () {
+                //    location.reload();
+                //}
+            })
+        }
+
+        //非标出货的的产品中的半成品温控的数量汇总
+        function TBwkupdate() {
+            var DATEM = $("#DATEM").val();
+            if (DATEM == "") {
+                layer.alert("日期不为空！", { icon: 2 });
+                return false;
+            }
+            $.ajax({
+                url: "../ERPDATA/GetFB_WKDATA_by_AbsID",
+                type: "POST",
+                data: { AbsID: DATEM },
+                dataType: "json",
+                async: true,
+                beforeSend: function () {
+                    ddchen();
+                },
+                success: function (response) {
+                    disLoading();
+                    if (response.result == "error") {
+                        layer.alert(response.msg, { icon: 2 }, function () { location.reload(); });
+                    }
+                    if (response.result == "success") {
+                        layer.alert(response.msg, { icon: 1 }, function () { location.reload(); });
+                    }
+
+
+                },
+                error: function (e) {
+                    disLoading();
+                    layer.alert("操作失败！", { icon: 2 });
+                }
+            })
+        }
+    </script>
+    }
+   <div class="inquiry1">
+            <fieldset>
+                <legend>查询条件：</legend>
+                <ul>
+                    <li>
+                        <span>出货日期：</span>
+                        <span class="inquiry-input">
+                            <input type="text" name="DATEM" id="DATEM" />
+                        </span>
+                    </li>
+                    <li>
+                        <span>客户名称：</span>
+                        <span class="inquiry-input">
+                            <input type="text" name="CrdName" id="CrdName" />
+                        </span>
+                    </li>
+                    <li>
+                        <span>物料代码：</span>
+                        <span class="inquiry-input">
+                            <input type="text" name="ItmID" id="ItmID" />
+                        </span>
+                    </li>
+                    <li>
+                        <span>物料名称：</span>
+                        <span class="inquiry-input">
+                            <input type="text" name="ItmName" id="ItmName" />
+                        </span>
+                    </li>
+                    <li>
+                        <span>物料型号：</span>
+                        <span class="inquiry-input">
+                            <input type="text" name="ItmSpec" id="ItmSpec" />
+                        </span>
+                    </li>
+                    <li>
+                        <span class="inquiry-input">
+                            <button class="layui-btn" onclick="return TBupdate()"><i class="layui-icon">&#x1002;</i>同步ERP数据</button>
+                        </span>
+                        <span class="inquiry-input">
+                            <button class="layui-btn" onclick="return TBwkupdate()"><i class="layui-icon">&#x1002;</i>获取半成品温控数据</button>
+                        </span>
+                        <span class="inquiry-input">
+                            <button class="layui-btn" onclick="return OpenView()"><i class="layui-icon">&#x1002;</i>技术小组产品金额</button>
+                        </span>
+                    </li>
+                </ul>
+            </fieldset>
+        </div>
+
+   <div style="padding:0 20px 0 20px">
+       <table class="layui-hide" id="test" lay-filter="test"></table>
+   </div>
+
+   <script src="~/Scripts/NAjs/DKXpulice.js"></script>

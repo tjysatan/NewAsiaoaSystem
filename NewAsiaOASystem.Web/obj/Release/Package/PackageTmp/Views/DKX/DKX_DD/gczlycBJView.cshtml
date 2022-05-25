@@ -83,7 +83,27 @@
                     if (xqzlstr[i].Isgl == "0") {//附件资料
                         var id = "'" + xqzlstr[i].Id + "'";
                         htmlxq += '<a  target="_blank" href="' + xqzlstr[i].url + '">' + xqzlstr[i].wjName + '</a>&nbsp;&nbsp;';
-                    } else {//关联的资料
+                    }
+                    else if (xqzlstr[i].Isgl == "2") {
+                        if (ddstr.COMPRESSOR_TYPE == '0') {
+                            htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/BLDetail.aspx?CONTROL_NO=' + ddstr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                        }
+                        else if (ddstr.COMPRESSOR_TYPE == '1') {
+                            htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/LGDetail.aspx?CONTROL_NO=' + ddstr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                        }
+                        else if (ddstr.COMPRESSOR_TYPE == '2') {
+                            htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/LSDetail.aspx?CONTROL_NO=' + ddstr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                        }
+                        else if (ddstr.COMPRESSOR_TYPE == '3') {
+                            htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/MDDetail2.aspx?CONTROL_NO=' + ddstr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                        }
+                        else if (ddstr.COMPRESSOR_TYPE == '12') {
+                            htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/PTLDetail.aspx?CONTROL_NO=' + ddstr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                        } else {
+                            htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/XXTDetail.aspx?CONTROL_NO=' + ddstr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';
+                        }
+                    }
+                    else {//关联的资料
                         var xuqiustr = AJaxxuqiujson(xqzlstr[i].Bjno);
                         if (xuqiustr.COMPRESSOR_TYPE == '0') {
                             htmlxq += '<a  target="_blank" href="http://106.14.40.169:7766/TZGL/XQB/BLDetail.aspx?CONTROL_NO=' + xuqiustr.CONTROL_INFO_NO + '">需求</a>&nbsp;&nbsp;';

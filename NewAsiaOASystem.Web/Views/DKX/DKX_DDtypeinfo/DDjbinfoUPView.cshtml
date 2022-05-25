@@ -37,7 +37,12 @@
             </select>
         </div>
     </div>
-
+    <div class="layui-form-item">
+        <label class="layui-form-label">数量：</label>
+        <div class="layui-input-block">
+            <input class="layui-input" id="sl" name="sl" placeholder="填写下单数量" value='@Model.NUM' type="text" style="width: 200px;" />
+        </div>
+    </div>
     <div class="layui-form-item" id="htdjhtml">
         <label class="layui-form-label">合同售价：</label>
         <div class="layui-input-inline">
@@ -64,12 +69,7 @@
     <div class="layui-form-item" id="wlwtyep" style="display: none">
     </div>
 
-    <div class="layui-form-item">
-        <label class="layui-form-label">数量：</label>
-        <div class="layui-input-block">
-            <input class="layui-input" id="sl" name="sl" placeholder="填写下单数量" value='@Model.NUM' type="text" style="width: 200px;" />
-        </div>
-    </div>
+
     <div class="layui-form-item">
         <label class="layui-form-label">功能简述：</label>
         <div class="layui-input-block">

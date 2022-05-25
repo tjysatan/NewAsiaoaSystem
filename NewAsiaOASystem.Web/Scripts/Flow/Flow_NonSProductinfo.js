@@ -53,12 +53,12 @@ function SCSavaForm() {
 
 
 //产品库存情况数据
-function AjxaNosPind(Sort, Category, wldm,Pname) {
+function AjxaNosPind(Sort, Category, wldm, Pname, Pmodel) {
     var json;
     $.ajax({
         type: "POST",
         url: "../Flow_NonSProductinfo/AJxaGetNonsdataJson",
-        data: { Sort: Sort, Category: Category, wldm: wldm, Pname: Pname },
+        data: { Sort: Sort, Category: Category, wldm: wldm, Pname: Pname, Pmodel: Pmodel },
         dataType: "json",
         async: false,
         success: function (reslut) {

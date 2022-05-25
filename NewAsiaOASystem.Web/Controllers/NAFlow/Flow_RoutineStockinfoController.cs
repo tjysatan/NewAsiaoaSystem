@@ -10,6 +10,7 @@ using System.Text;
 using Newtonsoft.Json;
 using System.Data;
 using System.IO;
+using System.Runtime.Serialization.Json;
 
 namespace NewAsiaOASystem.Web.Controllers
 {
@@ -139,6 +140,21 @@ namespace NewAsiaOASystem.Web.Controllers
             return Jsonstr;
         }
 
+        #region //常规销售温控器数据
+        public ActionResult New_GetCgkcJson(string Sort, string Category, string cpname, string P_Model, string wlsort)
+        {
+            IList<Flow_RoutineStockinfoView> modellist = _IFlow_RoutineStockinfoDao.New_GetxsinfobyOrderCode(Sort, Category, cpname, P_Model, wlsort);
+            var result = new
+            {
+                code = 0,
+                msg = "",
+                count = 100,
+                data = modellist,
+            };
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+        #endregion
+
         #region //更新库存信息
         public string Updateinventory(string type)
         {
@@ -194,6 +210,180 @@ namespace NewAsiaOASystem.Web.Controllers
 
         #endregion
 
+        #region //20210804库存更新
+
+        public string PsUpdateinventory(string type)
+        {
+            IList<Flow_RoutineStockinfoView> listmdeol = _IFlow_RoutineStockinfoDao.GetCpkcInfo("");//查询全部的温控常规产品
+            foreach (var item in listmdeol)
+            {
+                Flow_RoutineStockinfoView model = item;
+                string kcjson = GetPSKC(model.P_Bianhao);
+                string wqjpjson = Get_PS_wqjpsum(model.P_Bianhao);
+                decimal count = Convert.ToDecimal(kcjson);//库存
+                model.N_Stock = count;//当天的及时库存
+                model.A_Sum = count - model.W_Consumption;//报警库存
+                if (model.A_Sum <= 0)
+                {
+                    model.Isbj = 1;//库存异常
+                    model.SC_Sum = model.M_Consumption - model.A_Sum - count;//报警库存为负数（用月用量加上报警数的绝对值建现有库存）
+                }
+                else
+                {
+                    model.Isbj = 0;//库存正常
+                    model.SC_Sum = 0;//库存未报警 需要生产0
+                }
+                _IFlow_RoutineStockinfoDao.NUpdate(model);
+            }
+            return "";
+        }
+
+        public JsonResult N_PsUpdateinventory(string type)
+        {
+            try
+            {
+                IList<Flow_RoutineStockinfoView> listmodel = _IFlow_RoutineStockinfoDao.GetCpkcInfo("");//查询全部的温控常规产品
+                if (listmodel == null)
+                    return Json(new { result = "error", res = "当前产品都在生产中" });
+                foreach (var item in listmodel)
+                {
+                    Flow_RoutineStockinfoView model = item;
+                    decimal kcjson = 0;
+                    decimal wqjpsum = 0;
+                    decimal OnOrder = 0;
+                    psItmAzhinfomodel AA = Get_PS_psItmAzhinfo(model.P_Bianhao);
+                    if (AA != null)
+                    {
+                        kcjson = Convert.ToDecimal(AA.OnHand);
+                        OnOrder = Convert.ToDecimal(AA.OnOrder);
+                        if (AA.QtySUM == null || AA.QtySUM == "null")
+                            wqjpsum = 0;
+                        else
+                            wqjpsum = Convert.ToDecimal(AA.QtySUM);
+                    }
+                    decimal count = Convert.ToDecimal(kcjson);//库存
+                    model.N_Stock = count;//当天的及时库存
+                    model.A_Sum = count - model.W_Consumption + Convert.ToDecimal(wqjpsum);//报警库存
+                    model.wjjpsum = Convert.ToDecimal(wqjpsum);//未清拣配单数量
+                    model.sczdsum = Convert.ToDecimal(OnOrder);//生产预定量
+                    if (model.A_Sum <= 0)
+                    {
+                        model.Isbj = 1;//库存异常
+                        model.SC_Sum = model.M_Consumption - model.A_Sum - count;//报警库存为负数（用月用量加上报警数的绝对值建现有库存）
+                    }
+                    else
+                    {
+                        model.Isbj = 0;//库存正常
+                        model.SC_Sum = 0;//库存未报警 需要生产0
+                    }
+                    _IFlow_RoutineStockinfoDao.NUpdate(model);
+                }
+                return Json(new { result = "success", res = "操作成功" });
+
+            }
+            catch (Exception x)
+            {
+                return Json(new { result = "error", res = x });
+            }
+        }
+
+        //查询普实erp里面及时库存
+        public string GetPSKC(string wlno)
+        {
+            string resjson = zypushsoftHelper.GetBCStkbyItmID(wlno);
+            List<pskcmodel> timemodel = getObjectByJson<pskcmodel>(resjson);
+            if (timemodel.Count() > 0)
+            {
+                return timemodel[0].OnHand;
+            }
+            else
+            {
+                return "0";
+            }
+
+        }
+
+        //查询普实erp中未清拣配数量
+        public string Get_PS_wqjpsum(string wlno)
+        {
+            string resjson = zypushsoftHelper.Get_SATmpAsum_by_ItmID(wlno);
+            List<psjpsummodel> timemodel = getObjectByJson<psjpsummodel>(resjson);
+            if (timemodel.Count() > 0)
+            {
+                if (timemodel[0].Qtysum == "null" || timemodel[0].Qtysum == null)
+                    return "0";
+                else
+                    return timemodel[0].Qtysum;
+            }
+            else
+            {
+                return "0";
+            }
+        }
+
+        #region //获取及时库存/生产在的/销售预约/拣配未清
+        public psItmAzhinfomodel Get_PS_psItmAzhinfo(string wlno)
+        {
+            string resjson = zypushsoftHelper.Get_ItmeZHinfo_ItmID(wlno);
+            if (resjson == "[]")
+                return null;
+            List<psItmAzhinfomodel> timemodel = getObjectByJson<psItmAzhinfomodel>(resjson);
+            if (timemodel.Count() > 0)
+            {
+                return timemodel[0];
+            }
+            else
+            {
+                return null;
+            }
+        }
+        #endregion
+
+        public class pskcmodel
+        {
+            public virtual string ItmID { get; set; }
+
+            /// <summary>
+            /// 及时库存
+            /// </summary>
+            public virtual string OnHand { get; set; }
+        }
+
+        #region //拣配单数量
+        public class psjpsummodel
+        {
+            public virtual string Qtysum { get; set; }
+        }
+        #endregion
+
+        #region //及时库存/生产在的/销售预约/拣配未清
+        public class psItmAzhinfomodel
+        {
+            public virtual string OnHand { get; set; }//及时库存
+
+            public virtual string OnOrder { get; set; }//生产在定量
+
+            public virtual string IsCommited { get; set; }//销售预约量
+
+            public virtual string QtySUM { get; set; }//拣配未清量
+        }
+        #endregion
+
+        //返回json数据 转换方法
+        private static List<T> getObjectByJson<T>(string jsonString)
+        {
+            // 实例化DataContractJsonSerializer对象，需要待序列化的对象类型  
+            DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(List<T>));
+            //把Json传入内存流中保存  
+            //jsonString = jsonString;
+            MemoryStream stream = new MemoryStream(Encoding.UTF8.GetBytes(jsonString));
+            // 使用ReadObject方法反序列化成对象  
+            object ob = serializer.ReadObject(stream);
+            List<T> ls = (List<T>)ob;
+            return ls;
+        }
+        #endregion
+
         //用量修改
         public ActionResult UpdateConsumption(string Id)
         {
@@ -223,10 +413,13 @@ namespace NewAsiaOASystem.Web.Controllers
         public string InsertPlanproduction(string CpId, string Cpname, string Cp_bianhao, string scsl)
         {
            SessionUser user = Session[SessionHelper.User] as SessionUser;
+            Flow_RoutineStockinfoView modelcp = _IFlow_RoutineStockinfoDao.Getmodelinfobyp_bianhao(Cp_bianhao);
             Flow_PlanProductioninfoView model = new Flow_PlanProductioninfoView();
+            //查询物料信息
             model.P_CPId = CpId;//需要生产的产品的Id
             model.P_CPname = Cpname;//需要生产的产品名称
             model.P_Pianhao = Cp_bianhao;//需要生产的产品物料代码
+            model.P_Model = modelcp.P_Model;
             model.P_SCnumber = Convert.ToDecimal(scsl);//计划生产的数量
             model.P_Issc = 2;//待生产中  0生产中  1缺料中 2 待生产 3 完成
             model.C_time = DateTime.Now;//记录创建时间
@@ -235,6 +428,7 @@ namespace NewAsiaOASystem.Web.Controllers
             model.Status = 0;//记录状态
             model.P_type = 0;//常规
             model.scbianhao = Getwkorderbianhao();
+            model.orderbianhao = model.scbianhao;
             if (_IFlow_PlanProductioninfoDao.Ninsert(model))
             {
                 locCp(CpId, 0, scsl);//锁定产品（保存实际生产的数量）
@@ -464,6 +658,22 @@ namespace NewAsiaOASystem.Web.Controllers
             return jsonstr;
         }
 
+
+        #region //常规电控箱数据
+        public ActionResult DKXGetADATAnopage(string Sort, string Category, string cpname, string wlsort)
+        {
+            IList<Flow_RoutineStockinfoView> modellist = _IFlow_RoutineStockinfoDao.DKGetcgDATAinfo(Sort, Category, cpname, wlsort);
+            var result = new
+            {
+                code = 0,
+                msg = "",
+                count = 100,
+                data = modellist,
+            };
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+        #endregion
+
         #region //增加跳转页面（常规电控箱）
         /// <summary>
         /// 增加页面
@@ -566,6 +776,59 @@ namespace NewAsiaOASystem.Web.Controllers
                 _IFlow_RoutineStockinfoDao.NUpdate(model);
             }
             return "";
+        }
+
+        #endregion
+
+        #region //常规电控箱 更新普实的库存信息
+        public JsonResult PsDKXUpdateInventory(string type)
+        {
+            try
+            {
+                IList<Flow_RoutineStockinfoView> listmodel = _IFlow_RoutineStockinfoDao.DKXGetCpkcInfo("");
+                if (listmodel == null)
+                    return Json(new { result = "error", res = "当前产品都在生产中"});
+                foreach (var item in listmodel)
+                {
+                    Flow_RoutineStockinfoView model = item;
+                    //string kcjson = GetPSKC(model.P_Bianhao);
+                    //string wqjpsum = Get_PS_wqjpsum(model.P_Bianhao);
+                    decimal kcjson = 0;
+                    decimal wqjpsum = 0;
+                    decimal OnOrder = 0;
+                    psItmAzhinfomodel AA = Get_PS_psItmAzhinfo(model.P_Bianhao);
+                    if (AA != null)
+                    {
+                        kcjson = Convert.ToDecimal(AA.OnHand);
+                        OnOrder = Convert.ToDecimal(AA.OnOrder);
+                        if (AA.QtySUM == null || AA.QtySUM == "null")
+                            wqjpsum = 0;
+                        else
+                            wqjpsum = Convert.ToDecimal(AA.QtySUM);
+                    }
+                    decimal count = Convert.ToDecimal(kcjson);//库存
+                    model.N_Stock = count;//当天的及时库存
+                    model.A_Sum = count - model.W_Consumption + Convert.ToDecimal(wqjpsum);//报警库存
+                    model.wjjpsum = Convert.ToDecimal(wqjpsum);//未清拣配单数量
+                    model.sczdsum = Convert.ToDecimal(OnOrder);//生产预定量
+                    if (model.A_Sum <= 0)
+                    {
+                        model.Isbj = 1;//库存异常
+                        model.SC_Sum = model.M_Consumption - model.A_Sum - count;//报警库存为负数（用月用量加上报警数的绝对值建现有库存）
+                    }
+                    else
+                    {
+                        model.Isbj = 0;//库存正常
+                        model.SC_Sum = 0;//库存未报警 需要生产0
+                    }
+                    _IFlow_RoutineStockinfoDao.NUpdate(model);
+                }
+                return Json(new { result = "success", res = "操作成功" });
+            }
+            catch (Exception x)
+            {
+                return Json(new { result = "error", res = x });
+            }
         }
         #endregion
 

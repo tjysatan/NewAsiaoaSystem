@@ -1,0 +1,5 @@
+2022-03-03 17:02:42,054 [29] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2022-03-03 17:02:42,055 [29] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2022-03-03 17:02:42,055 [29] ERROR ApplicationInfoLog [(null)] <(null)< - 用户 'sa' 登录失败。原因: 该帐户的密码已过期。
+2022-03-03 17:02:42,055 [29] ERROR ApplicationInfoLog [(null)] <(null)< - Void .ctor(System.Data.ProviderBase.DbConnectionPoolIdentity, System.Data.SqlClient.SqlConnectionString, System.Data.SqlClient.SqlCredential, System.Object, System.String, System.Security.SecureString, Boolean, System.Data.SqlClient.SqlConnectionString, System.Data.SqlClient.SessionData, System.Data.ProviderBase.DbConnectionPool, System.String, Boolean, System.Data.SqlClient.SqlAuthenticationProviderManager)
+2022-03-03 17:02:42,056 [29] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================

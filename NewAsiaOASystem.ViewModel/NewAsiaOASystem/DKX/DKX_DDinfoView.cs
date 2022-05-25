@@ -18,9 +18,9 @@ namespace NewAsiaOASystem.ViewModel
         public virtual string DD_Bianhao { get; set; }
 
         /// <summary>
-        /// 关联报价编号
+        /// 关联报价订单号
         /// </summary>
-        public virtual string BJno { get; set; }
+        public virtual string BJno { get; set; } 
 
         /// <summary>
         /// k3 bom表
@@ -557,5 +557,20 @@ namespace NewAsiaOASystem.ViewModel
         /// 工程图纸异常出来时间
         /// </summary>
         public virtual DateTime? gczl_yccltime { get; set; }
+
+        /// <summary>
+        /// 报价系统的编号唯一
+        /// </summary>
+        public virtual string CONTROL_INFO_NO { get; set; }
+
+        /// <summary>
+        /// 报价单的机组类型
+        /// </summary>
+        public virtual string COMPRESSOR_TYPE { get; set; }
+
+        /// <summary>
+        /// 流水类型 B 下单之后 B+流水五位
+        /// </summary>
+        public virtual string liushuitype { get; set; }
     }
 }

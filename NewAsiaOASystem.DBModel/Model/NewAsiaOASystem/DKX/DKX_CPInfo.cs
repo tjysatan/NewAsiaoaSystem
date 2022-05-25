@@ -131,5 +131,15 @@ namespace NewAsiaOASystem.DBModel
         /// 硬件成本
         /// </summary>
         public virtual decimal? YJcb { get; set; }
+
+        /// <summary>
+        /// 报价单 Id
+        /// </summary>
+        public virtual string CONTROL_INFO_NO { get; set; }
+
+        /// <summary>
+        /// 报价单类型
+        /// </summary>
+        public virtual string COMPRESSOR_TYPE { get; set; }
     }
 }

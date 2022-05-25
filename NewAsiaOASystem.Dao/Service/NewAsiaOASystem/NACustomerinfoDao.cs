@@ -460,5 +460,23 @@ namespace NewAsiaOASystem.Dao
        }
         #endregion
 
+        #region //通过客户的编码查询客户信息
+        /// <summary>
+        /// 客户编码
+        /// </summary>
+        /// <param name="code"></param>
+        /// <returns></returns>
+        public NACustomerinfoView Getcusinfobycode(string code)
+        {
+            string Hqlstr = string.Format("from NACustomerinfo where K3CODE='{0}'", code);
+            List<NACustomerinfo> list = HibernateTemplate.Find<NACustomerinfo>(Hqlstr) as List<NACustomerinfo>;
+            IList<NACustomerinfoView> listmodel = GetViewlist(list);
+            if (listmodel != null)
+                return listmodel[0];
+            else
+                return null;
+        }
+        #endregion
+
     }
 }

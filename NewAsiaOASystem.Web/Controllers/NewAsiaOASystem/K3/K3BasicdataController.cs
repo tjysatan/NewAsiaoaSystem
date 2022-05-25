@@ -485,6 +485,74 @@ namespace NewAsiaOASystem.Web.Controllers
         }
         #endregion
 
+        #region //根据物料编码获取普实ERP中的数据更新平台的数据
+        public JsonResult updatePsdatabyfnumber(string fnumber)
+        {
+            //查询平台中的K3物料
+            K3_wuliaoinfoView k3model = new K3_wuliaoinfoView();
+            k3model = _IK3_wuliaoinfoDao.Getwuliaobyfnumber(fnumber);
+            if (k3model != null)
+            {
+                string resjson = zypushsoftHelper.Get_MDItm_by_ItmID(fnumber);
+                if (resjson != null || resjson != null || resjson != "")
+                {
+                    List<Psjsonmodel> timemodel = getObjectByJson<Psjsonmodel>(resjson);
+                    foreach (var a in timemodel)
+                    {
+                        k3model.fname = a.ItmName;
+                        k3model.fmodel = a.ItmSpec;
+                        k3model.unitname = a.UomName;
+                        k3model.WhsName = a.WhsName;
+                        k3model.SourceID = a.SourceID;
+                    }
+                    _IK3_wuliaoinfoDao.NUpdate(k3model);//更新基础数据的名称
+                                                        //查询元器件数据
+                    NQ_YJinfoView yqjmodel = _INQ_YJinfoDao.GetYqjModelbyW_dm(fnumber);
+                    if (yqjmodel != null)
+                    {
+                        yqjmodel.Y_Name = k3model.fname;//产品名称
+                        yqjmodel.Y_Ggxh = k3model.fmodel;//产品型号
+                        _INQ_YJinfoDao.NUpdate(yqjmodel);
+                    }
+                    //查询元器件检验标准
+                    IQC_SopInfoView IQCmodel = _IIQC_SopInfoDao.Getsopinfobyyqjwlno(fnumber);
+                    if (IQCmodel != null)
+                    {
+
+                        IQCmodel.Yqjname = k3model.fname;//产品名称
+                        IQCmodel.Yqjxh = k3model.fmodel;//产品型号
+                        _IIQC_SopInfoDao.NUpdate(IQCmodel);
+                    }
+                    //查询常规电控温控产品
+                    Flow_RoutineStockinfoView cgcpmodel = _IFlow_RoutineStockinfoDao.Getmodelinfobyp_bianhao(fnumber);
+                    if (cgcpmodel != null)
+                    {
+                        cgcpmodel.P_Model = k3model.fmodel;//产品型号
+                        cgcpmodel.P_Name = k3model.fname;//产品名称
+                        _IFlow_RoutineStockinfoDao.NUpdate(cgcpmodel);
+                    }
+                    //查询非标电控温控产品
+                    Flow_NonSProductinfoView fbcpmodel = _IFlow_NonSProductinfoDao.Getmodelbywldm(fnumber);
+                    if (fbcpmodel != null)
+                    {
+                        fbcpmodel.Pname = k3model.fname;//产品名称
+                        fbcpmodel.Pmodel = k3model.fmodel;//产品型号
+                        _IFlow_NonSProductinfoDao.NUpdate(fbcpmodel);
+                    }
+                    return Json(new { result = "success", res = "操作完成" });
+                }
+                else
+                {
+                    return Json(new { result = "error", res = "ERP接口没有返回数据，请查正物料代码！" });
+                }
+            }
+            else
+            {
+                return Json(new { result = "error", res = "平台中尚未同步该物料，请尝试先同步ERP数据！" });
+            }
+        }
+        #endregion
+
         //返回json数据 转换方法
         private static List<T> getObjectByJson<T>(string jsonString)
         {
@@ -536,6 +604,46 @@ namespace NewAsiaOASystem.Web.Controllers
             /// 重量
             /// </summary>
             public virtual string fnetweight { get; set; }
+        }
+
+        public class Psjsonmodel 
+        { 
+            /// <summary>
+            /// 物料号
+            /// </summary>
+           public virtual string ItmID { get; set; }
+
+            /// <summary>
+            /// 物料名称
+            /// </summary>
+            public virtual string ItmName { get; set; }
+
+            /// <summary>
+            /// 前俩段编码
+            /// </summary>
+            public virtual string ItmKindID { get; set; }
+
+            public virtual string ItmKindName { get; set; }
+
+
+            public virtual string ItmGrpID { get; set; }
+
+            /// <summary>
+            /// 规格型号
+            /// </summary>
+            public virtual string ItmSpec { get; set; }
+
+            public virtual string IsClose { get; set; }
+
+            /// <summary>
+            /// 单位
+            /// </summary>
+            public virtual string UomName { get; set; }
+
+            public virtual string OpDate { get; set; }
+
+            public virtual string WhsName { get; set; }
+            public virtual string SourceID { get; set; }
         }
 
         //更加物料代码返回物料是属于那个仓的
@@ -603,9 +711,16 @@ namespace NewAsiaOASystem.Web.Controllers
         //返回物料中间三位数
         public string Getwuliaosanweibyfnumber(string fnumber)
         {
-            string str;
-            str = fnumber.Substring(3, 3);
-            return str;
+            try
+            {
+                string str;
+                str = fnumber.Substring(3, 3);
+                return str;
+            }
+            catch
+            {
+                return "";
+            }
         }
 
         [HttpPost]
@@ -740,6 +855,67 @@ namespace NewAsiaOASystem.Web.Controllers
                 conn.Dispose();
             }
 
+        }
+        #endregion
+
+        #region //批量修改ERP中物料的数据
+        public ActionResult BatcupdateERPMDItm_GXGSView()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public JsonResult BatcDRERPMDItm_GXGSinfoExcel(HttpPostedFileBase fileImport)
+        {
+            SessionUser user = Session[SessionHelper.User] as SessionUser;
+            if (fileImport != null)
+            {
+                string fileName = DateTime.Now.ToString("yyyyMMdd") + "-" + Path.GetFileName(fileImport.FileName);
+                string filePath = Path.Combine(Server.MapPath("~/Content/upload"), fileName);
+                fileImport.SaveAs(filePath);
+                string filurl = Server.MapPath("~") + "/Content/upload/" + fileName;
+                System.Data.DataTable dt = GetExcelDatatable(filurl, "mapTable");
+                BatcupdateMDItm_GXGS(dt);
+                return Json(new { result = "success", res = "操作成功" });
+            }
+            else
+            {
+                return Json(new { result = "error", res = "操作失败" });
+            }
+        }
+
+        //更普实物料
+        public void BatcupdateMDItm_GXGS(System.Data.DataTable dt)
+        {
+            string fnumber = "";
+            string Z_DQZZDBGS = "";
+            string Z_DQZZKZXGS = "";
+            string Z_DQZZZHLGS = "";
+            string Z_DQZZMBZXGS = "";
+            string Z_DQZZMBJXGS = "";
+            foreach (DataRow dr in dt.Rows)
+            {
+                fnumber = dr["fnumber"].ToString().Trim();//产品编号
+                Z_DQZZDBGS = dr["底板装配工时"].ToString().Trim();
+                Z_DQZZKZXGS= dr["控制线工时"].ToString().Trim();
+                Z_DQZZZHLGS= dr["主回路线工时"].ToString().Trim();
+                Z_DQZZMBZXGS= dr["面板装箱工时"].ToString().Trim();
+                Z_DQZZMBJXGS= dr["面板接线工时"].ToString().Trim();
+                if (fnumber != "" && fnumber != null)
+                {
+                    if (Z_DQZZDBGS == "" || Z_DQZZDBGS == null)
+                        Z_DQZZDBGS = "0";
+                    if (Z_DQZZKZXGS == "" || Z_DQZZKZXGS == null)
+                        Z_DQZZKZXGS = "0";
+                    if (Z_DQZZZHLGS == "" || Z_DQZZZHLGS == null)
+                        Z_DQZZZHLGS = "0";
+                    if (Z_DQZZMBZXGS == "" || Z_DQZZMBZXGS == null)
+                        Z_DQZZMBZXGS = "0";
+                    if (Z_DQZZMBJXGS == "" || Z_DQZZMBJXGS == null)
+                        Z_DQZZMBJXGS = "0";
+                    zypushsoftHelper.updateMDItm_GXGS(fnumber, Z_DQZZDBGS, Z_DQZZKZXGS, Z_DQZZZHLGS, Z_DQZZMBZXGS, Z_DQZZMBJXGS);
+                }
+            }
         }
         #endregion
 
@@ -889,10 +1065,27 @@ namespace NewAsiaOASystem.Web.Controllers
 
                     foreach (var item in timemodel)
                     {
+                        //查询物料
+                        K3_wuliaoinfoView jcwlmodel = _IK3_wuliaoinfoDao.Getwuliaobyfnumber(item.子项物料代码);
                         Itemsmodel wlmodel = new Itemsmodel();
                         wlmodel.ItmID = item.子项物料代码;
                         wlmodel.NetQty = Convert.ToDecimal(item.单位用量);
                         wlmodel.ScrapRate = "0";
+                        if (jcwlmodel != null)
+                        {
+                            if (jcwlmodel.SourceID == "制造")
+                            {
+                                wlmodel.LineType = "M";
+                            }
+                            else
+                            {
+                                wlmodel.LineType = "P";
+                            }
+                        }
+                        else
+                        {
+                            wlmodel.LineType = "P";
+                        }
                         wlmodel.LineType = "P";
                         wlmodel.OperationLine = "10";
                         wlmodel.Position = "1";
@@ -1120,7 +1313,7 @@ namespace NewAsiaOASystem.Web.Controllers
         #region //查询普实的BOM明细
         public string Getpushbywlno(string wlno)
         {
-            string strjson = zypushsoftHelper.GetBombywlno(wlno);
+            string strjson = zypushsoftHelper.GetBom_QYbywlno(wlno);
             return strjson;
         }
         #endregion
@@ -1139,13 +1332,29 @@ namespace NewAsiaOASystem.Web.Controllers
                 int IOrderNum = 10;
                 foreach (var item in timemodel)
                 {
-
+                    //查询物料
+                    K3_wuliaoinfoView jcwlmodel = _IK3_wuliaoinfoDao.Getwuliaobyfnumber(item.子项物料代码);
                     iLineNum++;
                     FInstaerMDBomA mxmodel = new FInstaerMDBomA();
                     mxmodel.DocEntry = DocEntry;
                     mxmodel.ItmID = item.子项物料代码;
                     mxmodel.LineNum = iLineNum.ToString();
                     mxmodel.NetQty = Convert.ToDecimal(item.单位用量);
+                    if (jcwlmodel != null)
+                    {
+                        if (jcwlmodel.SourceID == "制造")
+                        {
+                            mxmodel.LineType = "M";
+                        }
+                        else
+                        {
+                            mxmodel.LineType = "P";
+                        }
+                    }
+                    else
+                    {
+                        mxmodel.LineType = "P";
+                    }
                     mxmodel.OrderNum = IOrderNum;
                     IOrderNum = IOrderNum + 10;
                     string datejson = JsonConvert.SerializeObject(mxmodel);
@@ -1163,6 +1372,194 @@ namespace NewAsiaOASystem.Web.Controllers
         #endregion
         #endregion
 
+        #region //获取普实基础数据的方法
+        public JsonResult GetBMitmejson()
+        {
+            //获取最近的时间
+            K3_wuliaoinfoView model = _IK3_wuliaoinfoDao.GetwuliaoMaxOpDate();
+            string OpDate = "2021-04-01";
+            if (model != null)
+            {
+                OpDate =Convert.ToDateTime(model.OpDate).ToString("yyyy-MM-dd");
+            }
+            string resjson = zypushsoftHelper.GetMDItmbyOpDate(OpDate);
+            int xz = 0;
+            int gz = 0;
+            if (resjson != null || resjson != null)
+            {
+                List<Psjsonmodel> timemodel = getObjectByJson<Psjsonmodel>(resjson);
+                foreach (var a in timemodel)
+                {
+                    K3_wuliaoinfoView k3model = new K3_wuliaoinfoView();
+                    k3model = _IK3_wuliaoinfoDao.Getwuliaobyfnumber(a.ItmID);
+                    if (k3model == null)//不存在
+                    {
+                        xz = xz + 1;
+                        k3model = new K3_wuliaoinfoView();
+                        k3model.fnumber = a.ItmID;
+                        k3model.fname = a.ItmName;
+                        k3model.fmodel = a.ItmSpec;
+                        k3model.Type = Convert.ToInt32(Getwuliaotypebyfnumber(a.ItmID));
+                        k3model.str1 = Getwuliaotwobyfnumber(a.ItmID);
+                        k3model.str2 = Getwuliaosanweibyfnumber(a.ItmID);
+                        k3model.unitname = a.UomName;
+                        k3model.C_Time = DateTime.Now;
+                        k3model.OpDate = Convert.ToDateTime(a.OpDate);
+                        k3model.WhsName = a.WhsName;
+                        k3model.SourceID = a.SourceID;
+                        _IK3_wuliaoinfoDao.Ninsert(k3model);
+                    }
+                    else
+                    {
+                        gz = gz + 1;
+                        k3model.OpDate = Convert.ToDateTime(a.OpDate);
+                        k3model.WhsName = a.WhsName;
+                        k3model.SourceID = a.SourceID;
+                        _IK3_wuliaoinfoDao.NUpdate(k3model);
+                    }
+                }
+                return Json(new { result = "success", msg ="新增数量："+xz +"条，更新："+gz+"条" });
+
+            }
+            else
+            {
+                return Json(new { result = "error", msg = "数据为空！"  });
+            }
+
+
+        }
+        #endregion
+
+
+        #region //产品标准工时计算
+        #region //页面
+        public ActionResult CalculationSWH()
+        {
+            return View();
+        }
+
+        #region //根据BOM和物料返回工序工时计算产品的标准工时
+        public JsonResult GetchanpanSWH(string wlno,string xishu)
+        {
+
+            try
+            {
+                decimal? hz_Z_DQZZDBGS = 0;
+                decimal? hz_Z_DQZZKZXGS = 0;
+                decimal? hz_Z_DQZZZHLGS = 0;
+                decimal? hz_Z_DQZZMBZXGS = 0;
+                decimal? hz_Z_DQZZMBJXGS = 0;
+                decimal? hz_zgs = 0;
+                string strjson = zypushsoftHelper.GetBom_QYbywlno(wlno);
+                if (strjson != null || strjson != "[]")
+                {
+                    List<bcmodel> timemodel = getObjectByJson<bcmodel>(strjson);
+                    List<bcmodel> Newmodel = new List<bcmodel>(); 
+                    foreach (var item in timemodel)
+                    {
+                        //查询物料工序工时
+                        string wlgxgsjson = zypushsoftHelper.GetMDItm_GXGS(item.ItmID);
+                        if (wlgxgsjson != null || wlgxgsjson != "[]")
+                        {
+                            List<Ps_wlGXGSModel> wlgsmodel = getObjectByJson<Ps_wlGXGSModel>(wlgxgsjson);
+                            Ps_wlGXGSModel gxgsmodel = wlgsmodel[0];
+                            if (gxgsmodel.Z_DQZZDBGS == null)
+                                gxgsmodel.Z_DQZZDBGS = "0";
+                            gxgsmodel.Z_DQZZDBGS = (Convert.ToDecimal(gxgsmodel.Z_DQZZDBGS) * Convert.ToDecimal(xishu)).ToString();
+                            item.b_Z_DQZZDBGS =(item.NetQty *Convert.ToDecimal(gxgsmodel.Z_DQZZDBGS)).ToString();
+                            hz_Z_DQZZDBGS = hz_Z_DQZZDBGS + (item.NetQty * Convert.ToDecimal(gxgsmodel.Z_DQZZDBGS));
+                            if (gxgsmodel.Z_DQZZKZXGS == null)
+                                gxgsmodel.Z_DQZZKZXGS = "0";
+                            gxgsmodel.Z_DQZZKZXGS = (Convert.ToDecimal(gxgsmodel.Z_DQZZKZXGS) * Convert.ToDecimal(xishu)).ToString();
+                            item.b_Z_DQZZKZXGS = (item.NetQty * Convert.ToDecimal(gxgsmodel.Z_DQZZKZXGS)).ToString();
+                            hz_Z_DQZZKZXGS = hz_Z_DQZZKZXGS + (item.NetQty * Convert.ToDecimal(gxgsmodel.Z_DQZZKZXGS));
+                            if (gxgsmodel.Z_DQZZZHLGS == null)
+                                gxgsmodel.Z_DQZZZHLGS = "0";
+                            gxgsmodel.Z_DQZZZHLGS = (Convert.ToDecimal(gxgsmodel.Z_DQZZZHLGS) * Convert.ToDecimal(xishu)).ToString();
+                            item.b_Z_DQZZZHLGS = (item.NetQty * Convert.ToDecimal(gxgsmodel.Z_DQZZZHLGS)).ToString();
+                            hz_Z_DQZZZHLGS = hz_Z_DQZZZHLGS + (item.NetQty * Convert.ToDecimal(gxgsmodel.Z_DQZZZHLGS));
+                            if (gxgsmodel.Z_DQZZMBZXGS == null)
+                                gxgsmodel.Z_DQZZMBZXGS = "0";
+                            gxgsmodel.Z_DQZZMBZXGS = (Convert.ToDecimal(gxgsmodel.Z_DQZZMBZXGS) * Convert.ToDecimal(xishu)).ToString();
+                            item.b_Z_DQZZMBZXGS = (item.NetQty * Convert.ToDecimal(gxgsmodel.Z_DQZZMBZXGS)).ToString();
+                            hz_Z_DQZZMBZXGS = hz_Z_DQZZMBZXGS + (item.NetQty * Convert.ToDecimal(gxgsmodel.Z_DQZZMBZXGS));
+                            if (gxgsmodel.Z_DQZZMBJXGS == null)
+                                gxgsmodel.Z_DQZZMBJXGS = "0";
+                            gxgsmodel.Z_DQZZMBJXGS = (Convert.ToDecimal(gxgsmodel.Z_DQZZMBJXGS) * Convert.ToDecimal(xishu)).ToString();
+                            item.b_Z_DQZZMBJXGS = (item.NetQty * Convert.ToDecimal(gxgsmodel.Z_DQZZMBJXGS)).ToString();
+                            hz_Z_DQZZMBJXGS = hz_Z_DQZZMBJXGS + (item.NetQty * Convert.ToDecimal(gxgsmodel.Z_DQZZMBJXGS));
+                            item.b_zgs =Convert.ToString(Convert.ToDecimal(item.b_Z_DQZZDBGS) + Convert.ToDecimal(item.b_Z_DQZZKZXGS) + Convert.ToDecimal(item.b_Z_DQZZZHLGS) + Convert.ToDecimal(item.b_Z_DQZZMBZXGS) + Convert.ToDecimal(item.b_Z_DQZZMBJXGS));
+                            hz_zgs = hz_zgs + Convert.ToDecimal(item.b_zgs);
+
+                        }
+                        Newmodel.Add(item);
+                    }
+                    string BOMJSON = JsonConvert.SerializeObject(Newmodel);
+                    gxgshzmodel hzgxgs = new gxgshzmodel();
+                    hzgxgs.Z_DQZZDBGS = hz_Z_DQZZDBGS.ToString();
+                    hzgxgs.Z_DQZZKZXGS = hz_Z_DQZZKZXGS.ToString();
+                    hzgxgs.Z_DQZZZHLGS = hz_Z_DQZZZHLGS.ToString();
+                    hzgxgs.Z_DQZZMBZXGS = hz_Z_DQZZMBZXGS.ToString();
+                    hzgxgs.Z_DQZZMBJXGS = hz_Z_DQZZMBJXGS.ToString();
+                    hzgxgs.hz_gxgs = hz_zgs.ToString();
+                    string hzjson = JsonConvert.SerializeObject(hzgxgs);
+                    return Json(new { result= "success", BOMdata= BOMJSON ,HZGSdata= hzjson });
+
+
+                }
+                else
+                {
+                    return Json(new { result = "error", res = "产品物料不存在" });
+                }
+            }
+            catch(Exception x)
+            {
+                return Json(new { result = "error", res = x });
+            }
+        }
+        #endregion
+        //继承BOM的实体，新增工序工时
+        public class bcmodel:FInstaerMDBomA
+        {
+            /// <summary>
+            /// 物料名称
+            /// </summary>
+            public virtual string ItmName { get; set; }
+
+            /// <summary>
+            /// 物料型号
+            /// </summary>
+            public virtual string ItmSpec { get; set; }
+            public virtual string b_Z_DQZZDBGS { get; set; }
+
+            public virtual string b_Z_DQZZKZXGS { get; set; }
+
+            public virtual string b_Z_DQZZZHLGS { get; set; }
+
+            public virtual string b_Z_DQZZMBZXGS { get; set; }
+
+            public virtual string b_Z_DQZZMBJXGS { get; set; }
+
+            public virtual string b_zgs { get; set; }
+        }
+
+        //各个工序汇总数据
+        public class gxgshzmodel
+        {
+            public virtual string Z_DQZZDBGS { get; set; }
+
+            public virtual string Z_DQZZKZXGS { get; set; }
+
+            public virtual string Z_DQZZZHLGS { get; set; }
+
+            public virtual string Z_DQZZMBZXGS { get; set; }
+
+            public virtual string Z_DQZZMBJXGS { get; set; }
+
+            public virtual string hz_gxgs { get; set; }
+        }
+        #endregion
+        #endregion
 
 
     }

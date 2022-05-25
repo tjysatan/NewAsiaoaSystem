@@ -124,7 +124,7 @@ namespace NewAsiaOASystem.Dao
         #region //根据销售订单ID 查找订单明细
         public IList<NA_XSdetailsinfoView> GetxsdetaillistbyxsId(string xsid)
         {
-            List<NA_XSdetailsinfo> list = HibernateTemplate.Find<NA_XSdetailsinfo>("from NA_XSdetailsinfo where xsId='" + xsid + "'") as List<NA_XSdetailsinfo>;
+            List<NA_XSdetailsinfo> list = HibernateTemplate.Find<NA_XSdetailsinfo>("from NA_XSdetailsinfo where xsId='" + xsid + "' order by ItemId") as List<NA_XSdetailsinfo>;
             IList<NA_XSdetailsinfoView> listmodel = GetViewlist(list);
             return listmodel;
         } 

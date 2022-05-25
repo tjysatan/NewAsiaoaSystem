@@ -2,20 +2,209 @@
     Layout = "~/Views/Shared/_SysLayout.cshtml";
 }
 
-<div class="h-right">
-    <div class="h-right-c">
-        <div class="h-right-title">
-            <span class="tolic"></span>
-            <span class="tolic-title">
-                <marquee scrollamount="3" direction="left" style="width: 95%; height: 45px;"> <a href="#" onclick="News('')"></a></marquee>
-            </span>
+
+<style>
+    .layui-top-box {
+        padding: 40px 20px 20px 20px;
+        color: #fff
+    }
+
+    .panel {
+        margin-bottom: 17px;
+        background-color: #fff;
+        border: 1px solid transparent;
+        border-radius: 3px;
+        -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.05);
+        box-shadow: 0 1px 1px rgba(0,0,0,.05)
+    }
+
+    .panel-body {
+        padding: 15px;
+        background: none !important;
+        color: none !important;
+        border-width: initial !important;
+        border-style: none !important;
+        color: white !important
+    }
+
+    .panel-title {
+        margin-top: 0;
+        margin-bottom: 0;
+        font-size: 14px !important;
+        color: inherit !important
+    }
+
+    .label {
+        display: inline;
+        padding: .2em .6em .3em;
+        font-size: 75%;
+        font-weight: 700;
+        line-height: 1;
+        color: #fff;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: baseline;
+        border-radius: .25em;
+        margin-top: .3em;
+    }
+
+    .layui-red {
+        color: red
+    }
+
+    .pull-right {
+        float: right
+    }
+
+    .main_btn > p {
+        height: 40px;
+    }
+
+    body {
+        margin: 15px 15px 15px 15px !important;
+        background: #f2f2f2 !important;
+    }
+
+    .layuimini-container {
+        border: 1px solid #f2f2f2;
+        border-radius: 5px;
+        background-color: #ffffff
+    }
+
+    .layuimini-main {
+        margin: 10px 10px 10px 10px;
+    }
+
+    /**必填红点 */
+    .layuimini-form > .layui-form-item > .required:after {
+        content: '*';
+        color: red;
+        position: absolute;
+        margin-left: 4px;
+        font-weight: bold;
+        line-height: 1.8em;
+        top: 6px;
+        right: 5px;
+    }
+
+    .layuimini-form > .layui-form-item > .layui-form-label {
+        width: 120px !important;
+    }
+
+    .layuimini-form > .layui-form-item > .layui-input-block {
+        margin-left: 150px !important;
+    }
+
+        .layuimini-form > .layui-form-item > .layui-input-block > tip {
+            display: inline-block;
+            margin-top: 10px;
+            line-height: 10px;
+            font-size: 10px;
+            color: #a29c9c;
+        }
+
+
+
+    /**搜索框*/
+    .layuimini-container .table-search-fieldset {
+        margin: 0;
+        border: 1px solid #e6e6e6;
+        padding: 10px 20px 5px 20px;
+        color: #6b6b6b;
+    }
+</style>
+
+ 
+
+<div class="layuimini-container">
+    <div class="layuimini-main layui-top-box">
+        <div class="layui-row layui-col-space10">
+
+            <div class="layui-col-md3">
+                <div class="col-xs-6 col-md-3">
+                    <div class="panel layui-bg-cyan">
+                        <div class="panel-body" style="">
+                            <div class="panel-title">
+                                <span class="label pull-right layui-bg-blue">实时</span>
+                                <h5>非标订单</h5>
+                            </div>
+                            <div class="panel-content">
+                                <h1 class="no-margins">1234</h1>
+                                @*<div class="stat-percent font-bold text-gray"><i class="fa fa-commenting"></i> 1234</div>*@
+                                <small>当前分类总记录数</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-col-md3">
+                <div class="col-xs-6 col-md-3">
+                    <div class="panel layui-bg-blue">
+                        <div class="panel-body">
+                            <div class="panel-title">
+                                <span class="label pull-right layui-bg-cyan">实时</span>
+                                <h5>销售订单</h5>
+                            </div>
+                            <div class="panel-content">
+                                <h1 class="no-margins">1234</h1>
+                                @*<div class="stat-percent font-bold text-gray"><i class="fa fa-commenting"></i> 1234</div>*@
+                                <small>当前分类总记录数</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-col-md3">
+                <div class="col-xs-6 col-md-3">
+                    <div class="panel layui-bg-green">
+                        <div class="panel-body">
+                            <div class="panel-title">
+                                <span class="label pull-right layui-bg-orange">实时</span>
+                                <h5>返退货</h5>
+                            </div>
+                            <div class="panel-content">
+                                <h1 class="no-margins">1234</h1>
+                                @*<div class="stat-percent font-bold text-gray"><i class="fa fa-commenting"></i> 1234</div>*@
+                                <small>当前分类总记录数</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md3">
+                <div class="col-xs-6 col-md-3">
+                    <div class="panel layui-bg-orange">
+                        <div class="panel-body">
+                            <div class="panel-title">
+                                <span class="label pull-right layui-bg-green">实时</span>
+                                <h5>方案库</h5>
+                            </div>
+                            <div class="panel-content">
+                                <h1 class="no-margins">1234</h1>
+                                @*<div class="stat-percent font-bold text-gray"><i class="fa fa-commenting"></i> 1234</div>*@
+                                <small>当前分类总记录数</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
-        <div class="d_div_r_notice">
-            @*<iframe name="right" class="r-frame" id="right" allowtransparency="true">
-                 
-            </iframe>*@
+ 
+    </div>
+
+    <div class="layui-card">
+        <div class="layui-card-header">
+            <i class="fa fa-line-chart icon"></i>报表统计
+        </div>
+        <div class="layui-card-body">
+            <div id="container" style="width: 100%;min-height:65vh">
+
+            </div>
         </div>
     </div>
+
+
 </div>
-<script type="text/javascript">
-</script>

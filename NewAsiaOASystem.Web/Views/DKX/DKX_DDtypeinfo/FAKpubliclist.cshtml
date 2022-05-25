@@ -1,4 +1,4 @@
-﻿@model NewAsiaOASystem.ViewModel.PagerInfo<NewAsiaOASystem.ViewModel.DKX_CPInfoView>
+﻿
 @{
     ViewBag.Title = "方案库公共查看页面";
     Layout = "~/Views/Shared/_SysLayout.cshtml";
@@ -7,9 +7,119 @@
 
 @section HeadContent{
     <script type="text/javascript">
+        var loadi;
+        function ddchen() {
+            loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+        }
+        //关闭等待效果
+        function disLoading() {
+            layer.close(loadi);
+        }
         $(function () {
-            BindGrid();
+           // BindGrid();
+            Gettabledata();
         })
+
+        //初始化table数据
+        function Gettabledata() {
+            var txtwlno = $("#txtwlno").val();//物料号
+            var txtcpname = $("#txtcpname").val();//产品型号
+            var txtgl = $("#txtgl").val();//功率
+            var txtdw = $("#txtdw").val();//功率单位
+            var txtType = $("#txtType").val();//产品类型
+            var txtft = $("#txtft").val();//是否分体
+            var txtcpgnjs = $("#txtcpgnjs").val();//功能简述
+            var txtGcs_name = $("#txtKF").val();//工程师
+            var txtIsDis = $("#txtIsDis").val();
+            layui.use(['table', 'element'], function () {
+                var table = layui.table;
+                var element = layui.element;
+                table.render({
+                    elem: '#test',
+                    url: '/DKX_DDtypeinfo/New_GetDKXCPInfolistpage',
+                    page: {
+                        curr: history.state != null && history.state.page != null ? history.state.page : 1
+                    },//页面缓存值为null时页码为1 否则取缓存值
+                    where: {
+                        wlno: txtwlno,
+                        cpname: txtcpname,
+                        gl: txtgl,
+                        dw: txtdw,
+                        Type: txtType,
+                        ft: txtft,
+                        Gcs_name: txtGcs_name,
+                        gnjs: txtcpgnjs,
+                        IsDis: txtIsDis,
+                    },//设定异步数据接口的额外参数
+                    cellMinWidth: 80, //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                    cols: [[
+                        { field: 'Id', width: 80, title: 'ID', sort: true, },
+                        { field: 'Ps_wlBomNO', width: 130, title: '物料号', fixed: 'left' },
+                        { field: 'Cpname', width: 130, title: '型号名称' },
+
+                        {
+                            field: 'POWER', width: 90, title: '功率', templet: function (d) {
+                                return d.Power + "/" + d.DW;
+                            }
+                        },
+                        {
+                            field: 'Type', width: 100, title: '类型', templet: function (d) {
+
+                                return showddtype(d.Type, d.Isft);
+                            }
+                        },
+                        {
+                            field: 'IsDis', width: 100, title: '状态', templet: function (d) {
+
+                                return showcpzt(d.IsDis, d.zgyy);
+                            }
+                        },
+                        { field: 'cpgnjs', width: 230, title: '功能简述' },
+                        {
+                            field: 'Gcs_nameId', width: 80, title: '工程师', templet(d) {
+                                return AjaxGcsinfo(d.Gcs_name).Name;
+                            }
+                        },
+                        {
+                            field: 'Ysdatetime', width: 130, title: '入库时间', templet(d) {
+                                //return layui_dateToStr(d.Ysdatetime)
+                                if (d.RK_time != "" && d.RK_time != null) {
+                                    return layui_dateToStr(d.RK_time);
+                                }
+                                else {
+                                    return "";
+                                }
+                            }
+                        },
+
+                        { field: '', title: '操作', width: 160, fixed: 'right', toolbar: "#bar" }
+                    ]],
+                    done: function (res, curr, count) {
+                        $(".layui-table-box").find("[data-field='Id']").css("display", "none");
+                        $("[data-field='DD_Type']").children().each(function () {
+                            var dd_typename = showddtype($(this).text());
+                            $(this).text(dd_typename)
+                        });
+                        element.render();
+                    }
+                    ,
+                    //page: true,
+                    limits: [3, 5, 10, 15, 20]  //一页选择显示3,5或10条数据
+                    , limit: 10  //一页显示10条数据
+
+                });
+                table.on('tool(test)', function (obj) {
+                    var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+                    var data = obj.data; //获得当前行 tr 的 DOM 对象（如果有的话）
+                    
+                    if (layEvent === 'showzl') {//资料查看
+                        ziliaochakan(data.Id)
+                    }
+                    
+                })
+            })
+        }
+
         function BindGrid() {
             @{
                 if (null != Model && null != Model.GetPagingDataJson)
@@ -117,8 +227,6 @@
             return z;
         }
 
-       
-
         //资料查看
         function ziliaochakan(val)
         {
@@ -174,109 +282,143 @@
                 }
             });
         }
+
+        //更新常规订单产品的物料
+        function updatecgdzwlno() {
+            $.ajax({
+                url: "../DKX_DDtypeinfo/Updatecgcpwlno",
+                type: "POST",
+                dataType: "json",
+                async: true,
+                beforeSend: function () {
+                    ddchen();
+                },
+                success: function (response) {
+                    disLoading();
+                    if (response.result == "error") {
+                        layer.alert(response.msg, { icon: 2 });
+                        return false;
+                    }
+                    if (response.result == "success") {
+                        layer.alert(response.msg, { icon: 1 });
+                        return false;
+                    }
+                    return false;
+
+                },
+                error: function (e) {
+                    disLoading();
+                    layer.alert("操作失败！", { icon: 2 });
+                    return false;
+                }
+            })
+        }
+    </script>
+
+    <script type="text/html" id="bar">
+        <div class="layui-btn-group">
+            
+            <button type="button" class="layui-btn  layui-btn-xs layui-btn-warm" lay-event="showzl" title="资料查看">
+                <i class="layui-icon">&#xe63c;</i>
+            </button>
+           
+        </div>
     </script>
 }
 
 
 
-<div class="h-right">
-    <div class="h-right-c">
-        <!--查询条件-->
-        <div class="inquiry1">
-            <fieldset>
-                <legend>查询条件：</legend>
-                @using (Html.BeginForm("DkxcpSearchList", "DKX_DDtypeinfo", FormMethod.Post, new { id = "form1" }))
-                {
-                    @Html.Hidden("pageIndex");
-                    <ul>
-                        <li>
-                            <span>产品型号：</span>
-                            <span class="inquiry-input">
-                                <input type="text" name="txtcpname" id="txtcpname" />
-                            </span>
-                        </li>
-                        <li>
-                            <span>功率：</span>
-                            <span class="inquiry-input">
-                                <input type="text" name="txtgl" id="txtgl" />
-                            </span>
-                        </li>
-                        <li>
-                            <span>功率单位：</span>
-                            <span class="inquiry-input">
-                                <select id="txtdw" name="txtdw">
-                                    <option value="">全部</option>
-                                    <option value="KW">KW</option>
-                                    <option value="P">P</option>
-                                </select>
-                            </span>
-                        </li>
-                        <li>
-                            @*<span>产品类型：</span>
-                            <span class="inquiry-input">
-                                <select id="txtType" name="txtType">
-                                    <option value="">全部</option>
-                                    <option value="0">小系统</option>
-                                    <option value="1">大系统</option>
-                                    <option value="2">物联网</option>
-                                    <option value="3">大系统（拼接柜）</option>
-                                </select>
-                            </span>*@
-                            <span>产品类型：</span>
-                            <span class="inquiry-input">
-                                @Html.DropDownList("txtType", ViewData["aDTlist"] as SelectList)
-                            </span>
-                        </li>
-                        <li>
-                            <span>是否分体：</span>
-                            <span class="inquiry-input">
-                                <select id="txtft" name="txtft">
-                                    <option value="">全部</option>
-                                    <option value="0">一体</option>
-                                    <option value="1">分体</option>
-                                </select>
-                            </span>
-                        </li>
-                        <li>
-                            <span>工程师：</span>
-                            <span class="inquiry-input">
-                                @Html.DropDownList("txtGcs_name", ViewData["GCSDATA"] as SelectList)
-                            </span>
-                        </li>
-                        <li>
-                            <span>功能简述：</span>
-                            <span class="inquiry-input">
-                                <input type="text" name="txtgnjs" id="txtgnjs" />
-                            </span>
-                        </li>
+<div class="inquiry1">
+    <fieldset>
+        <legend>查询条件：</legend>
+        <ul>
+            <li>
+                <span>物料代码：</span>
+                <span class="inquiry-input">
+                    <input type="text" name="txtwlno" id="txtwlno" />
+                </span>
+            </li>
+            <li>
+                <span>产品型号：</span>
+                <span class="inquiry-input">
+                    <input type="text" name="txtcpname" id="txtcpname" />
+                </span>
+            </li>
+            <li>
+                <span>功率：</span>
+                <span class="inquiry-input">
+                    <input type="text" name="txtgl" id="txtgl" />
+                </span>
+            </li>
+            <li>
+                <span>功率单位：</span>
+                <span class="inquiry-input">
+                    <select id="txtdw" name="txtdw">
+                        <option value="">全部</option>
+                        <option value="KW">KW</option>
+                        <option value="P">P</option>
+                    </select>
+                </span>
+            </li>
+            <li>
+                <span>产品类型：</span>
+                <span class="inquiry-input">
+                    @Html.DropDownList("txtType", ViewData["aDTlist"] as SelectList)
+                </span>
+            </li>
+            <li>
+                <span>是否分体：</span>
+                <span class="inquiry-input">
+                    <select id="txtft" name="txtft">
+                        <option value="">全部</option>
+                        <option value="0">一体</option>
+                        <option value="1">分体</option>
+                    </select>
+                </span>
+            </li>
+            <li>
+                <span>工程师：</span>
+                <span class="inquiry-input">
+                    @Html.DropDownList("txtGcs_name", ViewData["GCSDATA"] as SelectList)
+                </span>
+            </li>
+            <li>
+                <span>功能简述：</span>
+                <span class="inquiry-input">
+                    <input type="text" name="txtgnjs" id="txtgnjs" />
+                </span>
+            </li>
+            <li>
+                <span>状态：</span>
+                <span class="inquiry-input">
+                    <select id="txtIsDis" name="txtIsDis">
+                        <option value="">全部</option>
+                        <option value="0">正常</option>
+                        <option value="1">异常</option>
+                        <option value="2">待审核</option>
+                        <option value="3">未提交</option>
+                    </select>
+                </span>
+            </li>
 
-                        <li style="*width: 100%; *margin: -10px 0 5px 90px;">
-                            <span class="inquiry-input">
-                                <button name="btnSerch" class="layui-btn" onclick="return SerchList(1)"><i class="layui-icon">&#xe615;</i>查询</button>
-                            </span>
-                            <span class="inquiry-input">
-                                <button class="layui-btn" onclick="exportexcel();return false;" style="width: 110px">导出数据</button>
-                            </span>
-                        </li>
-                    </ul>
-                }
-            </fieldset>
-        </div>
-
-        <div class="h-table">
-            <div class="h-table-content" style="color: #9d9999;">
-                <div id="content"></div>
-            </div>
-        </div>
-    </div>
+            <li style="*width: 100%; *margin: -10px 0 5px 90px;">
+                <span class="inquiry-input">
+                    <button name="btnSerch" class="layui-btn" onclick="Gettabledata()"><i class="layui-icon">&#xe615;</i>查询</button>
+                </span>
+                <span class="inquiry-input">
+                    <button class="layui-btn" onclick="exportexcel();return false;" style="width: 110px">导出数据</button>
+                </span>
+                <span class="inquiry-input">
+                    <button class="layui-btn" onclick="updatecgdzwlno();return false;" style="width: 110px">更新常规物料</button>
+                </span>
+            </li>
+        </ul>
+    </fieldset>
 </div>
 
-<!--==========================输出分页按钮=========================-->
-<div class="pagin">
-    @if (ViewBag.PageNavigate == null)
-    {
-        @Html.ShowPageNavigate(Model.CurrentPageIndex, Model.PageSize, Model.RecordCount);
-    }
+<div style="padding:0 20px 0 20px">
+    <table class="layui-hide" id="test" lay-filter="test"></table>
 </div>
+
 
 <script src="~/Scripts/NAjs/DKXpulice.js"></script>

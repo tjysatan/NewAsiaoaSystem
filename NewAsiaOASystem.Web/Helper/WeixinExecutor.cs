@@ -580,7 +580,6 @@ namespace NewAsiaOASystem.Web
             return couponesBuilder.ToString();
         }
 
-
         private string RepayE_gz(string toUserName, string fromUserName, string content)
         {
             return string.Format("<xml><ToUserName><![CDATA[{0}]]></ToUserName>" +

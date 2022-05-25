@@ -171,5 +171,34 @@ namespace NewAsiaOASystem.Dao
                 return null;
         }
         #endregion
+
+        #region //通过产品Id查询产品入库资料的全部明细
+        /// <summary>
+        /// 通过产品Id查询产品入库资料的全部明细
+        /// </summary>
+        /// <param name="CPID">产品Id</param>
+        /// <returns></returns>
+        public IList<DKX_RKZLDataInfoView> Get_ALLCPRKZL_BY_CpId(string CPID)
+        {
+            string Hqlstr = string.Format(" from DKX_RKZLDataInfo where cpId='{0}' and Start='0'", CPID);
+            List<DKX_RKZLDataInfo> list = HibernateTemplate.Find<DKX_RKZLDataInfo>(Hqlstr) as List<DKX_RKZLDataInfo>;
+            IList<DKX_RKZLDataInfoView> listmodel = GetViewlist(list);
+            return listmodel;
+        }
+        #endregion
+
+        #region //查询入库资料的常规订单的BOM 数据（整理数据）
+        /// <summary>
+        /// 查询入库资料的常规订单的BOM 数据（整理数据）
+        /// </summary>
+        /// <returns></returns>
+        public IList<DKX_RKZLDataInfoView> GetcgBom()
+        {
+            string Hqlstr = string.Format("  from DKX_RKZLDataInfo where Zl_type=1 and Bjno like 'BOM%'");
+            List<DKX_RKZLDataInfo> list = HibernateTemplate.Find<DKX_RKZLDataInfo>(Hqlstr) as List<DKX_RKZLDataInfo>;
+            IList<DKX_RKZLDataInfoView> listmodel = GetViewlist(list);
+            return listmodel;
+        }
+        #endregion
     }
 }

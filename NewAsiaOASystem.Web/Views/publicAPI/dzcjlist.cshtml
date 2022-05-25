@@ -1,0 +1,118 @@
+﻿@{
+    ViewBag.Title = "电子车间生产计划单";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<style>
+    .layui-table-cell {
+      height:30px;
+      line-height:30px;
+  /*    font-size:25px;*/
+      color:black;
+    }
+    .layui-badge {
+        height: 30px;
+        line-height: 30px;
+      /*  font-size: 25px*/
+    }
+</style>
+@section HeadContent{
+    <script type="text/javascript">
+
+        setTimeout('Gettabledata()', 30000); //指定1秒刷新一次
+
+        $(function () {
+            
+            Gettabledata();
+        })
+
+        function Gettabledata() {
+            
+            layui.use('table', function () {
+                var table = layui.table;
+                table.render({
+                    elem: '#test',
+                    url: '/publicAPI/GetDZCJorderlist_Rservice',
+                    where: {
+                         
+                    },//设定异步数据接口的额外参数
+                  
+                    cellMinWidth: 80, //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                    cols: [[
+                        { field: 'Id', width: 80, title: 'ID', sort: true, },
+                        { field: 'scbianhao', width: '12%', height:200, title: '生产批号', fixed: 'left' },
+                        {
+                            field: 'P_Pianhao', width: '10%', title: '当前状态', templet(d) {
+                                if (d.P_Issc == '0') {
+                                    return '<span class="layui-badge layui - bg - green">生产中</span>';
+                                }
+                                if (d.P_Issc == '1') {
+                                    return '<span class="layui-badge">缺料</span>';
+                                }
+                                if (d.P_Issc == '2') {
+                                    return '<span class="layui-badge layui-bg-blue">待生产</span>';
+                                }
+                                if (d.P_Issc == '3') {
+                                    return '<span class="layui-badge layui-bg-green">完成</span>';
+                                }
+                                if (d.P_Issc == '4') {
+                                    return '<span class="layui-badge layui-bg-orange">技术待确认</span>';
+                                }
+                            }
+                        },
+                        { field: 'P_Pianhao', width: '12%', title: '物料代码' },
+                        { field: 'P_CPname', width: '15%', title: '产品名称' },
+                        { field: 'P_SCnumber', width: '10%', title: '订单数量' },
+                        {
+                            field: 'kgdatetime', width: '20%', title: '开始时间', templet(d) {
+                                if (d.kgdatetime != "" && d.kgdatetime != null) {
+                                    return layui_dateToStr(d.kgdatetime)
+                                } else { return "" }
+                            }
+                        },
+                        {
+                            field: 'wcdatetime', width: '20%', title: '实际完工', templet(d) {
+                                if (d.wcdatetime != "" && d.wcdatetime != null) {
+                                    return layui_dateToStr(d.wcdatetime)
+                                } else { return "" }
+                            }
+                        }
+                        
+                    ]],
+                    done: function (res, curr, count) {
+                        $("table").css("width","100%")
+                        $(".layui-table-box").find("[data-field='Id']").css("display", "none");
+                        $("[data-field='DD_Type']").children().each(function () {
+                            var dd_typename = showddtype($(this).text());
+                            $(this).text(dd_typename)
+                        });
+                    }
+                    , page: true
+                    , limits: [3, 5, 10, 15, 20]  //一页选择显示3,5或10条数据
+                    , limit: 20  //一页显示10条数据
+
+                });
+                table.on('tool(test)', function (obj) {
+                    var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+                    var data = obj.data; //获得当前行 tr 的 DOM 对象（如果有的话）
+                    if (layEvent === 'check') { //查看
+                        ziliaochakan(data.Id);
+                    }
+                    if (layEvent === 'checkcz') {//操作记录查看
+                        ckczji(data.Id);
+                    }
+
+                })
+            })
+        }
+    </script>
+    }
+<blockquote class="layui-elem-quote" style="margin-top: 10px;">
+                电子车间生产计划单总汇
+</blockquote>
+
+<div style="padding:0 20px 0 20px">
+            <table class="layui-hide" id="test" lay-filter="test" ></table>
+</div>
+
+<script src="~/Scripts/NAjs/DKXpulice.js"></script>

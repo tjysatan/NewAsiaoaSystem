@@ -1912,7 +1912,8 @@ namespace NewAsiaOASystem.Web
         {
             try
             {
-                string YCTZmbId = "ejogp4Iyc9481HNQNulyoR9zoMrgzuWB72zmvIbpjpo";
+                //string YCTZmbId = "ejogp4Iyc9481HNQNulyoR9zoMrgzuWB72zmvIbpjpo";
+                string YCTZmbId = "2RnmX9LcqWdsuFDcgwWeM4C8xKtKT5iHcYjHNVo1jP8";
                 log4net.LogManager.GetLogger("ApplicationInfoLog").Error("参数3:" + openId + "/" + Username + "/" + consrt + "/" + jkdname);
                 string F_Date = DateTime.Now.ToString();
                 StringBuilder builder = new StringBuilder();
@@ -1945,7 +1946,7 @@ namespace NewAsiaOASystem.Web
                 builder.Append("\"color\":\"" + "#173177" + "\"");
                 builder.Append("},");
                 builder.Append("\"remark\":{");
-                builder.Append("\"value\":\"" + "如果您已经处理,请忽略该告警/通知,感谢关注新亚洲远程监控！" + "\",");
+                builder.Append("\"value\":\"" + "如果您已经处理,请忽略该告警/通知！蓝河网络助力企业数值化转型" + "\",");
                 builder.Append("\"color\":\"" + "#173177" + "\"");
                 builder.Append("}");
                 builder.Append("}");
@@ -1967,12 +1968,10 @@ namespace NewAsiaOASystem.Web
             string I = "1";
             try
             {
-                log4net.LogManager.GetLogger("ApplicationInfoLog").Error("参数2:" + openId + "/" + Username + "/" + consrt + "/" + jkdname + "/" + SID);
                 string data = YCTZXMLpj(openId, Username, consrt, jkdname);
-                log4net.LogManager.GetLogger("ApplicationInfoLog").Error("发送数据:" + data);
                 if (data != null)
                 {
-                    string url = string.Format("https://api.weixin.qq.com/cgi-bin/message/template/send?access_token={0}", MenuContext.AccessToken);
+                    string url = string.Format("https://api.weixin.qq.com/cgi-bin/message/template/send?access_token={0}", MenuContext.AccessTokenlh);
                     String result = HttpUtility11.PostUrl(url, data);
                     XDocument doc = XmlUtility.ParseJson(result, "root");
                     XElement root = doc.Root;

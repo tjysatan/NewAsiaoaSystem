@@ -22,6 +22,7 @@ namespace NewAsiaOASystem.Web.Controllers
         // GET: /NA_XSinfo/
         INA_XSinfoDao _INA_XSinfoDao = ContextRegistry.GetContext().GetObject("NA_XSinfoDao") as INA_XSinfoDao;
         INA_XSdetailsinfoDao _INA_XSdetailsinfoDao = ContextRegistry.GetContext().GetObject("NA_XSdetailsinfoDao") as INA_XSdetailsinfoDao;
+        INA_XSqitainfoDao _INA_XSqitainfoDao = ContextRegistry.GetContext().GetObject("NA_XSqitainfoDao") as INA_XSqitainfoDao;
         INACustomerinfoDao _INACustomerinfoDao = ContextRegistry.GetContext().GetObject("NACustomerinfoDao") as INACustomerinfoDao;
         INA_AddresseeInfoDao _INA_AddresseeInfoDao = ContextRegistry.GetContext().GetObject("NA_AddresseeInfoDao") as INA_AddresseeInfoDao;
         IWL_DkxInfoDao _IWL_DkxInfoDao = ContextRegistry.GetContext().GetObject("WL_DkxInfoDao") as IWL_DkxInfoDao;
@@ -303,6 +304,8 @@ namespace NewAsiaOASystem.Web.Controllers
         #region //
         public ViewResult EwmOrderch(string Id)
         {
+            //刷新订单
+            updateDsorder(Id);
             ViewData["EwmOrderId"] = Id;//保存订单Id
             return View();
         } 
@@ -653,8 +656,60 @@ namespace NewAsiaOASystem.Web.Controllers
         #region //打开同步普实页面
         public ActionResult TBPsorderView(string Id)
         {
+            //刷新订单的其他信息
+            updatexs_qtinfo(Id);
             NA_XSinfoView model = _INA_XSinfoDao.NGetModelById(Id);
             return View(model);
+        }
+        #endregion
+
+        #region //查询销售订单的其他信息
+        public string Getxsorderqtinfo(string dsorderId)
+        {
+            try
+            {
+                //查询
+                NA_XSqitainfoView qtmodel = _INA_XSqitainfoDao.GetModelByDsOrder_Id(dsorderId);
+                if (qtmodel == null)
+                {
+                    //刷新
+                    Newasia.XYOffer Dsmodel = new Newasia.XYOffer();
+                    DataTable dt = Dsmodel.GetOrderShipInfoByID(Convert.ToInt32(dsorderId));
+                    string OrderId = dt.Rows[0]["OrderId"].ToString();//订单Id
+                    string JHQX = dt.Rows[0]["JHQX"].ToString();//交货期限
+                    string YFCD = dt.Rows[0]["YFCD"].ToString();//运费承担
+                    string JSFS = dt.Rows[0]["JSFS"].ToString();//付款方式
+                    string JHDD = dt.Rows[0]["JHDD"].ToString();//交货地点
+                    string AddTime = dt.Rows[0]["AddTime"].ToString();//添加时间
+                    string ISK3 = dt.Rows[0]["ISK3"].ToString();//
+                    string YWRY = dt.Rows[0]["YWRY"].ToString();
+                    string IsSend = dt.Rows[0]["IsSend"].ToString();
+                    string cell = dt.Rows[0]["cell"].ToString();
+                    string ordercode = dt.Rows[0]["ordercode"].ToString();
+                    string Freight = dt.Rows[0]["Freight"].ToString();//运费
+                    qtmodel = new NA_XSqitainfoView();
+                    qtmodel.DsOrder_Id = OrderId;
+                    qtmodel.Dsjhqx = JHQX;
+                    qtmodel.Dsjhdd = JHDD;
+                    qtmodel.Dsyfcd = YFCD;
+                    qtmodel.DsJSFS = JSFS;
+                    qtmodel.Dsaddtime = AddTime;
+                    qtmodel.DsIsK3 = ISK3;
+                    qtmodel.Dsywry = YWRY;
+                    qtmodel.DsIsseed = IsSend;
+                    qtmodel.Dscell = cell;
+                    qtmodel.Dsordercode = ordercode;
+                    qtmodel.Dsyf = Convert.ToDecimal(Freight);
+                    qtmodel.C_Time = DateTime.Now;
+                    _INA_XSqitainfoDao.Ninsert(qtmodel);
+                }
+                string json = JsonConvert.SerializeObject(qtmodel);
+                return json;
+            }
+            catch
+            {
+                return null;
+            }
         }
         #endregion
 
@@ -699,6 +754,7 @@ namespace NewAsiaOASystem.Web.Controllers
                     //查询订单明细
                     IList<NA_XSdetailsinfoView> mxmodellist = _INA_XSdetailsinfoDao.GetxsdetaillistbyxsId(model.Id);
                     List<pushsoftorderDetails> psmxlist = new List<pushsoftorderDetails>();
+                    
                     foreach (var item in mxmodellist)
                     {
                         //查询产品
@@ -706,6 +762,10 @@ namespace NewAsiaOASystem.Web.Controllers
                         pushsoftorderDetails Psmxmodel = new pushsoftorderDetails();
                         Psmxmodel.ItmID = cpmodel.P_bianhao;
                         Psmxmodel.Qty = item.SL;
+                        if (model.PaymentTypeName == "支付宝" || model.PaymentTypeName == "微信支付")
+                        {
+                            item.Je =Convert.ToDecimal(Convert.ToDouble(item.Je) * (1 - 0.006));
+                        }
                         Psmxmodel.TaxAfPriceFC = item.Je / item.SL;
                         Psmxmodel.ReqDate = Convert.ToDateTime(Z_JHQX);
                         psmxlist.Add(Psmxmodel);
@@ -715,6 +775,10 @@ namespace NewAsiaOASystem.Web.Controllers
                         pushsoftorderDetails Psmxmodel = new pushsoftorderDetails();
                         Psmxmodel.ItmID = "08.002";
                         Psmxmodel.Qty = 1;
+                        if (model.PaymentTypeName == "支付宝" || model.PaymentTypeName == "微信支付")
+                        {
+                            yfprice = (Convert.ToDouble(yfprice) * (1 - 0.006)).ToString();
+                        }
                         Psmxmodel.TaxAfPriceFC = Convert.ToDecimal(yfprice);
                         Psmxmodel.ReqDate = Convert.ToDateTime(Z_JHQX);
                         psmxlist.Add(Psmxmodel);
@@ -765,6 +829,7 @@ namespace NewAsiaOASystem.Web.Controllers
         #region //电商同步普实销售订单（可以选择管理非标生产的产品订单）
         public JsonResult Ps_InsterorderNew(string Id, string Z_JHQX, string Z_JHDD, string Z_YSFS, string yfprice, string dsprice)
         {
+            SessionUser Suser = Session[SessionHelper.User] as SessionUser;
             NA_XSinfoView model = _INA_XSinfoDao.NGetModelById(Id);
             if (model != null)
             {
@@ -791,7 +856,8 @@ namespace NewAsiaOASystem.Web.Controllers
                        
                     Psordermodel.CrdID = khmodel.K3CODE;
                     Psordermodel.NumAtCrd = model.Sc_Id;
-                    Psordermodel.DocDate = Convert.ToDateTime(Convert.ToDateTime(model.Xs_datetime).ToString("yyyy-MMM-dd"));
+                    //Psordermodel.DocDate = Convert.ToDateTime(Convert.ToDateTime(model.Xs_datetime).ToString("yyyy-MMM-dd"));
+                    Psordermodel.DocDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MMM-dd"));//凭证日期
                     Psordermodel.Z_JHQX = Z_JHQX;
                     Psordermodel.Z_JHDD = Z_JHDD;
                     Psordermodel.Z_YSFS = Z_YSFS;
@@ -801,8 +867,14 @@ namespace NewAsiaOASystem.Web.Controllers
                     }
                     else
                     { 
-                    Psordermodel.DocKind = 0;
+                        Psordermodel.DocKind = 0;
                     }
+                    if (Suser.ERP_YGNO != "" || Suser.ERP_YGNO != null)
+                    {//制单人
+                        Psordermodel.Z_OpUserSign = Suser.ERP_YGNO.ToString();
+                    }
+                    //主表备注
+                    var ZBbeizhu = "";
                     //查询订单明细
                     IList<NA_XSdetailsinfoView> mxmodellist = _INA_XSdetailsinfoDao.GetxsdetaillistbyxsId(model.Id);
                     List<pushsoftorderDetails> psmxlist = new List<pushsoftorderDetails>();
@@ -825,8 +897,13 @@ namespace NewAsiaOASystem.Web.Controllers
                         Psmxmodel.ReqDate = Convert.ToDateTime(Z_JHQX);
                         Psmxmodel.FreeTxt = item.beizhu;
                         psmxlist.Add(Psmxmodel);
+                            if (item.beizhu != "" && item.beizhu != null)
+                            {
+                                ZBbeizhu = ZBbeizhu + item.beizhu;
+                            }
                         }
                     }
+                    Psordermodel.Notes = ZBbeizhu;//主表的备注
                     //查询非标关联明细
                     //查询订单明细
                     IList<DKX_DDinfoView> ddmmodellist = _IDKX_DDinfoDao.GetAllmxbyPs_orderno(model.Sc_Id);
@@ -876,7 +953,7 @@ namespace NewAsiaOASystem.Web.Controllers
                         pushsoftorderDetails Psmxmodel = new pushsoftorderDetails();
                         Psmxmodel.ItmID = "08.005";
                         Psmxmodel.Qty = 1;
-                        Psmxmodel.TaxAfPriceFC = Convert.ToDecimal(yfprice);
+                        Psmxmodel.TaxAfPriceFC = Convert.ToDecimal(dsprice);
                         Psmxmodel.ReqDate = Convert.ToDateTime(Z_JHQX);
                         psmxlist.Add(Psmxmodel);
                     }
@@ -921,6 +998,68 @@ namespace NewAsiaOASystem.Web.Controllers
         #endregion
         #endregion
 
+        #region //刷新电商销售订单的其他信息
+        public JsonResult updatexs_qtinfo(string Id)
+        {
+            NA_XSinfoView model = _INA_XSinfoDao.NGetModelById(Id);
+            if(model==null)
+                return Json(new { result = "error", msg = "订单不存在" });
+            Newasia.XYOffer Dsmodel = new Newasia.XYOffer();
+            DataTable dt = Dsmodel.GetOrderShipInfoByID(model.Sort);
+            string OrderId= dt.Rows[0]["OrderId"].ToString();//订单Id
+            string JHQX = dt.Rows[0]["JHQX"].ToString();//交货期限
+            string YFCD = dt.Rows[0]["YFCD"].ToString();//运费承担
+            string JSFS = dt.Rows[0]["JSFS"].ToString();//付款方式
+            string JHDD = dt.Rows[0]["JHDD"].ToString();//交货地点
+            string AddTime = dt.Rows[0]["AddTime"].ToString();//添加时间
+            string ISK3 = dt.Rows[0]["ISK3"].ToString();//
+            string YWRY = dt.Rows[0]["YWRY"].ToString();
+            string IsSend = dt.Rows[0]["IsSend"].ToString();
+            string cell = dt.Rows[0]["cell"].ToString();
+            string ordercode = dt.Rows[0]["ordercode"].ToString();
+            string Freight = dt.Rows[0]["Freight"].ToString();//运费
+            //查询
+            NA_XSqitainfoView qtmodel = _INA_XSqitainfoDao.GetModelByDsOrder_Id(model.Sort.ToString());
+            if (qtmodel == null)
+            {
+                qtmodel = new NA_XSqitainfoView();
+                qtmodel.DsOrder_Id = OrderId;
+                qtmodel.Dsjhqx = JHQX;
+                qtmodel.Dsjhdd = JHDD;
+                qtmodel.Dsyfcd = YFCD;
+                qtmodel.DsJSFS = JSFS;
+                qtmodel.Dsaddtime = AddTime;
+                qtmodel.DsIsK3 = ISK3;
+                qtmodel.Dsywry = YWRY;
+                qtmodel.DsIsseed = IsSend;
+                qtmodel.Dscell = cell;
+                qtmodel.Dsordercode = ordercode;
+                qtmodel.Dsyf = Convert.ToDecimal(Freight);
+                qtmodel.C_Time = DateTime.Now;
+                _INA_XSqitainfoDao.Ninsert(qtmodel);
+            }
+            else
+            {
+                qtmodel.DsOrder_Id = OrderId;
+                qtmodel.Dsjhqx = JHQX;
+                qtmodel.Dsjhdd = JHDD;
+                qtmodel.Dsyfcd = YFCD;
+                qtmodel.DsJSFS = JSFS;
+                qtmodel.Dsaddtime = AddTime;
+                qtmodel.DsIsK3 = ISK3;
+                qtmodel.Dsywry = YWRY;
+                qtmodel.DsIsseed = IsSend;
+                qtmodel.Dscell = cell;
+                qtmodel.Dsordercode = ordercode;
+                qtmodel.Dsyf = Convert.ToDecimal(Freight);
+                qtmodel.C_Time = DateTime.Now;
+                _INA_XSqitainfoDao.NUpdate(qtmodel);
+            }
+
+            return Json(new { result = "success", msg = "操作成功" });
+        }
+        #endregion
+
         #region //刷新电商销售订单
         public JsonResult updateDsorder(string Id)
         {
@@ -928,6 +1067,7 @@ namespace NewAsiaOASystem.Web.Controllers
             if (model != null)
             {
                 decimal? zje = 0;
+                string fkfs = "";
                 //删除订单明细
                 List<NA_XSdetailsinfoView> oldmalist = _INA_XSdetailsinfoDao.GetxsdetaillistbyxsId(model.Id) as List<NA_XSdetailsinfoView>;
                 _INA_XSdetailsinfoDao.NDelete(oldmalist);
@@ -963,14 +1103,16 @@ namespace NewAsiaOASystem.Web.Controllers
                     string City = dt.Rows[a]["City"].ToString();//地级市
                     string Area = dt.Rows[a]["Area"].ToString();//区县
                     string beizhu = dt.Rows[a]["OrderRemark"].ToString();//备注
-                    zje=zje + (Convert.ToDecimal(Quantity) * Convert.ToDecimal(AdjustedPrice));
-
+                    string ItemId = dt.Rows[a]["ItemId"].ToString();//电商明细排序字段
+                    zje =zje + (Convert.ToDecimal(Quantity) * Convert.ToDecimal(AdjustedPrice));
+                    fkfs = PaymentTypeName;
                     NA_XSdetailsinfoView Ordermxmodel = new NA_XSdetailsinfoView();
                     Ordermxmodel.xsId = model.Id;//订单Id
                     Ordermxmodel.Je = Convert.ToDecimal(Quantity) * Convert.ToDecimal(AdjustedPrice);//明细价格
                     Ordermxmodel.SL = Convert.ToInt32(Quantity);//产品数量
                     Ordermxmodel.cpbianmao = sku;
                     Ordermxmodel.beizhu = beizhu;
+                    Ordermxmodel.ItemId = Convert.ToInt32(ItemId);
                     NQ_productinfoView SPmodel = new NQ_productinfoView();
                     SPmodel = _INQ_productinfoDao.GetProinfobyname(sku);//根据产品名称查询产品信息
                     if (SPmodel != null)
@@ -991,6 +1133,7 @@ namespace NewAsiaOASystem.Web.Controllers
 
                 }
                 model.Xs_je = zje;
+                model.PaymentTypeName = fkfs;
                 _INA_XSinfoDao.NUpdate(model);
                return Json(new { result = "success", msg = "提交成功" });
             }
@@ -999,6 +1142,84 @@ namespace NewAsiaOASystem.Web.Controllers
                 return Json(new { result = "error", msg = "订单不存在" });
             }
         }
+        #endregion
+
+        #region //销售订单打印合同
+        #region //销售订单合同
+        public ActionResult XShetongView(string Id)
+        {
+            NA_XSinfoView model = _INA_XSinfoDao.NGetModelById(Id);
+            return View(model);
+        }
+        #endregion
+
+        #region //查询合同的基础信息（或者订单的其他信息）
+        public string GethetongBasicsinfo(string Id, string dsorderId)
+        {
+            try
+            {
+                //通过销售订单的ID查询合同的基础信息
+                //查询
+                NA_XSqitainfoView qtmodel = _INA_XSqitainfoDao.GetModelByDsOrder_Id(Id);
+                if (qtmodel == null)
+                {
+                    qtmodel = _INA_XSqitainfoDao.GetModelByDsOrder_Id(dsorderId);
+                }
+                string json = JsonConvert.SerializeObject(qtmodel);
+                return json;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+        //public 
+        #endregion
+
+        #region //合同基础条款设置
+        public ActionResult HTBasicsinfoSetView(string Id)
+        {
+            NA_XSqitainfoView qtmodel = _INA_XSqitainfoDao.GetModelByDsOrder_Id(Id);
+            ViewData["orderId"] = Id;
+            if (qtmodel == null)
+                qtmodel = new NA_XSqitainfoView();
+            return View(qtmodel);
+        }
+
+        #region //提交合同的基础条款的数据保存
+        public JsonResult HTBasicsinfoSetEide(string orderId, string Dsjhqx, string Dsyfcd, string Dsjhdd, string DsJSFS)
+        {
+            try
+            {
+                NA_XSqitainfoView qtmodel = _INA_XSqitainfoDao.GetModelByDsOrder_Id(orderId);
+                if (qtmodel == null)
+                {
+                    qtmodel = new NA_XSqitainfoView();
+                    qtmodel.DsOrder_Id = orderId;
+                }
+                qtmodel.Dsjhqx = Dsjhqx;
+                qtmodel.Dsyfcd = Dsyfcd;
+                qtmodel.Dsjhdd = Dsjhdd;
+                qtmodel.DsJSFS = DsJSFS;
+                qtmodel.C_Time = DateTime.Now;
+                bool flay = false;
+                if (qtmodel.Id != "" || qtmodel.Id != null)
+                    flay= _INA_XSqitainfoDao.NUpdate(qtmodel);
+                else
+                    flay=_INA_XSqitainfoDao.Ninsert(qtmodel);
+                if(flay)
+                    return Json(new { result = "success", msg = "保存成功" });
+                else
+                    return Json(new { result = "error", msg = "提交失败" });
+
+            }
+            catch(Exception x)
+            {
+                return Json(new { result = "error", msg = "提交失败" });
+            }
+        }
+        #endregion
+        #endregion
         #endregion
     }
 }

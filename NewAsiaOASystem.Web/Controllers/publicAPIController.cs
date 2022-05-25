@@ -33,7 +33,7 @@ namespace NewAsiaOASystem.Web.Controllers
         INACustomerinfoDao _INACustomerinfoDao = ContextRegistry.GetContext().GetObject("NACustomerinfoDao") as INACustomerinfoDao;
         INA_XSinfoDao _INA_XSinfoDao = ContextRegistry.GetContext().GetObject("NA_XSinfoDao") as INA_XSinfoDao;
         INA_XSdetailsinfoDao _INA_XSdetailsinfoDao = ContextRegistry.GetContext().GetObject("NA_XSdetailsinfoDao") as INA_XSdetailsinfoDao;
-        INQ_productinfoDao _INQ_productinfoDao = ContextRegistry.GetContext().GetObject("NQ_productinfoDao") as INQ_productinfoDao;
+        INQ_productinfoDao _INQ_productinfoDao = ContextRegistry.GetContext().GetObject("NQ_productinfoDao") as INQ_productinfoDao; 
         INA_AddresseeInfoDao _INA_AddresseeInfoDao = ContextRegistry.GetContext().GetObject("NA_AddresseeInfoDao") as INA_AddresseeInfoDao;
         IWL_DkxInfoDao _IWL_DkxInfoDao = ContextRegistry.GetContext().GetObject("WL_DkxInfoDao") as IWL_DkxInfoDao;
         IFlow_ProductionNoticeinfoDao _IFlow_ProductionNoticeinfoDao = ContextRegistry.GetContext().GetObject("Flow_ProductionNoticeinfoDao") as IFlow_ProductionNoticeinfoDao;
@@ -49,14 +49,18 @@ namespace NewAsiaOASystem.Web.Controllers
         IDKX_CONTROL_LIST_DETAILDao _IDKX_CONTROL_LIST_DETAILDao = ContextRegistry.GetContext().GetObject("DKX_CONTROL_LIST_DETAILDao") as IDKX_CONTROL_LIST_DETAILDao;
         IDKX_ZLDataInfoDao _IDKX_ZLDataInfoDao = ContextRegistry.GetContext().GetObject("DKX_ZLDataInfoDao") as IDKX_ZLDataInfoDao;
         IDKX_CPInfoDao _IDKX_CPInfoDao = ContextRegistry.GetContext().GetObject("DKX_CPInfoDao") as IDKX_CPInfoDao;
-        IDKX_RKZLDataInfoDao _IDKX_RKZLDataInfoDao = ContextRegistry.GetContext().GetObject("DKX_RKZLDataInfoDao") as IDKX_RKZLDataInfoDao;
+        IDKX_RKZLDataInfoDao _IDKX_RKZLDataInfoDao = ContextRegistry.GetContext().GetObject("DKX_RKZLDataInfoDao") as IDKX_RKZLDataInfoDao; 
         IDKX_k3BominfoDao _IDKX_k3BominfoDao = ContextRegistry.GetContext().GetObject("DKX_k3BominfoDao") as IDKX_k3BominfoDao;
         IDKX_LCCZJLinfoDao _IDKX_LCCZJLinfoDao = ContextRegistry.GetContext().GetObject("DKX_LCCZJLinfoDao") as IDKX_LCCZJLinfoDao;
-        
+        INA_XSqitainfoDao _INA_XSqitainfoDao = ContextRegistry.GetContext().GetObject("NA_XSqitainfoDao") as INA_XSqitainfoDao;
 
         INA_QyinfoDao _INA_QyinfoDao = ContextRegistry.GetContext().GetObject("NA_QyinfoDao") as INA_QyinfoDao;
         IEP_jlinfoDao _IEP_jlinfoDao = ContextRegistry.GetContext().GetObject("EP_jlinfoDao") as IEP_jlinfoDao;
         IWx_FTUserbdopenIdinfoDao _IWx_FTUserbdopenIdinfoDao= ContextRegistry.GetContext().GetObject("Wx_FTUserbdopenIdinfoDao") as IWx_FTUserbdopenIdinfoDao;
+        IFlow_PlanProductioninfoDao _IFlow_PlanProductioninfoDao = ContextRegistry.GetContext().GetObject("Flow_PlanProductioninfoDao") as IFlow_PlanProductioninfoDao;
+        IPAY_CONTROL_INFODao _IPAY_CONTROL_INFODao = ContextRegistry.GetContext().GetObject("PAY_CONTROL_INFODao") as IPAY_CONTROL_INFODao;
+        INAReturnListDao _INAReturnListDao = ContextRegistry.GetContext().GetObject("NAReturnListDao") as INAReturnListDao;
+
 
         //远程监控 供应商信息 接口
         /// <summary>
@@ -188,6 +192,7 @@ namespace NewAsiaOASystem.Web.Controllers
                 string City = dt.Rows[a]["City"].ToString();//地级市
                 string Area = dt.Rows[a]["Area"].ToString();//区县
                 string beizhu = dt.Rows[a]["OrderRemark"].ToString();//备注
+                string ItemId = dt.Rows[a]["ItemId"].ToString();//电商明细排序字段
                 if (_INA_XSinfoDao.jccfbySc_Id(OrderCode))
                 { //检测是否存在重复的订单
                     NA_XSinfoView Ordermodel = new NA_XSinfoView();
@@ -203,13 +208,14 @@ namespace NewAsiaOASystem.Web.Controllers
                     {
                         Ordermodel.Fk_type = 0;//付款方式 支付宝
                     }
+                    Ordermodel.PaymentTypeName = PaymentTypeName;
                     NACustomerinfoView Custmodel = new NACustomerinfoView();//实例化 
-                  
+
                     Custmodel = _INACustomerinfoDao.GetCustomerbyUId(userid);
                     if (Custmodel != null)//存在该客户信息
                     {
                         NA_AddresseeInfoView addmodel = new NA_AddresseeInfoView();//收件人实例化
-                        addmodel = _INA_AddresseeInfoDao.GetaddresseeinfobyAnametel(ShipName, ShipCellPhone,ShipRegion + ShipAddress);//通过收件人和收件电话查找收件人信息
+                        addmodel = _INA_AddresseeInfoDao.GetaddresseeinfobyAnametel(ShipName, ShipCellPhone, ShipRegion + ShipAddress);//通过收件人和收件电话查找收件人信息
                         if (addmodel != null)
                         {//存在收件人信息 
                             Ordermodel.AddresseeId = addmodel.Id;//收件人Id
@@ -224,9 +230,9 @@ namespace NewAsiaOASystem.Web.Controllers
                             addmodel.ACompany = ShipName;//收件人公司信息（）
                             addmodel.Aname = ShipName;//收件人名称
                             addmodel.Tel = ShipCellPhone;//收件人电话
-                            addmodel.Address =ShipRegion+ShipAddress;//收件地址
+                            addmodel.Address = ShipRegion + ShipAddress;//收件地址
                             addmodel.qyo = Province;//省
-                            addmodel.qye= City;//地级市
+                            addmodel.qye = City;//地级市
                             addmodel.qyt = Area;//区县
                             addmodel.CusId = Custmodel.Id;//客户ID
                             addmodel.C_datetime = DateTime.Now;//创建时间
@@ -251,21 +257,22 @@ namespace NewAsiaOASystem.Web.Controllers
                         Custmodel.LxrName = ShipName;//客户联系人名称
                         Custmodel.Tel = BuyerCellPhone;//客户电话
                         Custmodel.Adress = ShipRegion + ShipAddress;//客户地址
+
                         Custmodel.CreateTime = DateTime.Now;//创建时间
                         Custmodel.isjxs = Convert.ToInt32(Haswlw);//是否物联网电控箱的经销商 0 无 1 是
-                        Custmodel.Status = 1;//启用
                         Custmodel.Isds = 1;//是电商同步过来的数据
+                        Custmodel.Status = 1;//启用
                         string CusId = _INACustomerinfoDao.InsertID(Custmodel);//保存该客户 返回该客户ID
                         NA_AddresseeInfoView addmodel = new NA_AddresseeInfoView();//收件人实例化
-                         addmodel.ACompany = ShipName;//收件人公司
-                         addmodel.Aname = ShipName;//收件人名称
-                         addmodel.Address = ShipRegion + ShipAddress;//收件人地址
-                         addmodel.qyo = Province;//省
-                         addmodel.qye = City;//地级市
-                         addmodel.qyt = Area;//区县
-                         addmodel.Tel = ShipCellPhone;//收件人地址
-                         addmodel.C_datetime = DateTime.Now;//创建时间
-                         addmodel.CusId = CusId;//客户ID
+                        addmodel.ACompany = ShipName;//收件人公司
+                        addmodel.Aname = ShipName;//收件人名称
+                        addmodel.Address = ShipRegion + ShipAddress;//收件人地址
+                        addmodel.qyo = Province;//省
+                        addmodel.qye = City;//地级市
+                        addmodel.qyt = Area;//区县
+                        addmodel.Tel = ShipCellPhone;//收件人地址
+                        addmodel.C_datetime = DateTime.Now;//创建时间
+                        addmodel.CusId = CusId;//客户ID
                         string addId = _INA_AddresseeInfoDao.InsertID(addmodel);//保存收件人信息 返回Id
                         Ordermodel.AddresseeId = addId;//收件人Id
                         Ordermodel.KhId = CusId;//客户ID
@@ -276,7 +283,7 @@ namespace NewAsiaOASystem.Web.Controllers
                     Ordermodel.PaymentStatus = Convert.ToInt32(PaymentStatus);//支付状态
                     Ordermodel.Sc_Id = OrderCode;//商城订单 编号（唯一识别）
                     Ordermodel.Xs_datetime = Convert.ToDateTime(CreatedDate);//下单时间
-                    Ordermodel.Sort =Convert.ToInt32(Sort);//排序
+                    Ordermodel.Sort = Convert.ToInt32(Sort);//排序
                     Ordermodel.States = 0;//启用
                     Ordermodel.C_datetime = DateTime.Now;//创建时间
                     Ordermodel.SM_ZT = 0;//未扫描
@@ -291,6 +298,7 @@ namespace NewAsiaOASystem.Web.Controllers
                     Ordermxmodel.SL = Convert.ToInt32(Quantity);//产品数量
                     Ordermxmodel.cpbianmao = sku;
                     Ordermxmodel.beizhu = beizhu;
+                    Ordermxmodel.ItemId = Convert.ToInt32(ItemId);
                     NQ_productinfoView SPmodel = new NQ_productinfoView();
                     SPmodel = _INQ_productinfoDao.GetProinfobyname(sku);//根据产品名称查询产品信息
                     if (SPmodel != null)
@@ -303,10 +311,11 @@ namespace NewAsiaOASystem.Web.Controllers
                         SPmodel.Pname = SPName;
                         SPmodel.P_bianhao = sku;
                         SPmodel.CreateTime = DateTime.Now;
-                     string PRiD= _INQ_productinfoDao.InsertID(SPmodel);
-                     Ordermxmodel.cpId = PRiD;
+                        string PRiD = _INQ_productinfoDao.InsertID(SPmodel);
+                        Ordermxmodel.cpId = PRiD;
                     }
                     _INA_XSdetailsinfoDao.Ninsert(Ordermxmodel);
+
                 }
                 else
                 { //有重复订单号
@@ -337,6 +346,7 @@ namespace NewAsiaOASystem.Web.Controllers
                     Ordermxmodel.SL = Convert.ToInt32(Quantity);//产品数量
                     Ordermxmodel.cpbianmao = sku;
                     Ordermxmodel.beizhu = beizhu;
+                    Ordermxmodel.ItemId = Convert.ToInt32(ItemId);
                     NQ_productinfoView SPmodel = new NQ_productinfoView();
                     SPmodel = _INQ_productinfoDao.GetProinfobyname(sku);//根据产品名称查询产品信息
                     if (SPmodel != null)
@@ -351,19 +361,8 @@ namespace NewAsiaOASystem.Web.Controllers
                         SPmodel.CreateTime = DateTime.Now;
                         string PRiD = _INQ_productinfoDao.InsertID(SPmodel);
                         Ordermxmodel.cpId = PRiD;
+
                     }
-                    //判断产品库存
-                    //decimal PKcsum = GetKcsum("'" + sku + "'");//产品库存
-                    //if (PKcsum < Convert.ToInt32(Quantity)) { //产品库存小于发货量
-                    //  Flow_ProductionNoticeinfoView PNModel = new Flow_ProductionNoticeinfoView();
-                    //     PNModel.Product_Id = Ordermxmodel.cpId;//产品Id
-                    //     PNModel.Xsorder_Id = Ordermxmodel.xsId;//订单Id
-                    //     PNModel.Number = Convert.ToInt32(Quantity);//数量
-                    //     PNModel.Status = 0;//记录状态
-                    //     PNModel.Type = 0;//处理状态
-                    //     PNModel.Createtime = DateTime.Now;//创建时间
-                    //     _IFlow_ProductionNoticeinfoDao.Ninsert(PNModel);
-                    //}
                     _INA_XSdetailsinfoDao.Ninsert(Ordermxmodel);
                 }
             }
@@ -548,6 +547,8 @@ namespace NewAsiaOASystem.Web.Controllers
         }
         #endregion
 
+
+
         #region //扫码出货 保存
         /// <summary>
         /// 扫码出货
@@ -649,6 +650,152 @@ namespace NewAsiaOASystem.Web.Controllers
             json = JsonConvert.SerializeObject(_INA_XSdetailsinfoDao.GetxsdetaillistbyxsId(Id));
             return json;
         }
+        #endregion
+
+        #region //新的SID扫码出货
+        public ViewResult NewSIDSMJPOrderView()
+        {
+            return View();
+        }
+
+        //扫码发货详情页面
+        public ViewResult NewSIDSMAView(string Id)
+        {
+            //截取当前的Id 判断是不是带有FT:开头的就是 反退货单子
+            string ktstr = Id.Substring(0, 3);
+            if (ktstr == "FT:")
+            {
+                string R_Id= Id.Substring(3, Id.Length-3);
+                ViewData["ROrderId"] = R_Id;//发货拣配单的单号
+                ViewData["code"] = "";
+                ViewData["cusname"] = "";
+               
+                //查询客户名称和编号
+                NAReturnListView model = _INAReturnListDao.NGetModelById(R_Id);
+                if (model != null)
+                {
+                    //客户编码k3code
+                    NACustomerinfoView khmodel = _INACustomerinfoDao.NGetModelById(model.C_Id);
+                    if (khmodel.K3CODE != "")
+                    {
+                        ViewData["code"] = khmodel.K3CODE;
+                        ViewData["cusname"] = khmodel.Name;
+                    }
+                }
+                return View("NewFT_SIDSMAView");
+            }
+            else
+            {
+                ViewData["SMOrderId"] = Id;//发货拣配单的单号
+                ViewData["code"] = "";
+                ViewData["cusname"] = "";
+               
+                //查询erp 发货拣配单主表数据
+                string resjson = zypushsoftHelper.GetSATmp_DocEntry(Id);
+                if (resjson != null || resjson != null || resjson != "[]")
+                {
+                    List<psJPordermodel> timemodel = getObjectByJson<psJPordermodel>(resjson);
+                    ViewData["code"] = timemodel[0].CrdID;
+                    ViewData["cusname"] = timemodel[0].CrdName;
+                }
+                return View("NewSIDSMAView");
+            }
+          
+        }
+        #region //反退货SID扫码出货
+        public ViewResult NewFT_SIDSMAView()
+        {
+            return View();
+        }
+        #endregion
+
+
+        //SID 的明细页面
+        public ViewResult SIDinfobyjpordernoView(string Id)
+        {
+            ViewData["SMOrderId"] = Id;//发货拣配单的单号
+            return View();
+        }
+
+        #region //通过拣配单查找已经扫码的SID
+        public string GetJpshSIDinfoinface(string orderno)
+        {
+            string json = null;
+            json = JsonConvert.SerializeObject(_IWL_DkxInfoDao.GetChSIDinfotbyjpno(orderno));
+            return json;
+
+        }
+        #endregion
+
+        #region //通过拣配单单号查询拣配单明细
+        public string GetJPorderAinface(string orderno)
+        {
+            string json=null;
+            string resjson = zypushsoftHelper.GetSATmpA_DocEntry(orderno);
+            if (resjson != null || resjson != null || resjson != "[]")
+            {
+                List<psJPordermodelA> timemodel = getObjectByJson<psJPordermodelA>(resjson);
+                json = JsonConvert.SerializeObject(timemodel);
+            }
+            return json;
+        }
+        #endregion
+
+        //#region //返退货Id 查询维修返退的明细
+        //public string GetFTH_wx_chinfo(string )
+        //#endregion
+
+        #region //当前发货数量
+        [HttpPost]
+        public string GetsmCountNew(string jpno)
+        {
+            int smcount = _IWL_DkxInfoDao.GetGetChcunotbyjpno(jpno);
+            return "{\"status\":\"" + smcount + "\"}";//添加成功
+        }
+        #endregion
+
+        #region //扫码出货保存
+        [HttpPost]
+        public JsonResult SmEditchNew(string sid, string code, string cusname, string jporderno)
+        {
+            try
+            {
+                bool flay = false;
+                string sidstr = Getsid(sid);
+                WL_DkxInfoView modelnew = new WL_DkxInfoView();
+                if (sidstr.Length < 10)
+                {
+                    return Json(new { result = "error1" });
+                }
+                else
+                {
+                    modelnew = _IWL_DkxInfoDao.GetDkxinfo(sidstr);//通过sid 查找电控箱信息
+                    if (modelnew == null)
+                        return Json(new { result = "bcz" });//不存在该 电控箱
+                    if (modelnew.Is_xs != 0)
+                        return Json(new { result = "yxs" });//已经销售
+                    modelnew.erp_JPorderno = jporderno;
+                    modelnew.erp_jxscode = code;
+                    modelnew.erp_jxsname = cusname;
+                    modelnew.WL_zt = 1;//已销售（旧）
+                    modelnew.Is_xs = 1;//已经销售
+                    modelnew.Xs_datetime = DateTime.Now;//销售时间
+                    modelnew.chtype = 2;
+                    flay = _IWL_DkxInfoDao.NUpdate(modelnew);
+                    if (flay)
+                        return Json(new { result = "success" });
+                    else
+                        return Json(new { result = "error" });
+                }
+            }
+            catch
+            {
+                return Json(new { result = "error" });
+            }
+        }
+        #endregion
+
+        
         #endregion
 
 
@@ -829,6 +976,16 @@ namespace NewAsiaOASystem.Web.Controllers
                     fhjsonmodel model = new fhjsonmodel();
                     if (dkxmodel.WL_zt != 0)
                     {
+                        if (dkxmodel.chtype == 2)
+                        {
+                            model.SID = dkxmodel.WL_SSD;//sid
+                            model.Deliverytime = dkxmodel.Xs_datetime.ToString();//扫码时间
+                            model.CusName = dkxmodel.erp_jxsname;
+                            model.Tel = "";//联系方式
+                            json = JsonConvert.SerializeObject(model);
+                        }
+                        else
+                        {
                         //查询经销商
                         NACustomerinfoView cusmodel = _INACustomerinfoDao.NGetModelById(dkxmodel.Xs_jxsId);
                         model.SID = dkxmodel.WL_SSD;//sid
@@ -836,6 +993,7 @@ namespace NewAsiaOASystem.Web.Controllers
                         model.CusName = cusmodel.Name;//客户名称
                         model.Tel = cusmodel.Tel;//联系方式
                         json = JsonConvert.SerializeObject(model);
+                        }
                     }
                     else
                     {
@@ -1074,7 +1232,18 @@ namespace NewAsiaOASystem.Web.Controllers
                     //保存退货记录（上次的发货的时间 订单 经销商）
                     thmodel.SID = sid;
                     thmodel.THdatetime = DateTime.Now;
-                    thmodel.XsordId = model.OrdermxId;
+                    if (model.chtype == 2)
+                    {
+                        thmodel.scxscuscode = model.erp_jxscode;
+                        thmodel.scxscusname = model.erp_jxsname;
+                        thmodel.Xsjpordno = model.erp_JPorderno;
+                        thmodel.smtype = 2;
+                    }
+                    else
+                    {
+                        thmodel.XsordId = model.OrdermxId;
+                    }
+                   
                     thmodel.scxsdtetime = model.Xs_datetime;
                     thmodel.jltype = 0;//正常订单退货
                     _IWL_dkxthjlinfoDao.Ninsert(thmodel);//保存
@@ -1091,6 +1260,13 @@ namespace NewAsiaOASystem.Web.Controllers
                     model.OrdermxId = "";//销售单
                     model.Is_xs = 0;//是否销售
                     model.Is_sx = 0;//是否上线
+                    if (model.chtype == 2)
+                    {
+                        model.erp_jxscode = "";
+                        model.erp_jxsname = "";
+                        model.erp_JPorderno = "";
+                        model.chtype = 0;
+                    }
                     bool flay = false;
                     flay = _IWL_DkxInfoDao.NUpdate(model);
                     if (flay)
@@ -1115,7 +1291,7 @@ namespace NewAsiaOASystem.Web.Controllers
             string json;
             json = JsonConvert.SerializeObject(_IWL_dkxthjlinfoDao.GetsmthdataToday());
             return json;
-        }
+        } 
         #endregion
 
         #region //物联网电控箱扫描初始化
@@ -1138,16 +1314,27 @@ namespace NewAsiaOASystem.Web.Controllers
                     WL_dkxthjlinfoView thmodel = new WL_dkxthjlinfoView();
                     //保存退货记录（上次的发货的时间 订单 经销商）
                     thmodel.SID = sid;
-                    thmodel.THdatetime = DateTime.Now;
-                    thmodel.XsordId = model.OrdermxId;
+                    if (model.chtype == 2)
+                    {
+                        thmodel.scxscuscode = model.erp_jxscode;
+                        thmodel.scxscusname = model.erp_jxsname;
+                        thmodel.Xsjpordno = model.erp_JPorderno;
+                        thmodel.smtype = 2;
+                    }
+                    else
+                    {
+                        thmodel.XsordId = model.OrdermxId;
+                    }
                     thmodel.scxsdtetime = model.Xs_datetime;
                     thmodel.jltype = 1;//扫错码初始化
                     _IWL_dkxthjlinfoDao.Ninsert(thmodel);//保存
-                    NA_XSinfoView xsmodel = _INA_XSinfoDao.NGetModelById(model.OrdermxId);//关联的订单信息
+                    if (model.chtype != 2) {
+                        NA_XSinfoView xsmodel = _INA_XSinfoDao.NGetModelById(model.OrdermxId);//关联的订单信息
                     if (xsmodel != null)
                     {
                         xsmodel.SM_ZT = 0;
                         _INA_XSinfoDao.NUpdate(xsmodel);
+                    }
                     }
                     model.Xs_datetime = null;//销售时间
                     model.Xs_jxsId = null;//经销商
@@ -1162,6 +1349,13 @@ namespace NewAsiaOASystem.Web.Controllers
                     model.OrdermxId = "";//销售单
                     model.Is_xs = 0;//是否销售
                     model.Is_sx = 0;//是否上线
+                    if (model.chtype == 2)
+                    {
+                        model.erp_jxscode = "";
+                        model.erp_jxsname = "";
+                        model.erp_JPorderno = "";
+                        model.chtype = 0;
+                    }
                     bool flay = false;
                     flay = _IWL_DkxInfoDao.NUpdate(model);
                     if (flay)
@@ -1237,7 +1431,7 @@ namespace NewAsiaOASystem.Web.Controllers
             Response.Redirect(url);
         }
 
-        #endregion
+        #endregion 
 
         #region //通过UID查询sid接口数据测试
         public string Getdksinfobyusid()
@@ -1483,7 +1677,7 @@ namespace NewAsiaOASystem.Web.Controllers
         }
         #endregion
         #endregion
-
+         
         //根据工程师的Id查找工程师的帐号
         public string AjaxGetgcsinfobyId(string gcsId)
         {
@@ -1528,6 +1722,7 @@ namespace NewAsiaOASystem.Web.Controllers
         {
             try
             {
+                //czdatetime = "2021-07-08 17:23:19";
                 string Tianshu = QRHelper.Getdkxxdczts(czdatetime);
                 return Tianshu;
             }
@@ -1549,6 +1744,28 @@ namespace NewAsiaOASystem.Web.Controllers
             NPOI.SS.UserModel.ISheet sheet1 = book.CreateSheet("Sheet1");
             //给sheet1添加第一行的头部标题
             NPOI.SS.UserModel.IRow row1 = sheet1.CreateRow(0);
+            //row1.CreateCell(0).SetCellValue("生产单号");
+            //row1.CreateCell(1).SetCellValue("客户名称");
+            //row1.CreateCell(2).SetCellValue("类型");
+            //row1.CreateCell(3).SetCellValue("型号");
+            //row1.CreateCell(4).SetCellValue("功率");
+            //row1.CreateCell(5).SetCellValue("功能简述");
+            //row1.CreateCell(6).SetCellValue("提交人");
+            //row1.CreateCell(7).SetCellValue("工程师");
+            //row1.CreateCell(8).SetCellValue("进度");
+            //row1.CreateCell(9).SetCellValue("下单时间");
+            //row1.CreateCell(10).SetCellValue("完成生产验收");
+            //row1.CreateCell(11).SetCellValue("客服备注");
+            //row1.CreateCell(12).SetCellValue("套数");
+            //row1.CreateCell(13).SetCellValue("制图完成时间");
+            //row1.CreateCell(14).SetCellValue("其他物料库存确认时间");
+            //row1.CreateCell(15).SetCellValue("箱体库存确认时间");
+            //row1.CreateCell(16).SetCellValue("其他物料到齐时间");
+            //row1.CreateCell(17).SetCellValue("箱体到齐时间");
+            //row1.CreateCell(18).SetCellValue("承若交期");
+
+
+
             row1.CreateCell(0).SetCellValue("生产单号");
             row1.CreateCell(1).SetCellValue("客户名称");
             row1.CreateCell(2).SetCellValue("类型");
@@ -1558,16 +1775,16 @@ namespace NewAsiaOASystem.Web.Controllers
             row1.CreateCell(6).SetCellValue("提交人");
             row1.CreateCell(7).SetCellValue("工程师");
             row1.CreateCell(8).SetCellValue("进度");
-            row1.CreateCell(9).SetCellValue("下单时间");
-            row1.CreateCell(10).SetCellValue("完成生产验收");
-            row1.CreateCell(11).SetCellValue("客服备注");
-            row1.CreateCell(12).SetCellValue("套数");
-            row1.CreateCell(13).SetCellValue("制图完成时间");
-            row1.CreateCell(14).SetCellValue("其他物料库存确认时间");
-            row1.CreateCell(15).SetCellValue("箱体库存确认时间");
-            row1.CreateCell(16).SetCellValue("其他物料到齐时间");
-            row1.CreateCell(17).SetCellValue("箱体到齐时间");
-            row1.CreateCell(18).SetCellValue("承若交期");
+            //row1.CreateCell(9).SetCellValue("下单时间");
+            //row1.CreateCell(10).SetCellValue("完成生产验收");
+            row1.CreateCell(9).SetCellValue("客服备注");
+            row1.CreateCell(10).SetCellValue("套数");
+            //row1.CreateCell(13).SetCellValue("制图完成时间");
+            //row1.CreateCell(14).SetCellValue("其他物料库存确认时间");
+            //row1.CreateCell(15).SetCellValue("箱体库存确认时间");
+            //row1.CreateCell(16).SetCellValue("其他物料到齐时间");
+            //row1.CreateCell(17).SetCellValue("箱体到齐时间");
+            row1.CreateCell(11).SetCellValue("承若交期");
             if (list != null)//数据不为空
             {
                 for (int i = 0; i < list.Count; i++)
@@ -1581,17 +1798,17 @@ namespace NewAsiaOASystem.Web.Controllers
                     rowtemp.CreateCell(5).SetCellValue(list[i].gnjsstr);
                     rowtemp.CreateCell(6).SetCellValue(GetcusinfobyId(list[i].C_name));
                     rowtemp.CreateCell(7).SetCellValue(GetgcsbyId(list[i].Gcs_nameId));
-                    rowtemp.CreateCell(8).SetCellValue(Getzt(list[i].DD_ZT.ToString(), list[i].xtIsq.ToString(), list[i].qtIsq.ToString(), list[i].Bnote2, list[i].Bnote1));
-                    rowtemp.CreateCell(9).SetCellValue(list[i].C_time.ToString());
-                    rowtemp.CreateCell(10).SetCellValue(list[i].Ysdatetime.ToString());
-                    rowtemp.CreateCell(11).SetCellValue(list[i].REMARK.ToString());
-                    rowtemp.CreateCell(12).SetCellValue(list[i].NUM.ToString());
-                    rowtemp.CreateCell(13).SetCellValue(list[i].Gscwctime.ToString());
-                    rowtemp.CreateCell(14).SetCellValue(list[i].qtqrtime.ToString());
-                    rowtemp.CreateCell(15).SetCellValue(list[i].xtqrtime.ToString());
-                    rowtemp.CreateCell(16).SetCellValue(list[i].qtdhtime.ToString());
-                    rowtemp.CreateCell(17).SetCellValue(list[i].xtdhtime.ToString());
-                    rowtemp.CreateCell(18).SetCellValue(list[i].YJJQtime.ToString());
+                    rowtemp.CreateCell(8).SetCellValue(Getzt(list[i].DD_ZT.ToString(), list[i].xtIsq.ToString(), list[i].qtIsq.ToString(), list[i].Bnote2, list[i].Bnote1, list[i].Flzt.ToString()));
+                    //rowtemp.CreateCell(9).SetCellValue(list[i].C_time.ToString());
+                    //rowtemp.CreateCell(10).SetCellValue(list[i].Ysdatetime.ToString());
+                    rowtemp.CreateCell(9).SetCellValue(list[i].REMARK.ToString());
+                    rowtemp.CreateCell(10).SetCellValue(list[i].NUM.ToString());
+                    //rowtemp.CreateCell(13).SetCellValue(list[i].Gscwctime.ToString());
+                    //rowtemp.CreateCell(14).SetCellValue(list[i].qtqrtime.ToString());
+                    //rowtemp.CreateCell(15).SetCellValue(list[i].xtqrtime.ToString());
+                    //rowtemp.CreateCell(16).SetCellValue(list[i].qtdhtime.ToString());
+                    //rowtemp.CreateCell(17).SetCellValue(list[i].xtdhtime.ToString());
+                    rowtemp.CreateCell(11).SetCellValue(list[i].YJJQtime.ToString());
                 }
             }
             string DataNew = DateTime.Now.ToString("yyyyMMdd");
@@ -1655,7 +1872,7 @@ namespace NewAsiaOASystem.Web.Controllers
         }
 
         //返回进度
-        public string Getzt(string zt, string xtIsq, string qtIsq, string Bnote2, string Bnote1)
+        public string Getzt(string zt, string xtIsq, string qtIsq, string Bnote2, string Bnote1,string pbshzt)
         {
             string str = "";
             if (zt == "-1")
@@ -1696,11 +1913,75 @@ namespace NewAsiaOASystem.Web.Controllers
             }
             if (zt == "3")
             {
-                str = "待发料";
+                var flstr = "物料待确认";
+                if (pbshzt == "0")
+                {
+                    flstr = "物料待确认";
+                }
+                if (pbshzt == "5")
+                {
+                    flstr = "等待发料";
+                }
+                if (pbshzt == "10")
+                {
+                    flstr = "缺料";
+                    var xtstr = "未确定";
+                    var qtstr = "未确定";
+                    if (xtIsq == "1")
+                    {
+                        xtstr = "箱体缺";
+                    }
+                    if (xtIsq == "2")
+                    {
+                        xtstr = "箱体齐";
+                    }
+                    if (qtIsq == "1")
+                    {
+                        qtstr = "其他缺";
+                    }
+                    if (qtIsq == "2")
+                    {
+                        qtstr = "其他齐";
+                    }
+                    flstr = flstr + "(" + xtstr + "/" + qtstr + ")";
+                }
+                if (pbshzt == "15")
+                {
+                    flstr = "完成发料";
+                }
+                str = "未发料[" + flstr+"]";
             }
             if (zt == "4")
             {
-                str = "可生产";
+                var flstr = "";
+                if (pbshzt == "15")
+                {
+                    flstr = "完成发料";
+                }
+                if (pbshzt == "20")
+                {
+                    flstr = "部分发料";
+                    var xtstr = "未确定";
+                    var qtstr = "未确定";
+                    if (xtIsq == "1")
+                    {
+                        xtstr = "箱体缺";
+                    }
+                    if (xtIsq == "2")
+                    {
+                        xtstr = "箱体齐";
+                    }
+                    if (qtIsq == "1")
+                    {
+                        qtstr = "其他缺";
+                    }
+                    if (qtIsq == "2")
+                    {
+                        qtstr = "其他齐";
+                    }
+                    flstr = flstr + "(" + xtstr + "/" + qtstr + ")";
+                }
+                str = "可生产["+flstr+"]";
             }
             if (zt == "5")
             {
@@ -1769,41 +2050,74 @@ namespace NewAsiaOASystem.Web.Controllers
                 {
                     if (sidmodel.Is_xs == 1)//已经销售
                     {
-                        NACustomerinfoView cusmodel = _INACustomerinfoDao.NGetModelById(sidmodel.Xs_jxsId);
-                        if (cusmodel != null)
+                        NACustomerinfoView cusmodel = new NACustomerinfoView();
+                        //  NACustomerinfoView cusmodel = _INACustomerinfoDao.NGetModelById(sidmodel.Xs_jxsId);
+                        if (sidmodel.Xs_jxsId != "" && sidmodel.Xs_jxsId != null)
                         {
-                            if (cusmodel.qyId != "" && cusmodel.qyId != null)
+                            cusmodel = _INACustomerinfoDao.NGetModelById(sidmodel.Xs_jxsId);
+                            if (cusmodel != null)
                             {
-                                NA_QyinfoView qymodel = _INA_QyinfoDao.NGetModelById(cusmodel.qyId);
-                                if (qymodel != null)
-                                {
-                                    remodel.areaname = qymodel.Qyname;
-                                }
+                                remodel.code = "0";
+                                remodel.jxsname = cusmodel.Name;
                             }
-                            else//没有
+                            else
                             {
-                               // remodel.areaname = "";
-                                if (cusmodel.DsUid != "" && cusmodel.DsUid != null)
-                                {
-                                    sfdjsmodel sfdjsmodel = GetdsUserinfobyUId(Convert.ToInt32(cusmodel.DsUid));
-                                    if (sfdjsmodel != null)
-                                    {
-                                        remodel.areaname = sfdjsmodel.Province;
-                                        //更新用户区域信息
-                                        UpdateCusqyinfobyIdandsfanddjs(cusmodel.Id, sfdjsmodel.Province, sfdjsmodel.City);
-                                    }
-                                }
+                                remodel.code = "4";
+                                remodel.jxsname = "";
                                 remodel.areaname = "";
                             }
-                            remodel.code = "0";
-                            remodel.jxsname = cusmodel.Name;
                         }
-                        else
+                        else  if (sidmodel.erp_jxscode != "" && sidmodel.erp_jxscode != null)
                         {
-                            remodel.code = "4";
-                            remodel.jxsname = "";
-                            remodel.areaname="";
+                           // cusmodel = _INACustomerinfoDao.Getcusinfobycode(sidmodel.erp_jxscode);
+                            if (cusmodel != null)
+                            {
+                                remodel.code = "0";
+                                remodel.jxsname = sidmodel.erp_jxsname;
+                            }
+                            else
+                            {
+                                remodel.code = "4";
+                                remodel.jxsname = "";
+                                remodel.areaname = "";
+                            }
+
                         }
+                        //if (cusmodel != null)
+                        //{
+                            //if (cusmodel.qyId != "" && cusmodel.qyId != null)
+                            //{
+                            //    NA_QyinfoView qymodel = _INA_QyinfoDao.NGetModelById(cusmodel.qyId);
+                            //    if (qymodel != null)
+                            //    {
+                            //        remodel.areaname = qymodel.Qyname;
+                            //    }
+                            //}
+                            //else//没有
+                            //{
+                            //   // remodel.areaname = "";
+                            //    if (cusmodel.DsUid != "" && cusmodel.DsUid != null)
+                            //    {
+                            //        sfdjsmodel sfdjsmodel = GetdsUserinfobyUId(Convert.ToInt32(cusmodel.DsUid));
+                            //        if (sfdjsmodel != null)
+                            //        {
+                            //            remodel.areaname = sfdjsmodel.Province;
+                            //            //更新用户区域信息
+                            //            UpdateCusqyinfobyIdandsfanddjs(cusmodel.Id, sfdjsmodel.Province, sfdjsmodel.City);
+                            //        }
+                            //    }
+                            //    remodel.areaname = "";
+                            //}
+      
+                        //}
+                        //else
+                        //{
+                           
+                            
+                        //    remodel.code = "4";
+                        //    remodel.jxsname = "";
+                        //    remodel.areaname="";
+                        //}
                     }
                     else
                     {
@@ -1912,7 +2226,6 @@ namespace NewAsiaOASystem.Web.Controllers
             public virtual string City { get; set; }
         }
         #endregion
-
 
         /// <summary>
         /// 获取客户端IP地址
@@ -2335,7 +2648,6 @@ namespace NewAsiaOASystem.Web.Controllers
         #endregion
         #endregion
 
-
         #region //K3接口测试
 
         public string K3test()
@@ -2351,6 +2663,398 @@ namespace NewAsiaOASystem.Web.Controllers
             model.FPlanFinishDate = DateTime.Now;
             string ss = K3Helper.InsertICMOSys(model);
             return ss;
+        }
+        #endregion
+
+
+        #region //电子的生产计划订单数据
+
+        #region //电子车间
+        public ActionResult dzcjlist()
+        {
+            return View();
+        }
+        #endregion
+
+        #region //电子车间的生产计划订单数据
+        public ActionResult GetDZCJorderlist_Rservice(int? page, int limit)
+        {
+            SessionUser Suser = Session[SessionHelper.User] as SessionUser;
+            int CurrentPageIndex = Convert.ToInt32(page);
+            if (CurrentPageIndex == 0)
+                CurrentPageIndex = 1;
+            _IFlow_PlanProductioninfoDao.SetPagerPageIndex(CurrentPageIndex);
+            _IFlow_PlanProductioninfoDao.SetPagerPageSize(limit);
+            PagerInfo<Flow_PlanProductioninfoView> listmodel = _IFlow_PlanProductioninfoDao.GetCinfoList(null, null, "0", null, null, "0,1,2,3");
+            var result = new
+            {
+                code = 0,
+                msg = "",
+                count = listmodel.RecordCount,
+                data = listmodel.DataList,
+            };
+            return Json(result, JsonRequestBehavior.AllowGet);
+
+        }
+        #endregion
+        #endregion
+
+        #region //报价平台接口测试
+        public string bjtest()
+        {
+            PAY_CONTROL_INFOView model1 = _IPAY_CONTROL_INFODao.GetMaxCONTROL_INFO_ID("0");
+            int ss;
+            if (model1 == null)
+                ss = 21444;
+            else
+                ss =Convert.ToInt32(model1.CONTROL_INFO_ID);
+            string res = BJHelper.Getbjlist(ss.ToString());
+ 
+              List<PAY_CONTROL_INFOView> list = JsonConvert.DeserializeObject<List<PAY_CONTROL_INFOView>>(res);
+            foreach (var item in list)
+            {
+                PAY_CONTROL_INFOView model = new PAY_CONTROL_INFOView();
+                model = item;
+                _IPAY_CONTROL_INFODao.Ninsert(model);
+
+            }
+      
+            return "";
+        }
+        #endregion
+
+        #region //电商平台-销售订单-插入ERP的接口
+        [HttpPost]
+        public string DsOrderinsertionERP(string orderno, string xqtime,string userno, string key)
+        {
+            try
+            {
+                if (key != "00BE974F-C52D-434D-AB99-4D9E3796CD81-2")
+                    return "8";//key 不对
+                //更新电商平台的订单信息
+                Addorder();
+                //刷新订单
+                updateDsorder(orderno);
+                //刷新订单其他信息
+                updatexs_qtinfo(orderno);
+                string aa = ddcrerp(orderno, xqtime, userno);
+                return aa;
+
+            }
+            catch
+            {
+                return "-1";//接口异常
+            }
+        }
+        #endregion
+
+        #region //刷新电商销售订单
+        public string updateDsorder(string orderno)
+        {
+            try
+            {
+                NA_XSinfoView model = _INA_XSinfoDao.GetxsinfobyOrderCode(orderno);
+                if (model != null)
+                {
+                    decimal? zje = 0;
+                    string fkfs = "";
+                    //删除订单明细
+                    List<NA_XSdetailsinfoView> oldmalist = _INA_XSdetailsinfoDao.GetxsdetaillistbyxsId(model.Id) as List<NA_XSdetailsinfoView>;
+                    _INA_XSdetailsinfoDao.NDelete(oldmalist);
+                    Newasia.XYOffer Dsmodel = new Newasia.XYOffer();
+                    //string Key = "00BE974F-C52D-434D-AB99-4D9E3796CD81";
+                    DataTable dt = Dsmodel.GetOrderByOrderCode(model.Sc_Id);
+                    for (int a = 0, b = dt.Rows.Count; a < b; a++)
+                    {
+                        string OrderCode = dt.Rows[a]["OrderCode"].ToString();//订单编号（唯一识别号）
+                        string CreatedDate = dt.Rows[a]["CreatedDate"].ToString();//订单下单时间
+                        string userid = dt.Rows[a]["userid"].ToString();//电商客户Id
+                        string userName = dt.Rows[a]["userName"].ToString();//电商用户登录名称（客户登录名称）
+                        string company = dt.Rows[a]["company"].ToString();//电商平台用户公司名称（客户公司名称）
+                        string BuyerCellPhone = dt.Rows[a]["BuyerCellPhone"].ToString();//用户联系电话(客户电话)
+                        string ShipRegion = dt.Rows[a]["ShipRegion"].ToString();//客户所属区域
+                        string ShipAddress = dt.Rows[a]["ShipAddress"].ToString();//客户具体地址
+                        string ShipName = dt.Rows[a]["ShipName"].ToString();//收货人名称
+                        string ExpressCompanyName = dt.Rows[a]["ExpressCompanyName"].ToString();//公司名称
+                        string PaymentTypeName = dt.Rows[a]["PaymentTypeName"].ToString();//支付方式
+                        string SPName = dt.Rows[a]["Name"].ToString();//商品名称
+                        string Description = dt.Rows[a]["Description"].ToString();//商品描述
+                        string Quantity = dt.Rows[a]["Quantity"].ToString();//数量
+                        string AdjustedPrice = dt.Rows[a]["AdjustedPrice"].ToString();//产品价格
+
+                        string OrderStatus = dt.Rows[a]["OrderStatus"].ToString();//订单状态
+                        string ShippingStatus = dt.Rows[a]["ShippingStatus"].ToString();//货运状态
+                        string PaymentStatus = dt.Rows[a]["PaymentStatus"].ToString();//支付状态
+                        string Sort = dt.Rows[a]["OrderId"].ToString();//订单
+                        string sku = dt.Rows[a]["SKU"].ToString();//产品物料码 （产品的唯一识别）
+                        string ShipCellPhone = dt.Rows[a]["ShipCellPhone"].ToString();//收件人电话
+                        string Haswlw = dt.Rows[a]["Haswlw"].ToString();//客户是否取得物联网电控箱的经销权
+                        string Province = dt.Rows[a]["Province"].ToString();//省
+                        string City = dt.Rows[a]["City"].ToString();//地级市
+                        string Area = dt.Rows[a]["Area"].ToString();//区县
+                        string beizhu = dt.Rows[a]["OrderRemark"].ToString();//备注
+                        string ItemId = dt.Rows[a]["ItemId"].ToString();//电商明细排序字段
+                        zje = zje + (Convert.ToDecimal(Quantity) * Convert.ToDecimal(AdjustedPrice));
+                        fkfs = PaymentTypeName;
+                        NA_XSdetailsinfoView Ordermxmodel = new NA_XSdetailsinfoView();
+                        Ordermxmodel.xsId = model.Id;//订单Id
+                        Ordermxmodel.Je = Convert.ToDecimal(Quantity) * Convert.ToDecimal(AdjustedPrice);//明细价格
+                        Ordermxmodel.SL = Convert.ToInt32(Quantity);//产品数量
+                        Ordermxmodel.cpbianmao = sku;
+                        Ordermxmodel.beizhu = beizhu;
+                        Ordermxmodel.ItemId = Convert.ToInt32(ItemId);
+                        NQ_productinfoView SPmodel = new NQ_productinfoView();
+                        SPmodel = _INQ_productinfoDao.GetProinfobyname(sku);//根据产品名称查询产品信息
+                        if (SPmodel != null)
+                        {
+                            Ordermxmodel.cpId = SPmodel.Id;//产品
+                        }
+                        else
+                        {
+                            SPmodel = new NQ_productinfoView();
+                            SPmodel.Pname = SPName;
+                            SPmodel.P_bianhao = sku;
+                            SPmodel.CreateTime = DateTime.Now;
+                            string PRiD = _INQ_productinfoDao.InsertID(SPmodel);
+                            Ordermxmodel.cpId = PRiD;
+
+                        }
+                        _INA_XSdetailsinfoDao.Ninsert(Ordermxmodel);
+
+                    }
+                    model.Xs_je = zje;
+                    model.PaymentTypeName = fkfs;
+                    _INA_XSinfoDao.NUpdate(model);
+                    return "dd0";
+                }
+                else
+                {
+                    return "dd1";
+                }
+            }
+            catch
+            {
+                return "dd-1";
+            }
+        }
+        #endregion
+
+        #region //刷新电商销售订单其他信息
+        public string updatexs_qtinfo(string orderno)
+        {
+            try
+            {
+                NA_XSinfoView model = _INA_XSinfoDao.GetxsinfobyOrderCode(orderno);
+                if (model == null)
+                    return "qt1";
+                Newasia.XYOffer Dsmodel = new Newasia.XYOffer();
+                DataTable dt = Dsmodel.GetOrderShipInfoByID(model.Sort);
+                string OrderId = dt.Rows[0]["OrderId"].ToString();//订单Id
+                string JHQX = dt.Rows[0]["JHQX"].ToString();//交货期限
+                string YFCD = dt.Rows[0]["YFCD"].ToString();//运费承担
+                string JSFS = dt.Rows[0]["JSFS"].ToString();//付款方式
+                string JHDD = dt.Rows[0]["JHDD"].ToString();//交货地点
+                string AddTime = dt.Rows[0]["AddTime"].ToString();//添加时间
+                string ISK3 = dt.Rows[0]["ISK3"].ToString();//
+                string YWRY = dt.Rows[0]["YWRY"].ToString();
+                string IsSend = dt.Rows[0]["IsSend"].ToString();
+                string cell = dt.Rows[0]["cell"].ToString();
+                string ordercode = dt.Rows[0]["ordercode"].ToString();
+                string Freight = dt.Rows[0]["Freight"].ToString();//运费
+                                                                  //查询
+                NA_XSqitainfoView qtmodel = _INA_XSqitainfoDao.GetModelByDsOrder_Id(model.Sort.ToString());
+                if (qtmodel == null)
+                {
+                    qtmodel = new NA_XSqitainfoView();
+                    qtmodel.DsOrder_Id = OrderId;
+                    qtmodel.Dsjhqx = JHQX;
+                    qtmodel.Dsjhdd = JHDD;
+                    qtmodel.Dsyfcd = YFCD;
+                    qtmodel.DsJSFS = JSFS;
+                    qtmodel.Dsaddtime = AddTime;
+                    qtmodel.DsIsK3 = ISK3;
+                    qtmodel.Dsywry = YWRY;
+                    qtmodel.DsIsseed = IsSend;
+                    qtmodel.Dscell = cell;
+                    qtmodel.Dsordercode = ordercode;
+                    qtmodel.Dsyf = Convert.ToDecimal(Freight);
+                    qtmodel.C_Time = DateTime.Now;
+                    _INA_XSqitainfoDao.Ninsert(qtmodel);
+                }
+                else
+                {
+                    qtmodel.DsOrder_Id = OrderId;
+                    qtmodel.Dsjhqx = JHQX;
+                    qtmodel.Dsjhdd = JHDD;
+                    qtmodel.Dsyfcd = YFCD;
+                    qtmodel.DsJSFS = JSFS;
+                    qtmodel.Dsaddtime = AddTime;
+                    qtmodel.DsIsK3 = ISK3;
+                    qtmodel.Dsywry = YWRY;
+                    qtmodel.DsIsseed = IsSend;
+                    qtmodel.Dscell = cell;
+                    qtmodel.Dsordercode = ordercode;
+                    qtmodel.Dsyf = Convert.ToDecimal(Freight);
+                    qtmodel.C_Time = DateTime.Now;
+                    _INA_XSqitainfoDao.NUpdate(qtmodel);
+                }
+                return "qt0";
+            }
+            catch
+            {
+                return "qt-1";
+            }
+           
+        }
+        #endregion
+
+        #region //同步插入
+        public string ddcrerp(string orderno, string xqtime,string userno)
+        {
+            try
+            {
+                if (orderno == "" || orderno == null)
+                    return "1";//订单号参数为空
+                if (xqtime == "" || xqtime == null)
+                    return "2";//需求日期参数为空
+                NA_XSinfoView model = _INA_XSinfoDao.GetxsinfobyOrderCode(orderno);
+                if (model == null)
+                    return "3";//订单不存在
+                if (model.Ps_DocEntry != "" && model.Ps_DocEntry != null)
+                {
+                    return "4";
+                }
+                else
+                {
+                    pushsoftorder Psordermodel = new pushsoftorder();
+                    //客户编码k3code
+                    NACustomerinfoView khmodel = _INACustomerinfoDao.NGetModelById(model.KhId);
+                    if (khmodel.K3CODE == "" || khmodel.K3CODE == null)
+                    {
+                        Newasia.XYOffer dsway = new Newasia.XYOffer();
+                        DataTable dt = dsway.GetUserInfoByUserId(Convert.ToInt32(khmodel.DsUid));
+                        string K3CODE = dt.Rows[0]["K3CODE"].ToString();// 
+                        if (K3CODE != null)
+                        {
+                            khmodel.K3CODE = K3CODE;
+                            _INACustomerinfoDao.NUpdate(khmodel);
+                        }
+                        else
+                        {
+                            return "5";//客户没有维护客户编码
+                        }
+                    }
+                    Psordermodel.CrdID = khmodel.K3CODE;
+                    Psordermodel.NumAtCrd = model.Sc_Id;
+                    Psordermodel.DocDate = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MMM-dd"));//凭证日期
+                    //查询订单其他的信息
+                    NA_XSqitainfoView qtmodel = _INA_XSqitainfoDao.GetModelByDsOrder_Id(model.Sort.ToString());
+                    Psordermodel.Z_JHQX = xqtime;
+                    if (userno != "" && userno != null) {
+                        Psordermodel.Z_OpUserSign = userno;
+                    }
+                    if (qtmodel != null)
+                    {
+                        Psordermodel.Z_JHDD = qtmodel.Dsjhdd;
+                        Psordermodel.Z_YSFS = qtmodel.Dsyfcd;
+                        //if (qtmodel.Dscell != "" && qtmodel.Dscell != null)
+                        //{//制单人
+                        //    //查询编号
+                        //    string erpno = _ISysPersonDao.GetERP_NObytel(qtmodel.Dscell);
+                        //    if (erpno != null && erpno != "")
+                        //        Psordermodel.Z_OpUserSign = erpno;
+                        //}
+                    }
+                    if (model.Xs_je == 0)
+                    {
+                        Psordermodel.DocKind = 1;
+                    }
+                    else
+                    {
+                        Psordermodel.DocKind = 0;
+                    }
+                    var ZBbeizhu = "";
+                    //查询订单明细
+                    IList<NA_XSdetailsinfoView> mxmodellist = _INA_XSdetailsinfoDao.GetxsdetaillistbyxsId(model.Id);
+                    List<pushsoftorderDetails> psmxlist = new List<pushsoftorderDetails>();
+                    bool Isfb = false;
+                    foreach (var item in mxmodellist)
+                    {
+                        //查询产品
+                        NQ_productinfoView cpmodel = _INQ_productinfoDao.NGetModelById(item.cpId);
+                        if (cpmodel.P_bianhao == "05.013.0001" || cpmodel.P_bianhao == "05.013.0002" || cpmodel.P_bianhao == "05.013.0003" || cpmodel.P_bianhao == "05.013.0004" || cpmodel.P_bianhao == "05.013.0005"
+                            || cpmodel.P_bianhao == "05.013.0006" || cpmodel.P_bianhao == "05.013.0007" || cpmodel.P_bianhao == "05.013.0009" || cpmodel.P_bianhao == "05.013.NAW0008")
+                        {
+                            Isfb = true;//含有非标产品
+                        }
+                        else
+                        {
+                            pushsoftorderDetails Psmxmodel = new pushsoftorderDetails();
+                            Psmxmodel.ItmID = cpmodel.P_bianhao;
+                            Psmxmodel.Qty = item.SL;
+                            Psmxmodel.TaxAfPriceFC = item.Je / item.SL;
+                            Psmxmodel.ReqDate = Convert.ToDateTime(xqtime);
+                            Psmxmodel.FreeTxt = item.beizhu;
+                            psmxlist.Add(Psmxmodel);
+                            if (item.beizhu != "" && item.beizhu != null)
+                            {
+                                ZBbeizhu = ZBbeizhu + item.beizhu;
+                            }
+                        }
+                    }
+                    Psordermodel.Notes = ZBbeizhu;//主表的备注
+                    if (Isfb == true)
+                        return "5";//含有非标产品
+                    if (qtmodel != null) { 
+                    if (qtmodel.Dsyf > 0)
+                    {
+                        pushsoftorderDetails Psmxmodel = new pushsoftorderDetails();
+                        Psmxmodel.ItmID = "08.002";
+                        Psmxmodel.Qty = 1;
+                        Psmxmodel.TaxAfPriceFC = qtmodel.Dsyf;
+                        Psmxmodel.ReqDate = Convert.ToDateTime(xqtime);
+                        psmxlist.Add(Psmxmodel);
+                    }
+                    if (qtmodel.DSF != null && qtmodel.DSF > 0)
+                    {
+                        pushsoftorderDetails Psmxmodel = new pushsoftorderDetails();
+                        Psmxmodel.ItmID = "08.005";
+                        Psmxmodel.Qty = 1;
+                        Psmxmodel.TaxAfPriceFC = qtmodel.DSF;
+                        Psmxmodel.ReqDate = Convert.ToDateTime(xqtime);
+                        psmxlist.Add(Psmxmodel);
+                    }
+                    }
+                    Psordermodel.Details = psmxlist;
+                    string res = pushsoftHelper.Insterorder(Psordermodel);
+                    if (res == "" || res == null)
+                    {
+                        return "6";//同步失败
+                    }
+                    else
+                    {
+                        pushsoftErrmodel errmodel = new pushsoftErrmodel();
+                        errmodel = JsonConvert.DeserializeObject<pushsoftErrmodel>(res);
+                        if (errmodel.ErrCode == "0")
+                        {
+                            model.Ps_DocEntry = errmodel.Data.DocEntry;
+                            model.Ps_DocNu = errmodel.Data.DocNum;
+                            _INA_XSinfoDao.NUpdate(model);
+                            return "0";//同步成功
+                        }
+                        else
+                        {
+                            return "7";//同步失败
+                        }
+                    }
+
+                }
+            }
+            catch
+            {
+                return "-2";
+            }
+
         }
         #endregion
     }

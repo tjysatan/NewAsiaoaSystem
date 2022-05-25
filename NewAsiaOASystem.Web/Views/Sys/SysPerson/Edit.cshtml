@@ -27,39 +27,44 @@
         <p id="Ptitle"></p>
         <div class="system-menu-set">
             <ul class="infor-c">
-                <li><span class="infor-c-width">用户账号：</span><span class="infor-c-input">
-                    @{
-                              if (!string.IsNullOrEmpty(Model.Id))
-                              { 
-                        @Html.TextBoxFor(m => m.Name, new { @readonly = "readonly" })
-                              }
-                              else
-                              {
-                        @Html.TextBoxFor(m => m.Name)
-                              }
-                    }
-                </span><span style="color: red; font-size: 24px; vertical-align: middle; margin-left: 8px;">*</span><span class="desc w-register">请输入英文字母，如admin</span></li>
+                <li>
+                    <span class="infor-c-width">用户账号：</span><span class="infor-c-input">
+                        @{
+                            if (!string.IsNullOrEmpty(Model.Id))
+                            {
+                                @Html.TextBoxFor(m => m.Name, new { @readonly = "readonly" })
+                            }
+                            else
+                            {
+                                @Html.TextBoxFor(m => m.Name)
+                            }
+                        }
+                    </span><span style="color: red; font-size: 24px; vertical-align: middle; margin-left: 8px;">*</span><span class="desc w-register">请输入英文字母，如admin</span>
+                </li>
             </ul>
             <ul class="infor-c">
                 <li><span class="infor-c-width">用户姓名：</span><span class="infor-c-input">@Html.TextBoxFor(m => m.UserName)</span><span style="color: red; font-size: 24px; vertical-align: middle; margin-left: 8px;">*</span><span class="desc w-register">请输入用户姓名，如张艳</span></li>
             </ul>
             <ul class="infor-c">
-                <li><span class="infor-c-width">用户密码：</span><span class="infor-c-input"><input type="password"  id="Password" name="Password" value="@ViewBag.PassWd"/>@*@Html.PasswordFor(m => m.Password)*@</span><span style="color: red; font-size: 24px; vertical-align: middle; margin-left: 8px;">*</span><span class="desc w-register">请设置密码，可以是数字、英文。</span></li>
+                <li><span class="infor-c-width">用户密码：</span><span class="infor-c-input"><input type="password" id="Password" name="Password" value="@ViewBag.PassWd" />@*@Html.PasswordFor(m => m.Password)*@</span><span style="color: red; font-size: 24px; vertical-align: middle; margin-left: 8px;">*</span><span class="desc w-register">请设置密码，可以是数字、英文。</span></li>
             </ul>
             <ul class="infor-c">
-                <li><span class="infor-c-width">确认密码：</span><span class="infor-c-input"><input type="password"  id="txt_CheckPassword" name="RePassword" value="@ViewBag.PassWd"/></span><span style="color: red; font-size: 24px; vertical-align: middle; margin-left: 8px;">*</span><span class="desc w-register">请重新输入密码</span></li>
+                <li><span class="infor-c-width">确认密码：</span><span class="infor-c-input"><input type="password" id="txt_CheckPassword" name="RePassword" value="@ViewBag.PassWd" /></span><span style="color: red; font-size: 24px; vertical-align: middle; margin-left: 8px;">*</span><span class="desc w-register">请重新输入密码</span></li>
             </ul>
             <ul class="infor-c">
                 <li><span class="infor-c-width">联系方式：</span><span class="infor-c-input">@Html.TextBoxFor(m => m.Tel)</span>请输入联系电话</li>
             </ul>
             <ul class="infor-c ">
-                <li><span class="infor-c-width">所在单位：</span>
+                <li>
+                    <span class="infor-c-width">所在单位：</span>
                     <span>
                         @Html.DropDownList("ADListData", ViewData["getADList"] as SelectList, new { @class = "add-function" });
-                    </span><span style="color: red; font-size: 24px; vertical-align: middle; margin-left: 8px;">*</span><span class="desc w-register">请选择所属单位</span></li>
+                    </span><span style="color: red; font-size: 24px; vertical-align: middle; margin-left: 8px;">*</span><span class="desc w-register">请选择所属单位</span>
+                </li>
             </ul>
             <ul class="infor-c ">
-                <li><span class="infor-c-width">角色：</span>
+                <li>
+                    <span class="infor-c-width">角色：</span>
                     <span>
                         <input id="sel_Comm" class="add-function" type="text" readonly="readonly" onclick="showMenu();" />
                     </span>
@@ -70,23 +75,29 @@
             </ul>
 
             <ul class="infor-c ">
-                <li><span class="infor-c-width">状态：</span>
+                <li>
+                    <span class="infor-c-width">状态：</span>
                     <span>
                         <select class="add-function" name="State">
                             @{
-                              if ("0".Equals(Convert.ToString(@Model.State)) && null != @Model.Id)
-                              {
-                                @:<option value="1">启用</option>
-                                @:<option value="0" selected="selected">禁用</option>
-                                                }
-                              else
-                              {
-                                @:<option value="1"  selected="selected">启用</option>
-                                @:<option value="0">禁用</option>
-                                                }
-                                                
+                                if ("0".Equals(Convert.ToString(@Model.State)) && null != @Model.Id)
+                                {
+                                    @:<option value="1">启用</option>
+                                    @:<option value="0" selected="selected">禁用</option>
+                                }
+                                else
+                                {
+                                    @:<option value="1" selected="selected">启用</option>
+                                    @:<option value="0">禁用</option>
+                                }
+
                             }
-                        </select></span><span class="desc w-register">是否启用此账户</span></li>
+                        </select>
+                    </span><span class="desc w-register">是否启用此账户</span>
+                </li>
+            </ul>
+            <ul class="infor-c">
+                <li><span class="infor-c-width">员工编号：</span><span class="infor-c-input">@Html.TextBoxFor(m => m.ERP_YGNO)</span>ERP中员工编号</li>
             </ul>
         </div>
         <div class="inquiry-input infor-b">

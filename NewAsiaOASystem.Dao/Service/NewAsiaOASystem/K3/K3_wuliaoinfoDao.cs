@@ -133,7 +133,20 @@ namespace NewAsiaOASystem.Dao
                 return listmodel[0];
             else
                 return null;
-        } 
+        }
+        #endregion
+
+        #region //查询普实创建时间字段最近的数据
+        public K3_wuliaoinfoView GetwuliaoMaxOpDate()
+        {
+            string hqlstr = string.Format("from K3_wuliaoinfo where OpDate = (SELECT MAX(OpDate) FROM K3_wuliaoinfo)");
+            List<K3_wuliaoinfo> list = Session.CreateQuery(hqlstr).List<K3_wuliaoinfo>() as List<K3_wuliaoinfo>;
+            IList<K3_wuliaoinfoView> listmodel = GetViewlist(list);
+            if (listmodel != null)
+                return listmodel[0];
+            else
+                return null;
+        }
         #endregion
 
         #region //通过物料代码查询出物料代码

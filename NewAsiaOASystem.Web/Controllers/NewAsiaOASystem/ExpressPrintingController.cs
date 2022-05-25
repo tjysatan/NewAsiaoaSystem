@@ -121,6 +121,18 @@ namespace NewAsiaOASystem.Web.Controllers
             return View();
         }
 
+        public ActionResult sfYPrint()
+        {
+            SessionUser user = Session[SessionHelper.User] as SessionUser;
+            EP_jlinfoView model = new EP_jlinfoView();
+            if (Session["epId"].ToString() != "" && Session["epId"] != null)
+            {
+                var Id = Session["epId"].ToString();
+                model = _IEP_jlinfoDao.NGetModelById(Id);
+            }
+            return View(model);
+        }
+
         /// <summary>
         /// 顺丰快递（新版）打印
         /// </summary>
@@ -132,6 +144,14 @@ namespace NewAsiaOASystem.Web.Controllers
             ViewData["UID"] = user.Id;//当前登录用户id
             ViewData["Id"] = id;//客户Id
             return View();
+            //SessionUser user = Session[SessionHelper.User] as SessionUser;
+            //EP_jlinfoView model = new EP_jlinfoView();
+            //if (Session["epId"].ToString() != "" && Session["epId"] != null)
+            //{
+            //    var Id = Session["epId"].ToString();
+            //    model = _IEP_jlinfoDao.NGetModelById(Id);
+            //}
+            //return View(model);
         }
 
         /// <summary>

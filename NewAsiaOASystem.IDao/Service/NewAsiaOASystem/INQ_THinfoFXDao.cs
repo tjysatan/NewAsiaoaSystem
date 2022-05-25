@@ -18,7 +18,43 @@ namespace NewAsiaOASystem.IDao
              string starttime, string enedtime, string wxstarttime, string wxendtime, string r_pId, SessionUser user);
         #endregion
 
-         //按照产品分组查询
+        #region MyRegion
+        /// <summary>
+        /// 返退明细列表分页数据
+        /// </summary>
+        /// <param name="khname">客户名称</param>
+        /// <param name="cpname">产品名称型号</param>
+        /// <param name="SC_PH">生产批次</param>
+        /// <param name="starttime">创建时间</param>
+        /// <param name="enedtime"></param>
+        /// <param name="wxstarttime">维修时间</param>
+        /// <param name="wxendtime"></param>
+        /// <param name="r_pId">产品类</param>
+        /// <param name="Isdz">定责情况</param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        PagerInfo<NQ_THinfoFXView> GetNewCinfoList(string khname, string cpname, string SC_PH, string starttime, string enedtime, string wxstarttime, string wxendtime, string r_pId, string Isdz, string dzstarttime, string dzendtime, SessionUser user);
+        #endregion
+
+        
+        #region //退货明细导出数据(2022211)
+        /// <summary>
+        /// 退货明细导出数据(2022211)
+        /// </summary>
+        /// <param name="khname"></param>
+        /// <param name="cpname"></param>
+        /// <param name="SC_PH"></param>
+        /// <param name="starttime"></param>
+        /// <param name="enedtime"></param>
+        /// <param name="wxstarttime"></param>
+        /// <param name="wxendtime"></param>
+        /// <param name="r_pId"></param>
+        /// <param name="Isdz"></param>
+        /// <returns></returns>
+        IList<NQ_THinfoFXView> NewDCWXFXDATA(string khname, string cpname, string SC_PH, string starttime, string enedtime, string wxstarttime, string wxendtime, string r_pId, string Isdz, string dzstarttime, string dzendtime); 
+        #endregion
+
+        //按照产品分组查询
         List<Object> GetTHwxfxgroupcpId(string starttime, string enedtime);
 
                 /// <summary>

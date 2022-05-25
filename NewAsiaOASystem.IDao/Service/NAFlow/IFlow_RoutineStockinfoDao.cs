@@ -16,7 +16,11 @@ namespace NewAsiaOASystem.IDao
         /// <returns></returns>
         IList<Flow_RoutineStockinfoView> GetxsinfobyOrderCode(string Sort, string Category, string cpname, string wlSort);
 
-         //通过物料代码查询常规产品的信息
+        #region //温控产品的数据
+        IList<Flow_RoutineStockinfoView> New_GetxsinfobyOrderCode(string Sort, string Category, string cpname, string P_Model, string wlSort); 
+        #endregion
+
+        //通过物料代码查询常规产品的信息
         Flow_RoutineStockinfoView Getmodelinfobyp_bianhao(string p_bianhao);
 
           /// <summary>

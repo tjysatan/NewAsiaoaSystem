@@ -66,5 +66,10 @@ namespace NewAsiaOASystem.ViewModel
         /// 备用字段
         /// </summary>
         public virtual string Beizhu2 { get; set; }
+
+        /// <summary>
+        /// 硬件成本 只有从报价系统获取的时候有这个字段
+        /// </summary>
+        public virtual decimal? yjcb { get; set; }
     }
 }

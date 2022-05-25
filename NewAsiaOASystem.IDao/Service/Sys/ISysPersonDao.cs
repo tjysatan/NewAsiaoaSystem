@@ -63,7 +63,17 @@ namespace NewAsiaOASystem.IDao
          /// </summary>
          /// <param name="Rolename">角色名称</param>
          /// <returns></returns>
-         IList<SysPersonView> GetPersonbyRolename(string Rolename); 
-         #endregion
+         IList<SysPersonView> GetPersonbyRolename(string Rolename);
+        #endregion
+
+       
+        #region //通过账户的联系方式查询账户信息中ERP的账户编号
+        /// <summary>
+        /// 通过账户的联系方式查询账户信息中ERP的账户编号
+        /// </summary>
+        /// <param name="tel">电话</param>
+        /// <returns></returns>
+        string GetERP_NObytel(string tel); 
+        #endregion
     }
 }

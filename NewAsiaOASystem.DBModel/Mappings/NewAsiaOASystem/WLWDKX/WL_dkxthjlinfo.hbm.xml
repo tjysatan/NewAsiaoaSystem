@@ -9,5 +9,10 @@
     <property name="scxsdtetime" column="scxsdtetime"  />
     <property name="XsordId" column="XsordId"  />
     <property name="jltype" column="jltype"  />
+
+    <property name="Xsjpordno" column="Xsjpordno"  />
+    <property name="scxscuscode" column="scxscuscode"  />
+    <property name="scxscusname" column="scxscusname"  />
+    <property name="smtype" column="smtype"  />
   </class>
 </hibernate-mapping>
