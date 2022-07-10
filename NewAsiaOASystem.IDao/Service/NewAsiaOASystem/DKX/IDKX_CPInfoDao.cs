@@ -114,7 +114,17 @@ namespace NewAsiaOASystem.IDao
         /// 查询正常状态的下含有头物料号的数据
         /// </summary>
         /// <returns></returns>
-        IList<DKX_CPInfoView> GetalldkxcpdataScheme_order(); 
+        IList<DKX_CPInfoView> GetalldkxcpdataScheme_order();
+        #endregion
+
+        
+        #region //查询全部或者当月新增的方案的数量
+        /// <summary>
+        /// 查询全部或者当月新增的方案的数量
+        /// </summary>
+        /// <param name="datatype">yy 查询全部数据 MM查询当月</param>
+        /// <returns></returns>
+        int Get_CPNumber_YORM(string datatype); 
         #endregion
 
 

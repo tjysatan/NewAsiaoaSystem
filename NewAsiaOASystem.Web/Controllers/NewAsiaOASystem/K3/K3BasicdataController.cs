@@ -504,6 +504,9 @@ namespace NewAsiaOASystem.Web.Controllers
                         k3model.unitname = a.UomName;
                         k3model.WhsName = a.WhsName;
                         k3model.SourceID = a.SourceID;
+                        k3model.IsClose = a.IsClose;
+                        k3model.Z_WLSX = a.Z_WLSX;
+                        k3model.updatetime = DateTime.Now;
                     }
                     _IK3_wuliaoinfoDao.NUpdate(k3model);//更新基础数据的名称
                                                         //查询元器件数据
@@ -644,6 +647,9 @@ namespace NewAsiaOASystem.Web.Controllers
 
             public virtual string WhsName { get; set; }
             public virtual string SourceID { get; set; }
+
+            public virtual string Z_WLSX { get; set; }
+ 
         }
 
         //更加物料代码返回物料是属于那个仓的
@@ -858,7 +864,7 @@ namespace NewAsiaOASystem.Web.Controllers
         }
         #endregion
 
-        #region //批量修改ERP中物料的数据
+        #region //批量修改ERP中物料的数据[修改各个工序工时]
         public ActionResult BatcupdateERPMDItm_GXGSView()
         {
             return View();
@@ -884,7 +890,7 @@ namespace NewAsiaOASystem.Web.Controllers
             }
         }
 
-        //更普实物料
+        //更普实物料【各个工序的工时字段】
         public void BatcupdateMDItm_GXGS(System.Data.DataTable dt)
         {
             string fnumber = "";
@@ -914,6 +920,93 @@ namespace NewAsiaOASystem.Web.Controllers
                     if (Z_DQZZMBJXGS == "" || Z_DQZZMBJXGS == null)
                         Z_DQZZMBJXGS = "0";
                     zypushsoftHelper.updateMDItm_GXGS(fnumber, Z_DQZZDBGS, Z_DQZZKZXGS, Z_DQZZZHLGS, Z_DQZZMBZXGS, Z_DQZZMBJXGS);
+                }
+            }
+        }
+        #endregion
+
+        #region //批量修改ERP中物料数据【修改内部售价字段】
+        public ActionResult BatcupdateMDItm_NBPriceView()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public JsonResult BatcDRMDItm_NBPriceExcel(HttpPostedFileBase fileImport)
+        {
+            SessionUser user = Session[SessionHelper.User] as SessionUser;
+            if (fileImport != null)
+            {
+                string fileName = DateTime.Now.ToString("yyyyMMdd") + "-" + Path.GetFileName(fileImport.FileName);
+                string filePath = Path.Combine(Server.MapPath("~/Content/upload"), fileName);
+                fileImport.SaveAs(filePath);
+                string filurl = Server.MapPath("~") + "/Content/upload/" + fileName;
+                System.Data.DataTable dt = GetExcelDatatable(filurl, "mapTable");
+                BatcMDItm_NBPrice(dt);
+                return Json(new { result = "success", res = "操作成功" });
+            }
+            else
+            {
+                return Json(new { result = "error", res = "文件为空" });
+            }
+        }
+
+        //更新普实物料【内部售价字段】
+        public void BatcMDItm_NBPrice(System.Data.DataTable dt)
+        {
+            string fnumber = "";
+            string NBPrice = "";
+            foreach (DataRow dr in dt.Rows)
+            {
+                fnumber = dr["fnumber"].ToString().Trim();//产品编号
+                NBPrice=dr["NBPrice"].ToString().Trim();
+                if (fnumber != "" && fnumber != null)
+                {
+                    if (NBPrice == "" || NBPrice == null)
+                        NBPrice = "0";
+                    zypushsoftHelper.updateupdateMDItm_Z_NBPrice(fnumber, NBPrice);
+                }
+            }
+        }
+        #endregion
+
+        #region //批量修改ERP中物料数据【修改物料分类属性字段】
+        public ActionResult BatcupdateMDItm_Z_WLSXView()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public JsonResult BatcDRMDItm_Z_WLSXExcel(HttpPostedFileBase fileImport)
+        {
+            SessionUser user = Session[SessionHelper.User] as SessionUser;
+            if (fileImport != null)
+            {
+                string fileName = DateTime.Now.ToString("yyyyMMdd") + "-" + Path.GetFileName(fileImport.FileName);
+                string filePath = Path.Combine(Server.MapPath("~/Content/upload"), fileName);
+                fileImport.SaveAs(filePath);
+                string filurl = Server.MapPath("~") + "/Content/upload/" + fileName;
+                System.Data.DataTable dt = GetExcelDatatable(filurl, "mapTable");
+                BatcMDItm_Z_WLSX(dt);
+                return Json(new { result = "success", res = "操作成功" });
+            }
+            else
+            {
+                return Json(new { result = "error", res = "文件为空" });
+            }
+        }
+
+        public void BatcMDItm_Z_WLSX(System.Data.DataTable dt)
+        {
+            string fnumber = "";
+            string Z_WLSX = "";
+            foreach (DataRow dr in dt.Rows)
+            {
+                fnumber = dr["fnumber"].ToString().Trim();//产品编号
+                Z_WLSX = dr["Z_WLSX"].ToString().Trim();
+                if (fnumber != "" && fnumber != null)
+                {
+                    zypushsoftHelper.updateMDItm_Z_WLSX(fnumber, Z_WLSX);
                 }
             }
         }
@@ -1089,6 +1182,7 @@ namespace NewAsiaOASystem.Web.Controllers
                         wlmodel.LineType = "P";
                         wlmodel.OperationLine = "10";
                         wlmodel.Position = "1";
+                      
                         wuliaolist.Add(wlmodel);
                     }
                 }
@@ -1340,6 +1434,7 @@ namespace NewAsiaOASystem.Web.Controllers
                     mxmodel.ItmID = item.子项物料代码;
                     mxmodel.LineNum = iLineNum.ToString();
                     mxmodel.NetQty = Convert.ToDecimal(item.单位用量);
+                   
                     if (jcwlmodel != null)
                     {
                         if (jcwlmodel.SourceID == "制造")
@@ -1404,9 +1499,12 @@ namespace NewAsiaOASystem.Web.Controllers
                         k3model.str2 = Getwuliaosanweibyfnumber(a.ItmID);
                         k3model.unitname = a.UomName;
                         k3model.C_Time = DateTime.Now;
+                        k3model.updatetime = DateTime.Now;
                         k3model.OpDate = Convert.ToDateTime(a.OpDate);
                         k3model.WhsName = a.WhsName;
                         k3model.SourceID = a.SourceID;
+                        k3model.IsClose = a.IsClose;
+                        k3model.Z_WLSX = a.Z_WLSX;
                         _IK3_wuliaoinfoDao.Ninsert(k3model);
                     }
                     else
@@ -1415,6 +1513,9 @@ namespace NewAsiaOASystem.Web.Controllers
                         k3model.OpDate = Convert.ToDateTime(a.OpDate);
                         k3model.WhsName = a.WhsName;
                         k3model.SourceID = a.SourceID;
+                        k3model.IsClose = a.IsClose;
+                        k3model.Z_WLSX = a.Z_WLSX;
+                        k3model.updatetime = DateTime.Now;
                         _IK3_wuliaoinfoDao.NUpdate(k3model);
                     }
                 }
@@ -1561,7 +1662,76 @@ namespace NewAsiaOASystem.Web.Controllers
         #endregion
         #endregion
 
+        #region //批量更新 采购物料信息
+        public JsonResult Batc_update_wuliaoinfo_bySourceID(string SourceID)
+        {
+            try
+            {
+                //查询物料平台
+                IList<K3_wuliaoinfoView> list = _IK3_wuliaoinfoDao.Get_info_bySourceID(SourceID);
+                var xz = 0;
+                foreach (var item in list)
+                {
+                    string resjson = zypushsoftHelper.Get_MDItm_by_ItmID(item.fnumber);
+                    if (resjson != null || resjson != null || resjson != "")
+                    {
+                        xz = xz + 1;
+                        List<Psjsonmodel> timemodel = getObjectByJson<Psjsonmodel>(resjson);
+                        foreach (var a in timemodel)
+                        {
+                            item.fname = a.ItmName;
+                            item.fmodel = a.ItmSpec;
+                            item.unitname = a.UomName;
+                            item.WhsName = a.WhsName;
+                            item.SourceID = a.SourceID;
+                            item.IsClose = a.IsClose;
+                            item.Z_WLSX = a.Z_WLSX;
+                            item.updatetime = DateTime.Now;
+                        }
+                        _IK3_wuliaoinfoDao.NUpdate(item);//更新基础数据的名称
 
+                        NQ_YJinfoView yqjmodel = _INQ_YJinfoDao.GetYqjModelbyW_dm(item.fnumber);
+                        if (yqjmodel != null)
+                        {
+                            yqjmodel.Y_Name = item.fname;//产品名称
+                            yqjmodel.Y_Ggxh = item.fmodel;//产品型号
+                            _INQ_YJinfoDao.NUpdate(yqjmodel);
+                        }
+                        //查询元器件检验标准
+                        IQC_SopInfoView IQCmodel = _IIQC_SopInfoDao.Getsopinfobyyqjwlno(item.fnumber);
+                        if (IQCmodel != null)
+                        {
+
+                            IQCmodel.Yqjname = item.fname;//产品名称
+                            IQCmodel.Yqjxh = item.fmodel;//产品型号
+                            _IIQC_SopInfoDao.NUpdate(IQCmodel);
+                        }
+                        //查询常规电控温控产品
+                        Flow_RoutineStockinfoView cgcpmodel = _IFlow_RoutineStockinfoDao.Getmodelinfobyp_bianhao(item.fnumber);
+                        if (cgcpmodel != null)
+                        {
+                            cgcpmodel.P_Model = item.fmodel;//产品型号
+                            cgcpmodel.P_Name = item.fname;//产品名称
+                            _IFlow_RoutineStockinfoDao.NUpdate(cgcpmodel);
+                        }
+                        //查询非标电控温控产品
+                        Flow_NonSProductinfoView fbcpmodel = _IFlow_NonSProductinfoDao.Getmodelbywldm(item.fnumber);
+                        if (fbcpmodel != null)
+                        {
+                            fbcpmodel.Pname = item.fname;//产品名称
+                            fbcpmodel.Pmodel = item.fmodel;//产品型号
+                            _IFlow_NonSProductinfoDao.NUpdate(fbcpmodel);
+                        }
+                    }
+                }
+                return Json(new { result = "success", msg = "更新：" + xz + "条" });
+            }
+            catch(Exception x)
+            {
+                return Json(new { result = "error", msg = x });
+            }
+        }
+        #endregion
     }
 
 }

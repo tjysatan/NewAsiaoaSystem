@@ -1112,7 +1112,7 @@ namespace NewAsiaOASystem.Dao
                 }
                 else
                 {
-                    temHql = string.Format(" from DKX_DDinfo where gczl_Isyc='1' and Gcs_nameId ='{0}'", user.Id);
+                    temHql = string.Format(" from DKX_DDinfo where gczl_Isyc='1' and Gcs_nameId in (select Id from  DKX_GCSinfo where ZH_Id='{0}')'", user.Id);
                 }
                 IQuery queryCount = Session.CreateQuery(string.Format("select count(*)  {0} ", temHql));
                 int count = Convert.ToInt32(queryCount.UniqueResult());
@@ -1138,7 +1138,7 @@ namespace NewAsiaOASystem.Dao
             //}
             //else
             //{
-            //    TempHql.AppendFormat(" and Gcs_nameId ='{0}'", user.Id);
+            //    TempHql.AppendFormat(" and Gcs_nameId in (select Id from  DKX_GCSinfo where ZH_Id='{0}')'", user.Id);
             //}
             TempHql.AppendFormat("order by  u.C_time desc");
             PagerInfo<DKX_DDinfoView> list = Search();
@@ -1414,6 +1414,28 @@ namespace NewAsiaOASystem.Dao
             List<DKX_DDinfo> list = query.List<DKX_DDinfo>() as List<DKX_DDinfo>;
             IList<DKX_DDinfoView> listmodel = GetViewlist(list);
             return listmodel;
+        }
+        #endregion
+
+        #region //查询当年和当月的订单数量
+        /// <summary>
+        /// 查询当年和当月的订单数量
+        /// </summary>
+        /// <param name="datatype">YY 查询当年的 MM查询当月的</param>
+        /// <returns></returns>
+        public int Get_OrderNumber_YORM(string datatype)
+        {
+            try
+            {
+                string tempHql= string.Format(" from DKX_DDinfo where Start='0' and DATEDIFF({0},C_time,GETDATE())=0 ", datatype);
+                IQuery queryCount = Session.CreateQuery(string.Format("select count(*) {0}", tempHql));
+                int count = Convert.ToInt32(queryCount.UniqueResult());
+                return count;
+            }
+            catch
+            {
+                return 0;
+            }
         }
         #endregion
     }

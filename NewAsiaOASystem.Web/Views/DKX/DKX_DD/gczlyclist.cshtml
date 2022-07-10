@@ -83,7 +83,9 @@
         }
     </script>
     <script type="text/html" id="bar">
+        {{#  if('@ViewData["IsEdit"]' !=='false'){ }}
         <button class="layui-btn layui-btn-primary layui-btn-small" lay-event="Eide">编辑</button>
+        {{# } }}
     </script>
 }
 

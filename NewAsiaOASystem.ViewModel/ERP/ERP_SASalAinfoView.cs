@@ -91,6 +91,16 @@ namespace NewAsiaOASystem.ViewModel
         public virtual string Z_EmpName { get; set; }
 
         /// <summary>
+        /// 单据日期
+        /// </summary>
+        public virtual string DocDate { get; set; }
+
+        /// <summary>
+        /// 单据日期
+        /// </summary>
+        public virtual DateTime? BDocDate { get; set; }
+
+        /// <summary>
         /// 更新时间
         /// </summary>
         public virtual DateTime? C_time { get; set; }

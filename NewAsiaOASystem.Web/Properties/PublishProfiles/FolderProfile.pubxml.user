@@ -56,37 +56,37 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>07/24/2017 09:25:13</publishTime>
     </File>
     <File Include="bin/NewAsiaOASystem.Dao.dll">
-      <publishTime>05/17/2022 09:33:12</publishTime>
+      <publishTime>06/27/2022 14:34:51</publishTime>
     </File>
     <File Include="bin/NewAsiaOASystem.Dao.pdb">
-      <publishTime>05/17/2022 09:33:12</publishTime>
+      <publishTime>06/27/2022 14:34:51</publishTime>
     </File>
     <File Include="bin/NewAsiaOASystem.DBModel.dll">
-      <publishTime>05/17/2022 09:33:11</publishTime>
+      <publishTime>06/27/2022 14:34:49</publishTime>
     </File>
     <File Include="bin/NewAsiaOASystem.DBModel.pdb">
-      <publishTime>05/17/2022 09:33:11</publishTime>
+      <publishTime>06/27/2022 14:34:49</publishTime>
     </File>
     <File Include="bin/NewAsiaOASystem.IDao.dll">
-      <publishTime>05/17/2022 09:33:11</publishTime>
+      <publishTime>06/27/2022 14:34:50</publishTime>
     </File>
     <File Include="bin/NewAsiaOASystem.IDao.pdb">
-      <publishTime>05/17/2022 09:33:11</publishTime>
+      <publishTime>06/27/2022 14:34:50</publishTime>
     </File>
     <File Include="bin/NewAsiaOASystem.ViewModel.dll">
-      <publishTime>05/17/2022 09:33:11</publishTime>
+      <publishTime>06/27/2022 14:34:50</publishTime>
     </File>
     <File Include="bin/NewAsiaOASystem.ViewModel.pdb">
-      <publishTime>05/17/2022 09:33:11</publishTime>
+      <publishTime>06/27/2022 14:34:50</publishTime>
     </File>
     <File Include="bin/NewAsiaOASystem.Web.dll">
-      <publishTime>05/19/2022 13:18:10</publishTime>
+      <publishTime>06/28/2022 08:27:42</publishTime>
     </File>
     <File Include="bin/NewAsiaOASystem.Web.pdb">
-      <publishTime>05/19/2022 13:18:10</publishTime>
+      <publishTime>06/28/2022 08:27:42</publishTime>
     </File>
     <File Include="bin/NewAsiaOASystem.Web.XmlSerializers.dll">
-      <publishTime>05/19/2022 13:18:11</publishTime>
+      <publishTime>06/28/2022 08:27:43</publishTime>
     </File>
     <File Include="bin/Newtonsoft.Json.4.5.0.0.Fakes.dll">
       <publishTime>07/24/2017 09:31:16</publishTime>
@@ -3065,7 +3065,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>07/24/2017 09:25:49</publishTime>
     </File>
     <File Include="logs/log.txt">
-      <publishTime>05/19/2022 13:06:22</publishTime>
+      <publishTime>06/23/2022 13:27:15</publishTime>
     </File>
     <File Include="packages.config">
       <publishTime>04/19/2021 11:40:35</publishTime>
@@ -4625,7 +4625,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>07/24/2017 09:25:51</publishTime>
     </File>
     <File Include="Scripts/NAjs/DKXpulice.js">
-      <publishTime>03/29/2022 09:37:15</publishTime>
+      <publishTime>06/14/2022 13:30:54</publishTime>
     </File>
     <File Include="Scripts/NAjs/images/face/0.gif">
       <publishTime>07/24/2017 09:25:51</publishTime>
@@ -5147,10 +5147,10 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>07/24/2017 09:24:35</publishTime>
     </File>
     <File Include="Views/Admin/h_right.cshtml">
-      <publishTime>12/06/2021 09:56:32</publishTime>
+      <publishTime>06/09/2022 11:04:54</publishTime>
     </File>
     <File Include="Views/Admin/Index.cshtml">
-      <publishTime>10/22/2021 09:59:37</publishTime>
+      <publishTime>06/07/2022 09:41:43</publishTime>
     </File>
     <File Include="Views/Admin/副本 Index.cshtml">
       <publishTime>07/24/2017 09:24:35</publishTime>
@@ -5192,22 +5192,22 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>08/07/2021 12:48:11</publishTime>
     </File>
     <File Include="Views/DKX/DKX_DD/FBHTZWMOREView.cshtml">
-      <publishTime>03/08/2022 16:57:08</publishTime>
+      <publishTime>06/23/2022 13:16:19</publishTime>
     </File>
     <File Include="Views/DKX/DKX_DD/FBHTZWView.cshtml">
-      <publishTime>03/08/2022 17:00:42</publishTime>
+      <publishTime>06/23/2022 13:17:18</publishTime>
     </File>
     <File Include="Views/DKX/DKX_DD/FBXJView.cshtml">
       <publishTime>07/22/2021 10:57:37</publishTime>
     </File>
     <File Include="Views/DKX/DKX_DD/GCSbomView.cshtml">
-      <publishTime>08/19/2021 08:47:06</publishTime>
+      <publishTime>06/21/2022 16:04:43</publishTime>
     </File>
     <File Include="Views/DKX/DKX_DD/gczlycBJView.cshtml">
       <publishTime>08/20/2021 11:53:34</publishTime>
     </File>
     <File Include="Views/DKX/DKX_DD/gczlyclist.cshtml">
-      <publishTime>06/23/2021 14:23:45</publishTime>
+      <publishTime>06/06/2022 11:51:03</publishTime>
     </File>
     <File Include="Views/DKX/DKX_DD/GczlycView.cshtml">
       <publishTime>06/23/2021 11:05:23</publishTime>
@@ -5215,11 +5215,17 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
     <File Include="Views/DKX/DKX_DD/kfzlckView.cshtml">
       <publishTime>01/06/2022 14:52:41</publishTime>
     </File>
+    <File Include="Views/DKX/DKX_DD/Order_SC_JinduView.cshtml">
+      <publishTime>06/14/2022 14:29:02</publishTime>
+    </File>
     <File Include="Views/DKX/DKX_DD/ShowMRPcountResult.cshtml">
       <publishTime>06/23/2021 14:20:18</publishTime>
     </File>
     <File Include="Views/DKX/DKX_DD/updateFBitmeView.cshtml">
       <publishTime>09/23/2021 14:12:13</publishTime>
+    </File>
+    <File Include="Views/DKX/DKX_DD/Update_WL_NumberView.cshtml">
+      <publishTime>06/21/2022 16:44:49</publishTime>
     </File>
     <File Include="Views/DKX/DKX_DDtypeinfo/CGJDView.cshtml">
       <publishTime>12/25/2017 11:34:19</publishTime>
@@ -5258,16 +5264,16 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>09/17/2020 17:13:51</publishTime>
     </File>
     <File Include="Views/DKX/DKX_DDtypeinfo/DKXDDgcslist.cshtml">
-      <publishTime>02/21/2022 15:40:12</publishTime>
+      <publishTime>06/21/2022 11:36:14</publishTime>
     </File>
     <File Include="Views/DKX/DKX_DDtypeinfo/DKXDDlist.cshtml">
-      <publishTime>05/18/2022 08:52:52</publishTime>
+      <publishTime>06/16/2022 13:16:13</publishTime>
     </File>
     <File Include="Views/DKX/DKX_DDtypeinfo/DKXDDPblist.cshtml">
-      <publishTime>12/29/2021 15:15:00</publishTime>
+      <publishTime>06/02/2022 14:59:27</publishTime>
     </File>
     <File Include="Views/DKX/DKX_DDtypeinfo/DKXDDsclist.cshtml">
-      <publishTime>08/11/2021 10:58:30</publishTime>
+      <publishTime>06/15/2022 10:08:39</publishTime>
     </File>
     <File Include="Views/DKX/DKX_DDtypeinfo/DKXpjdblist.cshtml">
       <publishTime>03/19/2020 00:12:24</publishTime>
@@ -5285,7 +5291,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>05/19/2019 15:10:01</publishTime>
     </File>
     <File Include="Views/DKX/DKX_DDtypeinfo/DKXXdView.cshtml">
-      <publishTime>03/21/2022 13:35:31</publishTime>
+      <publishTime>06/16/2022 14:48:07</publishTime>
     </File>
     <File Include="Views/DKX/DKX_DDtypeinfo/DQzlshView.cshtml">
       <publishTime>05/21/2019 23:19:27</publishTime>
@@ -5417,7 +5423,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>04/27/2021 14:22:09</publishTime>
     </File>
     <File Include="Views/DKX/DKX_DDtypeinfo/TBK3SCworkView.cshtml">
-      <publishTime>05/01/2021 15:02:43</publishTime>
+      <publishTime>06/23/2022 11:02:20</publishTime>
     </File>
     <File Include="Views/DKX/DKX_DDtypeinfo/TBPsCPView.cshtml">
       <publishTime>05/13/2021 10:22:03</publishTime>
@@ -5463,6 +5469,9 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
     </File>
     <File Include="Views/DKX_DD/ShowMRPcountResult.cshtml">
       <publishTime>06/17/2021 15:10:56</publishTime>
+    </File>
+    <File Include="Views/DKX_DD/Update_WL_NumberView.cshtml">
+      <publishTime>06/21/2022 16:44:49</publishTime>
     </File>
     <File Include="Views/DKX_DDtypeinfo/DKXSCGCCPrintView.cshtml">
       <publishTime>04/25/2021 16:49:31</publishTime>
@@ -5510,7 +5519,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>11/09/2021 09:18:33</publishTime>
     </File>
     <File Include="Views/ERPDATA/Xschdatelist.cshtml">
-      <publishTime>12/22/2021 14:22:49</publishTime>
+      <publishTime>05/31/2022 16:48:37</publishTime>
     </File>
     <File Include="Views/K3Basicdata/CalculationSWH.cshtml">
       <publishTime>03/04/2022 16:11:14</publishTime>
@@ -5884,6 +5893,12 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
     <File Include="Views/NewAsiaOASystem/K3Basicdata/BatcupdateERPMDItm_GXGSView.cshtml">
       <publishTime>03/04/2022 11:06:08</publishTime>
     </File>
+    <File Include="Views/NewAsiaOASystem/K3Basicdata/BatcupdateMDItm_NBPriceView.cshtml">
+      <publishTime>05/31/2022 14:26:09</publishTime>
+    </File>
+    <File Include="Views/NewAsiaOASystem/K3Basicdata/BatcupdateMDItm_Z_WLSXView.cshtml">
+      <publishTime>06/10/2022 15:19:49</publishTime>
+    </File>
     <File Include="Views/NewAsiaOASystem/K3Basicdata/BatcupdateprodectinfoxhbyfnumberView.cshtml">
       <publishTime>09/14/2020 14:49:03</publishTime>
     </File>
@@ -5906,7 +5921,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>09/14/2020 13:42:23</publishTime>
     </File>
     <File Include="Views/NewAsiaOASystem/K3Basicdata/TBk3wuliaoView.cshtml">
-      <publishTime>03/04/2022 11:12:01</publishTime>
+      <publishTime>06/10/2022 15:21:14</publishTime>
     </File>
     <File Include="Views/NewAsiaOASystem/NACustomerinfo/Edit.cshtml">
       <publishTime>11/25/2021 13:17:52</publishTime>
@@ -6088,6 +6103,9 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
     <File Include="Views/NewAsiaOASystem/NA_XSinfo/EwmOrderch.cshtml">
       <publishTime>08/23/2021 09:14:06</publishTime>
     </File>
+    <File Include="Views/NewAsiaOASystem/NA_XSinfo/HTBasicsinfoSetView.cshtml">
+      <publishTime>09/28/2021 14:14:18</publishTime>
+    </File>
     <File Include="Views/NewAsiaOASystem/NA_XSinfo/List.cshtml">
       <publishTime>12/15/2021 08:59:46</publishTime>
     </File>
@@ -6128,7 +6146,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>08/22/2017 11:26:29</publishTime>
     </File>
     <File Include="Views/NewAsiaOASystem/NA_XSinfo/XShetongView.cshtml">
-      <publishTime>11/29/2021 15:16:52</publishTime>
+      <publishTime>06/23/2022 13:18:05</publishTime>
     </File>
     <File Include="Views/NewAsiaOASystem/NA_XSinfo/Xskdlist.cshtml">
       <publishTime>07/24/2017 09:24:36</publishTime>
@@ -6767,7 +6785,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>03/08/2022 14:50:41</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>05/18/2022 08:07:06</publishTime>
+      <publishTime>06/28/2022 08:27:44</publishTime>
     </File>
     <File Include="WebAPI/WebService.asmx">
       <publishTime>07/24/2017 09:25:05</publishTime>

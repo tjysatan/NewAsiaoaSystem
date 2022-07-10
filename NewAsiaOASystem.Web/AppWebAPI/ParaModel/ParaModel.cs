@@ -311,6 +311,11 @@ namespace NewAsiaOASystem.Web
         /// 位置
         /// </summary>
         public virtual string Position { get; set; }
+
+        /// <summary>
+        /// 备注
+        /// </summary>
+        public virtual string FreeTxt { get; set; }
     }
     #endregion
     #endregion
@@ -387,6 +392,11 @@ namespace NewAsiaOASystem.Web
         /// 行类别
         /// </summary>
         public virtual string LineType { get; set; }
+
+        /// <summary>
+        /// 备注
+        /// </summary>
+        public virtual string FreeTxt { get; set; }
     }
     #endregion
 
@@ -603,6 +613,29 @@ namespace NewAsiaOASystem.Web
         public virtual string Z_DQZZMBZXGS { get; set; }
 
         public virtual string Z_DQZZMBJXGS { get; set; }
+
+        /// <summary>
+        /// 内部售价
+        /// </summary>
+        public virtual string Z_NBPrice { get; set; }
     }
+    #endregion
+
+    #region //首页统计实体
+
+    #region //各类订单总数据和当月总数据model
+    public class DDDataMode
+    {
+        /// <summary>
+        /// 订单的总数量【或者当年总数量】
+        /// </summary>
+        public virtual string TotalSum { get; set; }
+
+        /// <summary>
+        /// 订单的当月数量
+        /// </summary>
+        public virtual string TotaSameMonthSum { get; set; }
+    }
+    #endregion
     #endregion
 }

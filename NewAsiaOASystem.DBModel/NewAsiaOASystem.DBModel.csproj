@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Model\BJSys\PAY_CONTROL_INFO.cs" />
+    <Compile Include="Model\ERP\ERP_Material_usage.cs" />
     <Compile Include="Model\ERP\ERP_SASalAinfo.cs" />
     <Compile Include="Model\ERP\ERP_SASalA_FBCP_BCBWK.cs" />
     <Compile Include="Model\ERP\Js_xz_yfcost.cs" />
@@ -241,6 +242,7 @@
     <EmbeddedResource Include="Mappings\ERP\ERP_SASalAinfo.hbm.xml" />
     <EmbeddedResource Include="Mappings\ERP\Js_xz_yfcost.hbm.xml" />
     <EmbeddedResource Include="Mappings\ERP\ERP_SASalA_FBCP_BCBWK.hbm.xml" />
+    <EmbeddedResource Include="Mappings\ERP\ERP_Material_usage.hbm.xml" />
     <Content Include="Mappings\NewAsiaOASystem\KSGZ\KS_Trackinglistinfo.hbm.xml">
       <SubType>Designer</SubType>
     </Content>

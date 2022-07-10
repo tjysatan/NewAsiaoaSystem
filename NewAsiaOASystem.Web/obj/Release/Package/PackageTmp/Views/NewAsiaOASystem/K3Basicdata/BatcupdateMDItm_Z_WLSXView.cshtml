@@ -1,0 +1,72 @@
+﻿@{
+    ViewBag.Title = "批量导入修改物料的分类属性";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<script src="~/Scripts/NAjs/layui.js"></script>
+<script>
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+    //资料上传
+    function SavaForm(fromname) {
+        //表单验证
+        var options = {
+            beforeSubmit: function () {
+
+                return true;
+            },
+            beforeSend: function () {
+                ddchen();
+            },
+            dataType: "json",//这里是指控制器处理后返回的类型，这里返回json格式。
+            success: function (context) {
+                disLoading();
+                if ("success" == context.result) {
+
+                    layer.alert(context.res, { icon: 1 }, function () { guanbi() });
+                }
+                if ("error" == context.result) {
+                    layer.alert(context.res, { icon: 2 }, function () { location.reload(); });
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                disLoading();
+                $.messager.alert("操作提示", '操作失败！', 'error');
+            }
+        }
+        $('#' + fromname).ajaxSubmit(options);
+        return false; //为了不刷新页面,返回false
+    }
+
+    function guanbi() {
+        var index = parent.layer.getFrameIndex(window.name);
+        //关闭弹出层
+        parent.layer.close(index);
+    }
+</script>
+
+<div style="width: 90%; padding: 20px 20px 0 20px">
+    @using (Html.BeginForm("BatcDRMDItm_Z_WLSXExcel", "K3Basicdata", FormMethod.Post, new { id = "form1", enctype = "multipart/form-data" }))
+    {
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">上传表格：</label>
+            <div class="layui-input-block">
+
+                <input id="fileImport" name="fileImport" runat="server" type="file" class="layui-btn layui-btn-normal" />
+            </div>
+        </div>
+
+        <div class="layui-form-item" style="margin: auto">
+            <div class="layui-input-block">
+                <button type="button" class="layui-btn" onclick='SavaForm("form1")'>确定提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary" onclick="guanbi()">关闭</button>
+            </div>
+        </div>
+    }
+</div>

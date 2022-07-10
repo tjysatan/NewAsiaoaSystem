@@ -400,7 +400,16 @@ namespace NewAsiaOASystem.IDao
         /// <param name="itemno">物料代码</param>
         /// <param name="count">查询的条数</param>
         /// <returns></returns>
-        IList<DKX_DDinfoView> Get_order_by_itemno(string itemno, int count); 
+        IList<DKX_DDinfoView> Get_order_by_itemno(string itemno, int count);
+        #endregion
+
+        #region //查询当年和当月的订单数量
+        /// <summary>
+        /// 查询当年和当月的订单数量
+        /// </summary>
+        /// <param name="datatype">YY 查询当年的 MM查询当月的</param>
+        /// <returns></returns>
+        int Get_OrderNumber_YORM(string datatype); 
         #endregion
     }
 }

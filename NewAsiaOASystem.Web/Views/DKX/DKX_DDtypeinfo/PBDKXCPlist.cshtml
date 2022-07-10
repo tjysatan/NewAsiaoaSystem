@@ -20,7 +20,7 @@
             var txtdw = $("#txtdw").val();//功率单位
             var txtType = $("#txtType").val();//产品类型
             var txtft = $("#txtft").val();//是否分体
-            var txtcpgnjs = $("#txtcpgnjs").val();//功能简述
+            var txtcpgnjs = $("#txtgnjs").val();//功能简述
             var txtGcs_name = $("#txtGcs_name").val();//工程师
             var txtIsDis = $("#txtIsDis").val();
             layui.use(['table', 'element'], function () {
@@ -467,7 +467,7 @@
                     <button class="layui-btn" onclick="Gettabledata()"><i class="layui-icon">&#x1002;</i>刷新</button>
                     @*<button onclick="return del('/DKX_DDtypeinfo/Delete')">删除</button>*@
                 </span>
-                <span class="inquiry-input">
+                <span class="inquiry-input">--
                     <button class="layui-btn" onclick="exportexcel();return false;" style="width: 110px">导出数据</button>
                 </span>
             </li>

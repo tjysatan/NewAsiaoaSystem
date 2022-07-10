@@ -84,6 +84,7 @@ namespace NewAsiaOASystem.Web.Controllers
                         //model.LineSum = Convert.ToDecimal(a.LineSum);
                         //model.TaxAfPrice = Convert.ToDecimal(a.TaxAfPrice);
                         //model.Price = Convert.ToDecimal(a.Price);
+                        model.BDocDate = Convert.ToDateTime(a.DocDate);
                         model.XSCostPrice = (a.BaseQty * a.TaxAfPrice);
                         model.C_time = DateTime.Now;
                         if (_IERP_SASalAinfoDao.Ninsert(model))
@@ -713,6 +714,18 @@ namespace NewAsiaOASystem.Web.Controllers
                            string str = bomitem.ItmID.Substring(0, 3);
                             if (str == "06.")
                             {//是半成品温控
+                             //查询ERP中的内部售价
+                                decimal CostPrice = 0;
+                                string wlgxgsjson = zypushsoftHelper.GetMDItm_GXGS(bomitem.ItmID);
+                                if (wlgxgsjson != null || wlgxgsjson != "[]")
+                                {
+                                    List<Ps_wlGXGSModel> wlgsmodel = getObjectByJson<Ps_wlGXGSModel>(wlgxgsjson);
+                                    Ps_wlGXGSModel gxgsmodel = wlgsmodel[0];
+                                    if (gxgsmodel.Z_NBPrice == null)
+                                        gxgsmodel.Z_NBPrice = "0";
+                                    else
+                                        CostPrice = Convert.ToDecimal(gxgsmodel.Z_NBPrice);
+                                }
                                 ERP_SASalA_FBCP_BCBWKView model = new ERP_SASalA_FBCP_BCBWKView();
                                 model.F_Id = item.Id;
                                 model.F_ItmID = item.ItmID;
@@ -725,6 +738,7 @@ namespace NewAsiaOASystem.Web.Controllers
                                 model.ItmID = bomitem.ItmID;
                                 model.ItmName = bomitem.ItmName;
                                 model.ItmSpec = bomitem.ItmSpec;
+                                model.CostPrice = CostPrice;
                                 //model.Z_EmpName = "";
                                 model.BaseQty = Convert.ToDecimal(bomitem.NetQty) * item.BaseQty;
                                 _IERP_SASalA_FBCP_BCBWKDao.Ninsert(model);
@@ -733,7 +747,7 @@ namespace NewAsiaOASystem.Web.Controllers
                     }
 
                 }
-                return Json(new { result = "error", msg = "222222" });
+                return Json(new { result = "success", msg = "操作成功" });
 
             }
             catch (Exception x)
@@ -743,9 +757,54 @@ namespace NewAsiaOASystem.Web.Controllers
         }
         #endregion
 
-        #region //返回物料的硬件成本
+        #region //根据月份导出半成品数据
+        public FileResult DC_FB_WKDATA_by_AbsID_Eexcl(string AbsID)
+        {
+            IList<ERP_SASalA_FBCP_BCBWKView> list = _IERP_SASalA_FBCP_BCBWKDao.GetFB_WKDATA_by_AbsID(AbsID);
+            //创建Excel文件的对象
+            NPOI.HSSF.UserModel.HSSFWorkbook book = new NPOI.HSSF.UserModel.HSSFWorkbook();
+            //添加一个sheet
+            NPOI.SS.UserModel.ISheet sheet1 = book.CreateSheet("Sheet1");
+            //给sheet1添加第一行的头部标题
+            NPOI.SS.UserModel.IRow row1 = sheet1.CreateRow(0);
+            row1.CreateCell(0).SetCellValue("父级产品料号");
+            row1.CreateCell(1).SetCellValue("父级产品");
+            row1.CreateCell(2).SetCellValue("数量");
+            row1.CreateCell(3).SetCellValue("责任工程师");
+            row1.CreateCell(4).SetCellValue("温控产品料号");
+            row1.CreateCell(5).SetCellValue("温控产品名称");
+            row1.CreateCell(6).SetCellValue("温控产品规格");
+            row1.CreateCell(7).SetCellValue("总用量");
+            row1.CreateCell(8).SetCellValue("毛利单价（内部售价）");
+            row1.CreateCell(9).SetCellValue("温控毛利金额");
 
+            if (list != null)//数据不为空
+            {
+                for (int i = 0; i < list.Count; i++)
+                {
+                    NPOI.SS.UserModel.IRow rowtemp = sheet1.CreateRow(i + 1);
+                    rowtemp.CreateCell(0).SetCellValue(list[i].F_ItmID);
+                    rowtemp.CreateCell(1).SetCellValue(list[i].F_ItmSpec);
+                    rowtemp.CreateCell(2).SetCellValue(list[i].F_BaseQty.ToString());
+                    rowtemp.CreateCell(3).SetCellValue(list[i].F_Z_EmpName);
+                    rowtemp.CreateCell(4).SetCellValue(list[i].ItmID);
+                    rowtemp.CreateCell(5).SetCellValue(list[i].ItmName);
+                    rowtemp.CreateCell(6).SetCellValue(list[i].ItmSpec);
+                    rowtemp.CreateCell(7).SetCellValue(list[i].BaseQty.ToString());
+                    rowtemp.CreateCell(8).SetCellValue(list[i].CostPrice.ToString());
+                    rowtemp.CreateCell(9).SetCellValue((list[i].BaseQty* list[i].CostPrice).ToString());
+                }
+            }
+
+            string DataNew = DateTime.Now.ToString("yyyyMMdd");
+            // 写入到客户端 
+            System.IO.MemoryStream ms = new System.IO.MemoryStream();
+            book.Write(ms);
+            ms.Seek(0, SeekOrigin.Begin);
+            return File(ms, "application/vnd.ms-excel", AbsID +"非标电控中用到的温控.xls");
+        }
         #endregion
+
 
         #region //返回BOM的实体
         public class Bommodel
@@ -757,6 +816,21 @@ namespace NewAsiaOASystem.Web.Controllers
             public virtual string ItmSpec { get; set; }
 
             public virtual string NetQty { get; set; }
+        }
+        #endregion
+
+        #region 首页图标显示数据 ERP当月每天的销售金额
+        public JsonResult Get_TheMonth_DailySales_Interface()
+        {
+            try
+            {
+                List<Object> obj = _IERP_SASalAinfoDao.Get_TheMonth_DailySales();
+                return Json(new { result = "success", msg = "", data = obj }); ;
+            }
+            catch (Exception x)
+            {
+                return Json(new { result = "error", msg = x });
+            }
         }
         #endregion
 

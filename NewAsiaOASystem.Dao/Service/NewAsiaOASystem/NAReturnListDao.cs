@@ -341,6 +341,29 @@ namespace NewAsiaOASystem.Dao
         }
 
 
+        #region //查询当年或者当月的订单数量
+        /// <summary>
+        /// 查询当年和当月的订单数量
+        /// </summary>
+        /// <param name="datatype">YY 查询当年的 MM查询当月的</param>
+        /// <returns></returns>
+        public int Get_OrderNumber_YORM(string datatype)
+        {
+            try
+            {
+                string tempHql = string.Format(" from NAReturnList where DATEDIFF({0},CreateTime,GETDATE())=0 ", datatype);
+                IQuery queryCount = Session.CreateQuery(string.Format("select count(*) {0}", tempHql));
+                int count = Convert.ToInt32(queryCount.UniqueResult());
+                return count;
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+        #endregion
+
+
 
     }
 }

@@ -59,5 +59,10 @@ namespace NewAsiaOASystem.DBModel
         /// 通知类型 0 告警  1 通知
         /// </summary>
         public virtual int? type { get; set; }
+
+        /// <summary>
+        /// 接口返回
+        /// </summary>
+        public virtual string resultXml { get; set; }
     }
 }

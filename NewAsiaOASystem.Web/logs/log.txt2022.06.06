@@ -1,0 +1,586 @@
+2022-06-06 14:15:44,441 [135] INFO  NHibernate.Cfg.Environment [(null)] <(null)< - NHibernate 3.2.0.4000 (3.2.0.4000)
+2022-06-06 14:15:44,449 [135] INFO  NHibernate.Cfg.Environment [(null)] <(null)< - hibernate-configuration section not found in application configuration file
+2022-06-06 14:15:44,449 [135] INFO  NHibernate.Cfg.Environment [(null)] <(null)< - Bytecode provider name : lcg
+2022-06-06 14:15:44,449 [135] INFO  NHibernate.Cfg.Environment [(null)] <(null)< - Using reflection optimizer
+2022-06-06 14:15:44,454 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Searching for mapped documents in assembly: NewAsiaOASystem.DBModel
+2022-06-06 14:15:44,455 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.WLWDKX.WL_dkxthjlinfo.hbm.xml
+2022-06-06 14:15:44,489 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,511 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.WL_dkxthjlinfo -> WL_dkxthjlinfo
+2022-06-06 14:15:44,535 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.K3.K3_wuliaoinfo.hbm.xml
+2022-06-06 14:15:44,535 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,536 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.K3_wuliaoinfo -> K3_wuliaoinfo
+2022-06-06 14:15:44,536 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.NQ_BaseitemAttachment.hbm.xml
+2022-06-06 14:15:44,536 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,537 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.NQ_BaseitemAttachment -> NQ_BaseitemAttachment
+2022-06-06 14:15:44,537 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.NQ_OASupplier.hbm.xml
+2022-06-06 14:15:44,544 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,544 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.NQ_OASupplier -> NQ_OASupplier
+2022-06-06 14:15:44,548 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping collection: NewAsiaOASystem.DBModel.NQ_OASupplier.baseitems -> NQ_SupplierAndBaseitem
+2022-06-06 14:15:44,549 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.DKX.DKX_DKXtypeandgcs.hbm.xml
+2022-06-06 14:15:44,549 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,550 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.DKX_DKXtypeandgcs -> DKX_DKXtypeandgcs
+2022-06-06 14:15:44,550 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.DKX.DKX_DDtypeinfo.hbm.xml
+2022-06-06 14:15:44,550 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,550 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.DKX_DDtypeinfo -> DKX_DDtypeinfo
+2022-06-06 14:15:44,550 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.DKX.DKX_GCSinfo.hbm.xml
+2022-06-06 14:15:44,551 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,551 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.DKX_GCSinfo -> DKX_GCSinfo
+2022-06-06 14:15:44,551 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.DKX.DKX_DDinfo.hbm.xml
+2022-06-06 14:15:44,552 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,552 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.DKX_DDinfo -> DKX_DDinfo
+2022-06-06 14:15:44,558 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.DKX.DKX_PAY_CONTROL_INFO.hbm.xml
+2022-06-06 14:15:44,558 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,559 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.DKX_PAY_CONTROL_INFO -> DKX_PAY_CONTROL_INFO
+2022-06-06 14:15:44,561 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.DKX.DKX_CONTROL_LIST.hbm.xml
+2022-06-06 14:15:44,562 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,562 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.DKX_CONTROL_LIST -> DKX_CONTROL_LIST
+2022-06-06 14:15:44,563 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.DKX.DKX_CONTROL_LIST_DETAIL.hbm.xml
+2022-06-06 14:15:44,563 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,563 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.DKX_CONTROL_LIST_DETAIL -> DKX_CONTROL_LIST_DETAIL
+2022-06-06 14:15:44,564 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.DKX.DKX_LCCZJLinfo.hbm.xml
+2022-06-06 14:15:44,564 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,564 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.DKX_LCCZJLinfo -> DKX_LCCZJLinfo
+2022-06-06 14:15:44,565 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.DKX.DKX_ZLDataInfo.hbm.xml
+2022-06-06 14:15:44,565 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,565 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.DKX_ZLDataInfo -> DKX_ZLDataInfo
+2022-06-06 14:15:44,565 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.DKX.DKX_CPInfo.hbm.xml
+2022-06-06 14:15:44,566 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,566 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.DKX_CPInfo -> DKX_CPInfo
+2022-06-06 14:15:44,567 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.DKX.DKX_RKZLDataInfo.hbm.xml
+2022-06-06 14:15:44,567 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,567 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.DKX_RKZLDataInfo -> DKX_RKZLDataInfo
+2022-06-06 14:15:44,568 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.DKX.DKX_k3Bominfo.hbm.xml
+2022-06-06 14:15:44,568 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,568 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.DKX_k3Bominfo -> DKX_k3Bominfo
+2022-06-06 14:15:44,568 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NAFlow.Flow_DKXPlanPPrintinfo.hbm.xml
+2022-06-06 14:15:44,569 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,569 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.Flow_DKXPlanPPrintinfo -> Flow_DKXPlanPPrintinfo
+2022-06-06 14:15:44,569 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.DKX.DKX_Pleasepurchaseinfo.hbm.xml
+2022-06-06 14:15:44,569 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,570 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.DKX_Pleasepurchaseinfo -> DKX_Pleasepurchaseinfo
+2022-06-06 14:15:44,570 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.KSGZ.KS_CLPersonnelInfo.hbm.xml
+2022-06-06 14:15:44,570 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,570 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.KS_CLPersonnelInfo -> KS_CLPersonnelInfo
+2022-06-06 14:15:44,571 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.KSGZ.KS_ProblemTyle.hbm.xml
+2022-06-06 14:15:44,571 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,571 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.KS_ProblemTyle -> KS_ProblemTyle
+2022-06-06 14:15:44,571 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.DKX.DKX_DDCLyqNoteInfo.hbm.xml
+2022-06-06 14:15:44,572 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,572 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.DKX_DDCLyqNoteInfo -> DKX_DDCLyqNoteInfo
+2022-06-06 14:15:44,572 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.IQC.IQC_llNoticeordinfo.hbm.xml
+2022-06-06 14:15:44,572 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,572 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.IQC_llNoticeordinfo -> IQC_llNoticeordinfo
+2022-06-06 14:15:44,573 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.IQC.IQC_llNoticeMXordinfo.hbm.xml
+2022-06-06 14:15:44,573 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,573 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.IQC_llNoticeMXordinfo -> IQC_llNoticeMXordinfo
+2022-06-06 14:15:44,574 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.IQC.IQC_JYDDinfo.hbm.xml
+2022-06-06 14:15:44,574 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,574 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.IQC_JYDDinfo -> IQC_JYDDinfo
+2022-06-06 14:15:44,575 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.IQC.IQC_JYDjyconinfo.hbm.xml
+2022-06-06 14:15:44,576 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,576 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.IQC_JYDjyconinfo -> IQC_JYDjyconinfo
+2022-06-06 14:15:44,576 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.DKX.DKX_pjgdbinfo.hbm.xml
+2022-06-06 14:15:44,577 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,577 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.DKX_pjgdbinfo -> DKX_pjgdbinfo
+2022-06-06 14:15:44,577 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.DKX.NewChargebackReason.hbm.xml
+2022-06-06 14:15:44,577 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,577 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.NewChargebackReason -> NewChargebackReason
+2022-06-06 14:15:44,578 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.DKX.NA_MRPmain.hbm.xml
+2022-06-06 14:15:44,578 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,578 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.NA_MRPmain -> NA_MRPmain
+2022-06-06 14:15:44,578 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.DKX.NA_MRPdetailed.hbm.xml
+2022-06-06 14:15:44,578 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,579 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.NA_MRPdetailed -> NA_MRPdetailed
+2022-06-06 14:15:44,579 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.BJSys.PAY_CONTROL_INFO.hbm.xml
+2022-06-06 14:15:44,579 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,579 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.PAY_CONTROL_INFO -> PAY_CONTROL_INFO
+2022-06-06 14:15:44,582 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.lanhe.lanhe_QzCusinfo.hbm.xml
+2022-06-06 14:15:44,583 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,583 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.lanhe_QzCusinfo -> lanhe_QzCusinfo
+2022-06-06 14:15:44,583 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.ERP.ERP_SASalAinfo.hbm.xml
+2022-06-06 14:15:44,583 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,583 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.ERP_SASalAinfo -> ERP_SASalAinfo
+2022-06-06 14:15:44,584 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.ERP.Js_xz_yfcost.hbm.xml
+2022-06-06 14:15:44,584 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,584 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.Js_xz_yfcost -> Js_xz_yfcost
+2022-06-06 14:15:44,585 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.ERP.ERP_SASalA_FBCP_BCBWK.hbm.xml
+2022-06-06 14:15:44,585 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,585 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.ERP_SASalA_FBCP_BCBWK -> ERP_SASalA_FBCP_BCBWK
+2022-06-06 14:15:44,586 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.NA_Sharealike.hbm.xml
+2022-06-06 14:15:44,586 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,586 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.NA_Sharealike -> NA_Sharealike
+2022-06-06 14:15:44,586 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.NA_XSqitainfo.hbm.xml
+2022-06-06 14:15:44,587 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,587 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.NA_XSqitainfo -> NA_XSqitainfo
+2022-06-06 14:15:44,587 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.NQ_SupplierAttachment.hbm.xml
+2022-06-06 14:15:44,587 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,588 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.NQ_SupplierAttachment -> NQ_SupplierAttachment
+2022-06-06 14:15:44,588 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.Wx.Wx_configinfo.hbm.xml
+2022-06-06 14:15:44,588 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,588 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.Wx_configinfo -> Wx_configinfo
+2022-06-06 14:15:44,589 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.Wx.Wx_openIdinfo.hbm.xml
+2022-06-06 14:15:44,589 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,589 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.Wx_openIdinfo -> Wx_openIdinfo
+2022-06-06 14:15:44,589 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.sbycjk.YCACCandSIDInfo.hbm.xml
+2022-06-06 14:15:44,590 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,590 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.YCACCandSIDInfo -> YCACCandSIDInfo
+2022-06-06 14:15:44,590 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.sbycjk.YCAccountbindingInfo.hbm.xml
+2022-06-06 14:15:44,590 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,591 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.YCAccountbindingInfo -> YCAccountbindingInfo
+2022-06-06 14:15:44,591 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.sbycjk.YCnoticeinfo.hbm.xml
+2022-06-06 14:15:44,591 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,591 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.YCnoticeinfo -> YCnoticeinfo
+2022-06-06 14:15:44,591 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.NQ_SupplierAndBaseitem.hbm.xml
+2022-06-06 14:15:44,592 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,592 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.NQ_SupplierAndBaseitem -> NQ_SupplierAndBaseitem
+2022-06-06 14:15:44,592 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.Record.NA_CustomerRecord.hbm.xml
+2022-06-06 14:15:44,594 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,594 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.NA_CustomerRecord -> NA_CustomerRecord
+2022-06-06 14:15:44,594 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.Wx.WeChat_AnnualmeetingBarrage.hbm.xml
+2022-06-06 14:15:44,595 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,595 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.WeChat_AnnualmeetingBarrage -> WeChat_AnnualmeetingBarrage
+2022-06-06 14:15:44,595 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.Wx.WeChat_AnnualmeetingSign.hbm.xml
+2022-06-06 14:15:44,595 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,595 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.WeChat_AnnualmeetingSign -> WeChat_AnnualmeetingSign
+2022-06-06 14:15:44,596 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.Wx.WeChat_SlyderpersonInfo.hbm.xml
+2022-06-06 14:15:44,596 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,596 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.WeChat_SlyderpersonInfo -> WeChat_SlyderpersonInfo
+2022-06-06 14:15:44,596 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.Wx.WeChat_signuppersonInfo.hbm.xml
+2022-06-06 14:15:44,596 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,597 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.WeChat_signuppersonInfo -> WeChat_signuppersonInfo
+2022-06-06 14:15:44,597 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.Wx.Wechat_TXinfo.hbm.xml
+2022-06-06 14:15:44,597 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,597 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.Wechat_TXinfo -> Wechat_TXinfo
+2022-06-06 14:15:44,598 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.Wx.WeChat_OrderInfo.hbm.xml
+2022-06-06 14:15:44,598 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,598 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.WeChat_OrderInfo -> WeChat_OrderInfo
+2022-06-06 14:15:44,598 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.Wx.WeChat_forwardInfo.hbm.xml
+2022-06-06 14:15:44,599 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,599 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.WeChat_forwardInfo -> WeChat_forwardInfo
+2022-06-06 14:15:44,599 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.Vote.Vote_ip.hbm.xml
+2022-06-06 14:15:44,599 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,599 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.Vote_ip -> Vote_ip
+2022-06-06 14:15:44,600 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.Vote.Vote_Question.hbm.xml
+2022-06-06 14:15:44,600 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,600 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.Vote_Question -> Vote_Question
+2022-06-06 14:15:44,600 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.Vote.Vote_Title.hbm.xml
+2022-06-06 14:15:44,601 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,601 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.Vote_Title -> Vote_Title
+2022-06-06 14:15:44,602 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.Vote.Vote_Config.hbm.xml
+2022-06-06 14:15:44,602 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,603 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.Vote_Config -> Vote_Config
+2022-06-06 14:15:44,603 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.Vote.Vote_Subject.hbm.xml
+2022-06-06 14:15:44,603 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,603 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.Vote_Subject -> Vote_Subject
+2022-06-06 14:15:44,603 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.Wx.WX_M_new.hbm.xml
+2022-06-06 14:15:44,604 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,604 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.WX_M_new -> WX_M_new
+2022-06-06 14:15:44,604 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.Wx.WX_SendC.hbm.xml
+2022-06-06 14:15:44,604 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,604 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.WX_SendC -> WX_SendC
+2022-06-06 14:15:44,604 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.Wx.WX_OpenID.hbm.xml
+2022-06-06 14:15:44,605 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,605 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.WX_OpenID -> WX_OpenID
+2022-06-06 14:15:44,605 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.Wx.WX_Menus.hbm.xml
+2022-06-06 14:15:44,605 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,605 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.WX_Menus -> WX_Menus
+2022-06-06 14:15:44,606 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.Wx.WX_Message.hbm.xml
+2022-06-06 14:15:44,606 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,607 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.WX_Message -> WX_Message
+2022-06-06 14:15:44,607 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping collection: NewAsiaOASystem.DBModel.WX_Message.wx_Message_News -> WX_M_new
+2022-06-06 14:15:44,607 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.Wx.WX_Message_News.hbm.xml
+2022-06-06 14:15:44,607 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,607 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.WX_Message_News -> WX_Message_News
+2022-06-06 14:15:44,607 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.Wx.WX_ReceiveMessage.hbm.xml
+2022-06-06 14:15:44,608 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,608 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.WX_ReceiveMessage -> WX_ReceiveMessage
+2022-06-06 14:15:44,608 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.Wx.WX_SendMessage.hbm.xml
+2022-06-06 14:15:44,609 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,609 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.WX_SendMessage -> WX_SendMessage
+2022-06-06 14:15:44,610 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.Sys.SysRoleFun.hbm.xml
+2022-06-06 14:15:44,610 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,610 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.SysRoleFun -> SysRoleFun
+2022-06-06 14:15:44,610 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.Sys.SysFunction.hbm.xml
+2022-06-06 14:15:44,610 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,610 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.SysFunction -> SysFunction
+2022-06-06 14:15:44,610 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.Sys.SysAuthorize.hbm.xml
+2022-06-06 14:15:44,610 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,611 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.SysAuthorize -> SysAuthorize
+2022-06-06 14:15:44,611 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.Sys.SysButton.hbm.xml
+2022-06-06 14:15:44,611 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,611 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.SysButton -> SysButton
+2022-06-06 14:15:44,611 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.Sys.SysDepartment.hbm.xml
+2022-06-06 14:15:44,611 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,611 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.SysDepartment -> SysDepartment
+2022-06-06 14:15:44,612 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.Sys.SysDepartmentRole.hbm.xml
+2022-06-06 14:15:44,612 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,612 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.SysDepartmentRole -> SysDepartmentRole
+2022-06-06 14:15:44,612 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.DisImmuneCenter.hbm.xml
+2022-06-06 14:15:44,612 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,612 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.DisImmuneCenter -> DisImmuneCenter
+2022-06-06 14:15:44,612 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.NACustomerinfo.hbm.xml
+2022-06-06 14:15:44,613 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,613 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.NACustomerinfo -> NACustomerinfo
+2022-06-06 14:15:44,613 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.NQR_Product.hbm.xml
+2022-06-06 14:15:44,613 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,614 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.NQR_Product -> NQR_Product
+2022-06-06 14:15:44,614 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.NQCosttype.hbm.xml
+2022-06-06 14:15:44,614 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,614 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.NQCosttype -> NQCosttype
+2022-06-06 14:15:44,614 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.NQR_Reason.hbm.xml
+2022-06-06 14:15:44,615 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,615 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.NQR_Reason -> NQR_Reason
+2022-06-06 14:15:44,615 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.NAReturnList.hbm.xml
+2022-06-06 14:15:44,615 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,616 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.NAReturnList -> NAReturnList
+2022-06-06 14:15:44,618 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.NQ_productinfo.hbm.xml
+2022-06-06 14:15:44,618 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,618 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.NQ_productinfo -> NQ_productinfo
+2022-06-06 14:15:44,619 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.NQ_chuhuoinfon.hbm.xml
+2022-06-06 14:15:44,619 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,619 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.NQ_chuhuoinfon -> NQ_chuhuoinfon
+2022-06-06 14:15:44,620 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.NQ_CHdetailinfo.hbm.xml
+2022-06-06 14:15:44,620 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,620 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.NQ_CHdetailinfo -> NQ_CHdetailinfo
+2022-06-06 14:15:44,620 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.NQ_Thdetailinfo.hbm.xml
+2022-06-06 14:15:44,620 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,620 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.NQ_Thdetailinfo -> NQ_Thdetailinfo
+2022-06-06 14:15:44,621 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.NQ_THinfoFX.hbm.xml
+2022-06-06 14:15:44,621 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,621 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.NQ_THinfoFX -> NQ_THinfoFX
+2022-06-06 14:15:44,623 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.NQ_Blinfo.hbm.xml
+2022-06-06 14:15:44,623 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,623 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.NQ_Blinfo -> NQ_Blinfo
+2022-06-06 14:15:44,623 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.NQ_GysInfo.hbm.xml
+2022-06-06 14:15:44,623 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,624 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.NQ_GysInfo -> NQ_GysInfo
+2022-06-06 14:15:44,624 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.NQ_YJinfo.hbm.xml
+2022-06-06 14:15:44,624 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,624 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.NQ_YJinfo -> NQ_YJinfo
+2022-06-06 14:15:44,625 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.NQ_Blxxinfo.hbm.xml
+2022-06-06 14:15:44,625 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,626 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.NQ_Blxxinfo -> NQ_Blxxinfo
+2022-06-06 14:15:44,626 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.EP_jlinfo.hbm.xml
+2022-06-06 14:15:44,626 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,626 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.EP_jlinfo -> EP_jlinfo
+2022-06-06 14:15:44,628 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NACG.CG_aqkc.hbm.xml
+2022-06-06 14:15:44,628 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,628 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.CG_aqkc -> CG_aqkc
+2022-06-06 14:15:44,628 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.CG_info.hbm.xml
+2022-06-06 14:15:44,628 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,629 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.CG_info -> CG_info
+2022-06-06 14:15:44,629 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.CG_Detailinfo.hbm.xml
+2022-06-06 14:15:44,629 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,629 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.CG_Detailinfo -> CG_Detailinfo
+2022-06-06 14:15:44,629 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.NA_Qyinfo.hbm.xml
+2022-06-06 14:15:44,630 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,630 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.NA_Qyinfo -> NA_Qyinfo
+2022-06-06 14:15:44,630 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.WLWDKX.WL_CPInfo.hbm.xml
+2022-06-06 14:15:44,630 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,630 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.WL_CPInfo -> WL_CPInfo
+2022-06-06 14:15:44,631 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.WLWDKX.WL_Gcsinfo.hbm.xml
+2022-06-06 14:15:44,631 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,631 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.WL_Gcsinfo -> WL_Gcsinfo
+2022-06-06 14:15:44,631 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.WLWDKX.WL_DkxInfo.hbm.xml
+2022-06-06 14:15:44,632 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,632 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.WL_DkxInfo -> WL_DkxInfo
+2022-06-06 14:15:44,633 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.NA_XSinfo.hbm.xml
+2022-06-06 14:15:44,633 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,633 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.NA_XSinfo -> NA_XSinfo
+2022-06-06 14:15:44,634 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.NA_XSdetailsinfo.hbm.xml
+2022-06-06 14:15:44,635 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,635 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.NA_XSdetailsinfo -> NA_XSdetailsinfo
+2022-06-06 14:15:44,635 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.XSFXdqinfo.hbm.xml
+2022-06-06 14:15:44,635 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,635 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.XSFXdqinfo -> XSFXdqinfo
+2022-06-06 14:15:44,636 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.XSFXkhinfo.hbm.xml
+2022-06-06 14:15:44,636 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,636 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.XSFXkhinfo -> XSFXkhinfo
+2022-06-06 14:15:44,636 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.XSFXqxinfo.hbm.xml
+2022-06-06 14:15:44,636 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,637 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.XSFXqxinfo -> XSFXqxinfo
+2022-06-06 14:15:44,637 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.NA_AddresseeInfo.hbm.xml
+2022-06-06 14:15:44,637 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,637 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.NA_AddresseeInfo -> NA_AddresseeInfo
+2022-06-06 14:15:44,637 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.WLWDKX.WL_DealerSalestarget.hbm.xml
+2022-06-06 14:15:44,638 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,638 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.WL_DealerSalestarget -> WL_DealerSalestarget
+2022-06-06 14:15:44,638 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.WLWDKX.WL_SalesONlineratioinfo.hbm.xml
+2022-06-06 14:15:44,638 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,638 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.WL_SalesONlineratioinfo -> WL_SalesONlineratioinfo
+2022-06-06 14:15:44,639 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.20150509WL_Jxqnumber.hbm.xml
+2022-06-06 14:15:44,639 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,639 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel._20150509WL_Jxqnumber -> _20150509WL_Jxqnumber
+2022-06-06 14:15:44,639 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.WLWDKX.WL_ReturnVisit.hbm.xml
+2022-06-06 14:15:44,639 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,639 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel._20150510WL_ReturnVisit -> _20150510WL_ReturnVisit
+2022-06-06 14:15:44,640 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NAFlow.Flow_ProductionNoticeinfo.hbm.xml
+2022-06-06 14:15:44,640 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,640 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.Flow_ProductionNoticeinfo -> Flow_ProductionNoticeinfo
+2022-06-06 14:15:44,641 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NAFlow.Flow_RoutineStockinfo.hbm.xml
+2022-06-06 14:15:44,641 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,641 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.Flow_RoutineStockinfo -> Flow_RoutineStockinfo
+2022-06-06 14:15:44,642 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NAFlow.Flow_PlanProductioninfo.hbm.xml
+2022-06-06 14:15:44,642 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,642 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.Flow_PlanProductioninfo -> Flow_PlanProductioninfo
+2022-06-06 14:15:44,644 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NAFlow.Flow_Pleasepurchaseinfo.hbm.xml
+2022-06-06 14:15:44,644 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,644 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.Flow_Pleasepurchaseinfo -> Flow_Pleasepurchaseinfo
+2022-06-06 14:15:44,645 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NAFlow.Flow_PlanPPrintinfo.hbm.xml
+2022-06-06 14:15:44,645 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,645 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.Flow_PlanPPrintinfo -> Flow_PlanPPrintinfo
+2022-06-06 14:15:44,646 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NAFlow.Flow_NonSProductinfo.hbm.xml
+2022-06-06 14:15:44,646 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,646 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.Flow_NonSProductinfo -> Flow_NonSProductinfo
+2022-06-06 14:15:44,646 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NAFlow.Flow_Ajaxtxdate.hbm.xml
+2022-06-06 14:15:44,646 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,646 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.Flow_Ajaxtxdate -> Flow_Ajaxtxdate
+2022-06-06 14:15:44,647 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.NQ_TjFtwxCPTypeSuminfo.hbm.xml
+2022-06-06 14:15:44,647 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,647 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.NQ_TjFtwxCPTypeSuminfo -> NQ_TjFtwxCPTypeSuminfo
+2022-06-06 14:15:44,647 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.Act_SignNamelistinfo.hbm.xml
+2022-06-06 14:15:44,648 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,648 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.Act_SignNamelistinfo -> Act_SignNamelistinfo
+2022-06-06 14:15:44,648 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.WLWDKX.WL_Newgscinfo.hbm.xml
+2022-06-06 14:15:44,648 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,649 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.WL_Newgscinfo -> WL_Newgscinfo
+2022-06-06 14:15:44,649 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.IQC.IQC_SopInfo.hbm.xml
+2022-06-06 14:15:44,649 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,649 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.IQC_SopInfo -> IQC_SopInfo
+2022-06-06 14:15:44,650 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.IQC.IQC_Jyffinfo.hbm.xml
+2022-06-06 14:15:44,650 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,651 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.IQC_Jyffinfo -> IQC_Jyffinfo
+2022-06-06 14:15:44,651 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.IQC.IQC_Jyconstrinfo.hbm.xml
+2022-06-06 14:15:44,651 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,651 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.IQC_Jyconstrinfo -> IQC_Jyconstrinfo
+2022-06-06 14:15:44,652 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.Wx_FTUserbdopenIdinfo.hbm.xml
+2022-06-06 14:15:44,652 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,652 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.Wx_FTUserbdopenIdinfo -> Wx_FTUserbdopenIdinfo
+2022-06-06 14:15:44,652 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.Perprofit.PP_Teaminfo.hbm.xml
+2022-06-06 14:15:44,653 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,653 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.PP_Teaminfo -> PP_Teaminfo
+2022-06-06 14:15:44,653 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.Perprofit.PP_Staffinfo.hbm.xml
+2022-06-06 14:15:44,653 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,654 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.PP_Staffinfo -> PP_Staffinfo
+2022-06-06 14:15:44,654 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.NewAsiaOASystem.WLWDKX.WL_XFOrderinfo.hbm.xml
+2022-06-06 14:15:44,654 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,655 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.WL_XFOrderinfo -> WL_XFOrderinfo
+2022-06-06 14:15:44,655 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.Perprofit.PP_Profitpointinfo.hbm.xml
+2022-06-06 14:15:44,655 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,655 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.PP_Profitpointinfo -> PP_Profitpointinfo
+2022-06-06 14:15:44,656 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.Perprofit.PP_ProfuttoStaffInfo.hbm.xml
+2022-06-06 14:15:44,656 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,657 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.PP_ProfuttoStaffInfo -> PP_ProfuttoStaffInfo
+2022-06-06 14:15:44,657 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.Perprofit.PP_ShouruandzhichuDetailsinfo.hbm.xml
+2022-06-06 14:15:44,657 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,657 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.PP_ShouruandzhichuDetailsinfo -> PP_ShouruandzhichuDetailsinfo
+2022-06-06 14:15:44,658 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.Perprofit.PP_ProfitSummaryinfo.hbm.xml
+2022-06-06 14:15:44,658 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,658 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.PP_ProfitSummaryinfo -> PP_ProfitSummaryinfo
+2022-06-06 14:15:44,659 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.Perprofit.PP_ProfuttoStaffTDInfo.hbm.xml
+2022-06-06 14:15:44,659 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,659 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.PP_ProfuttoStaffTDInfo -> PP_ProfuttoStaffTDInfo
+2022-06-06 14:15:44,659 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.Perprofit.PP_TTShouruandzhichuDetailsinfo.hbm.xml
+2022-06-06 14:15:44,660 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,660 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.PP_TTShouruandzhichuDetailsinfo -> PP_TTShouruandzhichuDetailsinfo
+2022-06-06 14:15:44,660 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.Sys.SysLog_history.hbm.xml
+2022-06-06 14:15:44,661 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,661 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.SysLog_history -> SysLog_history
+2022-06-06 14:15:44,661 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.Sys.SysMenu.hbm.xml
+2022-06-06 14:15:44,661 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,661 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.SysMenu -> SysMenu
+2022-06-06 14:15:44,661 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.Sys.SysPerson.hbm.xml
+2022-06-06 14:15:44,662 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,662 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.SysPerson -> SysPerson
+2022-06-06 14:15:44,671 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping collection: NewAsiaOASystem.DBModel.SysPerson.Department -> SysPersonDepartment
+2022-06-06 14:15:44,671 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping collection: NewAsiaOASystem.DBModel.SysPerson.Role -> SysRoleSysPerson
+2022-06-06 14:15:44,671 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.Sys.SysRole.hbm.xml
+2022-06-06 14:15:44,672 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,672 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.SysRole -> SysRole
+2022-06-06 14:15:44,672 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping collection: NewAsiaOASystem.DBModel.SysRole.SysMenu -> SysMenuRole
+2022-06-06 14:15:44,672 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping collection: NewAsiaOASystem.DBModel.SysRole.SysAuth -> SysRoleAuthorize
+2022-06-06 14:15:44,672 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping collection: NewAsiaOASystem.DBModel.SysRole.SysFun -> SysRoleFun
+2022-06-06 14:15:44,672 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.Sys.SysRoleAuthorize.hbm.xml
+2022-06-06 14:15:44,672 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,673 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.SysRoleAuthorize -> SysRoleAuthorize
+2022-06-06 14:15:44,673 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.Sys.SysRoleColumn.hbm.xml
+2022-06-06 14:15:44,673 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,673 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.SysRoleColumn -> SysRoleColumn
+2022-06-06 14:15:44,673 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.Sys.SysRoleMenuButton.hbm.xml
+2022-06-06 14:15:44,673 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,673 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.SysRoleMenuButton -> SysRoleMenuButton
+2022-06-06 14:15:44,673 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - Mapping resource: NewAsiaOASystem.DBModel.Mappings.Sys.SysRoleSysPerson.hbm.xml
+2022-06-06 14:15:44,673 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,674 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - Mapping class: NewAsiaOASystem.DBModel.SysRoleSysPerson -> SysRoleSysPerson
+2022-06-06 14:15:44,675 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - checking mappings queue
+2022-06-06 14:15:44,675 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - processing one-to-many association mappings
+2022-06-06 14:15:44,685 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - mapping collection: NewAsiaOASystem.DBModel.Vote_Title.VoteQ -> Vote_Question
+2022-06-06 14:15:44,685 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - mapping collection: NewAsiaOASystem.DBModel.Vote_Subject.voteTitle -> Vote_Title
+2022-06-06 14:15:44,685 [135] INFO  NHibernate.Cfg.XmlHbmBinding.Binder [(null)] <(null)< - mapping collection: NewAsiaOASystem.DBModel.Flow_PlanProductioninfo.Ppurchaselist -> Flow_Pleasepurchaseinfo
+2022-06-06 14:15:44,685 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - processing one-to-one association property references
+2022-06-06 14:15:44,685 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - processing foreign key constraints
+2022-06-06 14:15:44,688 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - processing filters (second pass)
+2022-06-06 14:15:44,689 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - checking mappings queue
+2022-06-06 14:15:44,689 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - processing one-to-many association mappings
+2022-06-06 14:15:44,689 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - processing one-to-one association property references
+2022-06-06 14:15:44,689 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - processing foreign key constraints
+2022-06-06 14:15:44,689 [135] INFO  NHibernate.Cfg.Configuration [(null)] <(null)< - processing filters (second pass)
+2022-06-06 14:15:44,714 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,717 [135] INFO  NHibernate.Dialect.Dialect [(null)] <(null)< - Using dialect: NHibernate.Dialect.MsSql2005Dialect
+2022-06-06 14:15:44,726 [135] INFO  NHibernate.Exceptions.SQLExceptionConverterFactory [(null)] <(null)< - Using dialect defined converter
+2022-06-06 14:15:44,726 [135] INFO  NHibernate.Cfg.SettingsFactory [(null)] <(null)< - Generate SQL with comments: disabled
+2022-06-06 14:15:44,726 [135] INFO  NHibernate.Connection.ConnectionProviderFactory [(null)] <(null)< - Initializing connection provider: Spring.Data.NHibernate.LocalSessionFactoryObject+DbProviderWrapper, Spring.Data.NHibernate32, Version=1.3.2.40943, Culture=neutral, PublicKeyToken=65e474d141e25e07
+2022-06-06 14:15:44,727 [135] INFO  NHibernate.Connection.ConnectionProvider [(null)] <(null)< - Configuring ConnectionProvider
+2022-06-06 14:15:44,727 [135] INFO  NHibernate.Cfg.SettingsFactory [(null)] <(null)< - Transaction factory: NHibernate.Transaction.AdoNetWithDistributedTransactionFactory
+2022-06-06 14:15:44,728 [135] INFO  NHibernate.Cfg.SettingsFactory [(null)] <(null)< - Optimize cache for minimal puts: False
+2022-06-06 14:15:44,728 [135] INFO  NHibernate.Cfg.SettingsFactory [(null)] <(null)< - Connection release mode: auto
+2022-06-06 14:15:44,728 [135] INFO  NHibernate.Cfg.SettingsFactory [(null)] <(null)< - Default batch fetch size: 1
+2022-06-06 14:15:44,728 [135] INFO  NHibernate.Cfg.SettingsFactory [(null)] <(null)< - echoing all SQL to stdout
+2022-06-06 14:15:44,728 [135] INFO  NHibernate.Cfg.SettingsFactory [(null)] <(null)< - Statistics: disabled
+2022-06-06 14:15:44,728 [135] INFO  NHibernate.Cfg.SettingsFactory [(null)] <(null)< - Deleted entity synthetic identifier rollback: disabled
+2022-06-06 14:15:44,728 [135] INFO  NHibernate.Cfg.SettingsFactory [(null)] <(null)< - Query translator: NHibernate.Hql.Ast.ANTLR.ASTQueryTranslatorFactory
+2022-06-06 14:15:44,729 [135] INFO  NHibernate.Cfg.SettingsFactory [(null)] <(null)< - Query language substitutions: {'true'='1', 'false'='0', 'yes'=''Y'', 'no'=''N''}
+2022-06-06 14:15:44,729 [135] INFO  NHibernate.Cfg.SettingsFactory [(null)] <(null)< - cache provider: NHibernate.Cache.NoCacheProvider, NHibernate, Version=3.2.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4
+2022-06-06 14:15:44,729 [135] INFO  NHibernate.Cfg.SettingsFactory [(null)] <(null)< - Order SQL inserts for batching: enabled
+2022-06-06 14:15:44,730 [135] INFO  NHibernate.Cfg.SettingsFactory [(null)] <(null)< - Batcher factory: NHibernate.AdoNet.SqlClientBatchingBatcherFactory, NHibernate, Version=3.2.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4
+2022-06-06 14:15:44,730 [135] INFO  NHibernate.Cfg.SettingsFactory [(null)] <(null)< - Default entity-mode: Poco
+2022-06-06 14:15:44,730 [135] INFO  NHibernate.Cfg.SettingsFactory [(null)] <(null)< - Named query checking : enabled
+2022-06-06 14:15:44,737 [135] INFO  NHibernate.Impl.SessionFactoryImpl [(null)] <(null)< - building session factory
+2022-06-06 14:15:44,946 [135] INFO  NHibernate.Impl.SessionFactoryObjectFactory [(null)] <(null)< - no name configured
+2022-06-06 14:15:45,101 [134] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2022-06-06 14:15:45,101 [134] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2022-06-06 14:15:45,101 [134] ERROR ApplicationInfoLog [(null)] <(null)< - 未将对象引用设置到对象的实例。
+2022-06-06 14:15:45,101 [134] ERROR ApplicationInfoLog [(null)] <(null)< - Void loginsession(NewAsiaOASystem.ViewModel.SessionUser)
+2022-06-06 14:15:45,101 [134] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================
+2022-06-06 14:19:41,263 [127] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2022-06-06 14:19:41,263 [127] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2022-06-06 14:19:41,263 [127] ERROR ApplicationInfoLog [(null)] <(null)< - 未将对象引用设置到对象的实例。
+2022-06-06 14:19:41,263 [127] ERROR ApplicationInfoLog [(null)] <(null)< - Void loginsession(NewAsiaOASystem.ViewModel.SessionUser)
+2022-06-06 14:19:41,263 [127] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================
+2022-06-06 14:25:42,274 [136] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2022-06-06 14:25:42,275 [136] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2022-06-06 14:25:42,275 [136] ERROR ApplicationInfoLog [(null)] <(null)< - 未将对象引用设置到对象的实例。
+2022-06-06 14:25:42,275 [136] ERROR ApplicationInfoLog [(null)] <(null)< - Void loginsession(NewAsiaOASystem.ViewModel.SessionUser)
+2022-06-06 14:25:42,275 [136] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================
+2022-06-06 14:29:40,281 [140] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2022-06-06 14:29:40,281 [140] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2022-06-06 14:29:40,281 [140] ERROR ApplicationInfoLog [(null)] <(null)< - 未将对象引用设置到对象的实例。
+2022-06-06 14:29:40,281 [140] ERROR ApplicationInfoLog [(null)] <(null)< - Void loginsession(NewAsiaOASystem.ViewModel.SessionUser)
+2022-06-06 14:29:40,281 [140] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================
+2022-06-06 14:35:21,905 [130] INFO  NHibernate.Hql.Ast.ANTLR.HqlSqlWalker [(null)] <(null)< - attempting to resolve property [Start] as a non-qualified ref
+2022-06-06 14:35:21,908 [130] INFO  NHibernate.Hql.Ast.ANTLR.Tree.FromElement [(null)] <(null)< - handling property dereference [NewAsiaOASystem.DBModel.DKX_GCSinfo () -> Start (Class)]
+2022-06-06 14:35:21,914 [130] INFO  NHibernate.Hql.Ast.ANTLR.HqlSqlWalker [(null)] <(null)< - attempting to resolve property [Sort] as a non-qualified ref
+2022-06-06 14:35:21,914 [130] INFO  NHibernate.Hql.Ast.ANTLR.Tree.FromElement [(null)] <(null)< - handling property dereference [NewAsiaOASystem.DBModel.DKX_GCSinfo () -> Sort (Class)]
+2022-06-06 14:35:21,969 [130] INFO  NHibernate.Loader.Loader [(null)] <(null)< - select dkx_gcsinf0_.Id as Id7_, dkx_gcsinf0_.ZH_Id as ZH2_7_, dkx_gcsinf0_.Name as Name7_, dkx_gcsinf0_.Tel as Tel7_, dkx_gcsinf0_.C_time as C5_7_, dkx_gcsinf0_.C_name as C6_7_, dkx_gcsinf0_.Up_time as Up7_7_, dkx_gcsinf0_.Up_name as Up8_7_, dkx_gcsinf0_.Start as Start7_, dkx_gcsinf0_.Sort as Sort7_, dkx_gcsinf0_.Teamname as Teamname7_ from DKX_GCSinfo dkx_gcsinf0_ where dkx_gcsinf0_.Start='0' order by dkx_gcsinf0_.Sort asc
+2022-06-06 14:35:22,092 [130] INFO  NHibernate.Hql.Ast.ANTLR.HqlSqlWalker [(null)] <(null)< - attempting to resolve property [Sort] as a non-qualified ref
+2022-06-06 14:35:22,092 [130] INFO  NHibernate.Hql.Ast.ANTLR.Tree.FromElement [(null)] <(null)< - handling property dereference [NewAsiaOASystem.DBModel.DKX_DDtypeinfo () -> Sort (Class)]
+2022-06-06 14:35:22,092 [130] INFO  NHibernate.Loader.Loader [(null)] <(null)< - select dkx_ddtype0_.Id as Id6_, dkx_ddtype0_.Type as Type6_, dkx_ddtype0_.Name as Name6_, dkx_ddtype0_.Beizhu as Beizhu6_, dkx_ddtype0_.Start as Start6_, dkx_ddtype0_.Sort as Sort6_, dkx_ddtype0_.C_time as C7_6_, dkx_ddtype0_.C_name as C8_6_, dkx_ddtype0_.Up_time as Up9_6_, dkx_ddtype0_.Up_name as Up10_6_, dkx_ddtype0_.Issh as Issh6_ from DKX_DDtypeinfo dkx_ddtype0_ order by dkx_ddtype0_.Sort asc
+2022-06-06 14:35:22,130 [130] INFO  NHibernate.Loader.Loader [(null)] <(null)< - select dkx_ddtype0_.Id as Id6_, dkx_ddtype0_.Type as Type6_, dkx_ddtype0_.Name as Name6_, dkx_ddtype0_.Beizhu as Beizhu6_, dkx_ddtype0_.Start as Start6_, dkx_ddtype0_.Sort as Sort6_, dkx_ddtype0_.C_time as C7_6_, dkx_ddtype0_.C_name as C8_6_, dkx_ddtype0_.Up_time as Up9_6_, dkx_ddtype0_.Up_name as Up10_6_, dkx_ddtype0_.Issh as Issh6_ from DKX_DDtypeinfo dkx_ddtype0_
+2022-06-06 14:35:22,209 [130] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2022-06-06 14:35:22,209 [130] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2022-06-06 14:35:22,209 [130] ERROR ApplicationInfoLog [(null)] <(null)< - 未将对象引用设置到对象的实例。
+2022-06-06 14:35:22,209 [130] ERROR ApplicationInfoLog [(null)] <(null)< - System.Web.Mvc.ActionResult DKXDDgcslist()
+2022-06-06 14:35:22,209 [130] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================
+2022-06-06 14:35:41,547 [130] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2022-06-06 14:35:41,547 [130] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2022-06-06 14:35:41,547 [130] ERROR ApplicationInfoLog [(null)] <(null)< - 未将对象引用设置到对象的实例。
+2022-06-06 14:35:41,547 [130] ERROR ApplicationInfoLog [(null)] <(null)< - Void loginsession(NewAsiaOASystem.ViewModel.SessionUser)
+2022-06-06 14:35:41,548 [130] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================
+2022-06-06 14:45:42,281 [140] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2022-06-06 14:45:42,281 [140] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2022-06-06 14:45:42,282 [140] ERROR ApplicationInfoLog [(null)] <(null)< - 未将对象引用设置到对象的实例。
+2022-06-06 14:45:42,282 [140] ERROR ApplicationInfoLog [(null)] <(null)< - Void loginsession(NewAsiaOASystem.ViewModel.SessionUser)
+2022-06-06 14:45:42,282 [140] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================
+2022-06-06 14:55:42,260 [34] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2022-06-06 14:55:42,260 [34] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2022-06-06 14:55:42,260 [34] ERROR ApplicationInfoLog [(null)] <(null)< - 未将对象引用设置到对象的实例。
+2022-06-06 14:55:42,260 [34] ERROR ApplicationInfoLog [(null)] <(null)< - Void loginsession(NewAsiaOASystem.ViewModel.SessionUser)
+2022-06-06 14:55:42,260 [34] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================
+2022-06-06 15:05:42,268 [30] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2022-06-06 15:05:42,268 [30] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2022-06-06 15:05:42,268 [30] ERROR ApplicationInfoLog [(null)] <(null)< - 未将对象引用设置到对象的实例。
+2022-06-06 15:05:42,268 [30] ERROR ApplicationInfoLog [(null)] <(null)< - Void loginsession(NewAsiaOASystem.ViewModel.SessionUser)
+2022-06-06 15:05:42,268 [30] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================
+2022-06-06 15:15:42,278 [112] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2022-06-06 15:15:42,278 [112] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2022-06-06 15:15:42,278 [112] ERROR ApplicationInfoLog [(null)] <(null)< - 未将对象引用设置到对象的实例。
+2022-06-06 15:15:42,279 [112] ERROR ApplicationInfoLog [(null)] <(null)< - Void loginsession(NewAsiaOASystem.ViewModel.SessionUser)
+2022-06-06 15:15:42,279 [112] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================
+2022-06-06 15:25:42,261 [14] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2022-06-06 15:25:42,261 [14] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2022-06-06 15:25:42,261 [14] ERROR ApplicationInfoLog [(null)] <(null)< - 未将对象引用设置到对象的实例。
+2022-06-06 15:25:42,261 [14] ERROR ApplicationInfoLog [(null)] <(null)< - Void loginsession(NewAsiaOASystem.ViewModel.SessionUser)
+2022-06-06 15:25:42,261 [14] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================
+2022-06-06 15:35:42,265 [127] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2022-06-06 15:35:42,265 [127] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2022-06-06 15:35:42,265 [127] ERROR ApplicationInfoLog [(null)] <(null)< - 未将对象引用设置到对象的实例。
+2022-06-06 15:35:42,266 [127] ERROR ApplicationInfoLog [(null)] <(null)< - Void loginsession(NewAsiaOASystem.ViewModel.SessionUser)
+2022-06-06 15:35:42,266 [127] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================
+2022-06-06 15:45:42,260 [27] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2022-06-06 15:45:42,260 [27] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2022-06-06 15:45:42,260 [27] ERROR ApplicationInfoLog [(null)] <(null)< - 未将对象引用设置到对象的实例。
+2022-06-06 15:45:42,260 [27] ERROR ApplicationInfoLog [(null)] <(null)< - Void loginsession(NewAsiaOASystem.ViewModel.SessionUser)
+2022-06-06 15:45:42,260 [27] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================
+2022-06-06 15:55:42,265 [109] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2022-06-06 15:55:42,265 [109] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2022-06-06 15:55:42,265 [109] ERROR ApplicationInfoLog [(null)] <(null)< - 未将对象引用设置到对象的实例。
+2022-06-06 15:55:42,265 [109] ERROR ApplicationInfoLog [(null)] <(null)< - Void loginsession(NewAsiaOASystem.ViewModel.SessionUser)
+2022-06-06 15:55:42,265 [109] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================
+2022-06-06 16:05:42,285 [89] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2022-06-06 16:05:42,286 [89] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2022-06-06 16:05:42,286 [89] ERROR ApplicationInfoLog [(null)] <(null)< - 未将对象引用设置到对象的实例。
+2022-06-06 16:05:42,286 [89] ERROR ApplicationInfoLog [(null)] <(null)< - Void loginsession(NewAsiaOASystem.ViewModel.SessionUser)
+2022-06-06 16:05:42,286 [89] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================
+2022-06-06 16:15:42,298 [30] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2022-06-06 16:15:42,298 [30] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2022-06-06 16:15:42,298 [30] ERROR ApplicationInfoLog [(null)] <(null)< - 未将对象引用设置到对象的实例。
+2022-06-06 16:15:42,298 [30] ERROR ApplicationInfoLog [(null)] <(null)< - Void loginsession(NewAsiaOASystem.ViewModel.SessionUser)
+2022-06-06 16:15:42,298 [30] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================
+2022-06-06 16:19:41,783 [122] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2022-06-06 16:19:41,783 [122] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2022-06-06 16:19:41,783 [122] ERROR ApplicationInfoLog [(null)] <(null)< - 未将对象引用设置到对象的实例。
+2022-06-06 16:19:41,783 [122] ERROR ApplicationInfoLog [(null)] <(null)< - NewAsiaOASystem.ViewModel.PagerInfo`1[NewAsiaOASystem.ViewModel.DKX_DDinfoView] Getdkxtypelistpage(System.String, System.String, System.String, System.String, System.String, System.String, System.String, System.String, System.String, System.String, System.String, System.String, System.String, System.String, System.String, System.String, System.String, System.String, System.String, System.String, System.String, NewAsiaOASystem.ViewModel.SessionUser)
+2022-06-06 16:19:41,784 [122] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================
+2022-06-06 16:22:09,473 [94] INFO  NHibernate.Loader.Loader [(null)] <(null)< - select dkx_gcsinf0_.Id as Id7_, dkx_gcsinf0_.ZH_Id as ZH2_7_, dkx_gcsinf0_.Name as Name7_, dkx_gcsinf0_.Tel as Tel7_, dkx_gcsinf0_.C_time as C5_7_, dkx_gcsinf0_.C_name as C6_7_, dkx_gcsinf0_.Up_time as Up7_7_, dkx_gcsinf0_.Up_name as Up8_7_, dkx_gcsinf0_.Start as Start7_, dkx_gcsinf0_.Sort as Sort7_, dkx_gcsinf0_.Teamname as Teamname7_ from DKX_GCSinfo dkx_gcsinf0_ where dkx_gcsinf0_.Start='0' order by dkx_gcsinf0_.Sort asc
+2022-06-06 16:22:09,591 [94] INFO  NHibernate.Hql.Ast.ANTLR.Tree.FromElement [(null)] <(null)< - handling property dereference [NewAsiaOASystem.DBModel.SysPerson (u) -> Role (Class)]
+2022-06-06 16:22:09,598 [94] INFO  NHibernate.Hql.Ast.ANTLR.Tree.FromElement [(null)] <(null)< - handling property dereference [NewAsiaOASystem.DBModel.SysRole (s) -> Name (Class)]
+2022-06-06 16:22:09,603 [94] INFO  NHibernate.Loader.Loader [(null)] <(null)< - select sysperson0_.Id as Id128_0_, sysrole2_.Id as Id131_1_, sysperson0_.Name as Name128_0_, sysperson0_.UserName as UserName128_0_, sysperson0_.Url as Url128_0_, sysperson0_.Tel as Tel128_0_, sysperson0_.Sort as Sort128_0_, sysperson0_.Description as Descript7_128_0_, sysperson0_.Password as Password128_0_, sysperson0_.State as State128_0_, sysperson0_.LogonNum as LogonNum128_0_, sysperson0_.LastLogonTime as LastLog11_128_0_, sysperson0_.CreatePerson as CreateP12_128_0_, sysperson0_.UpdatePerson as UpdateP13_128_0_, sysperson0_.UpdateTime as UpdateTime128_0_, sysperson0_.CreateTime as CreateTime128_0_, sysperson0_.ImmCenterId as ImmCent16_128_0_, sysperson0_.ERP_YGNO as ERP17_128_0_, sysrole2_.Name as Name131_1_, sysrole2_.Description as Descript3_131_1_, sysrole2_.CreatePerson as CreatePe4_131_1_, sysrole2_.CreateTime as CreateTime131_1_, sysrole2_.UpdateTime as UpdateTime131_1_, sysrole2_.UpdatePerson as UpdatePe7_131_1_, sysrole2_.Status as Status131_1_, sysrole2_.Pid as Pid131_1_, sysrole2_.RoleType as RoleType131_1_, role1_.SysPersonId as SysPerso1_0__, role1_.SysRoleId as SysRoleId0__ from SysPerson sysperson0_ inner join SysRoleSysPerson role1_ on sysperson0_.Id=role1_.SysPersonId inner join SysRole sysrole2_ on role1_.SysRoleId=sysrole2_.Id where sysrole2_.Name in ('客服专员' , '客服主管')
+2022-06-06 16:22:09,694 [94] INFO  NHibernate.Loader.Loader [(null)] <(null)< - SELECT department0_.PersonId as PersonId1_, department0_.DepartmentId as Departme2_1_, sysdepartm1_.Id as Id68_0_, sysdepartm1_.Name as Name68_0_, sysdepartm1_.ParentId as ParentId68_0_, sysdepartm1_.Sort as Sort68_0_, sysdepartm1_.Description as Descript5_68_0_, sysdepartm1_.CreatePerson as CreatePe6_68_0_, sysdepartm1_.CreateTime as CreateTime68_0_, sysdepartm1_.UpdatePerson as UpdatePe8_68_0_, sysdepartm1_.UpdateTime as UpdateTime68_0_, sysdepartm1_.State as State68_0_ FROM SysPersonDepartment department0_ left outer join SysDepartment sysdepartm1_ on department0_.DepartmentId=sysdepartm1_.Id WHERE department0_.PersonId=@p0
+2022-06-06 16:22:09,720 [94] INFO  NHibernate.Loader.Loader [(null)] <(null)< - SELECT department0_.PersonId as PersonId1_, department0_.DepartmentId as Departme2_1_, sysdepartm1_.Id as Id68_0_, sysdepartm1_.Name as Name68_0_, sysdepartm1_.ParentId as ParentId68_0_, sysdepartm1_.Sort as Sort68_0_, sysdepartm1_.Description as Descript5_68_0_, sysdepartm1_.CreatePerson as CreatePe6_68_0_, sysdepartm1_.CreateTime as CreateTime68_0_, sysdepartm1_.UpdatePerson as UpdatePe8_68_0_, sysdepartm1_.UpdateTime as UpdateTime68_0_, sysdepartm1_.State as State68_0_ FROM SysPersonDepartment department0_ left outer join SysDepartment sysdepartm1_ on department0_.DepartmentId=sysdepartm1_.Id WHERE department0_.PersonId=@p0
+2022-06-06 16:22:09,720 [94] INFO  NHibernate.Loader.Loader [(null)] <(null)< - SELECT department0_.PersonId as PersonId1_, department0_.DepartmentId as Departme2_1_, sysdepartm1_.Id as Id68_0_, sysdepartm1_.Name as Name68_0_, sysdepartm1_.ParentId as ParentId68_0_, sysdepartm1_.Sort as Sort68_0_, sysdepartm1_.Description as Descript5_68_0_, sysdepartm1_.CreatePerson as CreatePe6_68_0_, sysdepartm1_.CreateTime as CreateTime68_0_, sysdepartm1_.UpdatePerson as UpdatePe8_68_0_, sysdepartm1_.UpdateTime as UpdateTime68_0_, sysdepartm1_.State as State68_0_ FROM SysPersonDepartment department0_ left outer join SysDepartment sysdepartm1_ on department0_.DepartmentId=sysdepartm1_.Id WHERE department0_.PersonId=@p0
+2022-06-06 16:22:09,720 [94] INFO  NHibernate.Loader.Loader [(null)] <(null)< - SELECT department0_.PersonId as PersonId1_, department0_.DepartmentId as Departme2_1_, sysdepartm1_.Id as Id68_0_, sysdepartm1_.Name as Name68_0_, sysdepartm1_.ParentId as ParentId68_0_, sysdepartm1_.Sort as Sort68_0_, sysdepartm1_.Description as Descript5_68_0_, sysdepartm1_.CreatePerson as CreatePe6_68_0_, sysdepartm1_.CreateTime as CreateTime68_0_, sysdepartm1_.UpdatePerson as UpdatePe8_68_0_, sysdepartm1_.UpdateTime as UpdateTime68_0_, sysdepartm1_.State as State68_0_ FROM SysPersonDepartment department0_ left outer join SysDepartment sysdepartm1_ on department0_.DepartmentId=sysdepartm1_.Id WHERE department0_.PersonId=@p0
+2022-06-06 16:22:09,721 [94] INFO  NHibernate.Loader.Loader [(null)] <(null)< - SELECT sysfun0_.RoleId as RoleId1_, sysfun0_.FunctionId as FunctionId1_, sysfunctio1_.Id as Id65_0_, sysfunctio1_.Name as Name65_0_, sysfunctio1_.ActionUrl as ActionUrl65_0_, sysfunctio1_.CreatePerson as CreatePe4_65_0_, sysfunctio1_.CreateTime as CreateTime65_0_, sysfunctio1_.UpdatePerson as UpdatePe6_65_0_, sysfunctio1_.UpdateTime as UpdateTime65_0_, sysfunctio1_.Status as Status65_0_ FROM SysRoleFun sysfun0_ left outer join SysFunction sysfunctio1_ on sysfun0_.FunctionId=sysfunctio1_.Id WHERE sysfun0_.RoleId=@p0
+2022-06-06 16:22:09,744 [94] INFO  NHibernate.Loader.Loader [(null)] <(null)< - SELECT sysauth0_.RoleId as RoleId1_, sysauth0_.AuthorizeId as Authoriz2_1_, sysauthori1_.Id as Id66_0_, sysauthori1_.Name as Name66_0_, sysauthori1_.ParentId as ParentId66_0_, sysauthori1_.AuthorizeId as Authoriz4_66_0_, sysauthori1_.CreatePerson as CreatePe5_66_0_, sysauthori1_.CreateTime as CreateTime66_0_, sysauthori1_.UpdatePerson as UpdatePe7_66_0_, sysauthori1_.UpdateTime as UpdateTime66_0_, sysauthori1_.Status as Status66_0_ FROM SysRoleAuthorize sysauth0_ left outer join SysAuthorize sysauthori1_ on sysauth0_.AuthorizeId=sysauthori1_.Id WHERE sysauth0_.RoleId=@p0
+2022-06-06 16:22:09,753 [94] INFO  NHibernate.Loader.Loader [(null)] <(null)< - SELECT sysmenu0_.RoleId as RoleId1_, sysmenu0_.MenuId as MenuId1_, sysmenu1_.Id as Id127_0_, sysmenu1_.Name as Name127_0_, sysmenu1_.ParentId as ParentId127_0_, sysmenu1_.Sort as Sort127_0_, sysmenu1_.Description as Descript5_127_0_, sysmenu1_.Url as Url127_0_, sysmenu1_.CreatePerson as CreatePe7_127_0_, sysmenu1_.CreateTime as CreateTime127_0_, sysmenu1_.UpdatePerson as UpdatePe9_127_0_, sysmenu1_.UpdateTime as UpdateTime127_0_, sysmenu1_.Ico as Ico127_0_, sysmenu1_.Status as Status127_0_ FROM SysMenuRole sysmenu0_ left outer join SysMenu sysmenu1_ on sysmenu0_.MenuId=sysmenu1_.Id WHERE sysmenu0_.RoleId=@p0
+2022-06-06 16:22:09,793 [94] INFO  NHibernate.Loader.Loader [(null)] <(null)< - SELECT department0_.PersonId as PersonId1_, department0_.DepartmentId as Departme2_1_, sysdepartm1_.Id as Id68_0_, sysdepartm1_.Name as Name68_0_, sysdepartm1_.ParentId as ParentId68_0_, sysdepartm1_.Sort as Sort68_0_, sysdepartm1_.Description as Descript5_68_0_, sysdepartm1_.CreatePerson as CreatePe6_68_0_, sysdepartm1_.CreateTime as CreateTime68_0_, sysdepartm1_.UpdatePerson as UpdatePe8_68_0_, sysdepartm1_.UpdateTime as UpdateTime68_0_, sysdepartm1_.State as State68_0_ FROM SysPersonDepartment department0_ left outer join SysDepartment sysdepartm1_ on department0_.DepartmentId=sysdepartm1_.Id WHERE department0_.PersonId=@p0
+2022-06-06 16:22:09,794 [94] INFO  NHibernate.Loader.Loader [(null)] <(null)< - SELECT sysfun0_.RoleId as RoleId1_, sysfun0_.FunctionId as FunctionId1_, sysfunctio1_.Id as Id65_0_, sysfunctio1_.Name as Name65_0_, sysfunctio1_.ActionUrl as ActionUrl65_0_, sysfunctio1_.CreatePerson as CreatePe4_65_0_, sysfunctio1_.CreateTime as CreateTime65_0_, sysfunctio1_.UpdatePerson as UpdatePe6_65_0_, sysfunctio1_.UpdateTime as UpdateTime65_0_, sysfunctio1_.Status as Status65_0_ FROM SysRoleFun sysfun0_ left outer join SysFunction sysfunctio1_ on sysfun0_.FunctionId=sysfunctio1_.Id WHERE sysfun0_.RoleId=@p0
+2022-06-06 16:22:09,794 [94] INFO  NHibernate.Loader.Loader [(null)] <(null)< - SELECT sysauth0_.RoleId as RoleId1_, sysauth0_.AuthorizeId as Authoriz2_1_, sysauthori1_.Id as Id66_0_, sysauthori1_.Name as Name66_0_, sysauthori1_.ParentId as ParentId66_0_, sysauthori1_.AuthorizeId as Authoriz4_66_0_, sysauthori1_.CreatePerson as CreatePe5_66_0_, sysauthori1_.CreateTime as CreateTime66_0_, sysauthori1_.UpdatePerson as UpdatePe7_66_0_, sysauthori1_.UpdateTime as UpdateTime66_0_, sysauthori1_.Status as Status66_0_ FROM SysRoleAuthorize sysauth0_ left outer join SysAuthorize sysauthori1_ on sysauth0_.AuthorizeId=sysauthori1_.Id WHERE sysauth0_.RoleId=@p0
+2022-06-06 16:22:09,795 [94] INFO  NHibernate.Loader.Loader [(null)] <(null)< - SELECT sysmenu0_.RoleId as RoleId1_, sysmenu0_.MenuId as MenuId1_, sysmenu1_.Id as Id127_0_, sysmenu1_.Name as Name127_0_, sysmenu1_.ParentId as ParentId127_0_, sysmenu1_.Sort as Sort127_0_, sysmenu1_.Description as Descript5_127_0_, sysmenu1_.Url as Url127_0_, sysmenu1_.CreatePerson as CreatePe7_127_0_, sysmenu1_.CreateTime as CreateTime127_0_, sysmenu1_.UpdatePerson as UpdatePe9_127_0_, sysmenu1_.UpdateTime as UpdateTime127_0_, sysmenu1_.Ico as Ico127_0_, sysmenu1_.Status as Status127_0_ FROM SysMenuRole sysmenu0_ left outer join SysMenu sysmenu1_ on sysmenu0_.MenuId=sysmenu1_.Id WHERE sysmenu0_.RoleId=@p0
+2022-06-06 16:22:09,796 [94] INFO  NHibernate.Loader.Loader [(null)] <(null)< - SELECT department0_.PersonId as PersonId1_, department0_.DepartmentId as Departme2_1_, sysdepartm1_.Id as Id68_0_, sysdepartm1_.Name as Name68_0_, sysdepartm1_.ParentId as ParentId68_0_, sysdepartm1_.Sort as Sort68_0_, sysdepartm1_.Description as Descript5_68_0_, sysdepartm1_.CreatePerson as CreatePe6_68_0_, sysdepartm1_.CreateTime as CreateTime68_0_, sysdepartm1_.UpdatePerson as UpdatePe8_68_0_, sysdepartm1_.UpdateTime as UpdateTime68_0_, sysdepartm1_.State as State68_0_ FROM SysPersonDepartment department0_ left outer join SysDepartment sysdepartm1_ on department0_.DepartmentId=sysdepartm1_.Id WHERE department0_.PersonId=@p0
+2022-06-06 16:22:09,815 [94] INFO  NHibernate.Loader.Loader [(null)] <(null)< - select dkx_ddtype0_.Id as Id6_, dkx_ddtype0_.Type as Type6_, dkx_ddtype0_.Name as Name6_, dkx_ddtype0_.Beizhu as Beizhu6_, dkx_ddtype0_.Start as Start6_, dkx_ddtype0_.Sort as Sort6_, dkx_ddtype0_.C_time as C7_6_, dkx_ddtype0_.C_name as C8_6_, dkx_ddtype0_.Up_time as Up9_6_, dkx_ddtype0_.Up_name as Up10_6_, dkx_ddtype0_.Issh as Issh6_ from DKX_DDtypeinfo dkx_ddtype0_ order by dkx_ddtype0_.Sort asc
+2022-06-06 16:22:09,826 [94] INFO  NHibernate.Loader.Loader [(null)] <(null)< - select dkx_ddtype0_.Id as Id6_, dkx_ddtype0_.Type as Type6_, dkx_ddtype0_.Name as Name6_, dkx_ddtype0_.Beizhu as Beizhu6_, dkx_ddtype0_.Start as Start6_, dkx_ddtype0_.Sort as Sort6_, dkx_ddtype0_.C_time as C7_6_, dkx_ddtype0_.C_name as C8_6_, dkx_ddtype0_.Up_time as Up9_6_, dkx_ddtype0_.Up_name as Up10_6_, dkx_ddtype0_.Issh as Issh6_ from DKX_DDtypeinfo dkx_ddtype0_
+2022-06-06 16:22:09,828 [94] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2022-06-06 16:22:09,828 [94] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2022-06-06 16:22:09,828 [94] ERROR ApplicationInfoLog [(null)] <(null)< - 未将对象引用设置到对象的实例。
+2022-06-06 16:22:09,829 [94] ERROR ApplicationInfoLog [(null)] <(null)< - System.Web.Mvc.ActionResult DKXDDlist(System.Nullable`1[System.Int32])
+2022-06-06 16:22:09,829 [94] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================
+2022-06-06 16:25:42,270 [115] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2022-06-06 16:25:42,270 [115] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2022-06-06 16:25:42,270 [115] ERROR ApplicationInfoLog [(null)] <(null)< - 未将对象引用设置到对象的实例。
+2022-06-06 16:25:42,270 [115] ERROR ApplicationInfoLog [(null)] <(null)< - Void loginsession(NewAsiaOASystem.ViewModel.SessionUser)
+2022-06-06 16:25:42,270 [115] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================
+2022-06-06 16:35:42,276 [108] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2022-06-06 16:35:42,276 [108] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2022-06-06 16:35:42,276 [108] ERROR ApplicationInfoLog [(null)] <(null)< - 未将对象引用设置到对象的实例。
+2022-06-06 16:35:42,276 [108] ERROR ApplicationInfoLog [(null)] <(null)< - Void loginsession(NewAsiaOASystem.ViewModel.SessionUser)
+2022-06-06 16:35:42,276 [108] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================
+2022-06-06 16:45:42,267 [114] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2022-06-06 16:45:42,267 [114] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2022-06-06 16:45:42,267 [114] ERROR ApplicationInfoLog [(null)] <(null)< - 未将对象引用设置到对象的实例。
+2022-06-06 16:45:42,267 [114] ERROR ApplicationInfoLog [(null)] <(null)< - Void loginsession(NewAsiaOASystem.ViewModel.SessionUser)
+2022-06-06 16:45:42,267 [114] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================
+2022-06-06 16:55:42,274 [100] ERROR ApplicationInfoLog [(null)] <(null)< - =========================以下为错误提示===================================
+2022-06-06 16:55:42,275 [100] ERROR ApplicationInfoLog [(null)] <(null)< - System.EventArgs
+2022-06-06 16:55:42,275 [100] ERROR ApplicationInfoLog [(null)] <(null)< - 未将对象引用设置到对象的实例。
+2022-06-06 16:55:42,275 [100] ERROR ApplicationInfoLog [(null)] <(null)< - Void loginsession(NewAsiaOASystem.ViewModel.SessionUser)
+2022-06-06 16:55:42,275 [100] ERROR ApplicationInfoLog [(null)] <(null)< - ============================================================

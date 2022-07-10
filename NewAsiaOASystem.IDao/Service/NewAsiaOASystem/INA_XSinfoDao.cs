@@ -30,7 +30,17 @@ namespace NewAsiaOASystem.IDao
         #endregion
 
         #region //根据SORT 电商平台订单ID 查找订单信息
-        NA_XSinfoView GetxsInfobySort(string Sort); 
-	    #endregion
+        NA_XSinfoView GetxsInfobySort(string Sort);
+        #endregion
+
+        
+        #region //查询当年或者当月的订单数量
+        /// <summary>
+        /// 查询当年和当月的订单数量
+        /// </summary>
+        /// <param name="datatype">YY 查询当年的 MM查询当月的</param>
+        /// <returns></returns>
+        int Get_OrderNumber_YORM(string datatype); 
+        #endregion
     }
 }

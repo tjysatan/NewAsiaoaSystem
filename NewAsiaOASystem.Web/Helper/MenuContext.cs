@@ -20,7 +20,10 @@ namespace NewAsiaOASystem.Web
 
         public static readonly string AppIdlh = WebConfigurationManager.AppSettings["WeixinAppIdlh"];//与微信公众账号后台的AppId设置保持一致，区分大小写。
         public static readonly string AppSecretlh = WebConfigurationManager.AppSettings["WeixinAppSecretlh"];
+
         private static DateTime GetAccessToken_Time;
+
+        private static DateTime lhGetAccessToken_Time;
         /// <summary>
         /// 过期时间为7200秒
         /// </summary>
@@ -54,10 +57,10 @@ namespace NewAsiaOASystem.Web
             get
             {
                 //如果为空，或者过期，需要重新获取
-                if (string.IsNullOrEmpty(mAccessTokenlh) || HasExpired())
+                if (string.IsNullOrEmpty(mAccessTokenlh) || LH_HasExpired())
                 {
                     //获取
-                    mAccessTokenlh = GetAccessToken(AppIdlh, AppSecretlh);
+                    mAccessTokenlh = lhGetAccessToken(AppIdlh, AppSecretlh);
                 }
 
                 return mAccessTokenlh;
@@ -101,6 +104,35 @@ namespace NewAsiaOASystem.Web
          
         }
 
+        private static string lhGetAccessToken(string appId, string appSecret)
+        {
+            string url = string.Format("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={0}&secret={1}", appId, appSecret);
+            string result = HttpUtility11.GetData(url);
+
+            XDocument doc = XmlUtility.ParseJson(result, "root");
+            XElement root = doc.Root;
+            if (root != null)
+            {
+                XElement access_token = root.Element("access_token");
+                if (access_token != null)
+                {
+                    lhGetAccessToken_Time = DateTime.Now;
+                    if (root.Element("expires_in") != null)
+                    {
+                        Expires_Period = int.Parse(root.Element("expires_in").Value);
+                    }
+                    return access_token.Value;
+                }
+                else
+                {
+                    lhGetAccessToken_Time = DateTime.MinValue;
+                }
+            }
+            return null;
+
+
+        }
+
 
         //网页授权页面 关注的粉丝 回调openid
         public static string GetOAuthOpenID(string code)
@@ -134,6 +166,23 @@ namespace NewAsiaOASystem.Web
             {
                 //过期时间，允许有一定的误差，一分钟。获取时间消耗
                 if (DateTime.Now > GetAccessToken_Time.AddSeconds(Expires_Period).AddSeconds(-60))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 判断Access_token是否过期
+        /// </summary>
+        /// <returns>bool</returns>
+        private static bool LH_HasExpired()
+        {
+            if (lhGetAccessToken_Time != null)
+            {
+                //过期时间，允许有一定的误差，一分钟。获取时间消耗
+                if (DateTime.Now > lhGetAccessToken_Time.AddSeconds(Expires_Period).AddSeconds(-60))
                 {
                     return true;
                 }

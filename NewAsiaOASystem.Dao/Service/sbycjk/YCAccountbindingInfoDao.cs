@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using NewAsiaOASystem.IDao;
-using NewAsiaOASystem.DBModel;
-using NewAsiaOASystem.ViewModel;
+using IPR_System.IDao;
+using IPR_System.DBModel;
+using IPR_System.ViewModel;
 using System.Data;
 using Newtonsoft.Json;
 using NHibernate;
 
-namespace NewAsiaOASystem.Dao
+namespace IPR_System.Dao
 {
     public class YCAccountbindingInfoDao:ServiceConversion<YCAccountbindingInfoView,YCAccountbindingInfo>,IYCAccountbindingInfoDao
     {

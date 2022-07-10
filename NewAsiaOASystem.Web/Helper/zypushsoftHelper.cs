@@ -380,6 +380,46 @@ namespace NewAsiaOASystem.Web
         }
         #endregion
 
+        #region //更新ERP中的物料的内部售价
+        public static string updateupdateMDItm_Z_NBPrice(string ItmID, string NBPrice)
+        {
+            try
+            {
+                string lurl;
+                lurl = url + "updateMDItm_Z_NBPrice?ItmID=" + ItmID + "&NBPrice=" + NBPrice + "&key=" + key;
+                string result = HttpUtility11.GetData(lurl);
+                XmlDocument doc = new XmlDocument();
+                doc.LoadXml(result);
+                string sSupplier = doc.InnerText;
+                return sSupplier;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+        #endregion
+
+        #region //更新ERP中的物料的物料分类属性
+        public static string updateMDItm_Z_WLSX(string ItmID, string Z_WLSX)
+        {
+            try
+            {
+                string lurl;
+                lurl = url + "updateMDItm_Z_WLSX?ItmID=" + ItmID + "&Z_WLSX=" + Z_WLSX + "&key=" + key;
+                string result = HttpUtility11.GetData(lurl);
+                XmlDocument doc = new XmlDocument();
+                doc.LoadXml(result);
+                string sSupplier = doc.InnerText;
+                return sSupplier;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+        #endregion
+
         #region //查询原材料的工序工时
         /// <summary>
         /// 查询原材料的工序工时
@@ -417,6 +457,26 @@ namespace NewAsiaOASystem.Web
             {
                 string lurl;
                 lurl = url + "GetMDItm_ItmSpec?ItmSpec=" + ItmSpec + "&key=" + key;
+                string result = HttpUtility11.GetData(lurl);
+                XmlDocument doc = new XmlDocument();
+                doc.LoadXml(result);
+                string sSupplier = doc.InnerText;
+                return sSupplier;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+        #endregion
+
+        #region //通过物料代理和近期 天数【一段时间】查询生产领料出库数据
+        public static string GetWHDrw_ItmIDand_Days(string ItmID, string days)
+        {
+            try
+            {
+                string lurl;
+                lurl = url + "GetWHDrw_ItmIDand_Days?ItmID=" + ItmID + "&days" + days+ "&key=" + key;
                 string result = HttpUtility11.GetData(lurl);
                 XmlDocument doc = new XmlDocument();
                 doc.LoadXml(result);

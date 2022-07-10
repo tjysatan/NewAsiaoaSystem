@@ -224,7 +224,7 @@
                                 }
                             }
                         },
-                        { field: '', title: '操作', width: 160, fixed: 'right', toolbar: "#bar" }
+                        { field: '', title: '操作', width: 190, fixed: 'right', toolbar: "#bar" }
                     ]],
                     done: function (res, curr, count) {
                         $(".layui-table-box").find("[data-field='Id']").css("display", "none");
@@ -257,6 +257,9 @@
                     }
                     if (layEvent === 'del') {//删除
                         dddetAjax(data.Id, data.DD_ZT);
+                    }
+                    if (layEvent ==='checkscjd') {//查到生产进度
+                        OpenOrder_SC_JindeView(data.DD_Bianhao);
                     }
                     if (layEvent === 'guanlian') {//关联
                         if (data.KBomNo) {
@@ -1053,6 +1056,8 @@
                 //}
             })
         }
+
+        //
     </script>
     <script type="text/html" id="bar">
         <div class="layui-btn-group">
@@ -1074,6 +1079,9 @@
             <button type="button" class="layui-btn layui-btn-xs layui-btn-normal" lay-event="TBPS" title="同步普实">
                 <i class="layui-icon">&#xe609;</i>
             </button>
+            @*<button type="button" class="layui-btn layui-btn-xs layui-btn-danger" lay-event="checkscjd" title="订单生产进度">
+                <i class="layui-icon">&#xe629;</i>
+            </button>*@
         </div>
     </script>
 }

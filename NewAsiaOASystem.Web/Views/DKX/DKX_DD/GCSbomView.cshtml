@@ -201,9 +201,9 @@
         //var t = '<a class="layui-btn layui-btn-primary layui-btn-small" onclick="ziliaochakan(' + oid + ')">资料查看</a>';
         //var x = '<a class="layui-btn layui-btn-primary layui-btn-small" onclick="DDxiugai(' + oid + ',' + type + ')">信息修改</a>';
         var a = '<a class="layui-btn layui-btn-primary layui-btn-small" onclick="mxdel(' + id + ')">删除</a>';
-        //var z = '<a class="layui-btn layui-btn-primary layui-btn-small" onclick="ckczji(' + oid + ')">操作记录</a>';
+        var z = '<a class="layui-btn layui-btn-primary layui-btn-small" onclick="OpenUpdateView(' + id + ')">编辑</a>';
        //var p = '<a class="layui-btn layui-btn-primary layui-btn-small" onclick="openAddBmxView()">售价</a>';
-        return a;
+        return z+a;
     }
 
     //获取料单数据
@@ -376,6 +376,21 @@
             }
         })
     }
+    //编辑物料
+    function OpenUpdateView(Id) {
+           layer.open({
+            type: 2,
+            title: ['编辑料单物料', 'font-size:14px;'],
+            area: ['450px', '350px'],
+            offset: '10px',
+            fixed: false, //不固定
+            maxmin: true,
+               content: '../DKX_DD/Update_WL_NumberView?Id=' + Id,
+            end: function () {
+                location.reload();
+            }
+        })
+    }
 </script>
 
 <div id="form1">
@@ -396,7 +411,7 @@
             <button onclick="return CloseWin()">关闭</button>
         </span>
         <span>
-            <button onclick="return Ps_updateBom()">更新普实料单</button>
+            <button onclick="return Ps_updateBom()">更新至普实</button>
         </span>
     </div>
 </div>

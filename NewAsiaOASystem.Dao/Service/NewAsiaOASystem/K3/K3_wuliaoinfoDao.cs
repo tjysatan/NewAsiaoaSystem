@@ -402,5 +402,20 @@ namespace NewAsiaOASystem.Dao
         }
         #endregion
 
+        #region //根据物料的来源查询 SourceID 采购/制造
+        /// <summary>
+        /// 根据物料的来源查询 SourceID 采购/制造
+        /// </summary>
+        /// <param name="SourceID">物料的来源查询  采购/制造</param>
+        /// <returns></returns>
+        public IList<K3_wuliaoinfoView> Get_info_bySourceID(string SourceID)
+        {
+            string Hqlstr = string.Format(" from K3_wuliaoinfo where SourceID='{0}'", SourceID);
+            List<K3_wuliaoinfo> list = Session.CreateQuery(Hqlstr).List<K3_wuliaoinfo>() as List<K3_wuliaoinfo>;
+            IList<K3_wuliaoinfoView> listmodel = GetViewlist(list);
+            return listmodel;
+        }
+        #endregion
+
     }
 }

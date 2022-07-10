@@ -336,6 +336,7 @@ namespace NewAsiaOASystem.Web
                         }
                         wlmodel.OperationLine = "10";
                         wlmodel.Position = item.Beizhu;
+                        wlmodel.Position = item.Beizhu;
                         wuliaolist.Add(wlmodel);
                     }
                 }

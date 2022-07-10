@@ -53,7 +53,16 @@ namespace NewAsiaOASystem.IDao
         /// </summary>
         /// <param name="AbsID"></param>
         /// <returns></returns>
-        IList<ERP_SASalAinfoView> GetFB_DATA_BY_AbsID(string AbsID); 
+        IList<ERP_SASalAinfoView> GetFB_DATA_BY_AbsID(string AbsID);
+        #endregion
+
+        
+        #region //当月每天的ERP发货金额
+        /// <summary>
+        /// 当月每天的发货金额汇总
+        /// </summary>
+        /// <returns></returns>
+        List<Object> Get_TheMonth_DailySales(); 
         #endregion
     }
 }

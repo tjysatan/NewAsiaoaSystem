@@ -19,6 +19,7 @@
     <property name="Amount" column="Amount"  />
     <property name="EmpName" column="EmpName"  />
     <property name="Z_EmpName" column="Z_EmpName"  />
+    <property name="BDocDate" column="BDocDate"  />
     <property name="C_time" column="C_time"  />
     <property name="DocNum" column="DocNum"  />
   </class>

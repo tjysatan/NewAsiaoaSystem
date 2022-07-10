@@ -85,5 +85,20 @@ namespace NewAsiaOASystem.ViewModel
         /// 制造/采购
         /// </summary>
         public virtual string SourceID { get; set; }
+
+        /// <summary>
+        /// 采购物料属性  通通  定定  通定 定通 通通-战略 战略
+        /// </summary>
+        public virtual string Z_WLSX { get; set; }
+
+        /// <summary>
+        /// 是否停用 Y 停用 N 没停用
+        /// </summary>
+        public virtual string IsClose { get; set; }
+
+        /// <summary>
+        /// 最近更新时间
+        /// </summary>
+        public virtual DateTime? updatetime { get; set; }
     }
 }

@@ -1982,12 +1982,12 @@ namespace NewAsiaOASystem.Web
                         {
                             if (errmsg.Value == "ok")
                             {
-                                InsertYCTZDATA(openId, Username, consrt, jkdname, "0", data, SID, type);
+                                InsertYCTZDATA(openId, Username, consrt, jkdname, "0", data, SID, type, result);
                                 I = "0";
                             }
                             else
                             {
-                                InsertYCTZDATA(openId, Username, consrt, jkdname, "1", data, SID, type);
+                                InsertYCTZDATA(openId, Username, consrt, jkdname, "1", data, SID, type, result);
                                 I = "1";
                             }
                         }
@@ -2003,7 +2003,7 @@ namespace NewAsiaOASystem.Web
         #endregion
 
         #region //发送数据保存
-        public static void InsertYCTZDATA(string openId, string Username, string consrt, string jkdname, string Isfs, string data, string SID, string type)
+        public static void InsertYCTZDATA(string openId, string Username, string consrt, string jkdname, string Isfs, string data, string SID, string type,string resultXml)
         {
             YCnoticeinfoView model = new YCnoticeinfoView();
             try
@@ -2017,6 +2017,7 @@ namespace NewAsiaOASystem.Web
                 model.Isfs = Convert.ToInt32(Isfs);
                 model.C_time = DateTime.Now;
                 model.type = Convert.ToInt32(type);//0 告警 1 通知
+                model.resultXml = resultXml;
                 _IYCnoticeinfoDao.Ninsert(model);
             }
             catch

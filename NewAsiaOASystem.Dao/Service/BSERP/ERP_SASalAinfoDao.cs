@@ -195,5 +195,19 @@ namespace NewAsiaOASystem.Dao
             return listmodel;
         }
         #endregion
+
+        #region //当月每天的ERP发货金额
+        /// <summary>
+        /// 当月每天的发货金额汇总
+        /// </summary>
+        /// <returns></returns>
+        public List<Object> Get_TheMonth_DailySales()
+        {
+            string HQLstr = string.Format("select sum(XSCostPrice) as cost,day(BDocDate) as Day from ERP_SASalAinfo where DateDiff(MM,BDocDate,getdate())=0 group by day(BDocDate) order by Day");
+            List<Object> obj = Session.CreateSQLQuery(HQLstr).List<Object>() as List<Object>;
+            return obj;
+
+        }
+        #endregion
     }
 }

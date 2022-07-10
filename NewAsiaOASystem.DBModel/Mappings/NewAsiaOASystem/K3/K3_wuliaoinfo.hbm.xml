@@ -15,9 +15,11 @@
     <property name="C_Time" column="C_Time" />
     <property name="str1" column="str1" />
     <property name="str2" column="str2" />
-
     <property name="OpDate" column="OpDate" />
     <property name="WhsName" column="WhsName" />
     <property name="SourceID" column="SourceID" />
+    <property name="Z_WLSX" column="Z_WLSX" />
+    <property name="IsClose" column="IsClose" />
+    <property name="updatetime" column="updatetime" />
   </class>
 </hibernate-mapping>

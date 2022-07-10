@@ -98,8 +98,14 @@ namespace NewAsiaOASystem.Web.Controllers
         #endregion
 
         #region //异常整个的分页数据
-        public ActionResult gczlyclist()
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="IsEdit">是否需要编辑按钮 false 就是需要 true或者空就是不需要</param>
+        /// <returns></returns>
+        public ActionResult gczlyclist(string IsEdit)
         {
+            ViewData["IsEdit"] = IsEdit;//
             return View();
         }
         public ActionResult Getgczlyclist(int? page, int limit, string DD_Bianhao)
@@ -746,7 +752,6 @@ namespace NewAsiaOASystem.Web.Controllers
                 //生产普实物料单号
                 //同步普实产品
                 Ps_Instercp(Id, Ps_sanduanno, yjcb,Gcs_nameId,KHname);
-
                 return Json(new { result = "success", res = "下单成功"});
 
             }
@@ -1100,6 +1105,32 @@ namespace NewAsiaOASystem.Web.Controllers
             }
         }
         #endregion
+
+        #region //Bom表中修改物料的用量和备注页面
+        public ActionResult Update_WL_NumberView(string Id)
+        {
+            DKX_k3BominfoView model = _IDKX_k3BominfoDao.NGetModelById(Id);
+            return View(model);
+        }
+
+        public JsonResult Update_WL_NumberEide(string Id, string Number, string beizhu)
+        {
+            try
+            {
+                DKX_k3BominfoView model = _IDKX_k3BominfoDao.NGetModelById(Id);
+                model.FAuxQty = Convert.ToDecimal(Number);
+                model.Beizhu = beizhu;
+                if(_IDKX_k3BominfoDao.NUpdate(model))
+                    return Json(new { result = "success", msg = "修改成功" });
+                else
+                    return Json(new { result = "error", msg = "提交保存失败" });
+            }
+            catch (Exception x)
+            {
+                return Json(new { result = "error", msg = x });
+            }
+        }
+        #endregion
         #endregion
 
         #region //销售客服资料查看页面
@@ -1330,6 +1361,70 @@ namespace NewAsiaOASystem.Web.Controllers
         //}
         #endregion
 
+        #endregion
+
+        #region //首页订单数据
+        public JsonResult DKX_DD_Statistics_Interface()
+        {
+            try
+            {
+                //查询全年的
+                int YY_Count = _IDKX_DDinfoDao.Get_OrderNumber_YORM("YY");
+                //查询当月的
+                int MM_Count = _IDKX_DDinfoDao.Get_OrderNumber_YORM("MM");
+                DDDataMode model = new DDDataMode();
+                model.TotalSum = YY_Count.ToString();
+                model.TotaSameMonthSum = MM_Count.ToString();
+                string json = JsonConvert.SerializeObject(model);
+                return Json(new { result = "success", msg = "",data= model }); ;
+            }
+            catch(Exception x)
+            {
+                return Json(new { result = "error", msg = x }); ;
+            }
+        }
+        #endregion
+        #region //首页方案库数据统计
+        public JsonResult DKX_CP_Statistics_Interface()
+        {
+            try
+            {
+                //查询全部
+                int YY_Count = _IDKX_CPInfoDao.Get_CPNumber_YORM("YY");
+                //查询当月的
+                int MM_Count = _IDKX_CPInfoDao.Get_CPNumber_YORM("MM");
+                DDDataMode model = new DDDataMode();
+                model.TotalSum = YY_Count.ToString();
+                model.TotaSameMonthSum = MM_Count.ToString();
+                string json = JsonConvert.SerializeObject(model);
+                return Json(new { result = "success", msg = "", data = model });
+            }
+            catch (Exception x)
+            {
+                return Json(new { result = "error", msg = x });
+            }
+        }
+        #endregion
+
+        #region //订单生产进度查看
+        public ActionResult Order_SC_JinduView(string orderno)
+        {
+            ViewData["orderno"] = orderno;
+            return View();
+        }
+
+        public JsonResult GetOrder_SC_Jindujson(string orderno)
+        {
+            try
+            {
+                string res = gwjHelper.Order_SC_jindu(orderno);
+                return Json(new { result = "success", msg = "", data = res }); ;
+            }
+            catch (Exception x)
+            {
+                return Json(new { result = "error", msg = x }); ;
+            }
+        }
         #endregion
 
 

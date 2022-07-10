@@ -134,7 +134,7 @@
         function updatewuliaogxgs() {
             layer.open({
                 type: 2,
-                title: ['批量物料工序工时（只更新ERP中）', 'font-size:14px;'],
+                title: ['批量修改物料工序工时（只更新ERP中）', 'font-size:14px;'],
                 area: ['550px', '350px'],
                 offset: '10px',
                 fixed: false, //不固定
@@ -145,6 +145,31 @@
                 //}
             })
         }
+
+        //修改ERP中物料的内部售价
+        function updatewuliaoNBPrice() {
+            layer.open({
+                type: 2,
+                title: ['批量修改物料内部售价（只更新ERP中）', 'font-size:14px;'],
+                area: ['550px', '350px'],
+                offset: 'false',//不固定
+                maxmin: true,
+                content:'../K3Basicdata/BatcupdateMDItm_NBPriceView',
+            })
+        }
+
+        //修改ERP中物料的分类属性
+        function updatewuliaoZ_WLSX() {
+            layer.open({
+                type: 2,
+                title: ['批量修改物料的分类属性（只更新ERP中）', 'font-size:14px;'],
+                area: ['550px', '350px'],
+                offset: 'false',//不固定
+                maxmin: true,
+                content: '../K3Basicdata/BatcupdateMDItm_Z_WLSXView',
+            })
+        }
+
         //操作按钮
         function showczbtn(val,val2) {
             var fnumber = "'" + val + "'";
@@ -280,9 +305,6 @@
                             <span class="inquiry-input">
                                 <button class="layui-btn" onclick="PstjUpdatedate();return  false;"><i class="layui-icon">&#xe63d;</i> 更新</button>
                             </span>
-                            @*<span class="inquiry-input">
-            <button class="layui-btn" onclick="test();return  false;"><i class="layui-icon">&#xe63d;</i> 测试</button>
-        </span>*@
                             <span class="inquiry-input">
                                 <button class="layui-btn" onclick="return addClick('/K3Basicdata/TBk3wuliaoView')"><i class="layui-icon">&#x1002;</i> 刷新</button>
                             </span>
@@ -291,6 +313,12 @@
                             </span>
                             <span class="inquiry-input">
                                 <button class="layui-btn" onclick="updatewuliaogxgs(); return false;"><i class="layui-icon">&#xe642;</i>工序工时导入</button>
+                            </span>
+                            <span>
+                                <button class="layui-btn layui-btn-primary" onclick="updatewuliaoNBPrice(); return false;">ERP批量修改物物料内部售价</button>
+                            </span>
+                            <span>
+                                <button class="layui-btn layui-btn-primary" onclick="updatewuliaoZ_WLSX(); return false;">ERP批量修改物料分类属性</button>
                             </span>
                         </li>
                     </ul>

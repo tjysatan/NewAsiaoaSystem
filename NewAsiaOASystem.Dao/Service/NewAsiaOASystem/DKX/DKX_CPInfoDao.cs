@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using NewAsiaOASystem.IDao;
-using NewAsiaOASystem.DBModel;
-using NewAsiaOASystem.ViewModel;
+using IPR_System.IDao;
+using IPR_System.DBModel;
+using IPR_System.ViewModel;
 using NHibernate;
 using Newtonsoft.Json;
 using Spring.Context.Support;
 
-namespace NewAsiaOASystem.Dao
+namespace IPR_System.Dao
 {
     public class DKX_CPInfoDao:ServiceConversion<DKX_CPInfoView,DKX_CPInfo>,IDKX_CPInfoDao
     {
@@ -369,6 +369,32 @@ namespace NewAsiaOASystem.Dao
             List<DKX_CPInfo> list = HibernateTemplate.Find<DKX_CPInfo>(Hqlstr) as List<DKX_CPInfo>;
             IList<DKX_CPInfoView> listmodel = GetViewlist(list);
             return listmodel;
+        }
+        #endregion
+
+        #region //查询全部或者当月新增的方案的数量
+        /// <summary>
+        /// 查询全部或者当月新增的方案的数量
+        /// </summary>
+        /// <param name="datatype">yy 查询全部数据 MM查询当月</param>
+        /// <returns></returns>
+        public int Get_CPNumber_YORM(string datatype)
+        {
+            try
+            {
+                string tempHql = "";
+                if (datatype=="YY")
+                    tempHql = string.Format(" from DKX_CPInfo");
+                else
+                    tempHql = string.Format(" from DKX_CPInfo where DATEDIFF({0},CreateTime,GETDATE())=0 ", datatype);
+                IQuery queryCount = Session.CreateQuery(string.Format("select count(*) {0}", tempHql));
+                int count = Convert.ToInt32(queryCount.UniqueResult());
+                return count;
+            }
+            catch
+            {
+                return 0;
+            }
         }
         #endregion
 

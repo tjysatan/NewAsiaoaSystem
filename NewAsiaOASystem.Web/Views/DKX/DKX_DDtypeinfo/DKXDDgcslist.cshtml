@@ -107,7 +107,9 @@
                         },
                         {
                             field: 'C_time', width: 130, title: '下单日期', templet: function (d) {
-                                return layui_dateToStr(d.C_time)
+                                if (d.C_time != "" && d.C_time != null) {
+                                    return layui_dateToStr(d.C_time)
+                                } else { return "" }
                             }
                         },
                         {
@@ -224,7 +226,6 @@
 
         //获取异常整改的数量
         async function Getgczlyccount() {
-
             var json;
             $.ajax({
                 url: "../DKX_DD/Getgczlyccount",
@@ -890,7 +891,7 @@
         function opengczkycView() {
             layer.open({
                 type: 2,
-                title: ['异常整个提交', 'font-size:14px;'],
+                title: ['异常整改提交', 'font-size:14px;'],
                 area: ['80vw', '95vh'],
                 offset: '10px',
                 fixed: false, //不固定

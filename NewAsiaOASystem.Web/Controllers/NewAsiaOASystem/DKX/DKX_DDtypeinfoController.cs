@@ -2949,7 +2949,7 @@ namespace NewAsiaOASystem.Web.Controllers
                     model.FBaseUnitID = wlmodel.unitname;//单位;//单位
                     model.FAuxQty = Convert.ToDecimal(a.NetQty);//单位用量
                     model.C_time = DateTime.Now;
-                    model.Beizhu = "";//备注
+                    model.Beizhu = a.FreeTxt;//备注
                     _IDKX_k3BominfoDao.Ninsert(model);
                 }
                 return "2";
@@ -3030,7 +3030,7 @@ namespace NewAsiaOASystem.Web.Controllers
                     model.FBaseUnitID = wlmodel.unitname;//单位;//单位
                     model.FAuxQty = Convert.ToDecimal(a.NetQty);//单位用量
                     model.C_time = DateTime.Now;
-                    model.Beizhu = "";//备注
+                    model.Beizhu = a.FreeTxt;//备注
                     _IDKX_k3BominfoDao.Ninsert(model);
                 }
                 return "0";// "更新BOM料单成功" });
@@ -3114,7 +3114,7 @@ namespace NewAsiaOASystem.Web.Controllers
                     model.FBaseUnitID = wlmodel.unitname;//单位;//单位
                     model.FAuxQty = Convert.ToDecimal(a.NetQty);//单位用量
                     model.C_time = DateTime.Now;
-                    model.Beizhu = "";//备注
+                    model.Beizhu = a.FreeTxt;//备注
                     _IDKX_k3BominfoDao.Ninsert(model);
                 }
                 return Json(new { result = "success", res = "更新BOM料单成功" });
@@ -4654,29 +4654,6 @@ namespace NewAsiaOASystem.Web.Controllers
             allDKXtypeDropdown(null);//电控箱类型的下来数据
             ViewBag.MyJson = getjsonalldkxtypedata();
             return View();
-            //PagerInfo<DKX_DDinfoView> listmodel = new PagerInfo<DKX_DDinfoView>();
-            //allDKXtypeDropdown(null);//电控箱类型的下来数据
-            //ViewBag.MyJson = getjsonalldkxtypedata();
-            //if (Session[SessionHelper.DKXSerch] != null)
-            //{
-            //    DKXDDCXTJView ssearch = Session[SessionHelper.DKXSerch] as DKXDDCXTJView;
-            //    ViewData["DD_Bianhao"] = ssearch.DD_Bianhao;
-            //    ViewData["BJno"] = ssearch.BJno;
-            //    ViewData["DD_Type"] = ssearch.DD_Type;
-            //    ViewData["KHname"] = ssearch.KHname;
-            //    ViewData["Lxname"] = ssearch.Lxname;
-            //    ViewData["Tel"] = ssearch.Tel;
-            //    ViewData["DD_ZT"] = ssearch.DD_ZT;
-            //    ViewData["startctime"] = ssearch.startctime;
-            //    ViewData["endctiome"] = ssearch.endctiome;
-            //    ViewData["DHtype"] = ssearch.DHtype;
-            //    listmodel = GetdkxddPBlistpage(pageIndex, ssearch.DD_Bianhao, ssearch.BJno, ssearch.DD_Type, ssearch.KHname, ssearch.Lxname, ssearch.Tel, ssearch.DD_ZT, ssearch.startctime, ssearch.endctiome, "0", ssearch.DHtype, null);
-            //}
-            //else
-            //{
-            //    listmodel = GetdkxddPBlistpage(pageIndex, null, null, null, null, null, null, null, null, null, "0", null, null);
-            //}
-            //return View(listmodel);
         }
 
         #region //获取电控箱（品保）生产单列表分页数据-20211229
@@ -6008,7 +5985,7 @@ namespace NewAsiaOASystem.Web.Controllers
                     model.FBaseUnitID = wlmodel.unitname;//单位;//单位
                     model.FAuxQty = Convert.ToDecimal(a.NetQty);//单位用量
                     model.C_time = DateTime.Now;
-                    model.Beizhu = "";//备注
+                    model.Beizhu = a.FreeTxt;//备注
                     _IDKX_k3BominfoDao.Ninsert(model);
                 }
                 return "2";
@@ -6045,6 +6022,11 @@ namespace NewAsiaOASystem.Web.Controllers
             /// 单据号
             /// </summary>
             public virtual string DocEntry { get; set; }
+
+            /// <summary>
+            /// 备注
+            /// </summary>
+            public virtual string FreeTxt { get; set; }
         }
  
         #endregion
@@ -9042,6 +9024,7 @@ namespace NewAsiaOASystem.Web.Controllers
                         }
                         wlmodel.OperationLine = "10";
                         wlmodel.Position = item.Beizhu;
+                        wlmodel.FreeTxt = item.Beizhu;
                         wuliaolist.Add(wlmodel);
                     }
                 }
@@ -9638,6 +9621,7 @@ namespace NewAsiaOASystem.Web.Controllers
                 mxmodel.LineNum = iLineNum.ToString();
                 mxmodel.NetQty = Convert.ToDecimal(item.FAuxQty);
                 mxmodel.OrderNum = IOrderNum;
+                mxmodel.FreeTxt = item.Beizhu;
                 if (jcwlmodel != null)
                 {
                     if (jcwlmodel.SourceID == "制造")

@@ -17,7 +17,6 @@
 
          $(function () {
             Gettabledata();
-           
         })
 
         //同步erp 销售出货数据
@@ -91,7 +90,7 @@
                         { field: 'XSCostPrice', width: 200, title: '含税金额' },
                         { field: 'Amount', width: 200, title: '销售成本' },
                         { field: 'Z_EmpName', width: 200, title: '责任工程师' }
-                       
+
 
                     ]],
                     done: function (res, curr, count) {
@@ -169,6 +168,32 @@
                 }
             })
         }
+
+        //导出半成品温控数据
+        function Export_BCBWK_Data() {
+            var DATEM = $("#DATEM").val();
+            if (DATEM == "") {
+                layer.alert("日期不为空！", { icon: 2 });
+                return false;
+            }
+          var text = "是否确定导出（" + DATEM  + "）非标电控箱中用到的温控数据吗！"
+
+        layer.open({
+            type: 1,
+            offset: 1 //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
+            , id: 'layerDemo' + 1 //防止重复弹出
+            , content: '<div style="padding: 20px 100px;">' + text + '</div>'
+            , btn: ['数据导出', '关闭']
+            , btnAlign: 'c' //按钮居中
+            , shade: 0 //不显示遮罩
+            , yes: function () {
+
+                window.location.href = "/ERPDATA/DC_FB_WKDATA_by_AbsID_Eexcl?AbsID=" + DATEM;
+                layer.closeAll();
+            }
+        });
+        }
+
     </script>
     }
    <div class="inquiry1">
@@ -206,14 +231,21 @@
                         </span>
                     </li>
                     <li>
-                        <span class="inquiry-input">
-                            <button class="layui-btn" onclick="return TBupdate()"><i class="layui-icon">&#x1002;</i>同步ERP数据</button>
+                        <span>
+                            <button class="layui-btn" onclick="Gettabledata()"><i class="layui-icon">&#xe615;</i>查询</button>
                         </span>
-                        <span class="inquiry-input">
-                            <button class="layui-btn" onclick="return TBwkupdate()"><i class="layui-icon">&#x1002;</i>获取半成品温控数据</button>
+                        <span>
+                            <button class="layui-btn layui-btn-primary" onclick="return TBupdate()"><i class="layui-icon">&#xe601;</i>同步ERP数据</button>
                         </span>
-                        <span class="inquiry-input">
-                            <button class="layui-btn" onclick="return OpenView()"><i class="layui-icon">&#x1002;</i>技术小组产品金额</button>
+                        <span>
+                            <button class="layui-btn layui-btn-primary" onclick="return TBwkupdate()"><i class="layui-icon">&#xe601;</i>获取半成品温控数据</button>
+                        </span>
+                        <span>
+                            <button class="layui-btn layui-btn-primary" onclick="return Export_BCBWK_Data()"><i class="layui-icon"> &#xe67d;</i>导出半成品温控数据</button>
+                          
+                        </span>
+                        <span>
+                            <button class="layui-btn layui-btn-normal" onclick="return OpenView()"><i class="layui-icon">&#xe770;</i>技术小组产品金额</button>
                         </span>
                     </li>
                 </ul>

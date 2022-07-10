@@ -199,6 +199,9 @@
                     if (layEvent === "ldkc") {
                         liaodanKCURL(data.Id);
                     }
+                    if (layEvent === 'checkscjd') {//查到生产进度
+                        OpenOrder_SC_JindeView(data.DD_Bianhao);
+                    }
                 })
             })
         }
@@ -875,19 +878,23 @@
         }
     </script>
     <script type="text/html" id="bar">
-        @*<button class="layui-btn layui-btn-sm" lay-event="check">查看操作</button>*@
-        <button type="button" class="layui-btn layui-btn-small layui-btn-normal" lay-event="check" title="查看/操作">
-            <i class="layui-icon">&#xe63c;</i>
-        </button>
-        @*<button class="layui-btn layui-btn-sm" lay-event="yanshou">验收</button>*@
-        <button type="button" class="layui-btn layui-btn-small layui-btn-warm" lay-event="yanshou" title="验收">
-            <i class="layui-icon">&#xe620;</i>
-        </button>
+        <div class="layui-btn-group">
+            <button type="button" class="layui-btn layui-btn-small layui-btn-normal" lay-event="check" title="查看/操作">
+                <i class="layui-icon">&#xe63c;</i>
+            </button>
 
-        <button type="button" class="layui-btn layui-btn-small layui-btn-normal" lay-event="ldkc" title="料单库存">
-            <i class="layui-icon">&#xe615;</i>
-        </button>
-    </script>
+            <button type="button" class="layui-btn layui-btn-small layui-btn-warm" lay-event="yanshou" title="验收">
+                <i class="layui-icon">&#xe620;</i>
+            </button>
+
+            <button type="button" class="layui-btn layui-btn-small layui-btn-normal" lay-event="ldkc" title="料单库存">
+                <i class="layui-icon">&#xe615;</i>
+            </button>
+            <button type="button" class="layui-btn layui-btn-small layui-btn-danger" lay-event="checkscjd" title="订单生产进度">
+                <i class="layui-icon">&#xe629;</i>
+            </button>
+        </div>
+</script>
 }
 
 <div class="inquiry1">

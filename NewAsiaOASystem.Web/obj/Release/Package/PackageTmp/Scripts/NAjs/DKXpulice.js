@@ -253,3 +253,19 @@ function Reload_laypage(tableId) {
         }
     });
 }
+
+//打开查询订单生产进度的页面
+function OpenOrder_SC_JindeView(orderno) {
+    layer.open({
+        type: 2,
+        title: [orderno+'产线生产进度', 'font-size:14px;'],
+        area: ['900px', '550px'],
+        offset: '10px',
+        fixed: false, //不固定
+        maxmin: true,
+        content: '../DKX_DD/Order_SC_JinduView?orderno=' + orderno,
+        //end: function () {
+        //    location.reload();
+        //}
+    })
+}

@@ -1221,6 +1221,28 @@ namespace NewAsiaOASystem.Web.Controllers
         #endregion
         #endregion
         #endregion
+
+        #region //首页订单数据集
+        public JsonResult DKX_DSOrder_Statistics_Interface()
+        {
+            try
+            {
+                //查询全年的
+                int YY_Count = _INA_XSinfoDao.Get_OrderNumber_YORM("YY");
+                //查询当月的
+                int MM_Count = _INA_XSinfoDao.Get_OrderNumber_YORM("MM");
+                DDDataMode model = new DDDataMode();
+                model.TotalSum = YY_Count.ToString();
+                model.TotaSameMonthSum = MM_Count.ToString();
+                string json = JsonConvert.SerializeObject(model);
+                return Json(new { result = "success", msg = "", data = model }); ;
+            }
+            catch (Exception x)
+            {
+                return Json(new { result = "error", msg = x }); ;
+            }
+        }
+        #endregion
     }
 }
  

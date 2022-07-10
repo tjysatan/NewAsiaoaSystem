@@ -2445,7 +2445,7 @@
     <Content Include="Views\DKX\DKX_DD\FBHTZWMOREView.cshtml" />
     <Content Include="Views\NewAsiaOASystem\NA_XSinfo\XShetongView.cshtml" />
     <Content Include="Views\DKX\DKX_DD\updateFBitmeView.cshtml" />
-    <Content Include="Views\NA_XSinfo\HTBasicsinfoSetView.cshtml" />
+    <Content Include="Views\NewAsiaOASystem\NA_XSinfo\HTBasicsinfoSetView.cshtml" />
     <Content Include="Views\publicAPI\NewSIDSMJPOrderView.cshtml" />
     <Content Include="Views\publicAPI\NewSIDSMAView.cshtml" />
     <Content Include="Views\publicAPI\SIDinfobyjpordernoView.cshtml" />
@@ -2463,6 +2463,10 @@
     <Content Include="Views\NewAsiaOASystem\K3Basicdata\BatcupdateERPMDItm_GXGSView.cshtml" />
     <Content Include="Views\NewAsiaOASystem\K3Basicdata\CalculationSWH.cshtml" />
     <Content Include="Views\DKX\DKX_DDtypeinfo\Scheme_order_detailsView.cshtml" />
+    <Content Include="Views\NewAsiaOASystem\K3Basicdata\BatcupdateMDItm_NBPriceView.cshtml" />
+    <Content Include="Views\NewAsiaOASystem\K3Basicdata\BatcupdateMDItm_Z_WLSXView.cshtml" />
+    <Content Include="Views\DKX\DKX_DD\Order_SC_JinduView.cshtml" />
+    <Content Include="Views\DKX\DKX_DD\Update_WL_NumberView.cshtml" />
     <None Include="Web References\localhost\Reference.map">
       <Generator>MSDiscoCodeGenerator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>

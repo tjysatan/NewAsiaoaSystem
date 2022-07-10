@@ -1,0 +1,82 @@
+﻿@model NewAsiaOASystem.ViewModel.DKX_k3BominfoView
+@{
+    ViewBag.Title = "更新BOM物料的单位用量和备注";
+    Layout = "~/Views/Shared/_SysLayout.cshtml";
+}
+
+<script type="text/javascript">
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+    function guanbi() {
+        var index = parent.layer.getFrameIndex(window.name);
+        //关闭弹出层
+        parent.layer.close(index);
+    }
+     function confirm_tbscwork() {
+         var FAuxQty = $("#FAuxQty").val();//物料的单位的用量
+         var Beizhu = $("#Beizhu").val();//物料的行备注
+
+         if (FAuxQty == "") {
+             layer.alert("物料的单位的用量不为空！", { icon: 2 });
+             return false;
+         }
+         if (isNaN(FAuxQty)) {
+             layer.alert("物料的单位的用量为数字！", { icon: 2 });
+             return false;
+         }
+        $.ajax({
+            url: "../DKX_DD/Update_WL_NumberEide",
+            type: "POST",
+            data: { Id: '@Model.Id', Number: FAuxQty, beizhu: Beizhu },
+            dataType: "json",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response.result == "success") {
+                    layer.alert(response.msg, { icon: 1 }, function () { guanbi(); });
+                }
+                if (response.result == "error") {
+                    layer.alert(response.msg, { icon: 2 }, function () { location.reload(); });
+                }
+            }
+        })
+    }
+</script>
+
+<div style="width: 80%; padding: 20px 20px 0 20px">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">物料代码：</label>
+        <div class="layui-input-block">
+            @Html.TextBoxFor(m => m.FNumber, new { placeholder = "物料代码", @class = "layui-input", @readonly = "readonly" })
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">单位用量：</label>
+        <div class="layui-input-block">
+            @Html.TextBoxFor(m => m.FAuxQty, new { placeholder = "单位用量", @class = "layui-input" })
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">行备注：</label>
+        <div class="layui-input-block">
+            @Html.TextBoxFor(m => m.Beizhu, new { placeholder = "行备注", @class = "layui-input" })
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" onclick="confirm_tbscwork()">提交修改</button>
+        </div>
+    </div>
+</div>

@@ -635,6 +635,25 @@ namespace NewAsiaOASystem.Web
             }
             return encode;
         }
+
+
+        #region //查询订单在产线的生产进度
+        public static string Order_SC_jindu(string orderno)
+        {
+            try
+            {
+                //var headersNvc = new NameValueCollection();
+                //headersNvc.Add("Authorization", keyAuthorization);
+                string url1 = "http://erp.sbycjk.net:9501/admin_api/mo/" + orderno + "/operation_details";
+                string res = HttpUtility11.GetData(url1);
+                return res;
+            }
+            catch(Exception x)
+            {
+                return "1";
+            }
+        }
+        #endregion
     }
 
     public class moldedata
@@ -848,6 +867,9 @@ namespace NewAsiaOASystem.Web
 
     }
     #endregion
+
+
+
 
 
 

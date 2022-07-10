@@ -64,7 +64,17 @@ namespace NewAsiaOASystem.IDao
 
         
         #region //查询普实创建时间字段最近的数据
-        K3_wuliaoinfoView GetwuliaoMaxOpDate(); 
+        K3_wuliaoinfoView GetwuliaoMaxOpDate();
+        #endregion
+
+        
+        #region //根据物料的来源查询 SourceID 采购/制造
+        /// <summary>
+        /// 根据物料的来源查询 SourceID 采购/制造
+        /// </summary>
+        /// <param name="SourceID">物料的来源查询  采购/制造</param>
+        /// <returns></returns>
+        IList<K3_wuliaoinfoView> Get_info_bySourceID(string SourceID); 
         #endregion
     }
 }

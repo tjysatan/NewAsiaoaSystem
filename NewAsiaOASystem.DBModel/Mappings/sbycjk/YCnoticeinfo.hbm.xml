@@ -13,5 +13,7 @@
     <property name="C_time" column="C_time"  />
     <property name="Isfs" column="Isfs"  />
     <property name="type" column="type"/>
+    <property name="resultXml" column="resultXml"/>
+    
   </class>
 </hibernate-mapping>

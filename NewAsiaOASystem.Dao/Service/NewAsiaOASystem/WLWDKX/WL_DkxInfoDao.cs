@@ -127,7 +127,7 @@ namespace NewAsiaOASystem.Dao
         /// <param name="Name">区域名称</param>
         /// <param name="user">当前登录用户</param>
         /// <returns></returns>
-        public PagerInfo<WL_DkxInfoView> GetWLdkxinfoList(string Name,string Name2, string Is_sx,string Is_xs, string wl_zt, string wl_sid,string Is_qf, string startdate, string enddate, string sxstartdate, string sxenddate, SessionUser user)
+        public PagerInfo<WL_DkxInfoView> GetWLdkxinfoList(string Cusname, string Name,string Name2, string Is_sx,string Is_xs, string wl_zt, string wl_sid,string Is_qf, string startdate, string enddate, string sxstartdate, string sxenddate, SessionUser user)
         {
             TempList = new List<string>();
             TempHql = new StringBuilder();

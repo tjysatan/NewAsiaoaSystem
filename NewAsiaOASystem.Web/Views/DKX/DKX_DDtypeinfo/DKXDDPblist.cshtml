@@ -7,18 +7,8 @@
 @section HeadContent{
     <script type="text/javascript">
         $(function () {
-            @*$("#txt_DD_Bianhao").val('@ViewData["DD_Bianhao"]');
-            $("#txt_BJno").val('@ViewData["BJno"]');
-            $("#txtDD_Type").val('@ViewData["DD_Type"]');
-            $("#txt_KHname").val('@ViewData["KHname"]');
-            $("#txt_Lxname").val('@ViewData["Lxname"]');
-            $("#txt_Tel").val('@ViewData["Tel"]');
-            $("#txtDD_ZT").val('@ViewData["DD_ZT"]');
-            $("#txt_startctime").val('@ViewData["startctime"]');
-            $("#txt_endctiome").val('@ViewData["endctiome"]');
-            $("#txt_DHtype").val('@ViewData["DHtype"]');*@
-            //BindGrid();
             Gettabledata();
+            Getgczlyccount();
         })
 
         function BindGrid() {
@@ -104,8 +94,8 @@
                         {
                             field: 'wlsqtime', width: 130, title: '品审时间', templet(d) {
                                 //return layui_dateToStr(d.Ysdatetime)
-                                if (d.wlsqtime != "" && d.wlsqtime != null) {
-                                    return layui_dateToStr(d.wlsqtime);
+                                if (d.pbshtime != "" && d.pbshtime != null) {
+                                    return layui_dateToStr(d.pbshtime);
                                 }
                                 else {
                                     return "";
@@ -851,29 +841,48 @@
             })
         }
 
+        //获取异常整改的数量
+        async function Getgczlyccount() {
+            var json;
+            $.ajax({
+                url: "../DKX_DD/Getgczlyccount",
+                type: "POST",
+                dataType: "json",
+                async: true,
+                success: function (response) {
+                    json = response;
+                    $("#gczlycsumhtml").html(json.res)
+                },
+                error: function (e) {
+                    layer.alert("操作失败！", { icon: 2 });
+                }
+            })
+            return json;
+        }
 
+        //打开工程资料异常的数据页面
+        function opengczkycView() {
+            layer.open({
+                type: 2,
+                title: ['异常整改数据', 'font-size:14px;'],
+                area: ['80vw', '95vh'],
+                offset: '10px',
+                fixed: false, //不固定
+                maxmin: true,
+                content: '../DKX_DD/gczlyclist?IsEdit=false',
+                //end: function () {
+                //    location.reload();
+                //}
+            })
+        }
     </script>
 
     <script type="text/html" id="bar">
         <div class="layui-btn-group">
-            @*<button type="button" class="layui-btn  layui-btn-xs layui-btn-normal" lay-event="check" title="资料查看">
-                <i class="layui-icon">&#xe63c;</i>
-            </button>*@
 
             <button type="button" class="layui-btn layui-btn-xs layui-btn-warm" lay-event="Eidesh" title="品保审核">
                 <i class="layui-icon">&#xe642;</i>
             </button>
-
-            @*<button type="button" class="layui-btn layui-btn-xs layui-btn-normal" lay-event="checkcz" title="操作记录查看">
-                <i class="layui-icon">&#xe60e;</i>
-            </button>
-
-            <button type="button" class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del" title="删除">
-                <i class="layui-icon">&#xe640;</i>
-            </button>
-            <button type="button" class="layui-btn layui-btn-xs layui-btn-normal" lay-event="TBPS" title="同步普实">
-                <i class="layui-icon">&#xe609;</i>
-            </button>*@
         </div>
     </script>
 }
@@ -968,6 +977,8 @@
                 <span class="inquiry-input">
                     <button name="btnSerch" class="layui-btn" onclick="Gettabledata()"><i class="layui-icon">&#xe615;</i>查询</button>
                 </span>
+
+                <button class="layui-btn" onclick="opengczkycView();return false;">异常整改<span class="layui-badge layui-bg-gray" id="gczlycsumhtml"></span>条</button>
             </li>
 
             <li>

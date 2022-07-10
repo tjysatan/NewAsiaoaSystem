@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BJSys\PAY_CONTROL_INFOView.cs" />
+    <Compile Include="ERP\ERP_Material_usageView.cs" />
     <Compile Include="ERP\ERP_SASalAinfoView.cs" />
     <Compile Include="ERP\ERP_SASalA_FBCP_BCBWKView.cs" />
     <Compile Include="ERP\Js_xz_yfcostView.cs" />

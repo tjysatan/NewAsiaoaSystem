@@ -114,6 +114,221 @@
     }
 </style>
 
+<script>
+    var loadi;
+    function ddchen() {
+        loadi = layer.load(1, { shade: [0.8, '#393D49'] })
+    }
+    //关闭等待效果
+    function disLoading() {
+        layer.close(loadi);
+    }
+    $(function () {
+        FB_ordercount();
+        DS_ordercount();
+        FT_ordercount();
+        CP_ordercount();
+        Get_TheMonth_DailySales();
+
+    })
+
+    //非标订单
+   async function FB_ordercount() {
+        $.ajax({
+            url: "../DKX_DD/DKX_DD_Statistics_Interface",
+            type: "POST",
+            dataType: "json",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response.result == "success") {
+                    console.log(response.data);
+                    $("#YY_Count").html(response.data.TotalSum);
+                    $("#MM_Count").html("本月:"+response.data.TotaSameMonthSum +"条");
+                }
+                else {
+                    console.log(response.msg);
+                }
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+    }
+
+    //电商的销售订单
+    async function DS_ordercount() {
+        $.ajax({
+            url: "../NA_XSinfo/DKX_DSOrder_Statistics_Interface",
+            type: "POST",
+            dataType: "json",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response.result == "success") {
+                    console.log(response.data);
+                    $("#DS_YY_Count").html(response.data.TotalSum);
+                    $("#DS_MM_Count").html("本月:" + response.data.TotaSameMonthSum + "条");
+                }
+                else {
+                    console.log(response.msg);
+                }
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+    }
+
+    //返退货订单
+    function FT_ordercount() {
+        $.ajax({
+            url: "../NAReturnList/DKX_FTOrder_Statistics_Interface",
+            type: "POST",
+            dataType: "json",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response.result == "success") {
+                    console.log(response.data);
+                    $("#FT_YY_Count").html(response.data.TotalSum);
+                    $("#FT_MM_Count").html("本月:" + response.data.TotaSameMonthSum + "条");
+                }
+                else {
+                    console.log(response.msg);
+                }
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+    }
+
+    //方案库订单
+    async function CP_ordercount() {
+        $.ajax({
+            url: "../DKX_DD/DKX_CP_Statistics_Interface",
+            type: "POST",
+            dataType: "json",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response.result == "success") {
+                    console.log(response.data);
+                    $("#CP_YY_Count").html(response.data.TotalSum);
+                    $("#CP_MM_Count").html("本月:" + response.data.TotaSameMonthSum + "条");
+                }
+                else {
+                    console.log(response.msg);
+                }
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+    }
+
+    //查询当月每天的销售出货量
+    function Get_TheMonth_DailySales() {
+        $.ajax({
+            url: "../ERPDATA/Get_TheMonth_DailySales_Interface",
+            type: "POST",
+            dataType: "json",
+            async: true,
+            beforeSend: function () {
+                ddchen();
+            },
+            success: function (response) {
+                disLoading();
+                if (response.result == "success") {
+                    console.log('11122222',response.data);
+                    TJ_BaoBiao(response.data);
+                }
+                else {
+                    console.log(response.msg);
+                }
+            },
+            error: function (e) {
+                disLoading();
+                layer.alert("操作失败！", { icon: 2 });
+            }
+        })
+    }
+
+    //
+    function TJ_BaoBiao(json) {
+
+        console.log('json', json);
+        var categoriesDATA = [];
+        var data = [];
+        for (var i = 0, J = json.length; i < J; i++) {
+            categoriesDATA.push(json[i][1]+"日");
+            data.push(json[i][0]);
+        }
+
+        $('#container').highcharts({
+            chart: {
+                type: 'spline'
+            },
+            title: {
+                text: 'ERP当月的销售数据'
+            },
+            subtitle: {
+                text: '数据来源: pushisoftERP'
+            },
+            xAxis: {
+                categories: categoriesDATA
+            },
+            yAxis: {
+                title: {
+                    text: '销售额'
+                },
+                labels: {
+                    formatter: function () {
+                        return this.value + '元';
+                    }
+                }
+            },
+            tooltip: {
+                crosshairs: true,
+                shared: true
+            },
+            plotOptions: {
+                spline: {
+                    marker: {
+                        radius: 4,
+                        lineColor: '#666666',
+                        lineWidth: 1
+                    }
+                }
+            },
+            series: [{
+                name: '销售出货（元）',
+                marker: {
+                    symbol: 'square'
+                },
+                data: data
+            } ]
+        })
+    }
+</script>
+<script src="../Scripts/highcharts.js"></script>
  
 
 <div class="layuimini-container">
@@ -129,9 +344,9 @@
                                 <h5>非标订单</h5>
                             </div>
                             <div class="panel-content">
-                                <h1 class="no-margins">1234</h1>
-                                @*<div class="stat-percent font-bold text-gray"><i class="fa fa-commenting"></i> 1234</div>*@
-                                <small>当前分类总记录数</small>
+                                 <h1 class="no-margins" id="MM_Count"></h1>
+ 
+                                <small>今年下单</small><span id="YY_Count"></span>条
                             </div>
                         </div>
                     </div>
@@ -144,12 +359,15 @@
                         <div class="panel-body">
                             <div class="panel-title">
                                 <span class="label pull-right layui-bg-cyan">实时</span>
-                                <h5>销售订单</h5>
+                                <h5>电商订单</h5>
                             </div>
                             <div class="panel-content">
-                                <h1 class="no-margins">1234</h1>
+                                <h1 class="no-margins" id="DS_MM_Count"></h1>
+
+                                <small>今年下单</small><span id="DS_YY_Count"></span>条
+                                @*<h1 class="no-margins">1234</h1>*@
                                 @*<div class="stat-percent font-bold text-gray"><i class="fa fa-commenting"></i> 1234</div>*@
-                                <small>当前分类总记录数</small>
+                                @*<small>当前分类总记录数</small>*@
                             </div>
                         </div>
                     </div>
@@ -165,9 +383,10 @@
                                 <h5>返退货</h5>
                             </div>
                             <div class="panel-content">
-                                <h1 class="no-margins">1234</h1>
-                                @*<div class="stat-percent font-bold text-gray"><i class="fa fa-commenting"></i> 1234</div>*@
-                                <small>当前分类总记录数</small>
+                                <h1 class="no-margins" id="FT_MM_Count"></h1>
+
+                                <small>今年下单</small><span id="FT_YY_Count"></span>条
+                                @*<small>当前分类总记录数</small>*@
                             </div>
                         </div>
                     </div>
@@ -182,9 +401,9 @@
                                 <h5>方案库</h5>
                             </div>
                             <div class="panel-content">
-                                <h1 class="no-margins">1234</h1>
-                                @*<div class="stat-percent font-bold text-gray"><i class="fa fa-commenting"></i> 1234</div>*@
-                                <small>当前分类总记录数</small>
+                                <h1 class="no-margins" id="CP_MM_Count"></h1>
+
+                                <small>方案库已有</small><span id="CP_YY_Count"></span>条
                             </div>
                         </div>
                     </div>
